@@ -43,8 +43,8 @@ disarm `TEXT()` macros used by cargo-culting Windows programmers who picked up
 the idea that using wide chars is necessary, or useful, for localization ;-)
 
 
-Events
-------
+Events (Signal/Slot system)
+---------------------------
 
 A robust, lean and fast signal/slot system. It's extremely fast (no library
 I tested it against could keep up) and yet offers a decent set of functionality
@@ -69,8 +69,8 @@ int main() {
 }
 ```
 
-You can find some benchmarks on
-(my blog)[http://blog.nuclex-games.com/2019/10/nuclex-signal-slot-benchmarks]
+You can find some benchmarks on my blog:
+[Nuclex Signal/Slot Library: Benchmarks](http://blog.nuclex-games.com/2019/10/nuclex-signal-slot-benchmarks])
 
 
 Any
