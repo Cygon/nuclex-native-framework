@@ -19,7 +19,8 @@ on top of SCons.
 If you call my build_library() method like this:
 
 ```python
-env.build_library()```
+env.build_library()
+```
 
 It will assume that your project as a directory `Source`, that you want intermediate
 files written a directory named `obj/platform-compiler-release` and that the final
@@ -44,7 +45,8 @@ unit_test_environment = common_environment.Clone()
 unit_test_environment.add_preprocessor_constant('NUCLEX_SUPPORT_EXECUTABLE')
 unit_test_artifacts = unit_test_environment.build_unit_tests(
     'Nuclex.Support.Native.Tests'
-)```
+)
+```
 
 Check the `SConstruct` files in each library directory to see how my SCons scripts
 are loaded.
