@@ -70,7 +70,7 @@ int main() {
 ```
 
 You can find some benchmarks on my blog:
-[Nuclex Signal/Slot Library: Benchmarks](http://blog.nuclex-games.com/2019/10/nuclex-signal-slot-benchmarks])
+[Nuclex Signal/Slot Library: Benchmarks](http://blog.nuclex-games.com/2019/10/nuclex-signal-slot-benchmarks)
 
 
 Any
