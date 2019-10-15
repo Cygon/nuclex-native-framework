@@ -261,6 +261,7 @@ def _register_cplusplus_extension_methods(environment):
     @param  environment  Environment the extension methods will be registered to"""
 
     environment.AddMethod(_add_cplusplus_package, 'add_package')
+    environment.AddMethod(_add_cplusplus_project, 'add_project')
     environment.AddMethod(_add_cplusplus_source_directory, 'add_source_directory')
     environment.AddMethod(_build_cplusplus_library, 'build_library')
     environment.AddMethod(_build_cplusplus_unit_tests, 'build_unit_tests')
@@ -332,7 +333,7 @@ def _set_standard_cplusplus_compiler_flags(environment):
         environment.Append(CXXFLAGS='/GS-') # No buffer security checks (we make games!)
         environment.Append(CXXFLAGS='/fp:fast') # Allow floating point optimizations
         environment.Append(CXXFLAGS='/EHsc') # Only C++ exceptions, no Microsoft exceptions
-        environment.Append(CXXFLAGS='/std:c++17') # Use a widely supported but current C++
+        environment.Append(CXXFLAGS='/std:c++14') # Use a widely supported but current C++
         environment.Append(CXXFLAGS='/GR') # Generate RTTI for dynamic_cast and type_info
 
         if _is_debug_build(environment):
@@ -364,7 +365,6 @@ def _set_standard_cplusplus_compiler_flags(environment):
 
     else:
         environment.Append(CFLAGS='-fvisibility=hidden') # Default visibility: don't export
-        environment.Append(CFLAGS='-fvisibility-inlines-hidden') # Inline code is also hidden
         environment.Append(CFLAGS='-Wpedantic') # Enable all ISO C++ deviation warnings
         environment.Append(CFLAGS='-Wall') # Show all common warnings
         environment.Append(CFLAGS='-Wextra') # Show extra warnings
@@ -375,7 +375,6 @@ def _set_standard_cplusplus_compiler_flags(environment):
         environment.Append(CFLAGS='-funsafe-math-optimizations') # Allow float optimizations
 
         environment.Append(CXXFLAGS='-fvisibility=hidden') # Default visibility: don't export
-        environment.Append(CXXFLAGS='-fvisibility-inlines-hidden') # Inline code is also hidden
         environment.Append(CXXFLAGS='-Wpedantic') # Enable all ISO C++ deviation warnings
         environment.Append(CXXFLAGS='-Wall') # Show all common warnings
         environment.Append(CXXFLAGS='-Wextra') # Show extra warnings
@@ -384,8 +383,8 @@ def _set_standard_cplusplus_compiler_flags(environment):
         environment.Append(CXXFLAGS='-shared-libgcc') # Use shared C/C++ runtime library
         environment.Append(CXXFLAGS='-fpic') # Use position-independent code
         environment.Append(CXXFLAGS='-funsafe-math-optimizations') # Allow float optimizations
-        environment.Append(CXXFLAGS='-std=c++17') # Use a widely supported but current C++
-        environment.Append(CXXFLAGS='-fpermissive')
+        environment.Append(CXXFLAGS='-std=c++14') # Use a widely supported but current C++
+        environment.Append(CXXFLAGS='-fvisibility-inlines-hidden') # Inline code is also hidden
 
         if _is_debug_build(environment):
             #environment.Append(CFLAGS='-Og') # Tailor code for optimal debugging
@@ -419,6 +418,7 @@ def _set_standard_cplusplus_linker_flags(environment):
     else:
         environment.Append(LINKFLAGS='-z defs') # Detect unresolved symbols in shared object
         environment.Append(LINKFLAGS='-Bsymbolic') # Prevent replacement on shared object syms
+        environment.Append(LINKFLAGS='-flto') # Compile all code in one unit at link time
 
 # ----------------------------------------------------------------------------------------------- #
 
@@ -486,7 +486,7 @@ def _add_cplusplus_package(environment, universal_package_name, universal_librar
     include_directory = cplusplus.find_or_guess_include_directory(package_directory)
     if include_directory is None:
         raise FileNotFoundError(
-        	'Could not find include directory for package in ' + package_directory
+            'Could not find include directory for package in ' + package_directory
         )
 
     environment.add_include_directory(include_directory)
@@ -495,7 +495,7 @@ def _add_cplusplus_package(environment, universal_package_name, universal_librar
     library_directory = cplusplus.find_or_guess_library_directory(environment, package_directory)
     if library_directory is None:
         raise FileNotFoundError(
-        	'Could not find library directory for package in ' + package_directory
+            'Could not find library directory for package in ' + package_directory
         )
 
     environment.add_library_directory(library_directory)
@@ -508,6 +508,56 @@ def _add_cplusplus_package(environment, universal_package_name, universal_librar
             environment.add_library(universal_library_name)
     else:
         environment.add_library(universal_library_names)
+
+# ----------------------------------------------------------------------------------------------- #
+
+def _add_cplusplus_project(environment, project_directory, universal_package_name = None):
+    """Adds another project (its include directory and expected build output if it is
+    using this build script as well)
+
+    @param  environment             Environment to which a package will be added
+    @param  project_directory       Directory holding the project
+    @param  universal_package_name  Name of the package produced by the project. If empty,
+                                    the directory name is assumed to match the package name."""
+
+    #project_directory = os.path.join('..', project_directory_name)
+
+    # Path for the package's headers
+    include_directory = cplusplus.find_or_guess_include_directory(project_directory)
+    if include_directory is None:
+        raise FileNotFoundError(
+            'Could not find include directory for project in ' + project_directory
+        )
+
+    environment.add_include_directory(include_directory)
+
+    # Path for the package's libraries
+    project_artifact_directory = os.path.join(project_directory, environment['ARTIFACT_DIRECTORY'])
+    library_directory = cplusplus.find_or_guess_library_directory(
+        environment, project_artifact_directory
+    )
+    if library_directory is None:
+        raise FileNotFoundError(
+            'Could not find library directory for package in ' + project_directory
+        )
+
+    environment.add_library_directory(library_directory)
+
+    # Library that needs to be linked
+    project_directory_name = os.path.basename(project_directory)
+    if universal_package_name is None:
+        environment.add_library(
+            cplusplus.get_platform_specific_library_name(project_directory_name, True)
+        )
+    elif isinstance(universal_package_name, list):
+        for single_universal_package_name in universal_package_name:
+            environment.add_library(
+                cplusplus.get_platform_specific_library_name(single_universal_package_name, True)
+            )
+    else:
+        environment.add_library(
+            cplusplus.get_platform_specific_library_name(universal_package_name, True)
+        )
 
 # ----------------------------------------------------------------------------------------------- #
 

@@ -101,11 +101,11 @@ def find_or_guess_include_directory(package_path):
     @param  self          The instance this method should work on
     @param  package_path  Path to the package"""
 
-    candidate = os.path.join(package_path, 'include')
+    candidate = os.path.join(package_path, 'Include')
     if os.path.isdir(candidate):
         return candidate
 
-    candidate = os.path.join(package_path, 'Include')
+    candidate = os.path.join(package_path, 'include')
     if os.path.isdir(candidate):
         return candidate
 
@@ -261,6 +261,8 @@ def get_compiler_name(environment):
         return 'msvc'
     elif (compiler_executable == 'gcc') or (compiler_executable == 'g++'):
         return 'gcc'
+    elif (compiler_executable == 'clang') or (compiler_executable == 'clang++'):
+        return 'clang'
     else:
         return compiler_executable
 

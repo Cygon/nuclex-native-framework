@@ -1,0 +1,7 @@
+build/googletest/src/gtest.cc
+build/googletest/src/gtest-death-test.cc
+build/googletest/src/gtest-filepath.cc
+build/googletest/src/gtest-port.cc
+build/googletest/src/gtest-printers.cc
+build/googletest/src/gtest-test-part.cc
+build/googletest/src/gtest-typed-test.cc
