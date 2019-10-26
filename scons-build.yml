@@ -1,0 +1,17 @@
+name: C/C++ CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: compile-gtest
+      run: scons --directory ./ThirdParty/gtest/
+    - name: compile-nuclex-support
+      run: scons --directory ./Nuclex.Support.Native/
+    - name: compile-nuclex-pixels
+      run: scons --directory ./Nuclex.Pixels.Native/
