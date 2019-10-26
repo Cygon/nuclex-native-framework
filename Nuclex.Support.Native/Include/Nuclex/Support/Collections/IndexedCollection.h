@@ -50,8 +50,10 @@ namespace Nuclex { namespace Support { namespace Collections {
     /// <summary>An index that is never given to any item in the collection</summary>
     public: static const std::size_t InvalidIndex;
 
+    /// <summary>Initializes a new indexed collection</summary>
+    protected: IndexedCollection() = default;
     /// <summary>Frees all memory used by the collection</summary>
-    public: virtual ~IndexedCollection() {}
+    public: virtual ~IndexedCollection() = default;
 
     /// <summary>Determines the index of the specified item in the collection</summary>
     /// <param name="value">Item whose index will be determined</param>
@@ -80,12 +82,10 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     /// <summary>Removes the item at the specified index from the collection</summary>
     /// <param name="index">Index at which the item will be removed</param>
-    /// <returns>True if the item was removed, false if the index was invalid</returns>
-    public: virtual bool RemoveAt(std::size_t index) = 0;
+    public: virtual void RemoveAt(std::size_t index) = 0;
 
-    protected: IndexedCollection() {}
-    private: IndexedCollection(const IndexedCollection &) = delete;
-    private: IndexedCollection &operator =(const IndexedCollection &) = delete;
+    //private: IndexedCollection(const IndexedCollection &) = delete;
+    //private: IndexedCollection &operator =(const IndexedCollection &) = delete;
 
   };
 

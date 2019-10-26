@@ -18,10 +18,10 @@ library_artifacts = library_environment.build_library('Nuclex.Support.Native')
 
 # Compile the unit test executable
 # Disabled because it requires gtest
-#unit_test_environment = common_environment.Clone()
-#unit_test_environment.add_preprocessor_constant('NUCLEX_SUPPORT_EXECUTABLE')
-#unit_test_artifacts = unit_test_environment.build_unit_tests(
-#    'Nuclex.Support.Native.Tests'
-#)
+unit_test_environment = common_environment.Clone()
+unit_test_environment.add_preprocessor_constant('NUCLEX_SUPPORT_EXECUTABLE')
+unit_test_artifacts = unit_test_environment.build_unit_tests(
+    'Nuclex.Support.Native.Tests'
+)
 
 # ----------------------------------------------------------------------------------------------- #

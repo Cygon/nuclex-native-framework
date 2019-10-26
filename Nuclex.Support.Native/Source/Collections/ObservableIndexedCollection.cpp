@@ -21,14 +21,11 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "Nuclex/Support/Any.h"
+#include "Nuclex/Support/Collections/ObservableIndexedCollection.h"
 
-namespace Nuclex { namespace Support {
+// --------------------------------------------------------------------------------------------- //
 
-  // ------------------------------------------------------------------------------------------- //
+// This file is only here to guarantee that its associated header has no hidden
+// dependencies and can be included on its own
 
-  const Any Any::Empty;
-
-  // ------------------------------------------------------------------------------------------- //
-
-}} // namespace Nuclex::Support
+// --------------------------------------------------------------------------------------------- //

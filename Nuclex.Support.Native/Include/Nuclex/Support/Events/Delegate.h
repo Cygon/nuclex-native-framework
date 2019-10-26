@@ -31,7 +31,7 @@ namespace Nuclex { namespace Support { namespace Events {
   // ------------------------------------------------------------------------------------------- //
 
   // Required to declare the type
-  template <typename TResult> class Delegate;
+  template<typename TResult> class Delegate;
 
   // ------------------------------------------------------------------------------------------- //
 

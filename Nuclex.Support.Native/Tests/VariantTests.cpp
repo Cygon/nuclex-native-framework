@@ -44,6 +44,24 @@ namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(VariantTest, HasCopyConstructor) {
+    Variant original = 123;
+    Variant copy(original);
+
+    EXPECT_EQ(copy.ToInt32(), original.ToInt32());
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(VariantTest, HasMoveConstructor) {
+    Variant original = 123;
+    Variant moved(std::move(original));
+
+    EXPECT_EQ(moved.ToInt32(), std::int32_t(123));
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   TEST(VariantTest, CanHoldDifferentTypes) {
     { Variant boolVariant(true); }
     { Variant uint8Variant(std::uint8_t(234)); }
@@ -280,7 +298,7 @@ namespace Nuclex { namespace Support {
     EXPECT_EQ(std::int32_t(-1246989881), uint64Variant.ToInt32());
     EXPECT_EQ(std::uint64_t(11111111111111111111ULL), uint64Variant.ToUint64());
     EXPECT_EQ(std::int64_t(-7335632962598440505LL), uint64Variant.ToInt64());
-#if NUCLEX_SUPPORT_WIN32
+#if NUCLEX_SUPPORT_WIN32 // Please explain this to me...
     EXPECT_EQ(float(1.11111104e+19f), uint64Variant.ToFloat());
 #else
     EXPECT_EQ(float(1.11111115e+19f), uint64Variant.ToFloat());
@@ -437,6 +455,18 @@ namespace Nuclex { namespace Support {
     EXPECT_EQ(VariantType::WString, Variant(std::wstring(L"Hello World")).GetType());
     EXPECT_EQ(VariantType::Any, Variant(Any(12345)).GetType());
     EXPECT_EQ(VariantType::VoidPointer, Variant(nullptr).GetType());
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(VariantTest, SupportsMoveAssignment) {
+    Variant source(std::string("Hello World"));
+
+    Variant target(123);
+    target = std::move(source);
+
+    EXPECT_EQ(target.GetType(), VariantType::String);
+    EXPECT_EQ(target.ToString(), std::string("Hello World"));
   }
 
   // ------------------------------------------------------------------------------------------- //

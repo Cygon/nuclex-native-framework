@@ -381,10 +381,7 @@ namespace Nuclex { namespace Support { namespace Events {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(EventTest, ReturnValueListIsEmptyWithoutSubscribers) {
-    const static std::size_t SubscriberCount = 16;
-
     Event<int()> test;
-
     std::vector<int> results = test();
 
     EXPECT_EQ(results.size(), 0);

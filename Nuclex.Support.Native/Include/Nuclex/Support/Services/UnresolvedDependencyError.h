@@ -18,34 +18,34 @@ License along with this library
 */
 #pragma endregion // CPL License
 
-#ifndef NUCLEX_SUPPORT_EVENTS_EMPTYDELEGATECALLERROR_H
-#define NUCLEX_SUPPORT_EVENTS_EMPTYDELEGATECALLERROR_H
+#ifndef NUCLEX_SUPPORT_SERVICES_UNRESOLVEDDEPENDENCYERROR_H
+#define NUCLEX_SUPPORT_SERVICES_UNRESOLVEDDEPENDENCYERROR_H
 
 #include "Nuclex/Support/Config.h"
 
 #include <stdexcept>
 
-namespace Nuclex { namespace Support { namespace Events {
+namespace Nuclex { namespace Support { namespace Services {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Indicates that the called delegate had no call target assigned</summary>
-  class EmptyDelegateCallError : public std::runtime_error {
+  /// <summary>Indicates that a service injector was unable to resolve a dependency</summary>
+  class UnresolvedDependencyError : public std::logic_error {
 
-    /// <summary>Initializes a new empty delegate call error</summary>
+    /// <summary>Initializes a new cyclic dependency error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: explicit EmptyDelegateCallError(const std::string &message) :
-      std::runtime_error(message) {}
+    public: explicit UnresolvedDependencyError(const std::string &message) :
+      std::logic_error(message) {}
 
-    /// <summary>Initializes a new empty delegate call error</summary>
+    /// <summary>Initializes a new cyclic dependency error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: explicit EmptyDelegateCallError(const char *message) :
-      std::runtime_error(message) {}
+    public: explicit UnresolvedDependencyError(const char *message) :
+      std::logic_error(message) {}
 
   };
 
   // ------------------------------------------------------------------------------------------- //
 
-}}} // namespace Nuclex::Support::Events
+}}} // namespace Nuclex::Support::Services
 
-#endif // NUCLEX_SUPPORT_EVENTS_EMPTYDELEGATECALLERROR_H
+#endif // NUCLEX_SUPPORT_SERVICES_UNRESOLVEDDEPENDENCYERROR_H

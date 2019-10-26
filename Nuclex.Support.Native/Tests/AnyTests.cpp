@@ -61,6 +61,14 @@ namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(AnyTest, HasDefaultConstructor) {
+    EXPECT_NO_THROW(
+      Any test;
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   TEST(AnyTest, InstancesCanBeCreated) {
     EXPECT_NO_THROW(
       Any test(12345);
@@ -69,11 +77,33 @@ namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(AnyTest, AnyCanBeCopied) {
+  TEST(AnyTest, HasCopyConstructor) {
     Any original(12345);
     Any copy(original);
 
-    EXPECT_EQ(12345, copy.Get<int>());
+    EXPECT_EQ(copy.Get<int>(), 12345);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(AnyTest, HasMoveConstructor) {
+    Any original(12345);
+    Any copy(std::move(original));
+
+    EXPECT_EQ(copy.Get<int>(), 12345);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(AnyTest, CanBeReset) {
+    Any test(12345);
+    EXPECT_TRUE(test.HasValue());
+    test.Reset();
+    EXPECT_FALSE(test.HasValue());
+
+    EXPECT_NO_THROW(
+      test.Reset();
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -89,23 +119,52 @@ namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(AnyTest, AnyCanBeAssignedToAnotherAny) {
+  TEST(AnyTest, CanBeCopyAssigned) {
     bool copiedOverInstanceWasDestroyed = false;
     {
       DestructionSignaller signaller(&copiedOverInstanceWasDestroyed);
-      Any test(signaller);
-      signaller.Disarm();
+      Any test(signaller); // Copies the signaller
+      signaller.Disarm(); // Disarm the in-scope one
 
       // The Any should have made a single copy of the signaller, so at this point,
       // no instances of the signaller should have been destroyed yet
-      EXPECT_EQ(copiedOverInstanceWasDestroyed, false);
+      EXPECT_FALSE(copiedOverInstanceWasDestroyed);
 
       // Overwrite the instance with another 'Any' value, destroying its earlier contents
       Any other(321);
       test = other;
 
       // Now the signaller within the first any should have been destroyed
-      EXPECT_EQ(copiedOverInstanceWasDestroyed, true);
+      EXPECT_TRUE(copiedOverInstanceWasDestroyed);
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(AnyTest, CanBeMoveAssigned) {
+    bool copiedOverInstanceWasDestroyed = false;
+    {
+      DestructionSignaller signaller(&copiedOverInstanceWasDestroyed);
+      Any test(signaller); // Copies the signaller
+      signaller.Disarm(); // Disarm the in-scope one
+
+      // The Any should have made a single copy of the signaller, so at this point,
+      // no instances of the signaller should have been destroyed yet
+      EXPECT_FALSE(copiedOverInstanceWasDestroyed);
+
+      // Overwrite the instance with another 'Any' value, destroying its earlier contents
+      Any other(signaller); // Construct with disarmed signaller
+      other = std::move(test); // Signaller should be moved, no copied & destroyed
+      test = 123; // Should no longer own the signaller
+
+      // Since the signaller was moved rather than copied, no instance of it
+      // should be destroyed at this point
+      EXPECT_FALSE(copiedOverInstanceWasDestroyed);
+
+      other = 0;
+
+      // Now the signaller should have been destroyed
+      EXPECT_TRUE(copiedOverInstanceWasDestroyed);
     }
   }
 

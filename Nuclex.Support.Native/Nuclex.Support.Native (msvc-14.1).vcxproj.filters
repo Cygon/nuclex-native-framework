@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>
+      </Extensions>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source\Collections">
+      <UniqueIdentifier>{3383d190-2e62-4a51-8b20-02524ed4b332}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Events">
+      <UniqueIdentifier>{e3f61b78-199d-4daf-9335-3bfce32621d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Services">
+      <UniqueIdentifier>{8776ca34-6ac1-43ca-9e2f-723d4bc5843b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text">
+      <UniqueIdentifier>{f20ce72c-f037-4bfc-8e47-a38db78850de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text\Utf8">
+      <UniqueIdentifier>{7f8c6eb7-89ef-4d69-ba39-1aceecbfc54a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Collections">
+      <UniqueIdentifier>{bb7bb4c9-39c3-4ac7-b033-c752c0cec4d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Events">
+      <UniqueIdentifier>{6309d6df-9d85-4228-a827-5c27b5922499}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Services">
+      <UniqueIdentifier>{a35a1321-4e93-4a53-bc8a-e98ab6a1e528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Text">
+      <UniqueIdentifier>{3ae3b2e0-1fd9-477a-9fc9-1eb06bd74a6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text\Dragon4">
+      <UniqueIdentifier>{f43ef6f6-b7be-4ad0-afab-0ed118b69cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text\Erthink">
+      <UniqueIdentifier>{49b9907f-256d-49bf-93e9-692d25ed43ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Documents">
+      <UniqueIdentifier>{c58695d4-9cc1-47b4-8c0c-d930830ae758}</UniqueIdentifier>
+      <Extensions>md;txt;pdf</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Any.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Config.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Variant.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VariantType.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\Collection.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\IndexedCollection.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Events\Event.cpp">
+      <Filter>Source\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\LazyServiceInjector.cpp">
+      <Filter>Source\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\ServiceContainer.cpp">
+      <Filter>Source\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Lexical.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\StringConverter.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\DynamicArray.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Dragon4\Dragon4.cpp">
+      <Filter>Source\Text\Dragon4</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Dragon4\Math.cpp">
+      <Filter>Source\Text\Dragon4</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Dragon4\PrintFloat.cpp">
+      <Filter>Source\Text\Dragon4</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Events\Delegate.cpp">
+      <Filter>Source\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Events\EmptyDelegateCallError.cpp">
+      <Filter>Source\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\ObservableCollection.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\ObservableDynamicArray.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\ServiceProvider.cpp">
+      <Filter>Source\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\UnresolvedDependencyError.cpp">
+      <Filter>Source\Services</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Text\Utf8\checked.h">
+      <Filter>Source\Text\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Utf8\core.h">
+      <Filter>Source\Text\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Utf8\unchecked.h">
+      <Filter>Source\Text\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Any.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Config.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Variant.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\VariantType.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\IndexedCollection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableCollection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
+      <Filter>Include\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\LazyServiceInjector.h">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceContainer.h">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\Lexical.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Dragon4\Dragon4.h">
+      <Filter>Source\Text\Dragon4</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Dragon4\Math.h">
+      <Filter>Source\Text\Dragon4</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Dragon4\PrintFloat.h">
+      <Filter>Source\Text\Dragon4</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Dragon4\Standard.h">
+      <Filter>Source\Text\Dragon4</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Erthink\erthink.h">
+      <Filter>Source\Text\Erthink</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Erthink\erthink_arch.h">
+      <Filter>Source\Text\Erthink</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Erthink\erthink_defs.h">
+      <Filter>Source\Text\Erthink</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Erthink\erthink_misc.h">
+      <Filter>Source\Text\Erthink</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Erthink\erthink_u2a.h">
+      <Filter>Source\Text\Erthink</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h">
+      <Filter>Include\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Events\EmptyDelegateCallError.h">
+      <Filter>Include\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableDynamicArray.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceProvider.h">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\Checks.inl">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignature.inl">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignatureDetector.inl">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceFactory.inl">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\UnresolvedDependencyError.h">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Nuclex.Support.Native.def">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Documents\David Gay - Correctly Rounded Binary-Decimal and Decimal-Binary Conversions.pdf">
+      <Filter>Documents</Filter>
+    </None>
+    <None Include="Documents\Florian Loitsch - Printing Floating-Point Numbers Quickly and Accurately with Integers.pdf">
+      <Filter>Documents</Filter>
+    </None>
+    <None Include="Documents\Marc Andrysco - Printing Floating-Point Numbers, An Always Correct Method.pdf">
+      <Filter>Documents</Filter>
+    </None>
+    <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf">
+      <Filter>Documents</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Documents\Copyright.md">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="Documents\EventBenchmark.md">
+      <Filter>Documents</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

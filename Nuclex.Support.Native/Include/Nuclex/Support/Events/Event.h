@@ -126,6 +126,12 @@ namespace Nuclex { namespace Support { namespace Events {
       }
     }
 
+    /// <summary>Returns the current number of subscribers to the event</summary>
+    /// <returns>The number of current subscribers</returns>
+    public: std::size_t CountSubscribers() const {
+      return this->subscriberCount;
+    }
+
     /// <summary>Calls all subscribers of the event and collects their return values</summary>
     /// <param name="arguments">Arguments that will be passed to the event</param>
     /// <returns>An list of the values returned by the event subscribers</returns>

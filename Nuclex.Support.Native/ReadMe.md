@@ -73,6 +73,58 @@ You can find some benchmarks on my blog:
 [Nuclex Signal/Slot Library: Benchmarks](http://blog.nuclex-games.com/2019/10/nuclex-signal-slot-benchmarks)
 
 
+Dependency Injector
+-------------------
+
+A dependency injector that is non-intrusive, easy to use and automatically
+detects your constructor parameters. With this, systems no longer need to
+rely on anti-patterns like singletons and remain unit-testable.
+
+  * Easy, fluent syntax inspired by Ninject for .NET
+  * All standard C++, no macros, no preprocessor, no code generator, no XML
+  * Service implementation type is only needed at site of service registration
+  * Recursive dependency resolution
+
+Here's an example that shows how it works:
+
+```cpp
+class CalculatorService {
+  public: virtual int Add(int first, int second) = 0;
+  public: virtual int Multiply(int first, int second) = 0;
+};
+
+class BrokenCalculator : public virtual CalculatorService {
+  public: int Add(int first, int second) override { return first + second + 1; }
+  public: int Multiply(int first, int second) override { return first + first * second; };
+};
+
+class CalculatorUser {
+  public: CalculatorUser(const std::shared_ptr<CalculatorService> &calculator) :
+    calculator(calculator) {}
+
+  public: int CalculateSomething() {
+    return this->calculator->Add(1, 2) + this->calculator->Multiply(2, 2);
+  }
+
+  private: std::shared_ptr<CalculatorService> calculator;
+};
+
+int main() {
+  Nuclex::Support::Services::LazyServiceInjector serviceInjector;
+
+  // Yep, it detects the constructor arguments, you can add or remove them :)
+  // Yep, it's non-intrusive, standard C++ and statically compiled :)
+  serviceInjector.Bind<CalculatorService>().To<BrokenCalculator>();
+  serviceInjector.Bind<CalculatorUser>().ToSelf();
+
+  std::shared_ptr<CalculatorUser> user = serviceInjector.Get<CalculatorUser>();
+  assert(!!user);
+
+  int result = user->CalculateSomething();
+}
+```
+
+
 Any
 ---
 

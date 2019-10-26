@@ -5,7 +5,7 @@ import shutil
 import sys
 import importlib
 import tarfile
-import requests
+#import requests
 
 """
 Archive utilities code for SCons projects
@@ -15,8 +15,9 @@ and applying unified diffs as patches
 """
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'techtonik'))
-print(os.path.join(os.path.realpath(__file__), 'techtonik'))
+#print(os.path.join(os.path.realpath(__file__), 'techtonik'))
 patch = importlib.import_module('patch')
+wget = importlib.import_module('wget')
 
 # ----------------------------------------------------------------------------------------------- #
 
@@ -62,23 +63,27 @@ def download_url_in_urlfile(target, source, env):
     @param  source  Expected to contain only one file, the url list file
     @param  env     SCons build environment"""
 
-    urls = list(filter(len, source[0].get_text_contents().split('\n')))
+    text_contents_without_cr = source[0].get_text_contents().replace('\r', '')
+    urls = list(filter(len, text_contents_without_cr.split('\n')))
     for url in urls:
+        print('Attempting download from ' + str(url))
+        wget.download(url, out = str(target[0]), bar = None)
+        if os.path.isfile(str(target[0])):
+            return
+
         # If this is a page (most lkely, an error page), it's not what we're looking for
         #request = requests.head(url, allow_redirects = True)
 
-        request = requests.get(url, allow_redirects = True)
-        content_type = request.headers.get('content-type')
-        if 'text' in content_type.lower():
-            continue
-        if 'html' in content_type.lower():
-            continue
+        #request = requests.get(url, allow_redirects = True)
+        #content_type = request.headers.get('content-type')
+        #if 'text' in content_type.lower():
+        #    continue
+        #if 'html' in content_type.lower():
+        #    continue
 
-        target_file = open(str(target[0]), 'wb')
-        target_file.write(request.content)
-        target_file.close()
-
-        return
+        #target_file = open(str(target[0]), 'wb')
+        #target_file.write(request.content)
+        #target_file.close()
 
     raise FileNotFoundError(
         'Could not download file ' + str(target[0])

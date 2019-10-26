@@ -38,6 +38,95 @@ namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //
 
+  Variant::Variant(const Variant &other) :
+    type(other.type) {
+
+    switch(other.type) {
+      case VariantType::Empty: { break; } // Nothing more to do
+      case VariantType::Boolean: { this->booleanValue = other.booleanValue; break; }
+      case VariantType::Uint8: { this->uint8Value = other.uint8Value; break; }
+      case VariantType::Int8: { this->int8Value = other.int8Value; break; }
+      case VariantType::Uint16: { this->uint16Value = other.uint16Value; break; }
+      case VariantType::Int16: { this->int16Value = other.int16Value; break; }
+      case VariantType::Uint32: { this->uint32Value = other.uint32Value; break; }
+      case VariantType::Int32: { this->int32Value = other.int32Value; break; }
+      case VariantType::Uint64: { this->uint64Value = other.uint64Value; break; }
+      case VariantType::Int64: { this->int64Value = other.int64Value; break; }
+      case VariantType::Float: { this->floatValue = other.floatValue; break; }
+      case VariantType::Double: { this->doubleValue = other.doubleValue; break; }
+      case VariantType::String: {
+        new(this->stringValueBytes) std::string(
+          *reinterpret_cast<const std::string *>(other.stringValueBytes)
+        );
+        break;
+      }
+      case VariantType::WString: {
+        new(this->wstringValueBytes) std::wstring(
+          *reinterpret_cast<const std::wstring *>(other.wstringValueBytes)
+        );
+        break;
+      }
+      case VariantType::Any: {
+        new(this->anyValueBytes) Any(
+          *reinterpret_cast<const Any *>(other.anyValueBytes)
+        );
+        break;
+      }
+      default: { throw std::runtime_error(InvalidVariantTypeExceptionMessage); }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Variant::Variant(Variant &&other) :
+    type(other.type) {
+
+    switch(other.type) {
+      case VariantType::Empty: { break; } // Nothing more to do
+      case VariantType::Boolean: { this->booleanValue = other.booleanValue; break; }
+      case VariantType::Uint8: { this->uint8Value = other.uint8Value; break; }
+      case VariantType::Int8: { this->int8Value = other.int8Value; break; }
+      case VariantType::Uint16: { this->uint16Value = other.uint16Value; break; }
+      case VariantType::Int16: { this->int16Value = other.int16Value; break; }
+      case VariantType::Uint32: { this->uint32Value = other.uint32Value; break; }
+      case VariantType::Int32: { this->int32Value = other.int32Value; break; }
+      case VariantType::Uint64: { this->uint64Value = other.uint64Value; break; }
+      case VariantType::Int64: { this->int64Value = other.int64Value; break; }
+      case VariantType::Float: { this->floatValue = other.floatValue; break; }
+      case VariantType::Double: { this->doubleValue = other.doubleValue; break; }
+      case VariantType::String: {
+        std::string &&otherString = std::move(
+          *reinterpret_cast<std::string *>(other.stringValueBytes)
+        );
+        new(this->stringValueBytes) std::string(std::move(otherString));
+        otherString.~basic_string(); // move doesn't guarantee that destructor can be omitted
+        break;
+      }
+      case VariantType::WString: {
+        std::wstring &&otherString = std::move(
+          *reinterpret_cast<std::wstring *>(other.wstringValueBytes)
+        );
+        new(this->wstringValueBytes) std::wstring(std::move(otherString));
+        otherString.~basic_string();
+        break;
+      }
+      case VariantType::Any: {
+        Any &&otherAny = std::move(*reinterpret_cast<Any *>(other.anyValueBytes));
+        new(this->anyValueBytes) Any(std::move(otherAny));
+        break;
+      }
+      default: { throw std::runtime_error(InvalidVariantTypeExceptionMessage); }
+    }
+
+    // We could just not call the destructor on the other variant's strings or anys,
+    // letting their clear() method do it on assignment or destruction, but then
+    // the other variant would still claim to hold a string or any when it is in
+    // fact holding a potentially destroyed string or any. So we destroy and clear.
+    other.type = VariantType::Empty;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   bool Variant::ToBoolean() const {
     switch(this->type) {
       case VariantType::Empty: { return false; }
@@ -645,6 +734,68 @@ namespace Nuclex { namespace Support {
     }
 
     this->type = other.type;
+
+    return *this;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Variant &Variant::operator =(Variant &&other) {
+    if(this == &other) {
+      return *this;
+    }
+
+    free();
+
+    // Change type to 'empty' temporarily in case the move throws an exception
+    this->type = VariantType::Empty;
+
+    switch(other.type) {
+      case VariantType::Empty: { return *this; } // Nothing more to do
+      case VariantType::Boolean: { this->booleanValue = other.booleanValue; break; }
+      case VariantType::Uint8: { this->uint8Value = other.uint8Value; break; }
+      case VariantType::Int8: { this->int8Value = other.int8Value; break; }
+      case VariantType::Uint16: { this->uint16Value = other.uint16Value; break; }
+      case VariantType::Int16: { this->int16Value = other.int16Value; break; }
+      case VariantType::Uint32: { this->uint32Value = other.uint32Value; break; }
+      case VariantType::Int32: { this->int32Value = other.int32Value; break; }
+      case VariantType::Uint64: { this->uint64Value = other.uint64Value; break; }
+      case VariantType::Int64: { this->int64Value = other.int64Value; break; }
+      case VariantType::Float: { this->floatValue = other.floatValue; break; }
+      case VariantType::Double: { this->doubleValue = other.doubleValue; break; }
+      case VariantType::String: {
+        std::string &&otherString = std::move(
+          *reinterpret_cast<std::string *>(other.stringValueBytes)
+        );
+        new(this->stringValueBytes) std::string(std::move(otherString));
+        otherString.~basic_string();
+        break;
+      }
+      case VariantType::WString: {
+        std::wstring &&otherString = std::move(
+          *reinterpret_cast<std::wstring *>(other.stringValueBytes)
+        );
+        new(this->stringValueBytes) std::wstring(std::move(otherString));
+        otherString.~basic_string();
+        break;
+      }
+      case VariantType::Any: {
+        Any &&otherAny = std::move(*reinterpret_cast<Any *>(other.anyValueBytes));
+        new(this->anyValueBytes) Any(std::move(otherAny));
+        otherAny.~Any();
+        break;
+      }
+      case VariantType::VoidPointer: { this->pointerValue = other.pointerValue; break; }
+      default: { throw std::runtime_error(InvalidVariantTypeExceptionMessage); }
+    }
+
+    this->type = other.type;
+
+    // We could just not call the destructor on the other variant's strings or anys,
+    // letting their clear() method do it on assignment or destruction, but then
+    // the other variant would still claim to hold a string or any when it is in
+    // fact holding a potentially destroyed string or any. So we destroy and clear.
+    other.type = VariantType::Empty;
 
     return *this;
   }

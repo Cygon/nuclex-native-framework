@@ -132,6 +132,10 @@ namespace Nuclex { namespace Support {
     /// <param name="other">Other variant that will be copied</param>
     public: NUCLEX_SUPPORT_API Variant(const Variant &other);
 
+    /// <summary>Initializes the variant by taking over the contents of another</summary>
+    /// <param name="other">Other variant that will be taken over</param>
+    public: NUCLEX_SUPPORT_API Variant(Variant &&other);
+
     /// <summary>Destroys the variant and frees any memory used</summary>
     public: NUCLEX_SUPPORT_API ~Variant() {
       free();
@@ -404,6 +408,11 @@ namespace Nuclex { namespace Support {
     /// <param name="other">Other variant whose value will be copied</param>
     /// <returns>The variant itself</returns>
     public: NUCLEX_SUPPORT_API Variant &operator =(const Variant &other);
+
+    /// <summary>Assigns a variant to hold the same value as another variant</summary>
+    /// <param name="other">Other variant whose value will be copied</param>
+    /// <returns>The variant itself</returns>
+    public: NUCLEX_SUPPORT_API Variant &operator =(Variant &&other);
 
     /// <summary>Frees all memory used by the variant</summary>
     private: void free() {

@@ -1,15 +1,29 @@
 Nuclex Native Framework
 =======================
 
-The Nuclex Native Framework is a set of C++ libraries carefully developed
-to provide sane, reliable and efficient building blocks to use in your own
-projects.
+The Nuclex Native Framework is a set of C++ libraries carefully designed
+to provide sane, reliable and efficient building blocks that you can drop
+into your own projects.
 
-I call it a framework because its individual parts can provide you a very
-neat and tidy environment around your code. Nevertheless, this is not
-the kind of framework you build your application into, it's a set of
-beautifully designed and robust components that you can use and will and
-that make no assumptions about your code.
+I call it a framework because its individual parts can form a neat and tidy
+layer between your code and an uncertain environment. Nevertheless, this is
+not the kind of framework you build your application into, it's a set of
+components that you can use individually and which make no assumptions
+about your architecture.
+
+
+What makes this one different from other libraries?
+
+  * It's clean, really clean. My components are designed to make the best
+    possible compromise between performance, memory use und simplicity.
+
+  * Full unit test coverage. Everything you can do has a test case verifying
+    correct behavior and components are modular pieces that can be used and
+    tested in isolation.
+
+  * Low-dependency philosophy. For changing logic, DRY is one of the highest
+    priorities. For unchanging logic in a library, going for least bloat
+    and minimal dependencies is most important.
 
 
 Components
@@ -23,13 +37,26 @@ Windows and Raspberry PIs. So I need a build system where I can simply
 say "this directory is a project set up with my standard layout. The library
 is called X. Go build it!"
 
+It's simple and deals with dependencies, both via source builds and from
+precompiled binaries.
+
 
 Nuclex.Support.Native
 ---------------------
 
-This library contains general-purpose code that I use in most of my projects
-to prevent the insanity of multiple platforms with different text encodings,
-threading facilities and compiler capabilities from leaking in
+This library contains general-purpose code that I use in most of my projects.
+
+  * Delegates (like std::function + std::bind, but equality-comparable)
+  * Events (super fast and lightweight signal/slot implementation)
+  * Lexical cast (robust number/string conversion without iostreams)
+  * UTF transcoding (turn Windowisms and silly TEXT() macros into UTF-8)
+  * Observable collections (be notified when items are added/removed)
+  * Lock-free thread-safe collections (fast & thread-safe without mutexes)
+
+
+Nuclex.Pixels.Native
+--------------------
+
 
 
 Others

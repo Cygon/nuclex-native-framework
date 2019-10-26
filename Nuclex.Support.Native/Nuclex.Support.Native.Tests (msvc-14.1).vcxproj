@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{156EFA80-1456-4C90-B5C8-2CA1D8A2A07F}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>NuclexSupportNative</RootNamespace>
+    <ProjectName>Nuclex.Support.Native.Tests (msvc-14.1)</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Platform)'=='Win32'">
+    <SanePlatform>x86</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <SanePlatform>amd64</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='ARM'">
+    <SanePlatform>armhf</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Support.Native.Tests</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Support.Native.Tests</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Support.Native.Tests</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Support.Native.Tests</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <StringPooling>true</StringPooling>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>gtest.lib;gtest_main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\gtest\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <StringPooling>true</StringPooling>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>gtest.lib;gtest_main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\gtest\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>gtest.lib;gtest_main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\gtest\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>gtest.lib;gtest_main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\gtest\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\IndexedCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableDynamicArray.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
+    <ClInclude Include="Include\Nuclex\Support\Events\EmptyDelegateCallError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Events\Event.h" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignature.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignatureDetector.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\Checks.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\LazyServiceInjector.h" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceContainer.h" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceFactory.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceProvider.h" />
+    <ClInclude Include="Include\Nuclex\Support\Services\UnresolvedDependencyError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\Lexical.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
+    <ClInclude Include="Include\Nuclex\Support\Any.h" />
+    <ClInclude Include="Include\Nuclex\Support\Config.h" />
+    <ClInclude Include="Include\Nuclex\Support\Variant.h" />
+    <ClInclude Include="Include\Nuclex\Support\VariantType.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Collections\Collection.cpp" />
+    <ClCompile Include="Source\Collections\DynamicArray.cpp" />
+    <ClCompile Include="Source\Collections\IndexedCollection.cpp" />
+    <ClCompile Include="Source\Collections\ObservableCollection.cpp" />
+    <ClCompile Include="Source\Collections\ObservableDynamicArray.cpp" />
+    <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp" />
+    <ClCompile Include="Source\Events\Delegate.cpp" />
+    <ClCompile Include="Source\Events\EmptyDelegateCallError.cpp" />
+    <ClCompile Include="Source\Events\Event.cpp" />
+    <ClCompile Include="Source\Services\LazyServiceInjector.cpp" />
+    <ClCompile Include="Source\Services\ServiceContainer.cpp" />
+    <ClCompile Include="Source\Services\ServiceProvider.cpp" />
+    <ClCompile Include="Source\Services\UnresolvedDependencyError.cpp" />
+    <ClCompile Include="Source\Text\Dragon4\Dragon4.cpp" />
+    <ClInclude Include="Source\Text\Dragon4\Dragon4.h" />
+    <ClInclude Include="Source\Text\Dragon4\Math.h" />
+    <ClCompile Include="Source\Text\Dragon4\PrintFloat.cpp" />
+    <ClInclude Include="Source\Text\Dragon4\PrintFloat.h" />
+    <ClInclude Include="Source\Text\Dragon4\Standard.h" />
+    <ClCompile Include="Source\Text\Dragon4\Math.cpp" />
+    <ClInclude Include="Source\Text\Erthink\erthink.h" />
+    <ClInclude Include="Source\Text\Erthink\erthink_arch.h" />
+    <ClInclude Include="Source\Text\Erthink\erthink_defs.h" />
+    <ClInclude Include="Source\Text\Erthink\erthink_misc.h" />
+    <ClInclude Include="Source\Text\Erthink\erthink_u2a.h" />
+    <ClInclude Include="Source\Text\Utf8\checked.h" />
+    <ClInclude Include="Source\Text\Utf8\core.h" />
+    <ClInclude Include="Source\Text\Utf8\unchecked.h" />
+    <ClCompile Include="Source\Text\Lexical.cpp" />
+    <ClCompile Include="Source\Text\StringConverter.cpp" />
+    <ClCompile Include="Source\Any.cpp" />
+    <ClCompile Include="Source\Config.cpp" />
+    <ClCompile Include="Source\Variant.cpp" />
+    <ClCompile Include="Source\VariantType.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Documents\Copyright.md" />
+    <None Include="Documents\David Gay - Correctly Rounded Binary-Decimal and Decimal-Binary Conversions.pdf" />
+    <Text Include="Documents\EventBenchmark.md" />
+    <None Include="Documents\Florian Loitsch - Printing Floating-Point Numbers Quickly and Accurately with Integers.pdf" />
+    <None Include="Documents\Marc Andrysco - Printing Floating-Point Numbers, An Always Correct Method.pdf" />
+    <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Tests\Collections\DynamicArrayTest.cpp" />
+    <ClCompile Include="Tests\Events\DelegateTests.cpp" />
+    <ClCompile Include="Tests\Events\EventTests.cpp" />
+    <ClCompile Include="Tests\Services\LazyServiceInjectorTest.cpp" />
+    <ClCompile Include="Tests\Services\ServiceContainerTest.cpp" />
+    <ClCompile Include="Tests\Text\LexicalTest.cpp" />
+    <ClCompile Include="Tests\Text\StringConverterTest.cpp" />
+    <ClCompile Include="Tests\AnyTests.cpp" />
+    <ClCompile Include="Tests\VariantTests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Nuclex.Support.Native.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

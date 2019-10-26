@@ -72,8 +72,10 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     #pragma endregion // class Enumerator
 
+    /// <summary>Initializes a new collection</summary>
+    protected: Collection() = default;
     /// <summary>Frees all memory used by the collection</summary>
-    public: virtual ~Collection() {}
+    public: virtual ~Collection() = default;
 
     /// <summary>Adds the specified item to the collection</summary>
     /// <param name="item">Item that will be added to the collection</param>
@@ -100,9 +102,8 @@ namespace Nuclex { namespace Support { namespace Collections {
     /// <returns>True if the collection is empty</returns>
     public: virtual bool IsEmpty() const = 0;
 
-    protected: Collection() {}
-    private: Collection(const Collection &) = delete;
-    private: Collection &operator =(const Collection &) = delete;
+    //private: Collection(const Collection &) = delete;
+    //private: Collection &operator =(const Collection &) = delete;
 
   };
 

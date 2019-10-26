@@ -21,20 +21,25 @@ environment = nuclex.create_cplusplus_environment()
 
 # Fetch the list of headers used when compiling
 gtest_headers_file = environment.File('gtest-headers')
+gtest_headers_contents_without_cr = gtest_headers_file.get_text_contents().replace('\r', '')
 gtest_header_files = list(
-    filter(len, gtest_headers_file.get_text_contents().split('\n'))
+    filter(len, gtest_headers_contents_without_cr.split('\n'))
 )
 
 # Fetch the list of sources to compile gtest
 gtest_sources_file = environment.File('gtest-sources')
+gtest_sources_contents_without_cr = gtest_sources_file.get_text_contents().replace('\r', '')
 gtest_source_files = list(
-    filter(len, gtest_sources_file.get_text_contents().split('\n'))
+    filter(len, gtest_sources_contents_without_cr.split('\n'))
 )
 
 # Fetch the list of sources to compile gtest_main
 gtestmain_sources_file = environment.File('gtestmain-sources')
+gtestmain_sources_contents_without_cr = (
+    gtestmain_sources_file.get_text_contents().replace('\r', '')
+)
 gtestmain_source_files = list(
-    filter(len, gtestmain_sources_file.get_text_contents().split('\n'))
+    filter(len, gtestmain_sources_contents_without_cr.split('\n'))
 )
 
 # ----------------------------------------------------------------------------------------------- #
@@ -42,7 +47,8 @@ gtestmain_source_files = list(
 
 # Fetch the available download URLs from a file
 download_url_file = environment.File('gtest-download-urls')
-download_urls = list(filter(len, download_url_file.get_text_contents().split('\n')))
+download_url_contents_without_cr = download_url_file.get_text_contents().replace('\r', '')
+download_urls = list(filter(len, download_url_contents_without_cr.split('\n')))
 
 # Determine the target filename for the download (below 'downloads' folder)
 archive_filename = os.path.basename(download_urls[0])
@@ -129,6 +135,8 @@ compile_gtestmain_library = gtestmain_environment.build_library(
 for header in gtest_header_files:
     if header.startswith('build/googletest/include/'):
         install_path = os.path.join('Include', header[25:])
-        environment.Install(install_path, header)
+        print('from |' + header[25:] + '|')
+        print('    to |' + install_path + '|')
+        environment.InstallAs(install_path, header)
 
 # ----------------------------------------------------------------------------------------------- #
