@@ -1,3 +1,0 @@
-[submodule "BuildSystem/scons/techtonik"]
-	path = BuildSystem/scons/techtonik
-	url = https://github.com/techtonik/python-patch.git
