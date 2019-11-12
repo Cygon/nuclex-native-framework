@@ -48,6 +48,7 @@ This library contains general-purpose code that I use in most of my projects.
 
   * Delegates (like std::function + std::bind, but equality-comparable)
   * Events (super fast and lightweight signal/slot implementation)
+  * Dependency injector with automatic constructor signature detection
   * Lexical cast (robust number/string conversion without iostreams)
   * UTF transcoding (turn Windowisms and silly TEXT() macros into UTF-8)
   * Observable collections (be notified when items are added/removed)
@@ -57,6 +58,16 @@ This library contains general-purpose code that I use in most of my projects.
 Nuclex.Pixels.Native
 --------------------
 
+This library provides a very light yet convenient Bitmap class that can
+support borrowed memory (i.e. constructed using a 3D API's buffer) and is
+a pleasure to use.
+
+  * Convenient and efficient Bitmap class
+  * Bitmaps use copy-on-write for the memory they carry
+  * Views into Bitmaps (Bitmaps that are an area inside another Bitmap)
+  * Fast, portable pixel format conversion
+  * Extensible Bitmap serializer with automatic file format detection
+  * Built-in serialization formats for PNG, JPG and EXR images
 
 
 Others
@@ -64,7 +75,5 @@ Others
 
 I'll provide controlled releases of my other libraries over time. Currently
 in my Subversion repository are `Nuclex.Game.Native`  (game-specific stuff
-such as reliable cross-platform precision timing), `Nuclex.Pixels.Native`
-(sane Bitmap class with copy-on-write and friendly use of borrowed memory,
-pixels format conversions, resizing and such), `Nuclex.Geometry.Native`
+such as reliable cross-platform precision timing), `Nuclex.Geometry.Native`
 (sweet 2D and 3D geometry classes without any rough edges) and a few others.
