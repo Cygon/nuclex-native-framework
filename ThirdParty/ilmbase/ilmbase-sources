@@ -1,0 +1,15 @@
+build/Half/half.cpp
+build/Imath/ImathColorAlgo.cpp
+build/Imath/ImathFun.cpp
+build/Imath/ImathMatrixAlgo.cpp
+build/Imath/ImathRandom.cpp
+build/Imath/ImathVec.cpp
+build/Iex/IexBaseExc.cpp
+build/Iex/IexThrowErrnoExc.cpp
+build/IexMath/IexMathFloatExc.cpp
+build/IexMath/IexMathFpu.cpp
+build/IlmThread/IlmThread.cpp
+build/IlmThread/IlmThreadMutex.cpp
+build/IlmThread/IlmThreadPool.cpp
+build/IlmThread/IlmThreadSemaphore.cpp
+build/IlmThread/IlmThreadSemaphorePosixCompat.cpp

@@ -1,0 +1,201 @@
+#!/usr/bin/env python
+
+import sys
+import importlib
+import os
+import shutil
+import platform
+
+# Nuclex SCons libraries
+sys.path.append('../../BuildSystem/scons')
+nuclex = importlib.import_module('nuclex')
+archive = importlib.import_module('archive')
+
+# ----------------------------------------------------------------------------------------------- #
+
+universal_ilmbase_target_name = 'ilmbase'
+
+environment = nuclex.create_cplusplus_environment()
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 0: preparatory work
+
+# Fetch the list of headers used when compiling
+ilmbase_headers_file = environment.File('ilmbase-headers')
+ilmbase_header_files = archive.split_lines(ilmbase_headers_file.get_text_contents())
+
+# Fetch the list of sources to compile ilmbase
+ilmbase_sources_file = environment.File('ilmbase-sources')
+ilmbase_source_files = archive.split_lines(ilmbase_sources_file.get_text_contents())
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 1: Download the current release
+
+# Fetch the available download URLs from a file
+download_url_file = environment.File('ilmbase-download-urls')
+download_urls = archive.split_lines(download_url_file.get_text_contents())
+
+# Determine the target filename for the download (below 'downloads' folder)
+archive_filename = os.path.basename(download_urls[0])
+archive_file = environment.File(os.path.join('downloads', archive_filename))
+
+# Tell SCons how to "produce" the downloaded archive (by calling wget)
+if not archive_file.exists():
+    download_archive = environment.Command(
+        source = download_url_file,
+        #action = 'wget ' + download_urls[0] + ' --output-document=$TARGET',
+        action = archive.download_url_in_urlfile,
+        target = archive_file
+    )
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 2: Extract the release into the build directory
+
+def extract_compressed_tarball(target, source, env):
+    """Extracts the distribution .tar.gz archive and applies a patch that ensures
+    the same headers will work on Windows and average Linux distributions.
+
+    @param  target  Output files, not used by the function but passed along so
+                    SCons can look at them and knows its dependency tree
+    @param  source  Source files, expected to be an array containing the .tar.gz
+                    path and the unified diff path
+    @param  env     SCons build environment"""
+
+    archive.extract_compressed_tarball(str(source[0]), 'build', 1)
+
+    # SCons is too stupid to be told to copy the frigging file AFTER
+    # extraction, so we'll work around the sucker:
+    shutil.copyfile(
+        'IlmBaseConfig.h',
+        'build/config/IlmBaseConfig.h'
+    )
+
+ilmbase_header_files.append('build/config/IlmBaseConfig.h')
+
+if platform.system() == 'Windows':
+    ilmbase_source_files.append('build/IlmThread/IlmThreadMutexWin32.cpp')
+    ilmbase_source_files.append('build/IlmThread/IlmThreadSemaphoreWin32.cpp')
+    ilmbase_source_files.append('build/IlmThread/IlmThreadWin32.cpp')
+else:
+    ilmbase_source_files.append('build/IlmThread/IlmThreadMutexPosix.cpp')
+    ilmbase_source_files.append('build/IlmThread/IlmThreadSemaphorePosix.cpp')
+    ilmbase_source_files.append('build/IlmThread/IlmThreadPosix.cpp')
+
+# Tell SCons how to "produce" the sources & headers (by calling tar)
+extract_archive = environment.Command(
+    source = archive_file,
+    #action = 'tar --extract --gzip --strip-components=1 --file=$SOURCE --directory=build',
+    action = extract_compressed_tarball,
+    target = (
+        ilmbase_source_files + ilmbase_header_files +
+        [ 'build/Half/eLut.cpp', 'build/Half/toFloat.cpp' ]
+    )
+)
+
+# Note: eLut.cpp and toFloat.cpp are part of the archive, but shouldn't be
+# compiled to ilmbase.lib / libilmbase.a. That's why they're not in
+# ilmbase_source_files.
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 3: Compile and run the eLut look-up-table generator
+
+elut_environment = environment.Clone()
+del elut_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+del elut_environment['HEADER_DIRECTORY'] # The generator has no internal header dependencies
+
+# Add eLut.cpp as the single source file we're going to compile
+elut_environment.add_source_directory(
+    'build/Half',
+    [ 'build/Half/eLut.cpp' ],
+    scons_issue_2908_workaround_needed = True
+)
+
+# Build the eLut executable
+compile_elut = elut_environment.build_executable(
+    'eLut', console = True
+)
+
+# Run the code generator to generate the eLut.h header
+elut_header = elut_environment.Command(
+    source = compile_elut,
+    action = '$SOURCE > $TARGET',
+    target = 'build/Half/eLut.h'
+)
+
+# Add the generated header to ilmbase_header_files so it gets copied into
+# the 'Include' directory with the other headers
+ilmbase_header_files.append('obj/linux-gcc9.2-amd64-release/build/Half/eLut.h')
+
+# ERROR: These make SCons invent a circular dependency from eLut.cpp to eLut.h ?!
+#elut_environment.Depends('build/Half/half.cpp', 'build/Half/eLut.h')
+#elut_environment.Depends('build/Half/half.cpp', elut_header)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 4: Compile and run the toFloat look-up-table generator
+
+tofloat_environment = environment.Clone()
+del tofloat_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+del tofloat_environment['HEADER_DIRECTORY'] # The generator has no internal header dependencies
+
+# Add toFloat.cpp as the single source file we're going to compile
+tofloat_environment.add_source_directory(
+    'build/Half',
+    [ 'build/Half/toFloat.cpp' ],
+    scons_issue_2908_workaround_needed = True
+)
+
+# Build the toFloat executable
+compile_tofloat = tofloat_environment.build_executable(
+    'toFloat', console = True
+)
+
+# Run the code generator to generate the toFloat.h header
+tofloat_header = tofloat_environment.Command(
+    source = compile_tofloat,
+    action = '$SOURCE > $TARGET',
+    target = 'build/Half/toFloat.h'
+)
+
+# Add the generated header to ilmbase_header_files so it gets copied into
+# the 'Include' directory with the other headers
+ilmbase_header_files.append('build/Half/toFloat.h')
+
+# ERROR: These make SCons invent a circular dependency from toFloat.cpp to toFloat.h ?!
+#tofloat_environment.Depends('build/Half/half.cpp', 'build/Half/toFloat.h')
+#tofloat_environment.Depends('build/Half/half.cpp', tofloat_header)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 5: Compile the ilmbase library
+
+ilmbase_environment = environment.Clone()
+
+del ilmbase_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+ilmbase_environment['HEADER_DIRECTORY'] = 'build/config' # Main include directory
+
+# Set up additional include directories for the 3 ilmbase modules
+ilmbase_environment.add_include_directory('build/Iex')
+ilmbase_environment.add_include_directory('build/IexMath')
+ilmbase_environment.add_include_directory('build/Half')
+
+# Add all sources from the sources list to this build
+ilmbase_environment.add_source_directory(
+    'build',
+    ilmbase_source_files,
+    scons_issue_2908_workaround_needed = True
+)
+
+# And finally, compile the ilmbase.lib / libilmbase.a library
+compile_ilmbase_library = ilmbase_environment.build_library(
+    universal_ilmbase_target_name,
+    static = True
+)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 6: Create an 'Include' directory containing only the headers
+
+for header in ilmbase_header_files:
+    if header.startswith('build/'):
+        install_path = os.path.join('Include', header[6:])
+        environment.InstallAs(install_path, header)
+
+# ----------------------------------------------------------------------------------------------- #
