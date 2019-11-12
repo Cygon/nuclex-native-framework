@@ -124,7 +124,7 @@ elut_header = elut_environment.Command(
 
 # Add the generated header to ilmbase_header_files so it gets copied into
 # the 'Include' directory with the other headers
-ilmbase_header_files.append('obj/linux-gcc9.2-amd64-release/build/Half/eLut.h')
+ilmbase_header_files.append('build/Half/eLut.h')
 
 # ERROR: These make SCons invent a circular dependency from eLut.cpp to eLut.h ?!
 #elut_environment.Depends('build/Half/half.cpp', 'build/Half/eLut.h')
