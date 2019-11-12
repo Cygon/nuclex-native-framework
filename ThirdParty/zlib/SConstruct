@@ -45,7 +45,8 @@ archive_file = environment.File(os.path.join('downloads', archive_filename))
 if not archive_file.exists():
     download_archive = environment.Command(
         source = download_url_file,
-        action = 'wget ' + download_urls[0] + ' --output-document=$TARGET',
+        #action = 'wget ' + download_urls[0] + ' --output-document=$TARGET',
+        action = archive.download_url_in_urlfile,
         target = archive_file
     )
 

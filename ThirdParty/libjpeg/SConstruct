@@ -42,7 +42,8 @@ archive_file = environment.File(os.path.join('downloads', archive_filename))
 if not archive_file.exists():
     download_archive = environment.Command(
         source = download_url_file,
-        action = 'wget ' + download_urls[0] + ' --output-document=$TARGET',
+        #action = 'wget ' + download_urls[0] + ' --output-document=$TARGET',
+        action = archive.download_url_in_urlfile,
         target = archive_file
     )
 
@@ -93,13 +94,13 @@ libjpeg_environment.add_source_directory(
     scons_issue_2908_workaround_needed = True
 )
 
-compile_libjpeg_library = libjpeg_environment.build_library(
+compile_gtest_library = libjpeg_environment.build_library(
     universal_libjpeg_target_name,
     static = True
 )
 
 # ----------------------------------------------------------------------------------------------- #
-# Step 4: Put the header in the main package directory
+# Step 5: Put the header in the main package directory
 
 for header in libjpeg_header_files:
     if header.startswith('build/'):

@@ -15,7 +15,6 @@ build/jfdctflt.c
 build/jdcoefct.c
 build/jchuff.c
 build/jidctflt.c
-build/cdjpeg.c
 build/wrppm.c
 build/jdarith.c
 build/rdbmp.c
