@@ -70,9 +70,7 @@ def enumerate_sources(source_directory, variant_directory = None):
         '.C',
         '.cpp',
         '.cc',
-        '.cxx',
-        '.inl',
-        '.inc'
+        '.cxx'
     ]
 
     sources = []

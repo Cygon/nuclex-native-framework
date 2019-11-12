@@ -60,8 +60,12 @@ def create_cplusplus_environment():
         HEADER_DIRECTORY = 'Include',
         TESTS_DIRECTORY = 'Tests',
         TESTS_RESULT_FILE = "gtest-results.xml",
-        REFERENCES_DIRECTORY = 'ThirdParty'
+        REFERENCES_DIRECTORY = 'References'
     )
+
+    # Pass the 'TERM' variable through to allow colored output on Linux terminals
+    if platform.system() == 'Linux':
+        environment['ENV']['TERM'] = os.environ['TERM']
 
     # Extension methods from the C/C++ module
     cplusplus.setup(environment)
@@ -494,12 +498,9 @@ def _add_cplusplus_package(environment, universal_package_name, universal_librar
     # Path for the package's libraries
     library_directory = cplusplus.find_or_guess_library_directory(environment, package_directory)
     if library_directory is None:
-        print('Retrying library with project layout instead of package layout...')
-        library_directory = cplusplus.find_or_guess_library_directory(environment, os.path.join(package_directory, 'bin'))
-        if library_directory is None:
-            raise FileNotFoundError(
-                'Could not find library directory for package in ' + package_directory
-            )
+        raise FileNotFoundError(
+            'Could not find library directory for package in ' + package_directory
+        )
 
     environment.add_library_directory(library_directory)
 
@@ -769,7 +770,7 @@ def _build_cplusplus_unit_tests(
     @param  universal_executable_name  Name of the library in universal format
                                        (i.e. 'My.Awesome.Stuff')"""
 
-    environment.add_package('gtest', [ 'gtest', 'gtest_main' ])
+    environment.add_project('../ThirdParty/gtest', [ 'gtest', 'gtest_main' ])
     if not (platform.system() == 'Windows'):
         environment.add_library('pthread')
 

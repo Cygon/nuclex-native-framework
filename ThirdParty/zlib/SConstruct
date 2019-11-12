@@ -11,8 +11,7 @@ archive = importlib.import_module('archive')
 
 # ----------------------------------------------------------------------------------------------- #
 
-universal_gtest_target_name = 'gtest'
-universal_gtestmain_target_name = 'gtest_main'
+universal_zlib_target_name = 'zlib'
 
 environment = nuclex.create_cplusplus_environment()
 
@@ -20,37 +19,33 @@ environment = nuclex.create_cplusplus_environment()
 # Step 0: preparatory work
 
 # Fetch the list of headers used when compiling
-gtest_headers_file = environment.File('gtest-headers')
-gtest_header_files = archive.split_lines(gtest_headers_file.get_text_contents())
+zlib_headers_file = environment.File('zlib-headers')
+zlib_header_files = list(
+    filter(len, zlib_headers_file.get_text_contents().split('\n'))
+)
 
 # Fetch the list of sources to compile gtest
-gtest_sources_file = environment.File('gtest-sources')
-gtest_source_files = archive.split_lines(gtest_sources_file.get_text_contents())
-
-# Fetch the list of sources to compile gtest_main
-gtestmain_sources_file = environment.File('gtestmain-sources')
-gtestmain_source_files = archive.split_lines(gtestmain_sources_file.get_text_contents())
+zlib_sources_file = environment.File('zlib-sources')
+zlib_source_files = list(
+    filter(len, zlib_sources_file.get_text_contents().split('\n'))
+)
 
 # ----------------------------------------------------------------------------------------------- #
 # Step 1: Download the current release
 
 # Fetch the available download URLs from a file
-download_url_file = environment.File('gtest-download-urls')
-download_urls = archive.split_lines(download_url_file.get_text_contents())
+download_url_file = environment.File('zlib-download-urls')
+download_urls = list(filter(len, download_url_file.get_text_contents().split('\n')))
 
 # Determine the target filename for the download (below 'downloads' folder)
 archive_filename = os.path.basename(download_urls[0])
 archive_file = environment.File(os.path.join('downloads', archive_filename))
 
 # Tell SCons how to "produce" the downloaded archive (by calling wget)
-#
-# If it already exists, we're satisfied with it (under the assumption, that nobody
-# would create a different release of the sources under the same file name)
 if not archive_file.exists():
     download_archive = environment.Command(
         source = download_url_file,
-        #action = 'wget ' + download_urls[0] + ' --output-document=$TARGET',
-        action = archive.download_url_in_urlfile,
+        action = 'wget ' + download_urls[0] + ' --output-document=$TARGET',
         target = archive_file
     )
 
@@ -74,55 +69,35 @@ extract_archive = environment.Command(
     source = archive_file,
     #action = 'tar --extract --gzip --strip-components=1 --file=$SOURCE --directory=build',
     action = extract_compressed_tarball,
-    target = gtest_source_files + gtest_header_files + gtestmain_source_files
+    target = zlib_source_files + zlib_header_files
 )
 
 # ----------------------------------------------------------------------------------------------- #
-# Step 3: Compile the gtest library
+# Step 3: Compile the zlib library
 
-gtest_environment = environment.Clone()
+zlib_environment = environment.Clone()
 
-del gtest_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
-gtest_environment['HEADER_DIRECTORY'] = 'build/googletest/include'
+del zlib_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+zlib_environment['HEADER_DIRECTORY'] = 'build'
 
-gtest_environment.add_include_directory('build/googletest')
-gtest_environment.add_source_directory(
-    'build/googletest/src',
-    gtest_source_files,
+#zlib_environment.add_include_directory('build')
+zlib_environment.add_source_directory(
+    'build',
+    zlib_source_files,
     scons_issue_2908_workaround_needed = True
 )
 
-compile_gtest_library = gtest_environment.build_library(
-    universal_gtest_target_name,
+compile_zlib_library = zlib_environment.build_library(
+    universal_zlib_target_name,
     static = True
 )
 
 # ----------------------------------------------------------------------------------------------- #
-# Step 4: Compile the gtest_main library
+# Step 4: Put the header in the main package directory
 
-gtestmain_environment = environment.Clone()
-
-del gtestmain_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
-gtestmain_environment['HEADER_DIRECTORY'] = 'build/googletest/include'
-
-gtestmain_environment.add_include_directory('build/googletest')
-gtestmain_environment.add_source_directory(
-    'build/googletest/src',
-    gtestmain_source_files,
-    scons_issue_2908_workaround_needed = True
-)
-
-compile_gtestmain_library = gtestmain_environment.build_library(
-    universal_gtestmain_target_name,
-    static = True
-)
-
-# ----------------------------------------------------------------------------------------------- #
-# Step 5: Put the header in the main package directory
-
-for header in gtest_header_files:
-    if header.startswith('build/googletest/include/'):
-        install_path = os.path.join('Include', header[25:])
+for header in zlib_header_files:
+    if header.startswith('build/'):
+        install_path = os.path.join('Include', header[6:])
         environment.InstallAs(install_path, header)
 
 # ----------------------------------------------------------------------------------------------- #

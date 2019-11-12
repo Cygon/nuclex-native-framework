@@ -3,6 +3,7 @@
 import sys
 import importlib
 import os
+import shutil
 
 # Nuclex SCons libraries
 sys.path.append('../../BuildSystem/scons')
@@ -11,8 +12,7 @@ archive = importlib.import_module('archive')
 
 # ----------------------------------------------------------------------------------------------- #
 
-universal_gtest_target_name = 'gtest'
-universal_gtestmain_target_name = 'gtest_main'
+universal_libpng_target_name = 'png'
 
 environment = nuclex.create_cplusplus_environment()
 
@@ -20,22 +20,18 @@ environment = nuclex.create_cplusplus_environment()
 # Step 0: preparatory work
 
 # Fetch the list of headers used when compiling
-gtest_headers_file = environment.File('gtest-headers')
-gtest_header_files = archive.split_lines(gtest_headers_file.get_text_contents())
+libpng_headers_file = environment.File('libpng-headers')
+libpng_header_files = archive.split_lines(libpng_headers_file.get_text_contents())
 
-# Fetch the list of sources to compile gtest
-gtest_sources_file = environment.File('gtest-sources')
-gtest_source_files = archive.split_lines(gtest_sources_file.get_text_contents())
-
-# Fetch the list of sources to compile gtest_main
-gtestmain_sources_file = environment.File('gtestmain-sources')
-gtestmain_source_files = archive.split_lines(gtestmain_sources_file.get_text_contents())
+# Fetch the list of sources to compile libpng
+libpng_sources_file = environment.File('libpng-sources')
+libpng_source_files = archive.split_lines(libpng_sources_file.get_text_contents())
 
 # ----------------------------------------------------------------------------------------------- #
 # Step 1: Download the current release
 
 # Fetch the available download URLs from a file
-download_url_file = environment.File('gtest-download-urls')
+download_url_file = environment.File('libpng-download-urls')
 download_urls = archive.split_lines(download_url_file.get_text_contents())
 
 # Determine the target filename for the download (below 'downloads' folder)
@@ -69,60 +65,56 @@ def extract_compressed_tarball(target, source, env):
 
     archive.extract_compressed_tarball(str(source[0]), 'build', 1)
 
+    # SCons is too stupid to be told to copy the frigging file AFTER
+    # extraction, so we'll work around the sucker:
+    shutil.copyfile(
+        'config.h',
+        'build/config.h'
+    )
+    shutil.copyfile(
+        'pnglibconf.h',
+        'build/pnglibconf.h'
+    )
+
+libpng_header_files.append('build/config.h')
+libpng_header_files.append('build/pnglibconf.h')
+
 # Tell SCons how to "produce" the sources & headers (by calling tar)
 extract_archive = environment.Command(
     source = archive_file,
     #action = 'tar --extract --gzip --strip-components=1 --file=$SOURCE --directory=build',
     action = extract_compressed_tarball,
-    target = gtest_source_files + gtest_header_files + gtestmain_source_files
+    target = libpng_source_files + libpng_header_files
 )
 
 # ----------------------------------------------------------------------------------------------- #
-# Step 3: Compile the gtest library
+# Step 3: Compile the libpng library
 
-gtest_environment = environment.Clone()
+libpng_environment = environment.Clone()
 
-del gtest_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
-gtest_environment['HEADER_DIRECTORY'] = 'build/googletest/include'
+del libpng_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+libpng_environment['HEADER_DIRECTORY'] = 'build/src'
 
-gtest_environment.add_include_directory('build/googletest')
-gtest_environment.add_source_directory(
-    'build/googletest/src',
-    gtest_source_files,
+#libpng_environment.add_include_directory('build/src/libpng')
+libpng_environment.add_source_directory(
+    'build',
+    libpng_source_files,
     scons_issue_2908_workaround_needed = True
 )
 
-compile_gtest_library = gtest_environment.build_library(
-    universal_gtest_target_name,
+libpng_environment.add_project('../zlib')
+
+compile_libpng_library = libpng_environment.build_library(
+    universal_libpng_target_name,
     static = True
 )
 
 # ----------------------------------------------------------------------------------------------- #
-# Step 4: Compile the gtest_main library
+# Step 4: Put the headers in the main package directory
 
-gtestmain_environment = environment.Clone()
-
-del gtestmain_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
-gtestmain_environment['HEADER_DIRECTORY'] = 'build/googletest/include'
-
-gtestmain_environment.add_include_directory('build/googletest')
-gtestmain_environment.add_source_directory(
-    'build/googletest/src',
-    gtestmain_source_files,
-    scons_issue_2908_workaround_needed = True
-)
-
-compile_gtestmain_library = gtestmain_environment.build_library(
-    universal_gtestmain_target_name,
-    static = True
-)
-
-# ----------------------------------------------------------------------------------------------- #
-# Step 5: Put the header in the main package directory
-
-for header in gtest_header_files:
-    if header.startswith('build/googletest/include/'):
-        install_path = os.path.join('Include', header[25:])
+for header in libpng_header_files:
+    if header.startswith('build/'):
+        install_path = os.path.join('Include', header[6:])
         environment.InstallAs(install_path, header)
 
 # ----------------------------------------------------------------------------------------------- #

@@ -1,0 +1,11 @@
+build/transupp.h
+build/jmorecfg.h
+build/cderror.h
+build/jpegint.h
+build/jinclude.h
+build/jdct.h
+build/jmemsys.h
+build/jpeglib.h
+build/jerror.h
+build/cdjpeg.h
+build/jversion.h
