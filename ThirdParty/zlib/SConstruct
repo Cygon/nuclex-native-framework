@@ -20,22 +20,18 @@ environment = nuclex.create_cplusplus_environment()
 
 # Fetch the list of headers used when compiling
 zlib_headers_file = environment.File('zlib-headers')
-zlib_header_files = list(
-    filter(len, zlib_headers_file.get_text_contents().split('\n'))
-)
+zlib_header_files = archive.split_lines(zlib_headers_file.get_text_contents())
 
-# Fetch the list of sources to compile gtest
+# Fetch the list of sources to compile ZLib
 zlib_sources_file = environment.File('zlib-sources')
-zlib_source_files = list(
-    filter(len, zlib_sources_file.get_text_contents().split('\n'))
-)
+zlib_source_files = archive.split_lines(zlib_sources_file.get_text_contents())
 
 # ----------------------------------------------------------------------------------------------- #
 # Step 1: Download the current release
 
 # Fetch the available download URLs from a file
 download_url_file = environment.File('zlib-download-urls')
-download_urls = list(filter(len, download_url_file.get_text_contents().split('\n')))
+download_urls = archive.split_lines(download_url_file.get_text_contents())
 
 # Determine the target filename for the download (below 'downloads' folder)
 archive_filename = os.path.basename(download_urls[0])

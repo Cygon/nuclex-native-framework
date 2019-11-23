@@ -1,4 +1,11 @@
 /* config/IlmBaseConfig.h.  Generated from IlmBaseConfig.h.in by configure.  */
+
+#if defined(_MSC_VER)
+#define PLATFORM_WINDOWS 1
+#else
+#undef PLATFORM_WINDOWS
+#endif
+
 //
 // Define and set to 1 if the target system has c++11/14 support
 // and you want IlmBase to NOT use it's features
@@ -12,7 +19,7 @@
 //
 
 #if defined(_MSC_VER)
-#undef HAVE_PTHREAD 1
+#undef HAVE_PTHREAD
 #else
 #define HAVE_PTHREAD 1
 #endif
@@ -29,7 +36,12 @@
 #define HAVE_POSIX_SEMAPHORES 1
 #endif
 
+
+#if defined(_MSC_VER)
+#undef HAVE_UCONTEXT_H
+#else
 #define HAVE_UCONTEXT_H 1
+#endif
 
 
 //

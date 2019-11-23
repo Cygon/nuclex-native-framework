@@ -1,8 +1,0 @@
-Do not use this build.
-
-It fails to compile when called with
-
-    scons -j8
-
-unless the 'build' directory already exists (i.e. from a previous call to scons).
-
