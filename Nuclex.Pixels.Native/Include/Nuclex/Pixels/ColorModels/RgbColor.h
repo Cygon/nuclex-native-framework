@@ -18,12 +18,12 @@ License along with this library
 */
 #pragma endregion // CPL License
 
-#ifndef NUCLEX_PIXELS_RGBCOLOR_H
-#define NUCLEX_PIXELS_RGBCOLOR_H
+#ifndef NUCLEX_PIXELS_COLORMODELS_RGBCOLOR_H
+#define NUCLEX_PIXELS_COLORMODELS_RGBCOLOR_H
 
 #include "Nuclex/Pixels/Config.h"
 
-namespace Nuclex { namespace Pixels {
+namespace Nuclex { namespace Pixels { namespace ColorModels {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -47,6 +47,6 @@ namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
 
-}} // namespace Nuclex::Pixels
+}}} // namespace Nuclex::Pixels::ColorModels
 
-#endif // NUCLEX_PIXELS_RGBCOLOR_H
+#endif // NUCLEX_PIXELS_COLORMODELS_RGBCOLOR_H

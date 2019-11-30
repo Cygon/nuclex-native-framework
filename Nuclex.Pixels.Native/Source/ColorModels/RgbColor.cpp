@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_PIXELS_SOURCE 1
 
-#include "Nuclex/Pixels/RgbColor.h"
+#include "Nuclex/Pixels/ColorModels/RgbColor.h"
 
 // --------------------------------------------------------------------------------------------- //
 
