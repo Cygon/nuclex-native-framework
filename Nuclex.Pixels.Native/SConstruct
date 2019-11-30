@@ -2,6 +2,8 @@
 
 import sys
 import importlib
+import os
+import platform
 
 # Nuclex SCons libraries
 sys.path.append('../BuildSystem/scons')
@@ -9,19 +11,94 @@ nuclex = importlib.import_module('nuclex')
 
 # ----------------------------------------------------------------------------------------------- #
 
+def add_third_party_libraries(environment):
+    """Adds the third-party libraries this project uses to the build environment
+
+    @param  environment  Build environment the libraries will be added to"""
+
+    # Whether Nuclex.Pixels should be able to load and save .png images
+    # Adds about 120 KiB to the .dll on Windows
+    # Adds about 160 KiB to the .so on Linux
+    want_libpng = True
+
+    # Whether Nuclex.Pixels should be able to load and save .jpg images
+    # Adds about 147 KiB to the .dll on Windows
+    # Adds about 163 KiB to the .so on Linux
+    want_libjpeg = True
+
+    # Whether Nuclex.Pixels should be able to load and save .exr images
+    # Adds about 2507 KiB to the .dll on Windows
+    # Adds about 2754 KiB to the .so on Linux
+    want_openexr = True
+
+    if want_openexr:
+        environment.add_project('../ThirdParty/openexr', [ 'openexr' ])
+        environment.add_project('../ThirdParty/ilmbase', [ 'ilmbase' ])
+        environment.add_preprocessor_constant('NUCLEX_PIXELS_HAVE_OPENEXR')
+
+        # OpenEXR uses threads, so on Linux that means we need pthreads
+        if platform.system() != 'Windows':
+            environment.add_library('pthread')
+
+        # This is one of the worst designed libraries I know of. It contains several
+        # modules and expects them all to be in the root include path. It is hard to
+        # believe that the developers at IL&M are such novices here.
+        environment.add_include_directory('../ThirdParty/ilmbase/Include/config')
+        environment.add_include_directory('../ThirdParty/ilmbase/Include/Imath')
+        environment.add_include_directory('../ThirdParty/ilmbase/Include/Iex')
+        environment.add_include_directory('../ThirdParty/ilmbase/Include/Half')
+        environment.add_include_directory('../ThirdParty/openexr/Include/config')
+
+    if want_libjpeg:
+        environment.add_project('../ThirdParty/libjpeg', [ 'jpeg' ])
+        environment.add_preprocessor_constant('NUCLEX_PIXELS_HAVE_LIBJPEG')
+
+    if want_libpng:
+        environment.add_project('../ThirdParty/libpng', [ 'png' ])
+        environment.add_preprocessor_constant('NUCLEX_PIXELS_HAVE_LIBPNG')
+
+    if want_openexr or want_libpng:
+        environment.add_project('../ThirdParty/zlib', [ 'zlib' ])
+
+# ----------------------------------------------------------------------------------------------- #
+
 # Standard C/C++ build environment with Nuclex extension methods
 common_environment = nuclex.create_cplusplus_environment()
+#common_environment['ENV'] = os.environ
+#common_environment['CXX'] = 'clang++'
 
 # Compile the main library
 library_environment = common_environment.Clone()
-library_artifacts = library_environment.build_library('Nuclex.Pixels.Native')
+add_third_party_libraries(library_environment)
+library_binaries = library_environment.build_library('Nuclex.Pixels.Native')
 
 # Compile the unit test executable
-# Disabled because it requires gtest
 unit_test_environment = common_environment.Clone()
+add_third_party_libraries(unit_test_environment)
 unit_test_environment.add_preprocessor_constant('NUCLEX_PIXELS_EXECUTABLE')
-unit_test_artifacts = unit_test_environment.build_unit_tests(
+unit_test_binaries = unit_test_environment.build_unit_tests(
     'Nuclex.Pixels.Native.Tests'
 )
 
 # ----------------------------------------------------------------------------------------------- #
+
+artifact_directory = os.path.join(
+        unit_test_environment['ARTIFACT_DIRECTORY'],
+        unit_test_environment.get_build_directory_name()
+)
+unit_test_results = unit_test_environment.Command(
+    source = unit_test_binaries,
+    action = '-$SOURCE --gtest_color=yes --gtest_output=xml:$TARGET',
+    target = os.path.join(artifact_directory, 'gtest-results.xml')
+)
+
+# ----------------------------------------------------------------------------------------------- #
+
+AlwaysBuild(unit_test_results)
+
+#if platform.system() != 'Windows':
+#    list_exported_symbols = common_environment.Command(
+#        source = library_artifacts,
+#        action = 'nm --demangle --extern-only $SOURCE',
+#        target = None
+#    )

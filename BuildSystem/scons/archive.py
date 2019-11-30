@@ -21,6 +21,25 @@ wget = importlib.import_module('wget')
 
 # ----------------------------------------------------------------------------------------------- #
 
+def split_lines(text_file_contents):
+    """Splits the contents of a text file into individual lines. This will work
+    on both Windows CR-LF line endings and rest-of-the-world LF line endings.
+    It is necessary because Python assumes the format of the platform it's running
+    on, which, however, will not work if you share working copies between Windows
+    and Linux.
+
+    @param  text_file_contents  Text file contents that will be split
+    @returns An array with the indiviual lines from the text file"""
+
+    return list(
+        filter(
+            len,
+            text_file_contents.replace('\r', '').split('\n')
+        )
+    )
+
+# ----------------------------------------------------------------------------------------------- #
+
 def _move_files_in_subdirectory_level(scan_directory, target_directory, depth):
     """Moves all files below a certain subdirectory level of the scan directory into
     the specified target directory. Used to emulate tar's 'strip-components' behavior.
@@ -63,11 +82,14 @@ def download_url_in_urlfile(target, source, env):
     @param  source  Expected to contain only one file, the url list file
     @param  env     SCons build environment"""
 
-    urls = list(filter(len, source[0].get_text_contents().split('\n')))
+    urls = split_lines(source[0].get_text_contents())
     for url in urls:
-        wget.download(url, out = str(target[0]), bar = None)
-        if os.path.isfile(str(target[0])):
-            return
+        try:
+            wget.download(url, out = str(target[0]), bar = None)
+            if os.path.isfile(str(target[0])):
+                return
+        except:
+            print('Download from ' + url + ' failed!')
 
         # If this is a page (most lkely, an error page), it's not what we're looking for
         #request = requests.head(url, allow_redirects = True)
@@ -133,20 +155,3 @@ def apply_patch(patchfile_path, target_directory = None):
         patchset.apply(root = target_directory)
 
 # ----------------------------------------------------------------------------------------------- #
-
-def split_lines(text_file_contents):
-    """Splits the contents of a text file into individual lines. This will work
-    on both Windows CR-LF line endings and rest-of-the-world LF line endings.
-    It is necessary because Python assumes the format of the platform it's running
-    on, which, however, will not work if you share working copies between Windows
-    and Linux.
-
-    @param  text_file_contents  Text file contents that will be split
-    @returns An array with the indiviual lines from the text file"""
-
-    return list(
-        filter(
-            len,
-            text_file_contents.replace('\r', '').split('\n')
-        )
-    )
