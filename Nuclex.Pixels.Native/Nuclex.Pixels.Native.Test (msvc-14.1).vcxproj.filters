@@ -21,6 +21,42 @@
       <UniqueIdentifier>{a48e7b1d-7c11-4443-877c-3aabe0e1d9db}</UniqueIdentifier>
       <Extensions>md;txt;pdf</Extensions>
     </Filter>
+    <Filter Include="Source\Storage">
+      <UniqueIdentifier>{1ed5650d-68d6-4aa8-b278-77317bdd2519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Utf8">
+      <UniqueIdentifier>{191a8a0e-154b-4d21-8b94-ac14f9ffd3ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Storage">
+      <UniqueIdentifier>{8fed40eb-51ff-4f59-a79c-dbef9599dd24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Storage">
+      <UniqueIdentifier>{ec5e4634-bf72-45be-a634-5c180a0a2f2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Utf8Fold">
+      <UniqueIdentifier>{eb90235e-3031-4357-85b9-f96eaf7ae00f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Jpeg">
+      <UniqueIdentifier>{08e65e04-60ac-4a17-952e-928f5ee0a0a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Png">
+      <UniqueIdentifier>{11d3554c-0287-4cdb-a867-b09abfdb2b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Exr">
+      <UniqueIdentifier>{64126c92-d551-470d-80ab-10afaadbd6a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ColorModels">
+      <UniqueIdentifier>{f9f4af52-e221-4f4b-9051-d6da93253934}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\ColorModels">
+      <UniqueIdentifier>{21892bc7-e0c4-4971-b782-cbc39e68db49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Errors">
+      <UniqueIdentifier>{2a1738bc-65ca-4bba-b584-c3ee14bb5fc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Errors">
+      <UniqueIdentifier>{4c5b0fb8-3a16-46a9-81c1-2960cfb0c520}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Bitmap.cpp">
@@ -56,9 +92,6 @@
     <ClCompile Include="Source\PixelFormat.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RgbColor.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Size.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -76,6 +109,63 @@
     </ClCompile>
     <ClCompile Include="Tests\UInt128Test.cpp">
       <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\BitmapCodec.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\BitmapSerializer.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\RealFile.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\VirtualFile.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\VirtualFileTest.cpp">
+      <Filter>Tests\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\TemporaryDirectoryScope.cpp">
+      <Filter>Tests\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\BitmapSerializerTest.cpp">
+      <Filter>Tests\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BitmapInfo.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\OptionalBitmap.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Jpeg\JpegBitmapCodec.cpp">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Jpeg\LibJpegHelpers.cpp">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Png\PngBitmapCodec.cpp">
+      <Filter>Source\Storage\Png</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Png\LibPngHelpers.cpp">
+      <Filter>Source\Storage\Png</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Exr\ExrBitmapCodec.cpp">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Exr\OpenExrHelpers.cpp">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\OptionalBitmapTest.cpp">
+      <Filter>Tests\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\FileAccessError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\FileFormatError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ColorModels\RgbColor.cpp">
+      <Filter>Source\ColorModels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,26 +193,89 @@
     <ClInclude Include="Include\Nuclex\Pixels\Size.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\RgbColor.h">
-      <Filter>Include</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Pixels\UInt128.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.h">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Utf8\checked.h">
+      <Filter>Source\Storage\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Utf8\core.h">
+      <Filter>Source\Storage\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Utf8\unchecked.h">
+      <Filter>Source\Storage\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapCodec.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapSerializer.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\VirtualFile.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\Storage\TemporaryDirectoryScope.h">
+      <Filter>Tests\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\BitmapInfo.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\OptionalBitmap.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Utf8Fold\Utf8Fold.h">
+      <Filter>Source\Storage\Utf8Fold</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.Linux.inl">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.Posix.inl">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.Windows.inl">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Jpeg\JpegBitmapCodec.h">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Jpeg\LibJpegHelpers.h">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Png\PngBitmapCodec.h">
+      <Filter>Source\Storage\Png</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Png\LibPngHelpers.h">
+      <Filter>Source\Storage\Png</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Exr\ExrBitmapCodec.h">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\ColorModels\RgbColor.h">
+      <Filter>Include\ColorModels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Exr\OpenExrHelpers.h">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Errors\FileAccessError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Errors\FileFormatError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Documents\Design.md">
-      <Filter>Documents</Filter>
-    </None>
-    <None Include="Documents\Algorithms.md">
-      <Filter>Documents</Filter>
-    </None>
     <None Include="Nuclex.Pixels.Native.def">
       <Filter>Resources</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Documents\Int128.txt">
+    <Text Include="Documents\Design.md">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="Documents\Copyright.md">
       <Filter>Documents</Filter>
     </Text>
   </ItemGroup>

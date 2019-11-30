@@ -53,6 +53,56 @@ bitmaps using borrowed memory (like in the above example) will also make
 the bitmap allocate its own memory and copy the foreign buffer.
 
 
+`BitmapSerializer`
+------------------
+
+The `BitmapSerializer` deals with on-disk file formats for you. It can be
+equipped with custom formats by registering your own `BitmapCodec`
+implementations to it.
+
+```cpp
+int main() {
+  BitmapSerializer myBitmapSerializer;
+  Bitmap logoBitmap = myBitmapSerializer.Load(u8"logo.png");
+}
+```
+
+or, as a more complete example, loading data directly into texture memory
+provided by your favorite 3D API without any intermediate copies (unless
+necessitated by pixel format differences).
+
+```cpp
+void MyTexture::LoadFromDisk() {
+  void *pixels = Lock();
+
+  // Describe the memory layout of the locked texture
+  BitmapMemory memory;
+  memory.Width = GetWidth();
+  memory.Height = GetHeight();
+  memory.Stride = GetWidth() * 4;
+  memory.PixelFormat = PixelFormat::R8_G8_B8_A8_Unsigned;
+  memory.Pixels = pixels;
+
+  // Construct a Bitmap that accesses the locked texture memory directly
+  Bitmap pixelsAsBitmap = Bitmap::FromExistingMemory(memory);
+
+  // Decode the image file straight into texture memory.
+  // (in production code you should construct one BitmapSerializer and reuse it)
+  BitmapSerializer serializer;
+  serializer.Reload(pixelsAsBitmap, GetBackingFilePath());
+}
+```
+
+Of course, you do not have to pass a path. The `BitmapSerializer` can load
+and save through a simple and efficient stream interface as well.
+
+When enabled in the build script, the `BitmapSerializer` will already support
+`png`, `jpg` and `exr` images out-of-the-box. These built-in `BitmapCodec`s use
+the reference implementations of each file format with carefully written
+error handling and stream interface adapters that do *not* blindly load the whole
+stream into memory for decoding.
+
+
 `PixelIterator` class
 ---------------------
 

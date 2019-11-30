@@ -133,6 +133,64 @@ namespace Nuclex { namespace Pixels {
     /// </remarks>
     public: NUCLEX_PIXELS_API void Autonomize();
 
+    /// <summary>Creates a bitmap that accesses a region within this bitmap</summary>
+    /// <param name="x">X coordinate of the region's left border</param>
+    /// <param name="y">Y coordinate of the region's top border</param>
+    /// <param name="width">Width of the region</param>
+    /// <param name="height">Height of the region</param>
+    /// <returns>A bitmap that accesses a region within this bitmap</returns>
+    /// <remarks>
+    ///   <para>
+    ///     The region will still be using the memory of this bitmap, so changes
+    ///     to the sub-bitmap will change the parent. This can be useful for clipping
+    ///     and atlases.
+    ///   </para>
+    ///   <para>
+    ///     If the parent bitmap gets destroyed, the sub-bitmap will still hold onto
+    ///     the whole memory buffer. In this case, the <see cref="IsWastingMemory" />
+    ///     method will return true.
+    ///   </para>
+    /// </remarks>
+    public: NUCLEX_PIXELS_API const Bitmap GetView(
+      std::size_t x, std::size_t y, std::size_t width, std::size_t height
+    ) const;
+
+    /// <summary>Creates a bitmap that accesses a region within this bitmap</summary>
+    /// <param name="x">X coordinate of the region's left border</param>
+    /// <param name="y">Y coordinate of the region's top border</param>
+    /// <param name="width">Width of the region</param>
+    /// <param name="height">Height of the region</param>
+    /// <returns>A bitmap that accesses a region within this bitmap</returns>
+    /// <remarks>
+    ///   <para>
+    ///     The region will still be using the memory of this bitmap, so changes
+    ///     to the sub-bitmap will change the parent. This can be useful for clipping
+    ///     and atlases.
+    ///   </para>
+    ///   <para>
+    ///     If the parent bitmap gets destroyed, the sub-bitmap will still hold onto
+    ///     the whole memory buffer. In this case, the <see cref="IsWastingMemory" />
+    ///     method will return true.
+    ///   </para>
+    /// </remarks>
+    public: NUCLEX_PIXELS_API Bitmap GetView(
+      std::size_t x, std::size_t y, std::size_t width, std::size_t height
+    );
+#if 0
+    /// <summary>Returns the amount of memory used by the bitmap</summary>
+    /// <returns>The number of bytes used to store the bitmap's pixels</returns>
+    /// <remarks>
+    ///   <para>
+    ///     The number of bytes used by the bitmap to store its pixels. This number
+    ///     can be slightly higher than the actual memory required for a tight fit
+    ///     due to alignment and a header, or much higher if the bitmap is a region
+    ///     within a larger bitmap.
+    ///   </para>
+    /// </remarks>
+    public: NUCLEX_PIXELS_API std::size_t GetMemoryUsed() const;
+
+    public: NUCLEX_PIXELS_API bool IsWastingMemory() const;
+#endif
     /// <summary>Copies another bitmap instance into this one</summary>
     /// <param name="other">Other bitmap instance that will be copied</param>
     /// <returns>This bitmap instance</returns>

@@ -73,7 +73,7 @@ namespace {
   int determineStride(std::size_t width, Nuclex::Pixels::PixelFormat pixelFormat) {
     Nuclex::Pixels::Size blockSize = Nuclex::Pixels::GetBlockSize(pixelFormat);
     width = nextMultiple(width, blockSize.Width);
-    return static_cast<int>(Nuclex::Pixels::CountRequiredBytes(width, pixelFormat));
+    return static_cast<int>(Nuclex::Pixels::CountRequiredBytes(pixelFormat, width));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -198,6 +198,48 @@ namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
 
+  Bitmap Bitmap::GetView(
+    std::size_t x, std::size_t y, std::size_t width, std::size_t height
+  ) {
+    BitmapMemory viewMemory;
+    viewMemory.Width = width;
+    viewMemory.Height = height;
+    viewMemory.Stride = this->memory.Stride;
+    viewMemory.PixelFormat = this->memory.PixelFormat;
+    viewMemory.Pixels = reinterpret_cast<void *>(
+      reinterpret_cast<std::uint8_t *>(this->memory.Pixels) +
+      (y * this->memory.Stride) +
+      CountRequiredBytes(this->memory.PixelFormat, x)
+    );
+
+    // Assumption: allocation-free Bitmap constructor will not throw.
+    ++this->buffer->OwnerCount;
+    return Bitmap(this->buffer, viewMemory);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  const Bitmap Bitmap::GetView(
+    std::size_t x, std::size_t y, std::size_t width, std::size_t height
+  ) const {
+    BitmapMemory viewMemory;
+    viewMemory.Width = width;
+    viewMemory.Height = height;
+    viewMemory.Stride = this->memory.Stride;
+    viewMemory.PixelFormat = this->memory.PixelFormat;
+    viewMemory.Pixels = reinterpret_cast<void *>(
+      reinterpret_cast<std::uint8_t *>(this->memory.Pixels) +
+      (y * this->memory.Stride) +
+      CountRequiredBytes(this->memory.PixelFormat, x)
+    );
+
+    // Assumption: allocation-free Bitmap constructor will not throw.
+    ++this->buffer->OwnerCount;
+    return Bitmap(this->buffer, viewMemory);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   Bitmap &Bitmap::operator =(const Bitmap &other) {
     if(this->buffer != nullptr) {
       releaseSharedBuffer(this->buffer);
@@ -239,7 +281,7 @@ namespace Nuclex { namespace Pixels {
 
     // Add the amount of memory required to store the bitmap
     std::size_t byteCount = headerSize;
-    byteCount += CountRequiredBytes(resolution.Width, pixelFormat) * resolution.Height;
+    byteCount += CountRequiredBytes(pixelFormat, resolution.Width) * resolution.Height;
 
     // Allocate memory to hold the detachable buffer AND the pixel data,
     // then construct the detachable buffer in it and set the address of the first pixel
@@ -263,7 +305,7 @@ namespace Nuclex { namespace Pixels {
 
     // Copy all pixels into the new buffer
     {
-      int newStride = static_cast<int>(CountRequiredBytes(bufferSize.Width, memory.PixelFormat));
+      int newStride = static_cast<int>(CountRequiredBytes(memory.PixelFormat, bufferSize.Width));
 
       const std::uint8_t *source = reinterpret_cast<std::uint8_t *>(memory.Pixels);
       std::uint8_t *target = reinterpret_cast<std::uint8_t *>(newBuffer->Memory);

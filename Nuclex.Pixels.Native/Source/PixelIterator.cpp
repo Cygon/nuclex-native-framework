@@ -194,11 +194,11 @@ namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void PixelIterator::enforceAtEndPosition(std::size_t x, std::size_t y) const {
+  void PixelIterator::enforceAtEndPosition(std::size_t checkX, std::size_t checkY) const {
     using namespace std; // Some C++ std libs had assert in std, some didn't :-/
     assert(
       "Cannot move iterator beyond the end position" &&
-      (x == this->memory.Width) && (y == this->memory.Height)
+      (checkX == this->memory.Width) && (checkY == this->memory.Height)
     );
   }
 

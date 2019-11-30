@@ -106,8 +106,8 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_OPENEXR;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\config\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Imath\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Iex\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Half\;$(ProjectDir)..\ThirdParty\openexr\Include\;$(ProjectDir)..\ThirdParty\openexr\Include\config;$(ProjectDir)..\ThirdParty\libjpeg\Include\;$(ProjectDir)..\ThirdParty\libpng\Include\</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp14</LanguageStandard>
@@ -118,14 +118,16 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>Nuclex.Pixels.Native.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\openexr\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\ilmbase\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openexr.lib;ilmbase.lib;jpeg.lib;png.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_OPENEXR;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\config\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Imath\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Iex\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Half\;$(ProjectDir)..\ThirdParty\openexr\Include\;$(ProjectDir)..\ThirdParty\openexr\Include\config;$(ProjectDir)..\ThirdParty\libjpeg\Include\;$(ProjectDir)..\ThirdParty\libpng\Include\</AdditionalIncludeDirectories>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp14</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -135,6 +137,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>Nuclex.Pixels.Native.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\openexr\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\ilmbase\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openexr.lib;ilmbase.lib;jpeg.lib;png.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -143,8 +147,8 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_OPENEXR;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\config\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Imath\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Iex\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Half\;$(ProjectDir)..\ThirdParty\openexr\Include\;$(ProjectDir)..\ThirdParty\openexr\Include\config;$(ProjectDir)..\ThirdParty\libjpeg\Include\;$(ProjectDir)..\ThirdParty\libpng\Include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -160,6 +164,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Nuclex.Pixels.Native.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\openexr\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\ilmbase\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openexr.lib;ilmbase.lib;jpeg.lib;png.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -168,8 +174,8 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_OPENEXR;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\config\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Imath\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Iex\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Half\;$(ProjectDir)..\ThirdParty\openexr\Include\;$(ProjectDir)..\ThirdParty\openexr\Include\config;$(ProjectDir)..\ThirdParty\libjpeg\Include\;$(ProjectDir)..\ThirdParty\libpng\Include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
@@ -184,9 +190,19 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Nuclex.Pixels.Native.def</ModuleDefinitionFile>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\openexr\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\ilmbase\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>openexr.lib;ilmbase.lib;jpeg.lib;png.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Pixels\ColorModels\RgbColor.h" />
+    <ClInclude Include="Include\Nuclex\Pixels\Errors\FileAccessError.h" />
+    <ClInclude Include="Include\Nuclex\Pixels\Errors\FileFormatError.h" />
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapCodec.h" />
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapSerializer.h" />
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\OptionalBitmap.h" />
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\VirtualFile.h" />
+    <ClInclude Include="Include\Nuclex\Pixels\BitmapInfo.h" />
     <ClInclude Include="Include\Nuclex\Pixels\Bitmap.h" />
     <ClInclude Include="Include\Nuclex\Pixels\BitmapMemory.h" />
     <ClInclude Include="Include\Nuclex\Pixels\Config.h" />
@@ -194,11 +210,39 @@
     <ClInclude Include="Include\Nuclex\Pixels\PixelFormat.h" />
     <ClInclude Include="Include\Nuclex\Pixels\PixelIterator.h" />
     <ClInclude Include="Include\Nuclex\Pixels\Rectangle.h" />
-    <ClInclude Include="Include\Nuclex\Pixels\RgbColor.h" />
     <ClInclude Include="Include\Nuclex\Pixels\Size.h" />
     <ClInclude Include="Include\Nuclex\Pixels\UInt128.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\ColorModels\RgbColor.cpp" />
+    <ClCompile Include="Source\Errors\FileAccessError.cpp" />
+    <ClCompile Include="Source\Errors\FileFormatError.cpp" />
+    <ClCompile Include="Source\Storage\Exr\ExrBitmapCodec.cpp" />
+    <ClInclude Include="Source\Storage\Exr\ExrBitmapCodec.h" />
+    <ClCompile Include="Source\Storage\Exr\OpenExrHelpers.cpp" />
+    <ClInclude Include="Source\Storage\Exr\OpenExrHelpers.h" />
+    <ClCompile Include="Source\Storage\Jpeg\JpegBitmapCodec.cpp" />
+    <ClInclude Include="Source\Storage\Jpeg\JpegBitmapCodec.h" />
+    <ClCompile Include="Source\Storage\Jpeg\LibJpegHelpers.cpp" />
+    <ClInclude Include="Source\Storage\Jpeg\LibJpegHelpers.h" />
+    <ClCompile Include="Source\Storage\Png\LibPngHelpers.cpp" />
+    <ClCompile Include="Source\Storage\Png\PngBitmapCodec.cpp" />
+    <ClInclude Include="Source\Storage\Png\LibPngHelpers.h" />
+    <ClInclude Include="Source\Storage\Png\PngBitmapCodec.h" />
+    <ClInclude Include="Source\Storage\Utf8Fold\Utf8Fold.h" />
+    <ClInclude Include="Source\Storage\Utf8\checked.h" />
+    <ClInclude Include="Source\Storage\Utf8\core.h" />
+    <ClInclude Include="Source\Storage\Utf8\unchecked.h" />
+    <ClCompile Include="Source\Storage\BitmapCodec.cpp" />
+    <ClCompile Include="Source\Storage\BitmapSerializer.cpp" />
+    <ClCompile Include="Source\Storage\OptionalBitmap.cpp" />
+    <ClInclude Include="Source\Storage\RealFile.h" />
+    <ClCompile Include="Source\Storage\RealFile.cpp" />
+    <ClInclude Include="Source\Storage\RealFile.Linux.inl" />
+    <ClInclude Include="Source\Storage\RealFile.Posix.inl" />
+    <ClInclude Include="Source\Storage\RealFile.Windows.inl" />
+    <ClCompile Include="Source\Storage\VirtualFile.cpp" />
+    <ClCompile Include="Source\BitmapInfo.cpp" />
     <ClCompile Include="Source\Bitmap.cpp" />
     <ClCompile Include="Source\BitmapMemory.cpp" />
     <ClCompile Include="Source\Config.cpp" />
@@ -206,13 +250,12 @@
     <ClCompile Include="Source\PixelFormat.cpp" />
     <ClCompile Include="Source\PixelIterator.cpp" />
     <ClCompile Include="Source\Rectangle.cpp" />
-    <ClCompile Include="Source\RgbColor.cpp" />
     <ClCompile Include="Source\Size.cpp" />
     <ClCompile Include="Source\UInt128.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Documents\Algorithms.md" />
-    <None Include="Documents\Design.md" />
+    <Text Include="Documents\Copyright.md" />
+    <Text Include="Documents\Design.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Nuclex.Pixels.Native.def" />

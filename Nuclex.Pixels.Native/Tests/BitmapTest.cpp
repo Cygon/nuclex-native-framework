@@ -48,11 +48,11 @@ namespace Nuclex { namespace Pixels {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(BitmapTest, HasMoveConstructor) {
-    Bitmap newBitmap(12, 23, PixelFormat::Modern_A8_Unsigned);
+    Bitmap newBitmap(12, 23, PixelFormat::A2_B10_G10_R10_Unsigned);
     Bitmap moved = std::move(newBitmap);
     EXPECT_EQ(12, moved.GetWidth());
     EXPECT_EQ(23, moved.GetHeight());
-    EXPECT_EQ(PixelFormat::Modern_A8_Unsigned, moved.GetPixelFormat());
+    EXPECT_EQ(PixelFormat::A2_B10_G10_R10_Unsigned, moved.GetPixelFormat());
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -60,12 +60,12 @@ namespace Nuclex { namespace Pixels {
   TEST(BitmapTest, HasCopyAssignmentOperator) {
     Bitmap copied(1, 1);
     {
-      Bitmap newBitmap(54, 42, PixelFormat::R8_G8_Signed);
+      Bitmap newBitmap(54, 42, PixelFormat::R8_G8_Unsigned);
       copied = newBitmap;
     }
     EXPECT_EQ(54, copied.GetWidth());
     EXPECT_EQ(42, copied.GetHeight());
-    EXPECT_EQ(PixelFormat::R8_G8_Signed, copied.GetPixelFormat());
+    EXPECT_EQ(PixelFormat::R8_G8_Unsigned, copied.GetPixelFormat());
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -84,13 +84,13 @@ namespace Nuclex { namespace Pixels {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(BitmapTest, CanAccessRawMemory) {
-    Bitmap newBitmap(98, 76, PixelFormat::Modern_R16_G16_B16_A16_Float);
+    Bitmap newBitmap(98, 76, PixelFormat::R16_G16_B16_A16_Float);
     {
       BitmapMemory memory = newBitmap.Access();
       EXPECT_EQ(98, memory.Width);
       EXPECT_EQ(76, memory.Height);
       EXPECT_EQ(98 * 8, memory.Stride);
-      EXPECT_EQ(PixelFormat::Modern_R16_G16_B16_A16_Float, memory.PixelFormat);
+      EXPECT_EQ(PixelFormat::R16_G16_B16_A16_Float, memory.PixelFormat);
       ASSERT_NE(memory.Pixels, nullptr);
 
       // If too little memory is allocated, this should crash or trigger heap protection

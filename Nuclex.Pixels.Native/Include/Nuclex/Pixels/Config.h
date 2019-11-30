@@ -23,9 +23,15 @@ License along with this library
 
 // --------------------------------------------------------------------------------------------- //
 
+// Whether pixel format conversions should ensure they're float-equivalent
+// Otherwise an error in the least significant bit is accepted (greatly increasing performance)
+#define NUCLEX_PIXELS_CONVERT_EXACT 1
+
+// --------------------------------------------------------------------------------------------- //
+
 // Platform recognition
 #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
-  #define NUCLEX_PIXELS_WINRT 1
+  #error The Nuclex.Pixels.Native library does not support WinRT
 #elif defined(WIN32) || defined(_WIN32)
   #define NUCLEX_PIXELS_WIN32 1
 #else
@@ -60,8 +66,19 @@ License along with this library
 
 // --------------------------------------------------------------------------------------------- //
 
-#if (defined(__GNUC__) || defined(__GNUG__))
-  #define NUCLEX_PIXELS_HAVE_BUILTIN_INT128
+//#if defined(__clang__) || (defined(__GNUC__) || defined(__GNUG__))
+//  #define NUCLEX_PIXELS_HAVE_BUILTIN_INT128
+//#endif
+
+// --------------------------------------------------------------------------------------------- //
+
+// Strong suggestion to the compiler to inline something
+#if defined(_MSC_VER)
+  #define NUCLEX_PIXELS_ALWAYS_INLINE __forceinline
+#elif defined(__clang__) || (defined(__GNUC__) || defined(__GNUG__))
+  #define NUCLEX_PIXELS_ALWAYS_INLINE __attribute__((always_inline))
+#else
+  #define NUCLEX_PIXELS_ALWAYS_INLINE
 #endif
 
 // --------------------------------------------------------------------------------------------- //
@@ -83,7 +100,7 @@ License along with this library
     #endif
   #endif
 
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) || defined(__GNUG__) || defined(__clang__)
 
   #if defined(NUCLEX_PIXELS_STATICLIB) || defined(NUCLEX_PIXELS_EXECUTABLE)
     #define NUCLEX_PIXELS_API

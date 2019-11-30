@@ -142,18 +142,18 @@ namespace Nuclex { namespace Pixels {
     /// <summary>Moves the pixel access iterator to the specified position</summary>
     /// <param name="x">X coordinate the pixel access iterator will be moved to</param>
     /// <param name="y">Y coordinate the pixel access iterator will be moved to</param>
-    public: NUCLEX_PIXELS_API void MoveTo(std::size_t x, std::size_t y) {
-      if((x >= this->memory.Width) || (y >= this->memory.Height)) {
+    public: NUCLEX_PIXELS_API void MoveTo(std::size_t newX, std::size_t newY) {
+      if((newX >= this->memory.Width) || (newY >= this->memory.Height)) {
         // It is valid to place the iterator *exactly* at one past the last pixel,
         // so we only fail if the position is out of bounds in any other way.
-        enforceAtEndPosition(x, y);
+        enforceAtEndPosition(newX, newY);
       }
 
-      this->x = x;
-      this->y = y;
+      this->x = newX;
+      this->y = newY;
       this->current = static_cast<std::uint8_t *>(memory.Pixels);
-      this->current += y * memory.Stride;
-      this->current += x * this->bytesPerPixel;
+      this->current += newY * memory.Stride;
+      this->current += newX * this->bytesPerPixel;
     }
 
     /// <summary>Moves the pixel accessor vertically in negative direction</summary>
@@ -352,7 +352,9 @@ namespace Nuclex { namespace Pixels {
     /// <summary>
     ///   Fails an assertion if the iterator is not at the end position
     /// </summary>
-    private: void enforceAtEndPosition(std::size_t x, std::size_t y) const;
+    /// <param name="checkX">X coordinate that will be checked</param>
+    /// <param name="checkY">Y coordinate that will be checked</param>
+    private: void enforceAtEndPosition(std::size_t checkX, std::size_t checkY) const;
 
     /// <summary>Bitmap memory the pixel accessor is accessing</summary>
     private: BitmapMemory memory;

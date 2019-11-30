@@ -18,6 +18,39 @@
       <UniqueIdentifier>{42dfb8e3-ec12-4748-8fd2-96f6e7817f4a}</UniqueIdentifier>
       <Extensions>md;txt;pdf</Extensions>
     </Filter>
+    <Filter Include="Source\Storage">
+      <UniqueIdentifier>{5050f200-1586-438a-9007-f045bb28c626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Storage">
+      <UniqueIdentifier>{b2f8a800-3479-41a8-9d14-3867642aecab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Utf8">
+      <UniqueIdentifier>{f593019e-f8ed-46cd-8276-435c584efdb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Utf8Fold">
+      <UniqueIdentifier>{8507dbc4-c298-4fd7-bca5-84502d3b2e40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Jpeg">
+      <UniqueIdentifier>{5f5a3e11-8268-45cb-992e-6d307e91cb92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Png">
+      <UniqueIdentifier>{ccf2d327-2ff5-4442-ab16-b3b2e40d1bba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\ColorModels">
+      <UniqueIdentifier>{18e2ad77-9f3f-4af8-ba11-a73a723fe16b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ColorModels">
+      <UniqueIdentifier>{861e6a02-abbe-4406-a3e1-d4d8bc5b7e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Exr">
+      <UniqueIdentifier>{e56e3fcb-ae25-4087-bef7-e515231b39ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Errors">
+      <UniqueIdentifier>{ebd44850-e0f1-49dc-a0ea-0242c047049a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Errors">
+      <UniqueIdentifier>{5019b844-f142-415a-a6d8-f084a8b92b7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Bitmap.cpp">
@@ -35,9 +68,6 @@
     <ClCompile Include="Source\PixelIterator.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\RgbColor.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Size.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -49,6 +79,51 @@
     </ClCompile>
     <ClCompile Include="Source\UInt128.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\BitmapCodec.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BitmapInfo.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\OptionalBitmap.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\RealFile.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\VirtualFile.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\BitmapSerializer.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Png\PngBitmapCodec.cpp">
+      <Filter>Source\Storage\Png</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Jpeg\JpegBitmapCodec.cpp">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Jpeg\LibJpegHelpers.cpp">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Png\LibPngHelpers.cpp">
+      <Filter>Source\Storage\Png</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Exr\ExrBitmapCodec.cpp">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ColorModels\RgbColor.cpp">
+      <Filter>Source\ColorModels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Exr\OpenExrHelpers.cpp">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\FileAccessError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\FileFormatError.cpp">
+      <Filter>Source\Errors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,9 +145,6 @@
     <ClInclude Include="Include\Nuclex\Pixels\PixelIterator.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\RgbColor.h">
-      <Filter>Include</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Pixels\Size.h">
       <Filter>Include</Filter>
     </ClInclude>
@@ -82,16 +154,84 @@
     <ClInclude Include="Include\Nuclex\Pixels\UInt128.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapCodec.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapSerializer.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\VirtualFile.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\BitmapInfo.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\OptionalBitmap.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.Windows.inl">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.h">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.Linux.inl">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.Posix.inl">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Utf8Fold\Utf8Fold.h">
+      <Filter>Source\Storage\Utf8Fold</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Utf8\checked.h">
+      <Filter>Source\Storage\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Utf8\core.h">
+      <Filter>Source\Storage\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Utf8\unchecked.h">
+      <Filter>Source\Storage\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Png\PngBitmapCodec.h">
+      <Filter>Source\Storage\Png</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Jpeg\JpegBitmapCodec.h">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Jpeg\LibJpegHelpers.h">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Png\LibPngHelpers.h">
+      <Filter>Source\Storage\Png</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Exr\ExrBitmapCodec.h">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\ColorModels\RgbColor.h">
+      <Filter>Include\ColorModels</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Exr\OpenExrHelpers.h">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Errors\FileAccessError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Errors\FileFormatError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Nuclex.Pixels.Native.def">
       <Filter>Resources</Filter>
     </None>
-    <None Include="Documents\Design.md">
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Documents\Design.md">
       <Filter>Documents</Filter>
-    </None>
-    <None Include="Documents\Algorithms.md">
+    </Text>
+    <Text Include="Documents\Copyright.md">
       <Filter>Documents</Filter>
-    </None>
+    </Text>
   </ItemGroup>
 </Project>
