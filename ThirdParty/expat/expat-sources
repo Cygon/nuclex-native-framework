@@ -1,0 +1,5 @@
+build/lib/xmlparse.c
+build/lib/xmlrole.c
+build/lib/xmltok.c
+build/lib/xmltok_impl.c
+build/lib/xmltok_ns.c

@@ -60,7 +60,7 @@ def create_cplusplus_environment():
         HEADER_DIRECTORY = 'Include',
         TESTS_DIRECTORY = 'Tests',
         TESTS_RESULT_FILE = "gtest-results.xml",
-        REFERENCES_DIRECTORY = 'References'
+        REFERENCES_DIRECTORY = 'ThirdParty'
     )
 
     # Pass the 'TERM' variable through to allow colored output on Linux terminals
@@ -91,7 +91,7 @@ def create_dotnet_environment():
         SOURCE_DIRECTORY = 'Source',
         TESTS_DIRECTORY = 'Tests',
         TESTS_RESULT_FILE = "nunit-results.xml",
-        REFERENCES_DIRECTORY = 'References'
+        REFERENCES_DIRECTORY = 'ThirdParty'
     )
 
     # Register extension methods and additional variables
@@ -507,9 +507,14 @@ def _add_cplusplus_package(environment, universal_package_name, universal_librar
     # Path for the package's libraries
     library_directory = cplusplus.find_or_guess_library_directory(environment, package_directory)
     if library_directory is None:
-        raise FileNotFoundError(
-            'Could not find library directory for package in ' + package_directory
+        print('Retrying library with project layout instead of package layout...')
+        library_directory = cplusplus.find_or_guess_library_directory(
+            environment, os.path.join(package_directory, 'bin')
         )
+        if library_directory is None:
+            raise FileNotFoundError(
+                'Could not find library directory for package in ' + package_directory
+            )
 
     environment.add_library_directory(library_directory)
 

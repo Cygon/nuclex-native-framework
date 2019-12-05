@@ -1,0 +1,14 @@
+build/lib/ascii.h
+build/lib/asciitab.h
+build/lib/expat.h
+build/lib/expat_external.h
+build/lib/iasciitab.h
+build/lib/internal.h
+build/lib/latin1tab.h
+build/lib/nametab.h
+build/lib/siphash.h
+build/lib/utf8tab.h
+build/lib/winconfig.h
+build/lib/xmlrole.h
+build/lib/xmltok.h
+build/lib/xmltok_impl.h

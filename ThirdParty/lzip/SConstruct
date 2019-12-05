@@ -1,0 +1,125 @@
+#!/usr/bin/env python
+
+import sys
+import importlib
+import os
+import platform
+
+# Nuclex SCons libraries
+sys.path.append('../../BuildSystem/scons')
+nuclex = importlib.import_module('nuclex')
+archive = importlib.import_module('archive')
+
+# ----------------------------------------------------------------------------------------------- #
+
+universal_lzip_target_name = 'lzip'
+
+environment = nuclex.create_cplusplus_environment()
+#environment['ENV'] = os.environ
+#environment['CXX'] = 'clang++'
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 0: preparatory work
+
+# Fetch the list of headers used when compiling
+lzip_headers_file = environment.File('lzip-headers')
+lzip_header_files = archive.split_lines(lzip_headers_file.get_text_contents())
+
+# Fetch the list of sources to compile lzip
+lzip_sources_file = environment.File('lzip-sources')
+lzip_source_files = archive.split_lines(lzip_sources_file.get_text_contents())
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 1: Download the current release
+
+# Fetch the available download URLs from a file
+download_url_file = environment.File('lzip-download-urls')
+download_urls = archive.split_lines(download_url_file.get_text_contents())
+
+# Determine the target filename for the download (below 'downloads' folder)
+archive_filename = os.path.basename(download_urls[0])
+archive_file = environment.File(os.path.join('downloads', archive_filename))
+
+# Tell SCons how to "produce" the downloaded archive (by calling wget)
+if not archive_file.exists():
+    download_archive = environment.Command(
+        source = download_url_file,
+        #action = 'wget ' + download_urls[0] + ' --output-document=$TARGET',
+        action = archive.download_url_in_urlfile,
+        target = archive_file
+    )
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 2: Extract the release into the build directory
+
+def extract_compressed_tarball(target, source, env):
+    """Extracts the distribution .tar.gz archive and applies a patch that ensures
+    the same headers will work on Windows and average Linux distributions.
+
+    @param  target  Output files, not used by the function but passed along so
+                    SCons can look at them and knows its dependency tree
+    @param  source  Source files, expected to be an array containing the .tar.gz
+                    path and the unified diff path
+    @param  env     SCons build environment"""
+
+    archive.extract_compressed_tarball(str(source[0]), 'build', 1)
+
+# Tell SCons how to "produce" the sources & headers (by calling tar)
+extract_archive = environment.Command(
+    source = archive_file,
+    #action = 'tar --extract --gzip --strip-components=1 --file=$SOURCE --directory=build',
+    action = extract_compressed_tarball,
+    target = lzip_source_files + lzip_header_files + [ 'build/carg_parser.c', 'build/main.c' ]
+)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 3: Compile the lzip library
+
+lzip_environment = environment.Clone()
+
+del lzip_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+lzip_environment['HEADER_DIRECTORY'] = 'build'
+
+lzip_environment.add_source_directory(
+    'build',
+    lzip_source_files,
+    scons_issue_2908_workaround_needed = True
+)
+
+compile_lzip_library = lzip_environment.build_library(
+    universal_lzip_target_name,
+    static = True
+)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 4: Compile the lzip executable
+
+if platform.system() != 'Windows':
+    minilzip_environment = environment.Clone()
+
+    del minilzip_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+    minilzip_environment['HEADER_DIRECTORY'] = 'build'
+    minilzip_environment['INTERMEDIATE_SUFFIX'] = 'minilzip'
+
+    minilzip_environment.add_preprocessor_constant('PROGVERSION', '\\"1.11\\"')
+
+    minilzip_environment.add_source_directory(
+        'build',
+        lzip_source_files + [ 'build/carg_parser.c', 'build/main.c' ],
+        scons_issue_2908_workaround_needed = True
+    )
+
+    compile_minilzip_executable = minilzip_environment.build_executable(
+        'minilzip', #universal_minilzip_target_name,
+        console = True
+    )
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 5: Put the header in the main package directory
+
+for header in lzip_header_files:
+    if header.startswith('build/'):
+        install_path = os.path.join('Include', header[6:])
+        environment.InstallAs(install_path, header)
+
+# ----------------------------------------------------------------------------------------------- #

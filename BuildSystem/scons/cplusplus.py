@@ -369,13 +369,17 @@ def _add_library(environment, library_name):
 
 # ----------------------------------------------------------------------------------------------- #
 
-def _add_preprocessor_constant(environment, constant_name):
+def _add_preprocessor_constant(environment, constant_name, constant_value = None):
     """Adds a C/C++ preprocessor constant to the build
 
-    @param  environment    Environment the C/C++ preprocessor constant will be set in
-    @param  constant_name  Name of the preprocessor constant that will be set"""
+    @param  environment     Environment the C/C++ preprocessor constant will be set in
+    @param  constant_name   Name of the preprocessor constant that will be set
+    @param  constant_value  Value that will be assigned to the constant"""
 
-    environment.Append(CPPDEFINES=[constant_name])
+    if constant_value is None:
+        environment.Append(CPPDEFINES=[constant_name])
+    else:
+        environment.Append(CPPDEFINES={constant_name: constant_value})
 
 # ----------------------------------------------------------------------------------------------- #
 
