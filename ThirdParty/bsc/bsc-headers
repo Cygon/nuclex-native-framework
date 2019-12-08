@@ -1,0 +1,15 @@
+build/libbsc/adler32/adler32.h
+build/libbsc/bwt/bwt.h
+build/libbsc/bwt/divsufsort/divsufsort.h
+build/libbsc/coder/coder.h
+build/libbsc/coder/common/predictor.h
+build/libbsc/coder/common/rangecoder.h
+build/libbsc/coder/common/tables.h
+build/libbsc/coder/qlfc/qlfc.h
+build/libbsc/coder/qlfc/qlfc_model.h
+build/libbsc/filters/tables.h
+build/libbsc/filters.h
+build/libbsc/libbsc.h
+build/libbsc/lzp/lzp.h
+build/libbsc/platform/platform.h
+build/libbsc/st/st.h

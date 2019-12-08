@@ -1,0 +1,12 @@
+build/libbsc/adler32/adler32.cpp
+build/libbsc/bwt/bwt.cpp
+build/libbsc/bwt/divsufsort/divsufsort.c
+build/libbsc/coder/coder.cpp
+build/libbsc/coder/qlfc/qlfc.cpp
+build/libbsc/coder/qlfc/qlfc_model.cpp
+build/libbsc/filters/detectors.cpp
+build/libbsc/filters/preprocessing.cpp
+build/libbsc/libbsc/libbsc.cpp
+build/libbsc/lzp/lzp.cpp
+build/libbsc/platform/platform.cpp
+build/libbsc/st/st.cpp

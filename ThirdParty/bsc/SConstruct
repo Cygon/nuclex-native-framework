@@ -1,0 +1,125 @@
+#!/usr/bin/env python
+
+import sys
+import importlib
+import os
+import platform
+
+# Nuclex SCons libraries
+sys.path.append('../../BuildSystem/scons')
+nuclex = importlib.import_module('nuclex')
+archive = importlib.import_module('archive')
+
+# ----------------------------------------------------------------------------------------------- #
+
+universal_bsc_target_name = 'bsc'
+
+environment = nuclex.create_cplusplus_environment()
+#environment['ENV'] = os.environ
+#environment['CXX'] = 'clang++'
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 0: preparatory work
+
+# Fetch the list of headers used when compiling
+bsc_headers_file = environment.File('bsc-headers')
+bsc_header_files = archive.split_lines(bsc_headers_file.get_text_contents())
+
+# Fetch the list of sources to compile bsc
+bsc_sources_file = environment.File('bsc-sources')
+bsc_source_files = archive.split_lines(bsc_sources_file.get_text_contents())
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 1: Download the current release
+
+# Fetch the available download URLs from a file
+download_url_file = environment.File('bsc-download-urls')
+download_urls = archive.split_lines(download_url_file.get_text_contents())
+
+# Determine the target filename for the download (below 'downloads' folder)
+archive_filename = os.path.basename(download_urls[0])
+archive_file = environment.File(os.path.join('downloads', archive_filename))
+
+# Tell SCons how to "produce" the downloaded archive (by calling wget)
+if not archive_file.exists():
+    download_archive = environment.Command(
+        source = download_url_file,
+        #action = 'wget ' + download_urls[0] + ' --output-document=$TARGET',
+        action = archive.download_url_in_urlfile,
+        target = archive_file
+    )
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 2: Extract the release into the build directory
+
+def extract_compressed_tarball(target, source, env):
+    """Extracts the distribution .tar.gz archive and applies a patch that ensures
+    the same headers will work on Windows and average Linux distributions.
+
+    @param  target  Output files, not used by the function but passed along so
+                    SCons can look at them and knows its dependency tree
+    @param  source  Source files, expected to be an array containing the .tar.gz
+                    path and the unified diff path
+    @param  env     SCons build environment"""
+
+    archive.extract_compressed_tarball(str(source[0]), 'build', 1)
+
+# Tell SCons how to "produce" the sources & headers (by calling tar)
+extract_archive = environment.Command(
+    source = archive_file,
+    #action = 'tar --extract --gzip --strip-components=1 --file=$SOURCE --directory=build',
+    action = extract_compressed_tarball,
+    target = bsc_source_files + bsc_header_files + [ 'build/bsc.cpp' ]
+)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 3: Compile the bsc library
+
+bsc_environment = environment.Clone()
+
+del bsc_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+bsc_environment['HEADER_DIRECTORY'] = 'build/libbsc'
+
+bsc_environment.add_source_directory(
+    'build/libbsc/',
+    bsc_source_files,
+    scons_issue_2908_workaround_needed = True
+)
+
+compile_bsc_library = bsc_environment.build_library(
+    universal_bsc_target_name,
+    static = True
+)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 4: Compile the bsc executable
+
+bscx_environment = environment.Clone()
+
+del bscx_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+bscx_environment['HEADER_DIRECTORY'] = 'build/libbsc'
+bscx_environment['INTERMEDIATE_SUFFIX'] = 'bscx'
+
+bscx_environment.add_source_directory(
+    'build',
+    bsc_source_files + [ 'build/bsc.cpp' ],
+    scons_issue_2908_workaround_needed = True
+)
+
+if platform.system() == 'Windows':
+    bscx_environment.add_library('advapi32.lib')
+
+compile_bsc_executable = bscx_environment.build_executable(
+    'bscx', #universal_bscx_target_name,
+    console = True
+)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 5: Put the header in the main package directory
+
+for header in bsc_header_files:
+    if header.startswith('build/libbsc/'):
+        install_path = os.path.join('Include', header[13:])
+        environment.InstallAs(install_path, header)
+
+# ----------------------------------------------------------------------------------------------- #
