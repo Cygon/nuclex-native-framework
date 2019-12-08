@@ -1,0 +1,109 @@
+#!/usr/bin/env python
+
+import sys
+import importlib
+import os
+import platform
+
+# Nuclex SCons libraries
+sys.path.append('../BuildSystem/scons')
+nuclex = importlib.import_module('nuclex')
+
+# ----------------------------------------------------------------------------------------------- #
+
+def add_third_party_libraries(environment):
+    """Adds the third-party libraries this project uses to the build environment
+
+    @param  environment  Build environment the libraries will be added to"""
+
+    # Whether Nuclex.Storage should be able to compress and decompress .zip archives
+    want_zlib = True
+
+    # Whether Nuclex.Storage should be able to compress and decompress with Brotli
+    want_brotli = True
+
+    # Whether Nuclex.Storage should be able to compress and decompress with LZMA
+    want_lzip = True
+
+    # Whether Nuclex.Storage should be able to compress and decompress with CSC
+    want_csc = False
+
+    # Whether Nuclex.Storage should be able to compress and decompress with BSC
+    want_bsc = True
+
+    # Whether Nuclex.Storage should be able to compress and decompress with ZPAQ
+    want_zpaq = False
+
+    if want_zlib:
+        #environment.add_preprocessor_constant('Z_SOLO')
+        environment.add_preprocessor_constant('ZLIB_CONST')
+        environment.add_project('../ThirdParty/zlib', [ 'zlib' ])
+        environment.add_preprocessor_constant('NUCLEX_STORAGE_HAVE_ZLIB')
+
+    if want_brotli:
+        environment.add_project('../ThirdParty/brotli', [ 'brotli' ])
+        environment.add_preprocessor_constant('NUCLEX_STORAGE_HAVE_BROTLI')
+
+    if want_lzip:
+        environment.add_project('../ThirdParty/lzip', [ 'lzip' ])
+        environment.add_preprocessor_constant('NUCLEX_STORAGE_HAVE_LZIP')
+
+    if want_csc:
+        environment.add_project('../ThirdParty/csc', [ 'csc' ])
+        environment.add_preprocessor_constant('NUCLEX_STORAGE_HAVE_CSC')
+        environment.add_preprocessor_constant('_7Z_TYPES_')
+
+    if want_bsc:
+        environment.add_project('../ThirdParty/bsc', [ 'bsc' ])
+        environment.add_preprocessor_constant('NUCLEX_STORAGE_HAVE_BSC')
+
+    if want_zpaq:
+        if platform.system() != 'Windows':
+            environment.add_preprocessor_constant('unix')
+        environment.add_project('../ThirdParty/zpaq', [ 'zpaq' ])
+        environment.add_preprocessor_constant('NUCLEX_STORAGE_HAVE_ZPAQ')
+
+    environment.add_project('../ThirdParty/expat', [ 'expat' ])
+
+# ----------------------------------------------------------------------------------------------- #
+
+# Standard C/C++ build environment with Nuclex extension methods
+common_environment = nuclex.create_cplusplus_environment()
+#common_environment['ENV'] = os.environ
+#common_environment['CXX'] = 'clang++'
+
+# Compile the main library
+library_environment = common_environment.Clone()
+add_third_party_libraries(library_environment)
+library_binaries = library_environment.build_library('Nuclex.Storage.Native')
+
+# Compile the unit test executable
+unit_test_environment = common_environment.Clone()
+add_third_party_libraries(unit_test_environment)
+unit_test_environment.add_preprocessor_constant('NUCLEX_STORAGE_EXECUTABLE')
+unit_test_binaries = unit_test_environment.build_unit_tests(
+    'Nuclex.Storage.Native.Tests'
+)
+
+# ----------------------------------------------------------------------------------------------- #
+
+artifact_directory = os.path.join(
+        unit_test_environment['ARTIFACT_DIRECTORY'],
+        unit_test_environment.get_build_directory_name()
+)
+unit_test_results = unit_test_environment.Command(
+    source = unit_test_binaries,
+    action = '-$SOURCE --gtest_color=yes --gtest_output=xml:$TARGET',
+    target = os.path.join(artifact_directory, 'gtest-results.xml')
+)
+
+# ----------------------------------------------------------------------------------------------- #
+
+AlwaysBuild(unit_test_results)
+
+#if platform.system() != 'Windows':
+#    list_exported_symbols = common_environment.Command(
+#        source = library_artifacts,
+#        action = 'nm --demangle --extern-only $SOURCE',
+#        target = None
+#    )
