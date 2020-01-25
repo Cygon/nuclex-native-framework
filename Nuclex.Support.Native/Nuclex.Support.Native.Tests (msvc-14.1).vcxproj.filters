@@ -66,6 +66,12 @@
     <Filter Include="Tests\Services">
       <UniqueIdentifier>{0284c8eb-686e-418f-a221-c574bc42ea8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Text\Ryu">
+      <UniqueIdentifier>{6d6734f5-932c-4dcd-bb67-6a9b69db0f2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text\Utf8Fold">
+      <UniqueIdentifier>{a464efe7-4a41-43bd-8cc9-46d5ae179e0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Any.cpp">
@@ -160,6 +166,27 @@
     </ClCompile>
     <ClCompile Include="Source\Services\UnresolvedDependencyError.cpp">
       <Filter>Source\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Ryu\d2fixed.c">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Ryu\d2s.c">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Ryu\f2s.c">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Ryu\generic_128.c">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Ryu\s2d.c">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\StringMatcher.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Text\StringMatcherTest.cpp">
+      <Filter>Tests\Text</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -270,6 +297,45 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Services\UnresolvedDependencyError.h">
       <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\common.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\d2fixed_full_table.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\d2s_full_table.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\d2s_intrinsics.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\d2s_small_table.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\digit_table.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\f2s_full_table.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\generic_128.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\ryu.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\ryu_generic_128.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Ryu\ryu_parse.h">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Utf8Fold\Utf8Fold.h">
+      <Filter>Source\Text\Utf8Fold</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
+      <Filter>Include\Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

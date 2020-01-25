@@ -8,39 +8,74 @@ to make you life easier.
 There are unit tests for the whole library, so everything is verifiably
 working on all platforms tested (Linux, Windows, Raspberry).
 
+* Locale-independent string/number conversion
+* Conversion between std::string and std::wstring
+* Case-insensitive UTF-8 string comparison
+* UTF-8 wildcard matching
+* Fast and lightweight events (publisher/subscriber pattern)
+* Lean dependency injector with automatic constructor detection
+
+* Supports Windows, Linux and ARM Linux (Raspberry PI)
+* Compiles cleanly at maximum warning levels with MSVC, GCC and clang
+* Everything is unit-tested
+
 
 lexical_cast
 ------------
 
 This is almost identical to the `lexical_cast` function found in Boost,
-but it avoids iostreams (which would be a relatively heavy dependency).
+but it avoids the heavyweight iostreams library. By shipping its own
+number/string conversion code, locale issues are avoided and you'll get
+the same results independent of the system's locale.
 
-It also ships its own number/string conversion code, therefore the output
-will always look identical, no matter what platform, standard library or
-system locale is being used.
-
-This is very nice if you serialize data on multiple platforms because
-the data is binary-reproducible.
+This is very nice if you have to serialize data (i.e. JSON or XML) on
+multiple platforms because the data is binary-reproducible.
 
 Uses [Dragon4](http://www.ryanjuckett.com/programming/printing-floating-point-numbers/),
-[Erthink](https://abf.io/erthink/erthink) internally, which have licenses that
-allow this use. See Copyright.md in the Documents directory.
+[Erthink](https://abf.io/erthink/erthink) and [Ryu](https://github.com/ulfjack/ryu)
+internally, which have licenses that allow this use. See Copyright.md
+in the Documents directory for more details.
+
+```cpp
+std::string myString = lexical_cast<std::string>(12.34f);
+float myFloat = lexical_cast<float>(u8"43.21");
+```
 
 
 StringConverter
 ---------------
 
-Wraps [UTF8-CPP](https://github.com/nemtrif/utfcpp) and limits its interface
-to simple conversions between `std::string` (assumed to be holding UTF-8)
-and `std::wstring` (assumed to be holding UTF-16 on Windows systems where
-`wchar_t` is 16 bits wide and the compiler turns `L"something"` into UTF-16)
-(assumed to be holding UTF-32 on Unix systems where `wchar_t` is 32 bits wide
-and the compiler turns `L"something"` into UTF-32).
+Useful helper methods for string, such as conversion between UTF-8,
+UTF-16 and UTF-32 and case-insensitive UTF-8 string comparison (done right
+by using the case folding table released by the unicode consortium).
 
-My convention is to only use UTF-8. The StringConverter's only purpose is to
-allow interfacing with Microsoft's unicode API (which requires UTF-16) and to
-disarm `TEXT()` macros used by cargo-culting Windows programmers who picked up
-the idea that using wide chars is necessary, or useful, for localization ;-)
+Can also convert between "wide char" strings and UTF-8. Wide chars are
+the bad side of unicode that Windows programmers have to deal with, with
+many `TEXT()` macros expanding to `L"my string"` which generates UTF-16 on
+Windows and UTF-32 on Linux. 
+
+Uses [UTF8-CPP](https://github.com/nemtrif/utfcpp) and some custom code.
+See Copyright.md in the Documents directory for more details.
+
+```cpp
+// This works on any platform, whether wchar_t is UTF-16 or UTF-32
+std::string utf8 = StringConverter::Utf8FromWide(L"Hello World");
+
+// If you need to read or write UTF-16 to communicate with Windows systems
+std::u16string alwaysUtf16 = StringConverter::Utf16FromUtf8(u8"Hello World");
+```
+
+
+StringMatcher
+-------------
+
+A UTF-8 wildcard matcher for strings.
+
+```cpp
+bool retursTrue = StringMatcher::FitsWilcard(
+  u8"Cupboard-Albedo.png", u8"*-Albedo.png"
+);
+```
 
 
 Events (Signal/Slot system)
@@ -129,7 +164,7 @@ Any
 ---
 
 Opaquely wraps a type so it can be transmitted between two pieces of code
-without making public APIs dependent on a library- os OS-specific type.
+without making public APIs dependent on a library- or OS-specific type.
 
 Imagine this:
 

@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -24,6 +24,7 @@ License along with this library
 #include "Nuclex/Support/Text/StringConverter.h"
 
 #include "Utf8/checked.h"
+#include "Utf8Fold/Utf8Fold.h"
 
 #include <vector>
 
@@ -63,7 +64,7 @@ namespace {
   template<>
   struct StringConverterCharWidthHelper<sizeof(char16_t)> {
 
-    /// <summary>Converts a UTF-8 string into a wide (UTF-16 or UTF-32) string</summary>
+    /// <summary>Converts a UTF-8 string into a UTF-16 string</summary>
     /// <param name="utf8String">UTF-8 string that will be converted</param>
     /// <returns>A wide version of the provided UTF-8 string</returns>
     inline static std::wstring WideFromUtf8(const std::string &utf8String) {
@@ -76,16 +77,16 @@ namespace {
       std::vector<wchar_t> utf16Characters;
       utf16Characters.reserve(utf8String.length());
 
-      // Do the conversions. If the vector was too short, it will be grown in factors
+      // Do the conversion. If the vector was too short, it will be grown in factors
       // of 2 usually (depending on the standard library implementation)
       utf8::utf8to16(utf8String.begin(), utf8String.end(), std::back_inserter(utf16Characters));
 
       return std::wstring(&utf16Characters[0], utf16Characters.size());
     }
 
-    /// <summary>Converts a wide (UTF-16 or UTF-32) string into a UTF-8 string</summary>
-    /// <param name="wideString">Wide string that will be converted</param>
-    /// <returns>A UTF-8 version of the provided wide string</returns>
+    /// <summary>Converts a UTF-16 string into a UTF-8 string</summary>
+    /// <param name="wideString">UTF-16 string that will be converted</param>
+    /// <returns>A UTF-8 version of the provided UTF-16 string</returns>
     inline static std::string Utf8FromWide(const std::wstring &utf16String) {
       if(utf16String.empty()) {
         return std::string();
@@ -96,7 +97,7 @@ namespace {
       std::vector<char> utf8Characters;
       utf8Characters.reserve(utf16String.length());
 
-      // Do the conversions. If the vector was too short, it will be grown in factors
+      // Do the conversion. If the vector was too short, it will be grown in factors
       // of 2 usually (depending on the standard library implementation)
       utf8::utf16to8(
         utf16String.begin(), utf16String.end(), std::back_inserter(utf8Characters)
@@ -113,9 +114,9 @@ namespace {
   template<>
   struct StringConverterCharWidthHelper<sizeof(char32_t)> {
 
-    /// <summary>Converts a UTF-8 string into a wide (UTF-16 or UTF-32) string</summary>
+    /// <summary>Converts a UTF-8 string into a UTF-32 string</summary>
     /// <param name="utf8String">UTF-8 string that will be converted</param>
-    /// <returns>A wide version of the provided UTF-8 string</returns>
+    /// <returns>A UTF-32 version of the provided UTF-8 string</returns>
     inline static std::wstring WideFromUtf8(const std::string &utf8String) {
       if(utf8String.empty()) {
         return std::wstring();
@@ -126,7 +127,7 @@ namespace {
       std::vector<char32_t> utf32Characters;
       utf32Characters.reserve(utf8String.length());
 
-      // Do the conversions. If the vector was too short, it will be grown in factors
+      // Do the conversion. If the vector was too short, it will be grown in factors
       // of 2 usually (depending on the standard library implementation)
       utf8::utf8to32(utf8String.begin(), utf8String.end(), std::back_inserter(utf32Characters));
 
@@ -136,9 +137,9 @@ namespace {
       return std::wstring(first, utf32Characters.size());
     }
 
-    /// <summary>Converts a wide (UTF-16 or UTF-32) string into a UTF-8 string</summary>
-    /// <param name="wideString">Wide string that will be converted</param>
-    /// <returns>A UTF-8 version of the provided wide string</returns>
+    /// <summary>Converts a UTF-32 string into a UTF-8 string</summary>
+    /// <param name="wideString">UTF-32 string that will be converted</param>
+    /// <returns>A UTF-8 version of the provided UTF-32 string</returns>
     inline static std::string Utf8FromWide(const std::wstring &utf32String) {
       if(utf32String.empty()) {
         return std::string();
@@ -149,7 +150,7 @@ namespace {
       std::vector<char> utf8Characters;
       utf8Characters.reserve(utf32String.length());
 
-      // Do the conversions. If the vector was too short, it will be grown in factors
+      // Do the conversion. If the vector was too short, it will be grown in factors
       // of 2 usually (depending on the standard library implementation)
       utf8::utf32to8(
         utf32String.begin(), utf32String.end(), std::back_inserter(utf8Characters)
@@ -190,7 +191,7 @@ namespace Nuclex { namespace Support { namespace Text {
     std::vector<char16_t> utf16Characters;
     utf16Characters.reserve(utf8String.length());
 
-    // Do the conversions. If the vector was too short, it will be grown in factors
+    // Do the conversion. If the vector was too short, it will be grown in factors
     // of 2 usually (depending on the standard library implementation)
     utf8::utf8to16(utf8String.begin(), utf8String.end(), std::back_inserter(utf16Characters));
 
@@ -209,7 +210,7 @@ namespace Nuclex { namespace Support { namespace Text {
     std::vector<char> utf8Characters;
     utf8Characters.reserve(utf16String.length());
 
-    // Do the conversions. If the vector was too short, it will be grown in factors
+    // Do the conversion. If the vector was too short, it will be grown in factors
     // of 2 usually (depending on the standard library implementation)
     utf8::utf16to8(
       utf16String.begin(), utf16String.end(), std::back_inserter(utf8Characters)
@@ -230,7 +231,7 @@ namespace Nuclex { namespace Support { namespace Text {
     std::vector<char32_t> utf32Characters;
     utf32Characters.reserve(utf8String.length());
 
-    // Do the conversions. If the vector was too short, it will be grown in factors
+    // Do the conversion. If the vector was too short, it will be grown in factors
     // of 2 usually (depending on the standard library implementation)
     utf8::utf8to32(utf8String.begin(), utf8String.end(), std::back_inserter(utf32Characters));
 
@@ -249,13 +250,19 @@ namespace Nuclex { namespace Support { namespace Text {
     std::vector<char> utf8Characters;
     utf8Characters.reserve(utf32String.length());
 
-    // Do the conversions. If the vector was too short, it will be grown in factors
+    // Do the conversion. If the vector was too short, it will be grown in factors
     // of 2 usually (depending on the standard library implementation)
     utf8::utf32to8(
       utf32String.begin(), utf32String.end(), std::back_inserter(utf8Characters)
     );
 
     return std::string(&utf8Characters[0], utf8Characters.size());
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::string StringConverter::FoldedLowercaseFromUtf8(const std::string &utf8String) {
+    return ToFoldedLowercase(utf8String);
   }
 
   // ------------------------------------------------------------------------------------------- //

@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -19,7 +19,7 @@ License along with this library
 #pragma endregion // CPL License
 
 // If the library is compiled as a DLL, this ensures symbols are exported
-#define NUCLEX_GEOMETRY_SOURCE 1
+#define NUCLEX_SUPPORT_SOURCE 1
 
 #include "Nuclex/Support/Events/Delegate.h"
 
@@ -154,12 +154,12 @@ namespace Nuclex { namespace Support { namespace Events {
     );
 
     EXPECT_EQ(StaticMock::LastSomethingParameterValue, 0);
-    EXPECT_EQ(StaticMock::ReceivedNotificationCount, 0);
+    EXPECT_EQ(StaticMock::ReceivedNotificationCount, 0U);
 
     test(666);
 
     EXPECT_EQ(StaticMock::LastSomethingParameterValue, 666);
-    EXPECT_EQ(StaticMock::ReceivedNotificationCount, 1);
+    EXPECT_EQ(StaticMock::ReceivedNotificationCount, 1U);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -172,12 +172,12 @@ namespace Nuclex { namespace Support { namespace Events {
     );
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 0);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0U);
 
     test(42);
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 42);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1U);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -190,12 +190,12 @@ namespace Nuclex { namespace Support { namespace Events {
     );
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 0);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0U);
 
     test(0x4472676E);
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 0x4472676E);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1U);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -208,12 +208,12 @@ namespace Nuclex { namespace Support { namespace Events {
     );
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 0);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0U);
 
     test(0x4472676E);
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 0x4472676E);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1U);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -273,12 +273,12 @@ namespace Nuclex { namespace Support { namespace Events {
     test.Reset<Mock, &Mock::Notify>(&callTarget);
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 0);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0U);
 
     test(555);
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 555);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1U);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -292,12 +292,12 @@ namespace Nuclex { namespace Support { namespace Events {
     test.Reset<Mock, &Mock::ConstNotify>(&callTarget);
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 0);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0U);
 
     test(555);
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 555);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1U);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -311,12 +311,12 @@ namespace Nuclex { namespace Support { namespace Events {
     test.Reset<Mock, &Mock::ConstNotify>(&callTarget);
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 0);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 0U);
 
     test(555);
 
     EXPECT_EQ(callTarget.LastSomethingParameterValue, 555);
-    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1);
+    EXPECT_EQ(callTarget.ReceivedNotificationCount, 1U);
   }
 
   // ------------------------------------------------------------------------------------------- //

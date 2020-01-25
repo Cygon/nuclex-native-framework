@@ -1,7 +1,7 @@
 ﻿#pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -19,7 +19,7 @@ License along with this library
 #pragma endregion // CPL License
 
 // If the library is compiled as a DLL, this ensures symbols are exported
-#define NUCLEX_GEOMETRY_SOURCE 1
+#define NUCLEX_SUPPORT_SOURCE 1
 
 #include "Nuclex/Support/Text/StringConverter.h"
 
@@ -89,6 +89,28 @@ namespace Nuclex { namespace Support { namespace Text {
     EXPECT_EQ(
       StringConverter::Utf8FromWide(text),
       u8"𝖠Β𝒞𝘋𝙴𝓕ĢȞỈ𝕵ꓗʟ𝙼ℕ০𝚸𝗤ՀꓢṰǓⅤ𝔚Ⲭ𝑌𝙕𝘢𝕤"
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(StringConverterTest, Utf8StringsCanBeCaseFolded) {
+    std::string variant1 = u8"HeLlO wOrLd Ä ö Ü λ Φ δ ẞ";
+    std::string variant2 = u8"hElLo WoRlD ä Ö ü Λ φ Δ ß";
+    std::string wrong1 = u8"hElLo WoRlD A o U λ Φ Δ B";
+    std::string wrong2 = u8"hElLo WoRlD ä ö ü ^ & ∩ b";
+
+    EXPECT_EQ(
+      StringConverter::FoldedLowercaseFromUtf8(variant1),
+      StringConverter::FoldedLowercaseFromUtf8(variant2)
+    );
+    EXPECT_NE(
+      StringConverter::FoldedLowercaseFromUtf8(variant1),
+      StringConverter::FoldedLowercaseFromUtf8(wrong1)
+    );
+    EXPECT_NE(
+      StringConverter::FoldedLowercaseFromUtf8(variant2),
+      StringConverter::FoldedLowercaseFromUtf8(wrong2)
     );
   }
 

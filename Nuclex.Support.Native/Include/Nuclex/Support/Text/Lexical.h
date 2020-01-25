@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -37,13 +37,15 @@ namespace Nuclex { namespace Support { namespace Text {
   /// <remarks>
   ///   <para>
   ///     This cast offers a portable way to convert between numeric and string types without
-  ///     resorting to cumbersome sprintf() constructs or relying on deprecated and functions
+  ///     resorting to cumbersome sprintf() constructs or relying on deprecated functions
   ///     such as gcvt() or itoa(). 
   ///   </para>
   ///   <para>
-  ///     Lexical casts are guaranteed to completely ignore system locale and any other
-  ///     localization settings. Primitive types can be converted without pulling in iostreams
-  ///     (which is a bit of a heavyweight part of the SC++L).
+  ///     <list type="bullet">
+  ///       <item><term>No iostreams dependency</term></item>
+  ///       <item><term>Ignores system locale</term></item>
+  ///       <item><term>Full float-string-float round tripping</term></item>
+  ///     </list>
   ///   </para>
   /// </remarks>
   template<typename TTarget>
@@ -98,36 +100,42 @@ namespace Nuclex { namespace Support { namespace Text {
 
   namespace Private {
 
-    /// <summary>Performs a lexical_cast but converts the string between UTF-8 and UTF-16</summary>
+    /// <summary>
+    ///   Performs a lexical_cast where one side is a UTF-16/UTF-32 string (std::wstring)
+    /// </summary>
     /// <typeparam name="TTarget">Target type for the lexical cast</typeparam>
     /// <typeparam name="TSource">Source type for the lexical cast</typeparam>
     template<typename TTarget, typename TSource>
     struct LexicalCastWithConversionHelper {
       /// <summary>Casts from the source type to the target type</summary>
-      /// <param name="from">Value that will be cast from or to a UTF-16 string</param>
-      /// <returns>Resulting UTF-16 string or value</returns>
+      /// <param name="from">Value that will be cast or a UTF-16 or UTF-32 string</param>
+      /// <returns>Resulting UTF-16 or UTF-32 string or value</returns>
       inline static TTarget _(const TSource &from) = delete;
     };
 
-    /// <summary>Performs a lexical_cast but converts the source string to UTF-16</summary>
+    /// <summary>
+    ///   Performs a lexical_cast but converts the input string from UTF-16 or UTF-32
+    /// </summary>
     /// <typeparam name="TTarget">Target type for the lexical cast</typeparam>
     template<typename TTarget>
     struct LexicalCastWithConversionHelper<TTarget, std::wstring> {
-      /// <summary>Casts from a UTF-16 string to the target type</summary>
-      /// <param name="from">UTF-16 string that will be cast to the target type</param>
+      /// <summary>Lexically casts from a UTF-16 or UTF-32 string to the target type</summary>
+      /// <param name="from">UTF-16 or UTF-32 string to cast to the target type</param>
       /// <returns>The resulting value</returns>
       inline static TTarget _(const std::wstring &from) {
         return lexical_cast<TTarget>(StringConverter::Utf8FromWide(from));
       }      
     };
 
-    /// <summary>Performs a lexical_cast but converts the resulting string to UTF-16</summary>
+    /// <summary>
+    ///   Performs a lexical_cast but converts the resulting string to UTF-16 or UTF-32
+    // </summary>
     /// <typeparam name="TSource">Source type for the lexical cast</typeparam>
     template<typename TSource>
     struct LexicalCastWithConversionHelper<std::wstring, TSource> {
-      /// <summary>Casts from the source type to a UTF-16 string</summary>
-      /// <param name="from">Value that will be cast to a UTF-16 string</param>
-      /// <returns>Resulting UTF-16 string</returns>
+      /// <summary>Casts from the source type to a UTF-16 or UTF-32 string</summary>
+      /// <param name="from">Value that will be cast to a UTF-16 or UTF-32 string</param>
+      /// <returns>Resulting UTF-16 or UTF-32 string</returns>
       inline static std::wstring _(const TSource &from) {
         return StringConverter::WideFromUtf8(lexical_cast<std::string>(from));
       }      
@@ -148,7 +156,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///   </para>
   ///   <para>
   ///     Lexical casts are guaranteed to completely ignore system locale and any other
-  ///     localization settings. Primitive types can be converted without pulling in iostreams
+  ///     localization settings. It also performs all conversion without pulling in iostreams
   ///     (which is a bit of a heavyweight part of the SC++L).
   ///   </para>
   /// </remarks>

@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -31,7 +31,7 @@ namespace Nuclex { namespace Support { namespace Collections {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>
-  ///   Simple dynamic array exposed under the <see cref="IndexedCollection"> interface
+  ///   Simple dynamic array exposed under the <see cref="IndexedCollection" /> interface
   /// </summary>
   /// <remarks>
   ///   Use std::vector&lt;&gt; directly for library-internal data. This wrapper is intended

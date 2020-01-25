@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -244,7 +244,7 @@ namespace Nuclex { namespace Support { namespace Services {
     using ServiceProvider::TryGet;
 
     /// <summary>Creates a new instance of the specified service</summary>
-    /// <param name="serviceType">Type of service that will be created</param>
+    /// <typeparam name="TService">Type of service that will be created</typeparam>
     /// <returns>A new instance of the requested service</returns>
     public: template<typename TService>
     std::shared_ptr<TService> Create() const {

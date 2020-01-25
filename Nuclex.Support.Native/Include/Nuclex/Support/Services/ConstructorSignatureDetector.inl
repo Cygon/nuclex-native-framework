@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -159,9 +159,9 @@ namespace Nuclex { namespace Support { namespace Services {
   namespace Private {
 
     /// <summary>Detects the constructor signature for the specified type</summary>
-    /// <typename name="TImplementation">
+    /// <typeparam name="TImplementation">
     ///   Type for which the constructor signature will be detectd
-    /// </typename>
+    /// </typeparam>
     template<typename TImplementation>
     using DetectConstructorSignature = typename ConstructorSignatureDetector<
       TImplementation, BuildIntegerSequence<0>

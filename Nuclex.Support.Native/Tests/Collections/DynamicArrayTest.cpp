@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -19,7 +19,7 @@ License along with this library
 #pragma endregion // CPL License
 
 // If the library is compiled as a DLL, this ensures symbols are exported
-#define NUCLEX_GEOMETRY_SOURCE 1
+#define NUCLEX_SUPPORT_SOURCE 1
 
 #include "Nuclex/Support/Collections/DynamicArray.h"
 #include <gtest/gtest.h>
@@ -54,9 +54,9 @@ namespace Nuclex { namespace Support { namespace Collections {
     test.Add(32);
     test.Add(43);
 
-    EXPECT_EQ(2, test.GetIndexOf(32));
-    EXPECT_EQ(3, test.GetIndexOf(43));
-    EXPECT_EQ(1, test.GetIndexOf(21));
+    EXPECT_EQ(2U, test.GetIndexOf(32));
+    EXPECT_EQ(3U, test.GetIndexOf(43));
+    EXPECT_EQ(1U, test.GetIndexOf(21));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -148,7 +148,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     EXPECT_EQ(987, test.GetAt(0));
     EXPECT_EQ(321, test.GetAt(1));
-    EXPECT_EQ(2, test.Count());
+    EXPECT_EQ(2U, test.Count());
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -172,12 +172,12 @@ namespace Nuclex { namespace Support { namespace Collections {
     test.Add(3232);
     test.Add(4343);
 
-    EXPECT_EQ(3, test.Count());
+    EXPECT_EQ(3U, test.Count());
     EXPECT_TRUE(test.Remove(3232));
 
     EXPECT_EQ(2121, test.GetAt(0));
     EXPECT_EQ(4343, test.GetAt(1));
-    EXPECT_EQ(2, test.Count());
+    EXPECT_EQ(2U, test.Count());
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -189,7 +189,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     test.Add(3);
 
     EXPECT_FALSE(test.Remove(4));
-    EXPECT_EQ(3, test.Count());
+    EXPECT_EQ(3U, test.Count());
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -202,7 +202,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     test.Add(33);
     test.Add(78);
 
-    EXPECT_EQ(5, test.Count());
+    EXPECT_EQ(5U, test.Count());
     EXPECT_TRUE(test.Remove(33));
 
     EXPECT_EQ(12, test.GetAt(0));
@@ -210,13 +210,13 @@ namespace Nuclex { namespace Support { namespace Collections {
     EXPECT_EQ(33, test.GetAt(2));
     EXPECT_EQ(78, test.GetAt(3));
 
-    EXPECT_EQ(4, test.Count());
+    EXPECT_EQ(4U, test.Count());
     EXPECT_TRUE(test.Remove(33));
 
     EXPECT_EQ(12, test.GetAt(0));
     EXPECT_EQ(45, test.GetAt(1));
     EXPECT_EQ(78, test.GetAt(2));
-    EXPECT_EQ(3, test.Count());
+    EXPECT_EQ(3U, test.Count());
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -227,9 +227,9 @@ namespace Nuclex { namespace Support { namespace Collections {
     test.Add(33);
     test.Add(55);
 
-    EXPECT_EQ(3, test.Count());
+    EXPECT_EQ(3U, test.Count());
     test.Clear();
-    EXPECT_EQ(0, test.Count());
+    EXPECT_EQ(0U, test.Count());
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -249,13 +249,13 @@ namespace Nuclex { namespace Support { namespace Collections {
   TEST(DynamicArrayTest, ItemsCanBeCounted) {
     DynamicArray<int> test;
 
-    EXPECT_EQ(0, test.Count());
+    EXPECT_EQ(0U, test.Count());
     test.Add(11);
-    EXPECT_EQ(1, test.Count());
+    EXPECT_EQ(1U, test.Count());
     test.Add(33);
-    EXPECT_EQ(2, test.Count());
+    EXPECT_EQ(2U, test.Count());
     test.Add(55);
-    EXPECT_EQ(3, test.Count());
+    EXPECT_EQ(3U, test.Count());
   }
 
   // ------------------------------------------------------------------------------------------- //

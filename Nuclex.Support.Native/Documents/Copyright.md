@@ -56,6 +56,17 @@ If you distribute binaries compiled from this library, you do not have to
 do anything, but an acknowledgement of the original author would be nice.
 
 
+Ryu String to Float Parser: Apache 2.0 License
+---------------------------------------------
+
+Code from the Ryu library is used to convert strings to floating point values
+independent of the system locale. It is written by Ulf Adams and licensed under
+the Apache 2.0 license (http://www.apache.org/licenses/LICENSE-2.0)
+
+If you distribute binaries compiled from this library, you do not have to
+do anything, but an acknowledgement of the original author would be nice.
+
+
 UTF-8, UTF-16, UTF-32 Converter: Boost Software License
 -------------------------------------------------------
 

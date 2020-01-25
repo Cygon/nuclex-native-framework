@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -25,8 +25,9 @@ License along with this library
 
 #include "Dragon4/PrintFloat.h"
 #include "Erthink/erthink_u2a.h"
+#include "Ryu/ryu_parse.h"
 
-#include <cstdlib>
+#include <limits> // for std::numeric_limits
 
 // Goal: print floating-point values accurately, locale-independent and without exponent
 //
@@ -70,12 +71,34 @@ License along with this library
 //   o Handles signed and 64 bit integers
 //
 
+// Goal: convert ascii strings to floating point values
+//   https://stackoverflow.com/questions/36018074
+//
+// Python https://github.com/enthought/Python-2.7.3/blob/master/Python/atof.c
+//   o Unusable due to broken multiply/divide-by-10 technique
+//
+// Google Double-Conversion https://github.com/google/double-conversion
+//   o Looks okay
+//   o May rely on std::locale stuff
+//
+// Ryu https://github.com/ulfjack/ryu/blob/master/ryu/s2d.c
+//   o Looks okay
+//   o No locale stuff
+//   o Used in unit test for full round-trip of all possible 32 bit floats
+//
+// Not checked:
+//   o Ruby built-in - naive and broken multiply/divide-by-10 technique
+//   o Sun - just as bad
+//   o Lucent - may be okay, but sketchy implementation, doesn't build on GNU
+//   o glibc - decent, but GPL
+//
+
 namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
   template<> bool lexical_cast<>(const std::string &from) {
-    if(from.length() >= 3) {
+    if(from.length() >= 4) {
       return (
         ((from[0] == 't') || (from[0] == 'T')) &&
         ((from[1] == 'r') || (from[1] == 'R')) &&
@@ -100,8 +123,8 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   template<> std::string lexical_cast<>(const bool &from) {
-    static const std::string trueString("true");
-    static const std::string falseString("false");
+    static const std::string trueString(u8"true");
+    static const std::string falseString(u8"false");
 
     if(from) {
       return trueString;
@@ -306,7 +329,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> std::string lexical_cast<>(const float &from) {
     char characters[64];
-    tU32 length = PrintFloat32(
+    tU32 length = ::PrintFloat32(
       characters, sizeof(characters), from, PrintFloatFormat_Positional, -1
     );
 
@@ -319,21 +342,34 @@ namespace Nuclex { namespace Support { namespace Text {
     if(from == nullptr) {
       return 0.0f;
     } else {
-      return std::stof(std::string(from));
+      double result;
+      enum ::Status status = s2d(from, &result);
+      if(status == SUCCESS) {
+        return static_cast<float>(result);
+      } else {
+        return std::numeric_limits<float>::quiet_NaN();
+      }
     }
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   template<> float lexical_cast<>(const std::string &from) {
-    return std::stof(from);
+    double result;
+    enum ::Status status = s2d_n(from.c_str(), static_cast<int>(from.length()), &result);
+    if(status == SUCCESS) {
+      return static_cast<float>(result);
+    } else {
+      return std::numeric_limits<float>::quiet_NaN();
+    }
+    //return std::stof(from);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   template<> std::string lexical_cast<>(const double &from) {
     char characters[256];
-    tU32 length = PrintFloat64(
+    tU32 length = ::PrintFloat64(
       characters, sizeof(characters), from, PrintFloatFormat_Positional, -1
     );
 
@@ -346,14 +382,27 @@ namespace Nuclex { namespace Support { namespace Text {
     if(from == nullptr) {
       return 0.0;
     } else {
-      return std::stod(std::string(from));
+      double result;
+      enum ::Status status = s2d(from, &result);
+      if(status == SUCCESS) {
+        return result;
+      } else {
+        return std::numeric_limits<double>::quiet_NaN();
+      }
     }
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   template<> double lexical_cast<>(const std::string &from) {
-    return std::stod(from);
+    double result;
+    enum ::Status status = s2d_n(from.c_str(), static_cast<int>(from.length()), &result);
+    if(status == SUCCESS) {
+      return result;
+    } else {
+      return std::numeric_limits<double>::quiet_NaN();
+    }
+    //return std::stof(from);
   }
 
   // ------------------------------------------------------------------------------------------- //
