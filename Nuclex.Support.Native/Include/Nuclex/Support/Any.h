@@ -31,6 +31,10 @@ namespace Nuclex { namespace Support {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Opaquely wraps a value of an arbitrary type</summary>
+  /// <remarks>
+  ///   This library targets C++14, where std::any hadn't been introduced yet.
+  ///   If you are targeting C++17 or later, there is no need to use this class.
+  /// </remarks>
   class Any {
 
     /// <summary>An <see cref="Any" /> instance that is empty</summary>

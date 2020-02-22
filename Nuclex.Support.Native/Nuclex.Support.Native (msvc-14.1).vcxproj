@@ -193,6 +193,7 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableDynamicArray.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\EmptyDelegateCallError.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Event.h" />
@@ -210,6 +211,7 @@
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />
     <ClInclude Include="Include\Nuclex\Support\Any.h" />
     <ClInclude Include="Include\Nuclex\Support\Config.h" />
+    <ClInclude Include="Include\Nuclex\Support\Optional.h" />
     <ClInclude Include="Include\Nuclex\Support\Variant.h" />
     <ClInclude Include="Include\Nuclex\Support\VariantType.h" />
   </ItemGroup>
@@ -220,6 +222,7 @@
     <ClCompile Include="Source\Collections\ObservableCollection.cpp" />
     <ClCompile Include="Source\Collections\ObservableDynamicArray.cpp" />
     <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp" />
+    <ClCompile Include="Source\Collections\ShiftBuffer.cpp" />
     <ClCompile Include="Source\Events\Delegate.cpp" />
     <ClCompile Include="Source\Events\EmptyDelegateCallError.cpp" />
     <ClCompile Include="Source\Events\Event.cpp" />
@@ -241,29 +244,30 @@
     <ClInclude Include="Source\Text\Erthink\erthink_u2a.h" />
     <ClInclude Include="Source\Text\Ryu\common.h" />
     <ClInclude Include="Source\Text\Ryu\d2fixed_full_table.h" />
+    <ClCompile Include="Source\Text\Ryu\d2fixed.c" />
     <ClInclude Include="Source\Text\Ryu\d2s_full_table.h" />
     <ClInclude Include="Source\Text\Ryu\d2s_intrinsics.h" />
     <ClInclude Include="Source\Text\Ryu\d2s_small_table.h" />
+    <ClCompile Include="Source\Text\Ryu\d2s.c" />
     <ClInclude Include="Source\Text\Ryu\digit_table.h" />
     <ClInclude Include="Source\Text\Ryu\f2s_full_table.h" />
+    <ClCompile Include="Source\Text\Ryu\f2s.c" />
     <ClInclude Include="Source\Text\Ryu\generic_128.h" />
+    <ClCompile Include="Source\Text\Ryu\generic_128.c" />
     <ClInclude Include="Source\Text\Ryu\ryu.h" />
     <ClInclude Include="Source\Text\Ryu\ryu_generic_128.h" />
     <ClInclude Include="Source\Text\Ryu\ryu_parse.h" />
+    <ClCompile Include="Source\Text\Ryu\s2d.c" />
     <ClInclude Include="Source\Text\Utf8Fold\Utf8Fold.h" />
     <ClInclude Include="Source\Text\Utf8\checked.h" />
     <ClInclude Include="Source\Text\Utf8\core.h" />
     <ClInclude Include="Source\Text\Utf8\unchecked.h" />
     <ClCompile Include="Source\Text\Lexical.cpp" />
-    <ClCompile Include="Source\Text\Ryu\d2fixed.c" />
-    <ClCompile Include="Source\Text\Ryu\d2s.c" />
-    <ClCompile Include="Source\Text\Ryu\f2s.c" />
-    <ClCompile Include="Source\Text\Ryu\generic_128.c" />
-    <ClCompile Include="Source\Text\Ryu\s2d.c" />
     <ClCompile Include="Source\Text\StringConverter.cpp" />
     <ClCompile Include="Source\Text\StringMatcher.cpp" />
     <ClCompile Include="Source\Any.cpp" />
     <ClCompile Include="Source\Config.cpp" />
+    <ClCompile Include="Source\Optional.cpp" />
     <ClCompile Include="Source\Variant.cpp" />
     <ClCompile Include="Source\VariantType.cpp" />
   </ItemGroup>

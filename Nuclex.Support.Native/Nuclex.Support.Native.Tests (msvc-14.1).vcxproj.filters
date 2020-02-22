@@ -188,6 +188,21 @@
     <ClCompile Include="Tests\Text\StringMatcherTest.cpp">
       <Filter>Tests\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Collections\ShiftBuffer.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Optional.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Collections\ShiftBufferDeathTest.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Collections\ShiftBufferTest.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\OptionalTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Text\Utf8\checked.h">
@@ -203,6 +218,9 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Config.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Optional.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Variant.h">
@@ -336,6 +354,9 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
       <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h">
+      <Filter>Include\Collections</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
