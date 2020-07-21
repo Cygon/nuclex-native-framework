@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -195,6 +195,9 @@ namespace Nuclex { namespace Pixels {
   // ------------------------------------------------------------------------------------------- //
 
   void PixelIterator::enforceAtEndPosition(std::size_t checkX, std::size_t checkY) const {
+    (void)checkX;
+    (void)checkY;
+
     using namespace std; // Some C++ std libs had assert in std, some didn't :-/
     assert(
       "Cannot move iterator beyond the end position" &&

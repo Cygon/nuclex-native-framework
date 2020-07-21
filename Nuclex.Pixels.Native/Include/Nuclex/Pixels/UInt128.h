@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -18,8 +18,8 @@ License along with this library
 */
 #pragma endregion // CPL License
 
-#ifndef NUCLEX_PIXELS_INT128_H
-#define NUCLEX_PIXELS_INT128_H
+#ifndef NUCLEX_PIXELS_UINT128_H
+#define NUCLEX_PIXELS_UINT128_H
 
 #include "Nuclex/Pixels/Config.h"
 
@@ -592,4 +592,4 @@ namespace std {
 
 }
 
-#endif // NUCLEX_PIXELS_INT128_H
+#endif // NUCLEX_PIXELS_UINT128_H

@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -38,7 +38,7 @@ namespace {
   /// <summary>Converts a UTF-8 path into a UTF-16 path</summary>
   /// <param name="utf8String">String containing a UTF-8 path</param>
   /// <param name="utf16Characters">Vector that will receive the UTF-16 path</param>
-  void utf8ToUtf16Path(const std::string &utf8String, std::vector<wchar_t> &utf16Characters) {
+  void utf16FromUtf8Path(const std::string &utf8String, std::vector<wchar_t> &utf16Characters) {
     utf16Characters.clear();
 
     if(utf8String.empty()) {
@@ -47,7 +47,7 @@ namespace {
 
     // We guess that we need as many UTF-16 characters as we needed UTF-8 characters
     // based on the assumption that most text will only use ascii characters.
-    utf16Characters.reserve(utf8String.length() + 4);
+    utf16Characters.reserve(utf8String.length() + 4 + 1); // +1 for likely zero termination
 
     // According to Microsoft, this is how you lift the 260 char MAX_PATH limit.
     const wchar_t prefix[] = L"\\\\?\\";
@@ -68,15 +68,15 @@ namespace {
 #if defined(NUCLEX_PIXELS_WIN32)
 
   /// <summary>RAII helper that calls LocalFree() on a wide character string</summary>
-  struct BufferAllocationScope {
+  struct LocalAllocScope {
 
     /// <summary>Initializes a new string memory releaser</summary>
     /// <param name="buffer">Buffer that will be freed when the instance is destroyed</param>
-    public: BufferAllocationScope(LPWSTR buffer) :
+    public: LocalAllocScope(LPWSTR buffer) :
       buffer(buffer) {}
 
     /// <summary>Frees the buffer</summary>
-    public: ~BufferAllocationScope() {
+    public: ~LocalAllocScope() {
       ::LocalFree(reinterpret_cast<HLOCAL>(buffer));
     }
 
@@ -95,6 +95,7 @@ namespace {
   /// <param name="errorCode">The error code returned by GetLastError()</param>
   /// <returns>The error message for the most-recently occurred Windows API error</returns>
   std::string getWindowsError(DWORD errorCode) {
+    std::vector<char> utf8ErrorMessage;
 
     // Use FormatMessage() to ask Windows for a human-readable error message
     LPWSTR errorMessageBuffer;
@@ -122,7 +123,7 @@ namespace {
         ),
         nullptr, // message string, ignored with passed flags
         errorCode,
-        0, // Let FormatMessage search neutral, thread locale, user locale and system locale
+        0, // Let FormatMessage search: neutral, thread locale, user locale and system locale
         reinterpret_cast<LPWSTR>(&errorMessageBuffer), // MS wants us to cast off pointer levels!
         0,
         nullptr
@@ -135,9 +136,8 @@ namespace {
     }
 
     // We don't want UTF-16 anywhere - at all. So convert this mess to UTF-8.
-    std::vector<char> utf8ErrorMessage;
     {
-      BufferAllocationScope errorMessageScope(errorMessageBuffer);
+      LocalAllocScope errorMessageScope(errorMessageBuffer);
 
       utf8ErrorMessage.reserve(errorMessageLength);
       utf8::utf16to8(
@@ -146,7 +146,7 @@ namespace {
       );
     }
 
-    // Microsoft likes to end an error message with various spaces and newlines,
+    // Microsoft likes to end their error message with various spaces and newlines,
     // cut these off so we have a single-line error message
     std::size_t size = utf8ErrorMessage.size();
     while(size > 0) {
@@ -203,7 +203,7 @@ namespace {
     // Convert the path to UTF-16 because it's what Microsoft unicode APIs crave
     std::vector<wchar_t> utf16Path;
     {
-      utf8ToUtf16Path(path, utf16Path);
+      utf16FromUtf8Path(path, utf16Path);
       utf16Path.push_back(0);
     }
 
@@ -242,7 +242,7 @@ namespace {
     // Convert the path to UTF-16 because it's what Microsoft unicode APIs crave
     std::vector<wchar_t> utf16Path;
     {
-      utf8ToUtf16Path(path, utf16Path);
+      utf16FromUtf8Path(path, utf16Path);
       utf16Path.push_back(0);
     }
 

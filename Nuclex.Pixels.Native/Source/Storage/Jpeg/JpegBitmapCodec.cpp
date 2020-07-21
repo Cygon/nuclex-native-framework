@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -185,7 +185,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       } else { // file is too short to be a PNG
         return false;
       }
-    } else { // extension is bound to be wrong
+    } else { // extension was wrong
       return false;
     }
   }
@@ -218,11 +218,11 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       JpegReadEnvironment virtualFileSource(source);
       commonInfo.src = &virtualFileSource;
 
-      // If the file is too small for even the JPEG/JFIF header, bail out
-      if(virtualFileSource.Length < 16) {
+      // If the file is too small to be a JPEG image, bail out
+      if(virtualFileSource.Length < SmallestPossibleJpegSize) {
         BitmapInfo result;
         result.Loadable = false;
-        return result; // Too small to even recognize as a JPEG file
+        return result;
       }
 
       // Do the first fill ourselves so we can check the file's identity
@@ -231,13 +231,13 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       if(!Helpers::IsValidJpegHeader(virtualFileSource.Buffer)) {
         BitmapInfo result;
         result.Loadable = false;
-        return result; // Too small to even recognize as a JPEG file
+        return result;
       }
 
       // Finally, we can read the JPEG file header to get file infos
       int result = ::jpeg_read_header(&commonInfo, TRUE);
       if(result != JPEG_HEADER_OK) {
-        throw std::runtime_error(u8"libjpeg failed to read the file header");
+        throw Errors::FileFormatError(u8"libjpeg failed to read the file header");
       }
 
       // Create an information structure holding the informations we found
@@ -279,15 +279,15 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       commonInfo.src = &virtualFileSource;
 
       // If the file is too small for even the JPEG/JFIF header, bail out
-      if(virtualFileSource.Length < 16) {
-        return OptionalBitmap(); // Too small to even recognize as a JPEG file
+      if(virtualFileSource.Length < SmallestPossibleJpegSize) {
+        return OptionalBitmap();
       }
 
       // Do the first fill ourselves so we can check the file's identity
       // and exit early if it doesn't look like a JPEG file
       virtualFileSource.fill_input_buffer(&commonInfo);
       if(!Helpers::IsValidJpegHeader(virtualFileSource.Buffer)) {
-        return OptionalBitmap(); // File header did not indicate a JPEG file
+        return OptionalBitmap(); // file header did not indicate a JPEG file
       }
 
       // Finally, we can read the JPEG file header to get file infos

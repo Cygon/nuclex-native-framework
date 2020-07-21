@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -31,6 +31,8 @@ License along with this library
 #include <algorithm>
 
 namespace {
+
+  // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Custom libpng read function that reads data from a virtual file</summary>
   /// <param name="pngRead">PNG read main structure</param>
@@ -200,9 +202,6 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
   void PngWriteEnvironment::SetupFunctionPointers(
     PngWriteEnvironment &pngWriteEnvironment, ::png_struct &pngWrite
   ) {
-    (void)pngWriteEnvironment;
-    (void)pngWrite;
-    
     ::png_set_write_fn(&pngWrite, &pngWriteEnvironment, &writeToVirtualFile, &flushVirtualFile);
   }
 

@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -63,7 +63,7 @@ namespace Nuclex { namespace Pixels { namespace Storage {
       this->fileDescriptor = ::open(
         path.c_str(),
         O_CREAT | O_WRONLY | O_TRUNC,
-        S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH
+        S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH // rw-rw-r--
       );
       if(this->fileDescriptor == -1) {
         int errorNumber = errno;
@@ -122,7 +122,7 @@ namespace Nuclex { namespace Pixels { namespace Storage {
 #elif defined(NUCLEX_PIXELS_LINUX)
 
     ssize_t readByteCount;
-    if(start == this->position) {
+    if(start == this->position) { // Prefer read() when not seeking to support stdin etc.
       readByteCount = ::read(this->fileDescriptor, buffer, byteCount);
       if(readByteCount == -1) {
         int errorNumber = errno;
@@ -169,7 +169,7 @@ namespace Nuclex { namespace Pixels { namespace Storage {
 #elif defined(NUCLEX_PIXELS_LINUX)
 
     ssize_t writtenByteCount;
-    if(start == this->position) {
+    if(start == this->position) { // Prefer write() when not seeking to support stdout etc.
       writtenByteCount = ::write(this->fileDescriptor, buffer, byteCount);
       if(writtenByteCount == -1) {
         int errorNumber = errno;

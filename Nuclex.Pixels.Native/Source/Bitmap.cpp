@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -160,7 +160,7 @@ namespace Nuclex { namespace Pixels {
     memory(other.memory),
     buffer(other.buffer) {
     other.buffer = nullptr;
-#if _DEBUG
+#if !defined(NDEBUG)
     other.memory.Pixels = nullptr;
 #endif
   }
@@ -172,7 +172,7 @@ namespace Nuclex { namespace Pixels {
       releaseSharedBuffer(this->buffer);
     }
 
-#if _DEBUG
+#if !defined(NDEBUG)
     this->buffer = nullptr;
 #endif
   }
@@ -264,7 +264,7 @@ namespace Nuclex { namespace Pixels {
     this->memory = other.memory;
 
     other.buffer = nullptr;
-    #if _DEBUG
+    #if !defined(NDEBUG)
     other.memory.Pixels = nullptr;
     #endif
 

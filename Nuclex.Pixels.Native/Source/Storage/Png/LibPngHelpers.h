@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -75,9 +75,10 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
     }
 
     /// <summary>Sets up the functions pointers used by libpng</summary>
-    /// <param name="jpegReadEnvironment">
+    /// <param name="pngReadEnvironment">
     ///   Environment on which the function pointers will be set up
     /// </param>
+    /// <param name="pngWrite">Main PNG structure initialized for reading</param>
     protected: static void SetupFunctionPointers(
       PngReadEnvironment &pngReadEnvironment, ::png_struct &pngRead
     );
@@ -109,12 +110,12 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
     }
 
     /// <summary>Sets up the functions pointers used by libpng</summary>
-    /// <param name="jpegReadEnvironment">
+    /// <param name="pngWriteEnvironment">
     ///   Environment on which the function pointers will be set up
     /// </param>
     /// <param name="pngWrite">Main PNG structure initialized for writing</param>
     protected: static void SetupFunctionPointers(
-      PngWriteEnvironment &pngReadEnvironment, ::png_struct &pngWrite
+      PngWriteEnvironment &pngWriteEnvironment, ::png_struct &pngWrite
     );
 
     /// <summary>Whether the file is read-only, always false for this structure</summary>

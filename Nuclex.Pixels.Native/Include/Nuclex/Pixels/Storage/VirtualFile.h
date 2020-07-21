@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -34,13 +34,15 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   class VirtualFile {
 
     /// <summary>Opens a real file stored in the OS' file system for reading</summary>
-    /// <param name="path">Path of the file that will be opened for reading</param>
+    /// <param name="path">
+    ///   Path of the file that will be opened for reading as UTF-8 string
+    /// </param>
     /// <param name="promiseSequentialAccess">
     ///   Whether you promise to read from the file sequentially only
     /// </param>
     /// <returns>The file at the specified path, opened in read-only mode</returns>
     /// <remarks>
-    ///   This opens a file using the apprpriate OS-specific API. 
+    ///   This opens a file using the appropriate OS-specific API. 
     ///   provided by the current OS.
     /// </remarks>
     public: NUCLEX_PIXELS_API static std::unique_ptr<const VirtualFile> OpenRealFileForReading(
@@ -48,7 +50,9 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     );
 
     /// <summary>Opens a real file stored in the OS' file system for writing</summary>
-    /// <param name="path">Path of the file that will be opened for writing</param>
+    /// <param name="path">
+    ///   Path of the file that will be opened for writing as UTF-8 string
+    /// </param>
     /// <param name="promiseSequentialAccess">
     ///   Whether you promise to write to the file sequentially only
     /// </param>
