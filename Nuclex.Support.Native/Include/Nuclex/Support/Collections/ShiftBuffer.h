@@ -22,6 +22,8 @@ License along with this library
 #define NUCLEX_SUPPORT_COLLECTIONS_SHIFTBUFFER_H
 
 #include "Nuclex/Support/Config.h"
+#include "Nuclex/Support/ScopeGuard.h"
+#include "Nuclex/Support/BitTricks.h"
 
 #include <cstddef> // for std::size_t
 #include <cstdint> // for std::uint8_t
@@ -67,8 +69,10 @@ namespace Nuclex { namespace Support { namespace Collections {
     /// <summary>Initializes a new shift buffer</summary>
     /// <param name="capacity">Storage space in the shift  buffer at the beginning</param>
     public: ShiftBuffer(std::size_t capacity = 256) :
-      itemMemory(new std::uint8_t[sizeof(TItem[2]) * getNextPowerOfTwo(capacity) / 2]),
-      capacity(getNextPowerOfTwo(capacity)),
+      itemMemory(
+        new std::uint8_t[sizeof(TItem[2]) * BitTricks::GetUpperPowerOfTwo(capacity) / 2]
+      ),
+      capacity(BitTricks::GetUpperPowerOfTwo(capacity)),
       startIndex(0),
       endIndex(0) {}
 
@@ -217,37 +221,6 @@ namespace Nuclex { namespace Support { namespace Collections {
 
 #endif
 
-    /// <summary>Calculates the next power of two for the specified value</summary>
-    /// <param name="value">Value of which the next power of two will be calculated</param>
-    /// <returns>The next power of two to the specified value</returns>
-    private: static std::uint32_t getNextPowerOfTwo(std::uint32_t value) {
-      --value;
-
-      value |= value >> 1;
-      value |= value >> 2;
-      value |= value >> 4;
-      value |= value >> 8;
-      value |= value >> 16;
-
-      return (value + 1);
-    }
-
-    /// <summary>Calculates the next power of two for the specified value</summary>
-    /// <param name="value">Value of which the next power of two will be calculated</param>
-    /// <returns>The next power of two to the specified value</returns>
-    private: static std::uint64_t getNextPowerOfTwo(std::uint64_t value) {
-      --value;
-
-      value |= value >> 1;
-      value |= value >> 2;
-      value |= value >> 4;
-      value |= value >> 8;
-      value |= value >> 16;
-      value |= value >> 32;
-
-      return (value + 1);
-    }
-
     /// <summary>Ensures that space is available for the specified number of items</summary>
     /// <param name="itemCount">Number of items for which space will be made available</param>
     /// <remarks>
@@ -264,8 +237,11 @@ namespace Nuclex { namespace Support { namespace Collections {
         // If the buffer needs to be resized anyway, we don't need to shift back
         // and can do the resize + shift in one operation
         std::size_t totalItemCount = usedItemCount + itemCount;
-        if(unlikely(totalItemCount > this->capacity)) {
-          this->capacity = getNextPowerOfTwo(this->startIndex + totalItemCount);
+        if(likely(this->capacity >= totalItemCount)) {
+          TItem *items = reinterpret_cast<TItem *>(this->itemMemory.get()) + this->startIndex;
+          shiftItems(items, usedItemCount);
+        } else { // No buffer resize needed, just shift the items back
+          this->capacity = BitTricks::GetUpperPowerOfTwo(this->startIndex + totalItemCount);
           {
             std::unique_ptr<std::uint8_t[]> newItemMemory(
               new std::uint8_t[sizeof(TItem[2]) * this->capacity / 2]
@@ -275,9 +251,6 @@ namespace Nuclex { namespace Support { namespace Collections {
             TItem *items = reinterpret_cast<TItem *>(newItemMemory.get()) + this->startIndex;
             shiftItems(items, usedItemCount);
           }
-        } else { // No buffer resize needed, just shift the items back
-          TItem *items = reinterpret_cast<TItem *>(this->itemMemory.get()) + this->startIndex;
-          shiftItems(items, usedItemCount);
         }
 
       } else { // The inaccessible space in the buffer is less than the used space
@@ -286,8 +259,10 @@ namespace Nuclex { namespace Support { namespace Collections {
         // two times the required size. This ensures that the buffer will settle into
         // a read-shift-fill cycle without resizes if the current usage pattern repeats.
         std::size_t freeItemCount = this->capacity - this->endIndex;
-        if(unlikely(freeItemCount < itemCount)) {
-          this->capacity = getNextPowerOfTwo((usedItemCount + itemCount) * 2);
+        if(likely(freeItemCount >= itemCount)) {
+          // Enough space available, no action needed
+        } else {
+          this->capacity = BitTricks::GetUpperPowerOfTwo((usedItemCount + itemCount) * 2);
           {
             std::unique_ptr<std::uint8_t[]> newItemMemory(
               new std::uint8_t[sizeof(TItem[2]) * this->capacity / 2]
@@ -313,7 +288,11 @@ namespace Nuclex { namespace Support { namespace Collections {
       targetItems += this->endIndex;
 
       std::size_t count = itemCount;
-      try {
+      {
+        ON_SCOPE_EXIT {
+          this->endIndex += itemCount - count;
+        };
+
         while(count > 0) {
           new(targetItems) TItem(*sourceItems);
           ++sourceItems;
@@ -321,12 +300,6 @@ namespace Nuclex { namespace Support { namespace Collections {
           --count;
         }
       }
-      catch(...) {
-        this->endIndex += itemCount - count;
-        throw;
-      }
-
-      this->endIndex += itemCount;
     }
 
     /// <summary>Copies the specified items into the already available buffer</summary>
@@ -353,7 +326,11 @@ namespace Nuclex { namespace Support { namespace Collections {
       targetItems += this->endIndex;
 
       std::size_t count = itemCount;
-      try {
+      {
+        ON_SCOPE_EXIT {
+          this->endIndex += itemCount - count;
+        };
+
         while(count > 0) {
           new(targetItems) TItem(std::move(*sourceItems));
           // no d'tor call here, source isn't ours and will be destroyed externally
@@ -362,12 +339,6 @@ namespace Nuclex { namespace Support { namespace Collections {
           --count;
         }
       }
-      catch(...) {
-        this->endIndex += itemCount - count;
-        throw;
-      }
-
-      this->endIndex += itemCount;
     }
 
     /// <summary>Moves the specified items into the already available buffer</summary>
@@ -488,7 +459,19 @@ namespace Nuclex { namespace Support { namespace Collections {
       this->startIndex = 0;
 
       std::size_t count = itemCount;
-      try {
+      {
+        auto cleanUp = ON_SCOPE_EXIT_TRANSACTION {
+          this->endIndex = itemCount - count;
+
+          // Move failed, kill all items that remain in the source buffer. Moving
+          // the rest would result in skipping an item in the buffer and risking
+          // another exception. We can't deal with segmented buffers either.
+          while(count > 0) {
+            sourceItems->~TItem();
+            ++sourceItems;
+            --count;
+          }
+        };
 
         // Move all items from their old location to their new location
         while(count > 0) {
@@ -499,24 +482,11 @@ namespace Nuclex { namespace Support { namespace Collections {
           --count;
         }
 
-        // Move succeeded, the new end index is the number of items we have moved
-        this->endIndex = itemCount;
-
+        cleanUp.Commit();
       }
-      catch(...) {
-        this->endIndex = itemCount - count;
 
-        // Move failed, kill all items that remain in the source buffer. Moving
-        // the rest would result in skipping an item in the buffer and risking
-        // another exception. We can't deal with segmented buffers either.
-        while(count > 0) {
-          sourceItems->~TItem();
-          ++sourceItems;
-          --count;
-        }
-
-        throw;
-      }
+      // Move succeeded, the new end index is the number of items we have moved
+      this->endIndex = itemCount;
     }
 
     /// <summary>Moves the items from another location into the buffer</summary>
