@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -62,8 +62,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     Bitmap returnedBitmap = bitmapContainer.Take();
 
     EXPECT_FALSE(bitmapContainer.HasValue());
-    EXPECT_EQ(returnedBitmap.GetWidth(), 12);
-    EXPECT_EQ(returnedBitmap.GetHeight(), 34);
+    EXPECT_EQ(returnedBitmap.GetWidth(), 12U);
+    EXPECT_EQ(returnedBitmap.GetHeight(), 34U);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -81,8 +81,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     EXPECT_TRUE(bitmapContainer.HasValue());
     EXPECT_FALSE(copy.HasValue());
 
-    EXPECT_EQ(returnedBitmap.GetWidth(), 12);
-    EXPECT_EQ(returnedBitmap.GetHeight(), 34);
+    EXPECT_EQ(returnedBitmap.GetWidth(), 12U);
+    EXPECT_EQ(returnedBitmap.GetHeight(), 34U);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -98,8 +98,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     Bitmap returnedBitmap = copy.Take();
     EXPECT_FALSE(copy.HasValue());
 
-    EXPECT_EQ(returnedBitmap.GetWidth(), 12);
-    EXPECT_EQ(returnedBitmap.GetHeight(), 34);
+    EXPECT_EQ(returnedBitmap.GetWidth(), 12U);
+    EXPECT_EQ(returnedBitmap.GetHeight(), 34U);
   }
 
   // ------------------------------------------------------------------------------------------- //

@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -32,8 +32,8 @@ namespace Nuclex { namespace Pixels {
   TEST(SizeTest, ConstructorAppliesSpecifiedSize) {
     Size size(12, 34);
 
-    EXPECT_EQ(12, size.Width);
-    EXPECT_EQ(34, size.Height);
+    EXPECT_EQ(12U, size.Width);
+    EXPECT_EQ(34U, size.Height);
   }
 
   // ------------------------------------------------------------------------------------------- //

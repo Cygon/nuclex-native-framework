@@ -30,8 +30,8 @@ namespace Nuclex { namespace Pixels {
 
   TEST(BitmapTest, NewBitmapDefaultsToARGB) {
     Bitmap newBitmap(32, 24);
-    EXPECT_EQ(32, newBitmap.GetWidth());
-    EXPECT_EQ(24, newBitmap.GetHeight());
+    EXPECT_EQ(32U, newBitmap.GetWidth());
+    EXPECT_EQ(24U, newBitmap.GetHeight());
     EXPECT_EQ(PixelFormat::R8_G8_B8_A8_Unsigned, newBitmap.GetPixelFormat());
   }
 
@@ -40,8 +40,8 @@ namespace Nuclex { namespace Pixels {
   TEST(BitmapTest, HasCopyConstructor) {
     Bitmap newBitmap(123, 234, PixelFormat::R5_G6_B5_Unsigned);
     Bitmap clone(newBitmap);
-    EXPECT_EQ(123, clone.GetWidth());
-    EXPECT_EQ(234, clone.GetHeight());
+    EXPECT_EQ(123U, clone.GetWidth());
+    EXPECT_EQ(234U, clone.GetHeight());
     EXPECT_EQ(PixelFormat::R5_G6_B5_Unsigned, clone.GetPixelFormat());
   }
 
@@ -50,8 +50,8 @@ namespace Nuclex { namespace Pixels {
   TEST(BitmapTest, HasMoveConstructor) {
     Bitmap newBitmap(12, 23, PixelFormat::A2_B10_G10_R10_Unsigned);
     Bitmap moved = std::move(newBitmap);
-    EXPECT_EQ(12, moved.GetWidth());
-    EXPECT_EQ(23, moved.GetHeight());
+    EXPECT_EQ(12U, moved.GetWidth());
+    EXPECT_EQ(23U, moved.GetHeight());
     EXPECT_EQ(PixelFormat::A2_B10_G10_R10_Unsigned, moved.GetPixelFormat());
   }
 
@@ -63,8 +63,8 @@ namespace Nuclex { namespace Pixels {
       Bitmap newBitmap(54, 42, PixelFormat::R8_G8_Unsigned);
       copied = newBitmap;
     }
-    EXPECT_EQ(54, copied.GetWidth());
-    EXPECT_EQ(42, copied.GetHeight());
+    EXPECT_EQ(54U, copied.GetWidth());
+    EXPECT_EQ(42U, copied.GetHeight());
     EXPECT_EQ(PixelFormat::R8_G8_Unsigned, copied.GetPixelFormat());
   }
 
@@ -76,8 +76,8 @@ namespace Nuclex { namespace Pixels {
       Bitmap newBitmap(65, 53, PixelFormat::R8_Unsigned);
       moved = std::move(newBitmap);
     }
-    EXPECT_EQ(65, moved.GetWidth());
-    EXPECT_EQ(53, moved.GetHeight());
+    EXPECT_EQ(65U, moved.GetWidth());
+    EXPECT_EQ(53U, moved.GetHeight());
     EXPECT_EQ(PixelFormat::R8_Unsigned, moved.GetPixelFormat());
   }
 
@@ -87,8 +87,8 @@ namespace Nuclex { namespace Pixels {
     Bitmap newBitmap(98, 76, PixelFormat::R16_G16_B16_A16_Float);
     {
       BitmapMemory memory = newBitmap.Access();
-      EXPECT_EQ(98, memory.Width);
-      EXPECT_EQ(76, memory.Height);
+      EXPECT_EQ(98U, memory.Width);
+      EXPECT_EQ(76U, memory.Height);
       EXPECT_EQ(98 * 8, memory.Stride);
       EXPECT_EQ(PixelFormat::R16_G16_B16_A16_Float, memory.PixelFormat);
       ASSERT_NE(memory.Pixels, nullptr);
@@ -115,8 +115,8 @@ namespace Nuclex { namespace Pixels {
       memory.Pixels = foreignBitmap;
 
       Bitmap borrowedBitmap = Bitmap::FromExistingMemory(memory);
-      EXPECT_EQ(16, borrowedBitmap.GetWidth());
-      EXPECT_EQ(17, borrowedBitmap.GetHeight());
+      EXPECT_EQ(16U, borrowedBitmap.GetWidth());
+      EXPECT_EQ(17U, borrowedBitmap.GetHeight());
       EXPECT_EQ(PixelFormat::R8_Unsigned, borrowedBitmap.GetPixelFormat());
       
       {

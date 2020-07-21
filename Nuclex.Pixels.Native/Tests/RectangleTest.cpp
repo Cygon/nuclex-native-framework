@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -32,10 +32,10 @@ namespace Nuclex { namespace Pixels {
   TEST(RectangleTest, ConstructorAppliesSpecifiedBounds) {
     Rectangle rectangle(112, 223, 445, 556);
 
-    EXPECT_EQ(112, rectangle.MinX);
-    EXPECT_EQ(223, rectangle.MinY);
-    EXPECT_EQ(445, rectangle.MaxX);
-    EXPECT_EQ(556, rectangle.MaxY);
+    EXPECT_EQ(112U, rectangle.MinX);
+    EXPECT_EQ(223U, rectangle.MinY);
+    EXPECT_EQ(445U, rectangle.MaxX);
+    EXPECT_EQ(556U, rectangle.MaxY);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -43,10 +43,10 @@ namespace Nuclex { namespace Pixels {
   TEST(RectangleTest, HasNamedConstructorForMinAndMaxCorner) {
     Rectangle rectangle = Rectangle::FromMinAndMax(9, 8, 7, 6);
 
-    EXPECT_EQ(9, rectangle.MinX);
-    EXPECT_EQ(8, rectangle.MinY);
-    EXPECT_EQ(7, rectangle.MaxX);
-    EXPECT_EQ(6, rectangle.MaxY);
+    EXPECT_EQ(9U, rectangle.MinX);
+    EXPECT_EQ(8U, rectangle.MinY);
+    EXPECT_EQ(7U, rectangle.MaxX);
+    EXPECT_EQ(6U, rectangle.MaxY);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -54,10 +54,10 @@ namespace Nuclex { namespace Pixels {
   TEST(RectangleTest, HasNamedConstructorForPositionAndSize) {
     Rectangle rectangle = Rectangle::FromPositionAndSize(100, 200, 23, 34);
 
-    EXPECT_EQ(100, rectangle.MinX);
-    EXPECT_EQ(200, rectangle.MinY);
-    EXPECT_EQ(123, rectangle.MaxX);
-    EXPECT_EQ(234, rectangle.MaxY);
+    EXPECT_EQ(100U, rectangle.MinX);
+    EXPECT_EQ(200U, rectangle.MinY);
+    EXPECT_EQ(123U, rectangle.MaxX);
+    EXPECT_EQ(234U, rectangle.MaxY);
   }
 
   // ------------------------------------------------------------------------------------------- //

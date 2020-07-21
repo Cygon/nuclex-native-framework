@@ -1,7 +1,7 @@
 ﻿#pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -206,7 +206,11 @@ namespace {
     public: Nuclex::Pixels::BitmapInfo TryReadInfo(
       const Nuclex::Pixels::Storage::VirtualFile &source,
       const std::string &extensionHint = std::string()
-    ) const override { throw -1; }
+    ) const override {
+      (void)source;
+      (void)extensionHint;
+      throw -1;
+    }
 
     /// <summary>Checks if the codec is able to load the specified file</summary>
     /// <param name="source">Source data that will be checked for loadbility</param>
@@ -216,6 +220,8 @@ namespace {
       const Nuclex::Pixels::Storage::VirtualFile &source,
       const std::string &extensionHint = std::string()
     ) const override {
+      (void)source;
+      (void)extensionHint;
       return true;
     }
 
@@ -236,6 +242,8 @@ namespace {
       const Nuclex::Pixels::Storage::VirtualFile &source,
       const std::string &extensionHint = std::string()
     ) const override {
+      (void)source;
+      (void)extensionHint;
       return Nuclex::Pixels::Storage::OptionalBitmap();
     }
 
@@ -250,7 +258,12 @@ namespace {
       Nuclex::Pixels::Bitmap &exactlyFittingBitmap,
       const Nuclex::Pixels::Storage::VirtualFile &source,
       const std::string &extensionHint = std::string()
-    ) const override { throw -1; }
+    ) const override {
+      (void)exactlyFittingBitmap;
+      (void)source;
+      (void)extensionHint;
+      throw -1;
+    }
 
     /// <summary>Saves the specified bitmap into a file</summary>
     /// <param name="bitmap">Bitmap that will be saved into a file</param>
@@ -259,7 +272,8 @@ namespace {
       const Nuclex::Pixels::Bitmap &bitmap,
       Nuclex::Pixels::Storage::VirtualFile &target
     ) const override {
-
+      (void)bitmap;
+      (void)target;
     }
 
     /// <summary>Human-readable name of the file format this codec implements</summary>
@@ -301,8 +315,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
       EXPECT_TRUE(store.CanLoad(testPngPath));
 
       Bitmap bitmap = store.Load(testPngPath);
-      EXPECT_EQ(bitmap.GetWidth(), 1);
-      EXPECT_EQ(bitmap.GetHeight(), 1);
+      EXPECT_EQ(bitmap.GetWidth(), 1U);
+      EXPECT_EQ(bitmap.GetHeight(), 1U);
       EXPECT_EQ(bitmap.GetPixelFormat(), PixelFormat::R8_Unsigned); // grayscale
     }
   }
@@ -325,8 +339,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
       EXPECT_TRUE(store.CanLoad(testJpegPath));
 
       Bitmap bitmap = store.Load(testJpegPath);
-      EXPECT_EQ(bitmap.GetWidth(), 1);
-      EXPECT_EQ(bitmap.GetHeight(), 1);
+      EXPECT_EQ(bitmap.GetWidth(), 1U);
+      EXPECT_EQ(bitmap.GetHeight(), 1U);
       EXPECT_EQ(bitmap.GetPixelFormat(), PixelFormat::R8_G8_B8_Unsigned);
     }
   }
@@ -349,8 +363,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
       EXPECT_TRUE(store.CanLoad(testExrPath));
 
       Bitmap bitmap = store.Load(testExrPath);
-      EXPECT_EQ(bitmap.GetWidth(), 1);
-      EXPECT_EQ(bitmap.GetHeight(), 1);
+      EXPECT_EQ(bitmap.GetWidth(), 1U);
+      EXPECT_EQ(bitmap.GetHeight(), 1U);
       EXPECT_EQ(bitmap.GetPixelFormat(), PixelFormat::R16_G16_B16_A16_Float);
     }
   }
@@ -372,8 +386,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
       std::string testPngPath = temporaryDirectory.GetPath(u8"test.png");
       Bitmap bitmap = store.Load(testPngPath);
 
-      EXPECT_EQ(bitmap.GetWidth(), 17);
-      EXPECT_EQ(bitmap.GetHeight(), 7);
+      EXPECT_EQ(bitmap.GetWidth(), 17U);
+      EXPECT_EQ(bitmap.GetHeight(), 7U);
       EXPECT_EQ(bitmap.GetPixelFormat(), PixelFormat::R8_G8_B8_A8_Unsigned);
       // TODO: Check some of the pixels
     }
@@ -396,8 +410,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
       std::string testJpegPath = temporaryDirectory.GetPath(u8"test.jpeg");
       Bitmap bitmap = store.Load(testJpegPath);
 
-      EXPECT_EQ(bitmap.GetWidth(), 17);
-      EXPECT_EQ(bitmap.GetHeight(), 7);
+      EXPECT_EQ(bitmap.GetWidth(), 17U);
+      EXPECT_EQ(bitmap.GetHeight(), 7U);
       EXPECT_EQ(bitmap.GetPixelFormat(), PixelFormat::R8_G8_B8_Unsigned);
       // TODO: Check some of the pixels
     }
