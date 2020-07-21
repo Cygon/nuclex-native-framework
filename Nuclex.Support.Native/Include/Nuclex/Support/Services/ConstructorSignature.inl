@@ -60,7 +60,7 @@ namespace Nuclex { namespace Support { namespace Services {
       >
       operator TArgument() const {
         typedef typename TArgument::element_type ServiceType;
-        return this->serviceActivator.Get<ServiceType>();
+        return this->serviceActivator.template Get<ServiceType>();
       }
 
       /// <summary>Activator through which the argument will be resolved when needed</summary>
