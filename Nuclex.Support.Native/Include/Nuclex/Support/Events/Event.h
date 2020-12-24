@@ -37,7 +37,7 @@ namespace Nuclex { namespace Support { namespace Events {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Manages a list of subscribers that receive callback when the event fires</summary>
+  /// <summary>Manages a list of subscribers that receive callbacks when the event fires</summary>
   /// <typeparam name="TResult">Type that will be returned from the method</typeparam>
   /// <typeparam name="TArguments">Types of the arguments accepted by the callback</typeparam>
   /// <remarks>
@@ -72,7 +72,7 @@ namespace Nuclex { namespace Support { namespace Events {
   ///       int Dummy(int first, std::string second) { return 123; }
   ///
   ///       class Mock {
-  ///         public: iunt Dummy(int first, std::string second) { return 456; }
+  ///         public: int Dummy(int first, std::string second) { return 456; }
   ///       };
   ///
   ///       int main() {

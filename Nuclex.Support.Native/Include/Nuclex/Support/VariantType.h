@@ -21,6 +21,8 @@ License along with this library
 #ifndef NUCLEX_SUPPORT_VARIANTTYPE_H
 #define NUCLEX_SUPPORT_VARIANTTYPE_H
 
+#include "Nuclex/Support/Config.h"
+
 namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //

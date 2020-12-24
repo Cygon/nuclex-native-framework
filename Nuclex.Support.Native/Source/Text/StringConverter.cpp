@@ -169,6 +169,25 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
+  std::string::size_type StringConverter::CountUtf8Characters(const std::string &from) {
+    std::string::size_type length = 0;
+
+    std::string::const_iterator current = from.begin();
+    std::string::const_iterator end = from.end();
+    while(current != end) { // needed, utf8 library reads into end and throws exception on \0...
+      std::uint32_t codePoint = utf8::next(current, end);
+      if(codePoint == 0) {
+        break;
+      }
+
+      ++length;
+    }
+
+    return length;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   std::wstring StringConverter::WideFromUtf8(const std::string &utf8String) {
     return StringConverterCharWidthHelper<sizeof(wchar_t)>::WideFromUtf8(utf8String);
   }

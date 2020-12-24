@@ -26,6 +26,8 @@ License along with this library
 
 #include <string>
 
+// TODO: Rename to LexicalCast.h
+
 namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
@@ -384,14 +386,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Converts a string into a floating point value</summary>
+  /// <summary>Converts a string into a double precision floating point value</summary>
   /// <param name="from">String that will be converted</param>
   /// <returns>The floating point value parsed from the specified string</returns>
   template<> NUCLEX_SUPPORT_API double lexical_cast<>(const char *from);
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Converts a string into a floating point value</summary>
+  /// <summary>Converts a string into a double precision floating point value</summary>
   /// <param name="from">String that will be converted</param>
   /// <returns>The floating point value parsed from the specified string</returns>
   template<> NUCLEX_SUPPORT_API double lexical_cast<>(const std::string &from);

@@ -18,14 +18,14 @@ License along with this library
 */
 #pragma endregion // CPL License
 
-#ifndef NUCLEX_SUPPORT_SERVICES_UNRESOLVEDDEPENDENCYERROR_H
-#define NUCLEX_SUPPORT_SERVICES_UNRESOLVEDDEPENDENCYERROR_H
+#ifndef NUCLEX_SUPPORT_ERRORS_UNRESOLVEDDEPENDENCYERROR_H
+#define NUCLEX_SUPPORT_ERRORS_UNRESOLVEDDEPENDENCYERROR_H
 
 #include "Nuclex/Support/Config.h"
 
-#include <stdexcept>
+#include <stdexcept> // for std::logic_error
 
-namespace Nuclex { namespace Support { namespace Services {
+namespace Nuclex { namespace Support { namespace Errors {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -46,6 +46,6 @@ namespace Nuclex { namespace Support { namespace Services {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}} // namespace Nuclex::Support::Services
+}}} // namespace Nuclex::Support::Errors
 
-#endif // NUCLEX_SUPPORT_SERVICES_UNRESOLVEDDEPENDENCYERROR_H
+#endif // NUCLEX_SUPPORT_ERRORS_UNRESOLVEDDEPENDENCYERROR_H

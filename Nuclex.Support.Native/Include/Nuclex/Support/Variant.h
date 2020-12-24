@@ -21,9 +21,9 @@ License along with this library
 #ifndef NUCLEX_SUPPORT_VARIANT_H
 #define NUCLEX_SUPPORT_VARIANT_H
 
-#include "Config.h"
-#include "Any.h"
-#include "VariantType.h"
+#include "Nuclex/Support/Config.h"
+#include "Nuclex/Support/Any.h"
+#include "Nuclex/Support/VariantType.h"
 
 #include <cstdint>
 #include <string>

@@ -1,33 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Documents">
+      <UniqueIdentifier>{41f93295-bbce-4d4c-b942-4515c11b357d}</UniqueIdentifier>
+      <Extensions>md;txt;pdf</Extensions>
     </Filter>
     <Filter Include="Include">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>
       </Extensions>
-    </Filter>
-    <Filter Include="Resources">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Source\Collections">
-      <UniqueIdentifier>{3383d190-2e62-4a51-8b20-02524ed4b332}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Events">
-      <UniqueIdentifier>{e3f61b78-199d-4daf-9335-3bfce32621d4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Services">
-      <UniqueIdentifier>{8776ca34-6ac1-43ca-9e2f-723d4bc5843b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Text">
-      <UniqueIdentifier>{f20ce72c-f037-4bfc-8e47-a38db78850de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Text\Utf8">
-      <UniqueIdentifier>{7f8c6eb7-89ef-4d69-ba39-1aceecbfc54a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Collections">
       <UniqueIdentifier>{bb7bb4c9-39c3-4ac7-b033-c752c0cec4d7}</UniqueIdentifier>
@@ -41,11 +26,21 @@
     <Filter Include="Include\Text">
       <UniqueIdentifier>{3ae3b2e0-1fd9-477a-9fc9-1eb06bd74a6b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tests">
-      <UniqueIdentifier>{6bba9bc0-cf59-4753-8206-8b3ee0c353d1}</UniqueIdentifier>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Tests\Collections">
-      <UniqueIdentifier>{dfcecd36-6a9a-4984-9d82-dbb40469135e}</UniqueIdentifier>
+    <Filter Include="Source\Collections">
+      <UniqueIdentifier>{3383d190-2e62-4a51-8b20-02524ed4b332}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Events">
+      <UniqueIdentifier>{e3f61b78-199d-4daf-9335-3bfce32621d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Services">
+      <UniqueIdentifier>{8776ca34-6ac1-43ca-9e2f-723d4bc5843b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text">
+      <UniqueIdentifier>{f20ce72c-f037-4bfc-8e47-a38db78850de}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Text\Dragon4">
       <UniqueIdentifier>{a269f932-f334-49f2-b999-0fef78045fdd}</UniqueIdentifier>
@@ -53,98 +48,147 @@
     <Filter Include="Source\Text\Erthink">
       <UniqueIdentifier>{1fb4616e-8299-4ad2-bc51-3a40b06d192f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tests\Text">
-      <UniqueIdentifier>{e379eb40-5772-47b9-96be-58023afd7cd0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tests\Events">
-      <UniqueIdentifier>{8d3a2c7c-0eac-4fd9-93e8-cf42d1a55f7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Documents">
-      <UniqueIdentifier>{41f93295-bbce-4d4c-b942-4515c11b357d}</UniqueIdentifier>
-      <Extensions>md;txt;pdf</Extensions>
-    </Filter>
-    <Filter Include="Tests\Services">
-      <UniqueIdentifier>{0284c8eb-686e-418f-a221-c574bc42ea8d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Text\Ryu">
       <UniqueIdentifier>{6d6734f5-932c-4dcd-bb67-6a9b69db0f2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text\Utf8">
+      <UniqueIdentifier>{7f8c6eb7-89ef-4d69-ba39-1aceecbfc54a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Text\Utf8Fold">
       <UniqueIdentifier>{a464efe7-4a41-43bd-8cc9-46d5ae179e0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{6bba9bc0-cf59-4753-8206-8b3ee0c353d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Collections">
+      <UniqueIdentifier>{dfcecd36-6a9a-4984-9d82-dbb40469135e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Events">
+      <UniqueIdentifier>{8d3a2c7c-0eac-4fd9-93e8-cf42d1a55f7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Text">
+      <UniqueIdentifier>{e379eb40-5772-47b9-96be-58023afd7cd0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Services">
+      <UniqueIdentifier>{0284c8eb-686e-418f-a221-c574bc42ea8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Errors">
+      <UniqueIdentifier>{0efb8298-425d-438c-ac9c-e1aba6120891}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Errors">
+      <UniqueIdentifier>{3f6da7d5-6d44-4081-8eda-bafe5849e090}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Any.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Config.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Variant.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\VariantType.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
+    <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\IndexedCollection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableCollection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableDynamicArray.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\RingBuffer.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Errors\CyclicDependencyError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
+      <Filter>Include\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h">
+      <Filter>Include\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\LazyServiceInjector.h">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceContainer.h">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceProvider.h">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\Checks.inl">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignature.inl">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignatureDetector.inl">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceFactory.inl">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl">
+      <Filter>Include\Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\Lexical.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\Logger.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Any.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\BitTricks.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Config.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Optional.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\ScopeGuard.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Variant.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\VariantType.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Source\Collections\Collection.cpp">
       <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Collections\IndexedCollection.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Events\Event.cpp">
-      <Filter>Source\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Services\LazyServiceInjector.cpp">
-      <Filter>Source\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Services\ServiceContainer.cpp">
-      <Filter>Source\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Lexical.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\StringConverter.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\AnyTests.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\VariantTests.cpp">
-      <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\DynamicArray.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Text\Dragon4\Dragon4.cpp">
-      <Filter>Source\Text\Dragon4</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Dragon4\Math.cpp">
-      <Filter>Source\Text\Dragon4</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Dragon4\PrintFloat.cpp">
-      <Filter>Source\Text\Dragon4</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\LexicalTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\StringConverterTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Collections\DynamicArrayTest.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Events\EventTests.cpp">
-      <Filter>Tests\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Events\Delegate.cpp">
-      <Filter>Source\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Events\EmptyDelegateCallError.cpp">
-      <Filter>Source\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Events\DelegateTests.cpp">
-      <Filter>Tests\Events</Filter>
+    <ClCompile Include="Source\Collections\IndexedCollection.cpp">
+      <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\ObservableCollection.cpp">
       <Filter>Source\Collections</Filter>
@@ -155,107 +199,45 @@
     <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Services\ServiceContainerTest.cpp">
-      <Filter>Tests\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Services\ServiceProvider.cpp">
-      <Filter>Source\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Services\LazyServiceInjectorTest.cpp">
-      <Filter>Tests\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Services\UnresolvedDependencyError.cpp">
-      <Filter>Source\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Ryu\d2fixed.c">
-      <Filter>Source\Text\Ryu</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Ryu\d2s.c">
-      <Filter>Source\Text\Ryu</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Ryu\f2s.c">
-      <Filter>Source\Text\Ryu</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Ryu\generic_128.c">
-      <Filter>Source\Text\Ryu</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Ryu\s2d.c">
-      <Filter>Source\Text\Ryu</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\StringMatcher.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\StringMatcherTest.cpp">
-      <Filter>Tests\Text</Filter>
+    <ClCompile Include="Source\Collections\RingBuffer.cpp">
+      <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\ShiftBuffer.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Optional.cpp">
-      <Filter>Source</Filter>
+    <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
+      <Filter>Source\Errors</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Collections\ShiftBufferDeathTest.cpp">
-      <Filter>Tests\Collections</Filter>
+    <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
+      <Filter>Source\Errors</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Collections\ShiftBufferTest.cpp">
-      <Filter>Tests\Collections</Filter>
+    <ClCompile Include="Source\Errors\CyclicDependencyError.cpp">
+      <Filter>Source\Errors</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\OptionalTests.cpp">
-      <Filter>Tests</Filter>
+    <ClCompile Include="Source\Events\Delegate.cpp">
+      <Filter>Source\Events</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Source\Text\Utf8\checked.h">
-      <Filter>Source\Text\Utf8</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Text\Utf8\core.h">
-      <Filter>Source\Text\Utf8</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Text\Utf8\unchecked.h">
-      <Filter>Source\Text\Utf8</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Any.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Config.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Optional.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Variant.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\VariantType.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\IndexedCollection.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableCollection.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
-      <Filter>Include\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Services\LazyServiceInjector.h">
-      <Filter>Include\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Services\ServiceContainer.h">
-      <Filter>Include\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\Lexical.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
+    <ClCompile Include="Source\Events\Event.cpp">
+      <Filter>Source\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\LazyServiceInjector.cpp">
+      <Filter>Source\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\ServiceContainer.cpp">
+      <Filter>Source\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Services\ServiceProvider.cpp">
+      <Filter>Source\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Dragon4\Dragon4.cpp">
+      <Filter>Source\Text\Dragon4</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Dragon4\Math.cpp">
+      <Filter>Source\Text\Dragon4</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Dragon4\PrintFloat.cpp">
+      <Filter>Source\Text\Dragon4</Filter>
+    </ClCompile>
     <ClInclude Include="Source\Text\Dragon4\Dragon4.h">
       <Filter>Source\Text\Dragon4</Filter>
     </ClInclude>
@@ -283,39 +265,21 @@
     <ClInclude Include="Source\Text\Erthink\erthink_u2a.h">
       <Filter>Source\Text\Erthink</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h">
-      <Filter>Include\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
-      <Filter>Include\Errors</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableDynamicArray.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Services\ServiceProvider.h">
-      <Filter>Include\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl">
-      <Filter>Include\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Services\Checks.inl">
-      <Filter>Include\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignatureDetector.inl">
-      <Filter>Include\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignature.inl">
-      <Filter>Include\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Services\ServiceFactory.inl">
-      <Filter>Include\Services</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h">
-      <Filter>Include\Errors</Filter>
-    </ClInclude>
+    <ClCompile Include="Source\Text\Ryu\d2fixed.c">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Ryu\d2s.c">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Ryu\f2s.c">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Ryu\generic_128.c">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Ryu\s2d.c">
+      <Filter>Source\Text\Ryu</Filter>
+    </ClCompile>
     <ClInclude Include="Source\Text\Ryu\common.h">
       <Filter>Source\Text\Ryu</Filter>
     </ClInclude>
@@ -349,19 +313,111 @@
     <ClInclude Include="Source\Text\Ryu\ryu_parse.h">
       <Filter>Source\Text\Ryu</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Text\Utf8\checked.h">
+      <Filter>Source\Text\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Utf8\core.h">
+      <Filter>Source\Text\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Text\Utf8\unchecked.h">
+      <Filter>Source\Text\Utf8</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Text\Utf8Fold\Utf8Fold.h">
       <Filter>Source\Text\Utf8Fold</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
+    <ClCompile Include="Source\Text\Lexical.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\LexicalAppend.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\Logger.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\StringConverter.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\StringMatcher.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Any.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BitTricks.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Config.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Optional.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ScopeGuard.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Variant.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\VariantType.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf">
-      <Filter>Documents</Filter>
+    <ClCompile Include="Tests\Collections\DynamicArrayTest.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Collections\RingBufferTest.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Collections\ShiftBufferTest.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Collections\ShiftBufferDeathTest.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Events\DelegateTests.cpp">
+      <Filter>Tests\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Events\EventTests.cpp">
+      <Filter>Tests\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Services\LazyServiceInjectorTest.cpp">
+      <Filter>Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Services\ServiceContainerTest.cpp">
+      <Filter>Tests\Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Text\LexicalTest.cpp">
+      <Filter>Tests\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Text\LexicalAppendTest.cpp">
+      <Filter>Tests\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Text\StringConverterTest.cpp">
+      <Filter>Tests\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Text\StringMatcherTest.cpp">
+      <Filter>Tests\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\AnyTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\BitTricksTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\OptionalTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\ScopeGuardTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\VariantTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Nuclex.Support.Native.def">
+      <Filter>Resources</Filter>
     </None>
     <None Include="Documents\David Gay - Correctly Rounded Binary-Decimal and Decimal-Binary Conversions.pdf">
       <Filter>Documents</Filter>
@@ -372,18 +428,13 @@
     <None Include="Documents\Marc Andrysco - Printing Floating-Point Numbers, An Always Correct Method.pdf">
       <Filter>Documents</Filter>
     </None>
-    <None Include="Nuclex.Support.Native.def">
-      <Filter>Resources</Filter>
+    <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf">
+      <Filter>Documents</Filter>
     </None>
-    <None Include="Nuclex.Support.Native.def">
-      <Filter>Resources</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Documents\EventBenchmark.md">
+    <Text Include="Documents\Copyright.md">
       <Filter>Documents</Filter>
     </Text>
-    <Text Include="Documents\Copyright.md">
+    <Text Include="Documents\EventBenchmark.md">
       <Filter>Documents</Filter>
     </Text>
   </ItemGroup>

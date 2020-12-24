@@ -128,7 +128,7 @@ namespace Nuclex { namespace Support { namespace Events {
     Delegate<void(int something)> test;
     EXPECT_THROW(
       test(123),
-      EmptyDelegateCallError
+      Errors::EmptyDelegateCallError
     );
   }
 
@@ -227,7 +227,7 @@ namespace Nuclex { namespace Support { namespace Events {
 
     EXPECT_THROW(
       test(654),
-      EmptyDelegateCallError
+      Errors::EmptyDelegateCallError
     );
   }
 

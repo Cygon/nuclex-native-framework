@@ -110,9 +110,10 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,9 +129,10 @@
       <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
       <StringPooling>true</StringPooling>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -152,9 +154,10 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -178,9 +181,10 @@
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <LanguageStandard>stdcpp14</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -199,25 +203,31 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableDynamicArray.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\RingBuffer.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h" />
-    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
+    <ClInclude Include="Include\Nuclex\Support\Errors\CyclicDependencyError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Event.h" />
-    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignature.inl" />
-    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignatureDetector.inl" />
-    <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl" />
     <ClInclude Include="Include\Nuclex\Support\Services\Checks.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignatureDetector.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignature.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl" />
     <ClInclude Include="Include\Nuclex\Support\Services\LazyServiceInjector.h" />
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceContainer.h" />
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceFactory.inl" />
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceProvider.h" />
-    <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\Lexical.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\Logger.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />
     <ClInclude Include="Include\Nuclex\Support\Any.h" />
+    <ClInclude Include="Include\Nuclex\Support\BitTricks.h" />
     <ClInclude Include="Include\Nuclex\Support\Config.h" />
     <ClInclude Include="Include\Nuclex\Support\Optional.h" />
+    <ClInclude Include="Include\Nuclex\Support\ScopeGuard.h" />
     <ClInclude Include="Include\Nuclex\Support\Variant.h" />
     <ClInclude Include="Include\Nuclex\Support\VariantType.h" />
   </ItemGroup>
@@ -228,16 +238,17 @@
     <ClCompile Include="Source\Collections\ObservableCollection.cpp" />
     <ClCompile Include="Source\Collections\ObservableDynamicArray.cpp" />
     <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp" />
+    <ClCompile Include="Source\Collections\RingBuffer.cpp" />
     <ClCompile Include="Source\Collections\ShiftBuffer.cpp" />
+    <ClCompile Include="Source\Errors\CyclicDependencyError.cpp" />
+    <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp" />
+    <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp" />
     <ClCompile Include="Source\Events\Delegate.cpp" />
-    <ClCompile Include="Source\Events\EmptyDelegateCallError.cpp" />
     <ClCompile Include="Source\Events\Event.cpp" />
     <ClCompile Include="Source\Services\LazyServiceInjector.cpp" />
     <ClCompile Include="Source\Services\ServiceContainer.cpp" />
     <ClCompile Include="Source\Services\ServiceProvider.cpp" />
-    <ClCompile Include="Source\Services\UnresolvedDependencyError.cpp" />
     <ClCompile Include="Source\Text\Dragon4\Dragon4.cpp" />
-    <ClCompile Include="Source\Text\StringMatcher.cpp" />
     <ClInclude Include="Source\Text\Dragon4\Dragon4.h" />
     <ClInclude Include="Source\Text\Dragon4\Math.h" />
     <ClCompile Include="Source\Text\Dragon4\PrintFloat.cpp" />
@@ -250,15 +261,15 @@
     <ClInclude Include="Source\Text\Erthink\erthink_misc.h" />
     <ClInclude Include="Source\Text\Erthink\erthink_u2a.h" />
     <ClInclude Include="Source\Text\Ryu\common.h" />
-    <ClInclude Include="Source\Text\Ryu\d2fixed_full_table.h" />
     <ClCompile Include="Source\Text\Ryu\d2fixed.c" />
+    <ClInclude Include="Source\Text\Ryu\d2fixed_full_table.h" />
+    <ClCompile Include="Source\Text\Ryu\d2s.c" />
     <ClInclude Include="Source\Text\Ryu\d2s_full_table.h" />
     <ClInclude Include="Source\Text\Ryu\d2s_intrinsics.h" />
     <ClInclude Include="Source\Text\Ryu\d2s_small_table.h" />
-    <ClCompile Include="Source\Text\Ryu\d2s.c" />
     <ClInclude Include="Source\Text\Ryu\digit_table.h" />
-    <ClInclude Include="Source\Text\Ryu\f2s_full_table.h" />
     <ClCompile Include="Source\Text\Ryu\f2s.c" />
+    <ClInclude Include="Source\Text\Ryu\f2s_full_table.h" />
     <ClInclude Include="Source\Text\Ryu\generic_128.h" />
     <ClCompile Include="Source\Text\Ryu\generic_128.c" />
     <ClInclude Include="Source\Text\Ryu\ryu.h" />
@@ -270,10 +281,15 @@
     <ClInclude Include="Source\Text\Utf8\core.h" />
     <ClInclude Include="Source\Text\Utf8\unchecked.h" />
     <ClCompile Include="Source\Text\Lexical.cpp" />
+    <ClCompile Include="Source\Text\LexicalAppend.cpp" />
+    <ClCompile Include="Source\Text\Logger.cpp" />
     <ClCompile Include="Source\Text\StringConverter.cpp" />
+    <ClCompile Include="Source\Text\StringMatcher.cpp" />
     <ClCompile Include="Source\Any.cpp" />
+    <ClCompile Include="Source\BitTricks.cpp" />
     <ClCompile Include="Source\Config.cpp" />
     <ClCompile Include="Source\Optional.cpp" />
+    <ClCompile Include="Source\ScopeGuard.cpp" />
     <ClCompile Include="Source\Variant.cpp" />
     <ClCompile Include="Source\VariantType.cpp" />
   </ItemGroup>
@@ -286,18 +302,22 @@
     <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Tests\BitTricksTest.cpp" />
     <ClCompile Include="Tests\Collections\DynamicArrayTest.cpp" />
+    <ClCompile Include="Tests\Collections\RingBufferTest.cpp" />
     <ClCompile Include="Tests\Collections\ShiftBufferDeathTest.cpp" />
     <ClCompile Include="Tests\Collections\ShiftBufferTest.cpp" />
     <ClCompile Include="Tests\Events\DelegateTests.cpp" />
     <ClCompile Include="Tests\Events\EventTests.cpp" />
+    <ClCompile Include="Tests\OptionalTests.cpp" />
+    <ClCompile Include="Tests\ScopeGuardTest.cpp" />
     <ClCompile Include="Tests\Services\LazyServiceInjectorTest.cpp" />
     <ClCompile Include="Tests\Services\ServiceContainerTest.cpp" />
+    <ClCompile Include="Tests\Text\LexicalAppendTest.cpp" />
     <ClCompile Include="Tests\Text\LexicalTest.cpp" />
     <ClCompile Include="Tests\Text\StringConverterTest.cpp" />
     <ClCompile Include="Tests\Text\StringMatcherTest.cpp" />
     <ClCompile Include="Tests\AnyTests.cpp" />
-    <ClCompile Include="Tests\OptionalTests.cpp" />
     <ClCompile Include="Tests\VariantTests.cpp" />
   </ItemGroup>
   <ItemGroup>

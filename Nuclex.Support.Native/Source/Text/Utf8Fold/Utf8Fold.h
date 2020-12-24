@@ -24,12 +24,12 @@ License along with this library
 // Requires Nemanja Trifunovic's "utf for cpp" library to iterate codepoints
 #include "../Utf8/checked.h"
 
-#include <string>
-#include <algorithm>
+#include <string> // for std::string
+#include <algorithm> // for std::lower_bound()
 
-#if defined(_DEBUG)
-#include <cassert>
-#include <set>
+#if !defined(NDEBUG)
+#include <cassert> // for assert() to fail tests
+#include <set> // for std::set to detect ambiguous mappings in tests
 #endif
 
 // References

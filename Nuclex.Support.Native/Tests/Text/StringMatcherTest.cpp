@@ -23,9 +23,6 @@ License along with this library
 
 #include "Nuclex/Support/Text/StringMatcher.h"
 
-#include <cmath>
-#include <clocale>
-
 #include <gtest/gtest.h>
 
 namespace Nuclex { namespace Support { namespace Text {

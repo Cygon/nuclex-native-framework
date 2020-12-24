@@ -297,8 +297,8 @@ namespace Nuclex { namespace Support { namespace Events {
       // Since we don't know the return type and there's no guarantee that we can
       // default-construct one out of thin air (or that that would be the right course
       // of action), we cannot 'return' and our only choice is to throw.
-      static const std::string message("No call target has been assigned to the delegate");
-      throw EmptyDelegateCallError(message);
+      static const std::string message(u8"No call target has been assigned to the delegate");
+      throw Errors::EmptyDelegateCallError(message);
 
     }
 
@@ -335,8 +335,8 @@ namespace Nuclex { namespace Support { namespace Events {
     /// <returns>The result of the called method or function</returns>
     private: TResult errorDelegateDestroyed(TArguments...) const {
       using namespace std;
-      assert(!"Call to destroyed delegate (post-destructor or move operator)");
-      throw std::logic_error("Call to destroyed delegate (post-destructor or move operator)");
+      assert(!u8"Call to destroyed delegate (post-destructor or move operator)");
+      throw std::logic_error(u8"Call to destroyed delegate (post-destructor or move operator)");
     }
 #endif
 

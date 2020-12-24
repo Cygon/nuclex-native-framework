@@ -23,9 +23,6 @@ License along with this library
 
 #include "Nuclex/Support/Text/Lexical.h"
 
-#include <cmath>
-#include <clocale>
-
 #include <gtest/gtest.h>
 
 namespace {
@@ -104,22 +101,22 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertBoolToString) {
+  TEST(LexicalTest, CanConvertBooleanToString) {
     std::string text = lexical_cast<std::string>(true);
-    EXPECT_EQ(text, "true");
+    EXPECT_EQ(text, u8"true");
     text = lexical_cast<std::string>(false);
-    EXPECT_EQ(text, "false");
+    EXPECT_EQ(text, u8"false");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToBool) {
-    bool boolean_from_true_string = lexical_cast<bool>("true");
+  TEST(LexicalTest, CanConvertStringToBoolean) {
+    bool boolean_from_true_string = lexical_cast<bool>(u8"true");
     EXPECT_TRUE(boolean_from_true_string);
-    bool boolean_from_false_string = lexical_cast<bool>("false");
+    bool boolean_from_false_string = lexical_cast<bool>(u8"false");
     EXPECT_FALSE(boolean_from_false_string);
 
-    bool boolean_from_invalid_string = lexical_cast<bool>("hi there, how goes?");
+    bool boolean_from_invalid_string = lexical_cast<bool>(u8"hi there, how goes?");
     EXPECT_FALSE(boolean_from_invalid_string);
   }
 
@@ -127,16 +124,16 @@ namespace Nuclex { namespace Support { namespace Text {
 
   TEST(LexicalTest, CanConvertUInt8ToString) {
     std::string text = lexical_cast<std::string>(std::uint8_t(234));
-    EXPECT_EQ(text, "234");
+    EXPECT_EQ(text, u8"234");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalTest, CanConvertStringToUInt8) {
-    std::uint8_t value = lexical_cast<std::uint8_t>("235");
+    std::uint8_t value = lexical_cast<std::uint8_t>(u8"235");
     EXPECT_EQ(value, std::uint8_t(235));
 
-    value = lexical_cast<std::uint8_t>(std::string("236"));
+    value = lexical_cast<std::uint8_t>(std::string(u8"236"));
     EXPECT_EQ(value, std::uint8_t(236));
   }
 
@@ -150,10 +147,10 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalTest, CanConvertStringToInt8) {
-    std::int8_t value = lexical_cast<std::int8_t>("-124");
+    std::int8_t value = lexical_cast<std::int8_t>(u8"-124");
     EXPECT_EQ(value, std::int8_t(-124));
 
-    value = lexical_cast<std::int8_t>(std::string("-125"));
+    value = lexical_cast<std::int8_t>(std::string(u8"-125"));
     EXPECT_EQ(value, std::int8_t(-125));
   }
 
@@ -161,16 +158,16 @@ namespace Nuclex { namespace Support { namespace Text {
 
   TEST(LexicalTest, CanConvertUInt16ToString) {
     std::string text = lexical_cast<std::string>(std::uint16_t(56789));
-    EXPECT_EQ(text, "56789");
+    EXPECT_EQ(text, u8"56789");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalTest, CanConvertStringToUInt16) {
-    std::uint16_t value = lexical_cast<std::uint16_t>("56790");
+    std::uint16_t value = lexical_cast<std::uint16_t>(u8"56790");
     EXPECT_EQ(value, std::uint16_t(56790));
 
-    value = lexical_cast<std::uint16_t>(std::string("56791"));
+    value = lexical_cast<std::uint16_t>(std::string(u8"56791"));
     EXPECT_EQ(value, std::uint16_t(56791));
   }
 
@@ -178,16 +175,16 @@ namespace Nuclex { namespace Support { namespace Text {
 
   TEST(LexicalTest, CanConvertInt16ToString) {
     std::string text = lexical_cast<std::string>(std::int16_t(-23456));
-    EXPECT_EQ(text, "-23456");
+    EXPECT_EQ(text, u8"-23456");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalTest, CanConvertStringToInt16) {
-    std::int16_t value = lexical_cast<std::int16_t>("-23457");
+    std::int16_t value = lexical_cast<std::int16_t>(u8"-23457");
     EXPECT_EQ(value, std::int16_t(-23457));
 
-    value = lexical_cast<std::int16_t>(std::string("-23458"));
+    value = lexical_cast<std::int16_t>(std::string(u8"-23458"));
     EXPECT_EQ(value, std::int16_t(-23458));
   }
 
@@ -195,7 +192,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   TEST(LexicalTest, CanConvertUInt32ToString) {
     std::string text = lexical_cast<std::string>(std::uint32_t(3456789012));
-    EXPECT_EQ(text, "3456789012");
+    EXPECT_EQ(text, u8"3456789012");
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -296,7 +293,10 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalTest, FloatToStringIsLocaleIndependent) {
-    std::setlocale(LC_NUMERIC, "de_DE.UTF-8");
+    {
+      using namespace std; // My Linux system has setlocale in std::
+      setlocale(LC_NUMERIC, "de_DE.UTF-8");
+    }
     std::string text = lexical_cast<std::string>(0.125f);
     EXPECT_EQ(text, "0.125");
   }
@@ -355,7 +355,10 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalTest, DoubleToStringIsLocaleIndependent) {
-    std::setlocale(LC_NUMERIC, "de_DE.UTF-8");
+    {
+      using namespace std;
+      setlocale(LC_NUMERIC, "de_DE.UTF-8");
+    }
     std::string text = lexical_cast<std::string>(0.125);
     EXPECT_EQ(text, "0.125");
   }

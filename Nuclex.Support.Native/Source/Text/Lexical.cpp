@@ -362,7 +362,6 @@ namespace Nuclex { namespace Support { namespace Text {
     } else {
       return std::numeric_limits<float>::quiet_NaN();
     }
-    //return std::stof(from);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -402,7 +401,6 @@ namespace Nuclex { namespace Support { namespace Text {
     } else {
       return std::numeric_limits<double>::quiet_NaN();
     }
-    //return std::stof(from);
   }
 
   // ------------------------------------------------------------------------------------------- //
