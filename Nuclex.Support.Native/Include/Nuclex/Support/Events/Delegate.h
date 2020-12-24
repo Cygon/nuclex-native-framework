@@ -22,7 +22,7 @@ License along with this library
 #define NUCLEX_SUPPORT_EVENTS_DELEGATE_H
 
 #include "Nuclex/Support/Config.h"
-#include "Nuclex/Support/Events/EmptyDelegateCallError.h"
+#include "Nuclex/Support/Errors/EmptyDelegateCallError.h"
 
 #include <cassert>
 

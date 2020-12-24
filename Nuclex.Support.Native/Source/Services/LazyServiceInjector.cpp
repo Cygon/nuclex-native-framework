@@ -22,7 +22,7 @@ License along with this library
 #define NUCLEX_SUPPORT_SOURCE 1
 
 #include "Nuclex/Support/Services/LazyServiceInjector.h"
-#include "Nuclex/Support/Services/UnresolvedDependencyError.h"
+#include "Nuclex/Support/Errors/UnresolvedDependencyError.h"
 
 #include <stdexcept>
 

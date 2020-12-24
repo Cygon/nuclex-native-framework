@@ -201,7 +201,7 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
-    <ClInclude Include="Include\Nuclex\Support\Events\EmptyDelegateCallError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Event.h" />
     <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignature.inl" />
     <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignatureDetector.inl" />
@@ -211,7 +211,7 @@
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceContainer.h" />
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceFactory.inl" />
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceProvider.h" />
-    <ClInclude Include="Include\Nuclex\Support\Services\UnresolvedDependencyError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\Lexical.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />

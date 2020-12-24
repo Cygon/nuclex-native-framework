@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "Nuclex/Support/Events/EmptyDelegateCallError.h"
+#include "Nuclex/Support/Errors/EmptyDelegateCallError.h"
 
 // --------------------------------------------------------------------------------------------- //
 

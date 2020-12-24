@@ -232,8 +232,8 @@
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h">
       <Filter>Include\Events</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Events\EmptyDelegateCallError.h">
-      <Filter>Include\Events</Filter>
+    <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
+      <Filter>Include\Errors</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableDynamicArray.h">
       <Filter>Include\Collections</Filter>
@@ -259,8 +259,8 @@
     <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl">
       <Filter>Include\Services</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Services\UnresolvedDependencyError.h">
-      <Filter>Include\Services</Filter>
+    <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h">
+      <Filter>Include\Errors</Filter>
     </ClInclude>
     <ClInclude Include="Source\Text\Ryu\common.h">
       <Filter>Source\Text\Ryu</Filter>
