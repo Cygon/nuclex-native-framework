@@ -24,6 +24,8 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 #include "Nuclex/Support/Collections/Collection.h"
 
+// CHECK: Rename the 'IndexedCollection' interface to 'Sequence'?
+
 namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
@@ -41,6 +43,10 @@ namespace Nuclex { namespace Support { namespace Collections {
   ///     you to expose a list of things in a natural and consistent way without
   ///     duplicating Add() and Remove() methods, while keeping complete freedom over
   ///     the actual data structure used to store the items.
+  ///   </para>
+  ///   <para>
+  ///     Java and .NET call this a 'list', but in C++ this name is already taken by
+  ///     the standard's linked list implementation.
   ///   </para>
   /// </remarks>
   template<typename TValue>

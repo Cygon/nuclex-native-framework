@@ -23,7 +23,7 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
-#include <cstdlib>
+#include <cstddef>
 
 namespace Nuclex { namespace Support { namespace Collections {
 

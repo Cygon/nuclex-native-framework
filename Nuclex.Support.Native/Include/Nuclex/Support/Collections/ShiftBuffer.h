@@ -57,9 +57,9 @@ namespace Nuclex { namespace Support { namespace Collections {
   ///     directly from a buffer. You can also obtain a pointer to write into the buffer.
   ///   </para>
   ///   <para>
-  ///     This class offers the <em>basic</em> exception guarantee: if you your items
-  ///     throw in their copy or move constructors throw, the ring buffer will remain in
-  ///     a usable state and not leak memory, but operations may end up applied partially,
+  ///     This class offers the <em>basic</em> exception guarantee: if your items throw
+  ///     in their copy or move constructors throw, the ring buffer will remain in a usable
+  ///     state and not leak memory, but operations may end up applied partially,
   ///     i.e. a read may fail and return nothing, yet kill half your buffer contents.
   ///   </para>
   /// </remarks>
