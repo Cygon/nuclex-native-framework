@@ -233,6 +233,105 @@ namespace Nuclex { namespace Support {
 #endif
     }
 
+    /// <summary>Calculates the log base-2 of a 32 bit integer</summary>
+    /// <param name="value">Value of which the log base-2 will be calculated</param>
+    /// <returns>The log base-2 of the specified value</returns>
+    /// <remarks>
+    ///   The result is undefined if the input value is 0
+    /// </remarks>
+    public: NUCLEX_SUPPORT_API static inline unsigned char GetLogBase2(std::uint32_t value) {
+#if defined(_MSC_VER)
+      unsigned long bitIndex;
+      _BitScanReverse(&bitIndex, value);
+      return static_cast<unsigned char>(bitIndex);
+#elif defined(__clang__) || (defined(__GNUC__) || defined(__GNUG__))
+      return static_cast<unsigned char>(31 - __builtin_clz(value));
+#else
+      // http://graphics.stanford.edu/~seander/bithacks.html#IntegerLogDeBruijn
+      static const unsigned char deBruijnBitPosition[32] = {
+        0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
+        8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
+      };
+
+      value |= value >> 1;
+      value |= value >> 2;
+      value |= value >> 4;
+      value |= value >> 8;
+      value |= value >> 16;
+
+      return deBruijnBitPosition[(value * 0x07C4ACDDU) >> 27];
+#endif
+    }
+
+    /// <summary>Calculates the log base-2 of a 64 bit integer</summary>
+    /// <param name="value">Value of which the log base-2 will be calculated</param>
+    /// <returns>The log base-2 of the specified value</returns>
+    /// <remarks>
+    ///   The result is undefined if the input value is 0
+    /// </remarks>
+    public: NUCLEX_SUPPORT_API static inline unsigned char GetLogBase2(std::uint64_t value) {
+#if defined(_MSC_VER) && defined(_M_X64)
+      //return static_cast<unsigned char>(__lzcnt64(value));
+      unsigned long bitIndex;
+      _BitScanReverse64(&bitIndex, value);
+      return static_cast<unsigned char>(bitIndex);
+#elif defined(__clang__) || (defined(__GNUC__) || defined(__GNUG__))
+      return static_cast<unsigned char>(63 - __builtin_clzll(value));
+#else
+      // https://stackoverflow.com/questions/21888140/
+      static const unsigned char deBruijnBitPosition[64] = {
+        0, 47, 1, 56, 48, 27, 2, 60, 57, 49, 41, 36, 28, 16, 3, 61,
+        54, 58, 35, 52, 50, 42, 21, 44, 38, 32, 29, 23, 17, 11, 4, 62,
+        46, 55, 26, 59, 40, 36, 15, 53, 34, 51, 20, 43, 31, 22, 10, 45,
+        25, 39, 14, 33, 19, 30, 9, 24, 13, 18, 8, 12, 7, 6, 5, 63
+      };
+
+      value |= value >> 1;
+      value |= value >> 2;
+      value |= value >> 4;
+      value |= value >> 8;
+      value |= value >> 16;
+      value |= value >> 32;
+
+      return deBruijnBitPosition[(value * 0x03F79D71B4CB0A89ULL) >> 58];
+#endif
+    }
+
+    /// <summary>Calculates the log base-10 of a 32 bit integer</summary>
+    /// <param name="value">Value of which the log base-10 will be calculated</param>
+    /// <returns>The log base-10 of the specified value</returns>
+    /// <remarks>
+    ///   The result is undefined if the input value is 0
+    /// </remarks>
+    public: NUCLEX_SUPPORT_API static inline unsigned char GetLogBase10(std::uint32_t value) {
+      static const std::uint32_t powersOfTen[10] = {
+        1U, 10U, 100U, 1000U, 10000U, 100000U, 1000000U, 10000000U, 100000000U, 1000000000U,
+      };
+
+      // http://graphics.stanford.edu/~seander/bithacks.html#IntegerLog10
+      std::uint32_t temp = (GetLogBase2(value) + 1) * 1233U >> 12;
+      return static_cast<unsigned char>(temp - (value < powersOfTen[temp]));
+    }
+
+    /// <summary>Calculates the log base-10 of a 64 bit integer</summary>
+    /// <param name="value">Value of which the log base-10 will be calculated</param>
+    /// <returns>The log base-10 of the specified value</returns>
+    /// <remarks>
+    ///   The result is undefined if the input value is 0
+    /// </remarks>
+    public: NUCLEX_SUPPORT_API static inline unsigned char GetLogBase10(std::uint64_t value) {
+      static const std::uint64_t powersOfTen[20] = {
+        1ULL, 10ULL, 100ULL, 1000ULL, 10000ULL, 100000ULL, 1000000ULL, 10000000ULL, 100000000U,
+        1000000000ULL, 10000000000ULL, 100000000000ULL, 1000000000000ULL, 10000000000000ULL,
+        100000000000000ULL, 1000000000000000ULL, 10000000000000000ULL, 100000000000000000ULL,
+        1000000000000000000ULL, 10000000000000000000ULL
+      };
+
+      // http://graphics.stanford.edu/~seander/bithacks.html#IntegerLog10
+      std::uint64_t temp = (GetLogBase2(value) + 1) * 1233U >> 12;
+      return static_cast<unsigned char>(temp - (value < powersOfTen[temp]));
+    }
+
   };
 
   // ------------------------------------------------------------------------------------------- //

@@ -24,7 +24,7 @@ License along with this library
 #include "Nuclex/Support/BitTricks.h"
 #include <gtest/gtest.h>
 
-#include <random>
+#include <random> // lots, for testing with random numbers
 
 namespace Nuclex { namespace Support {
 
@@ -133,6 +133,68 @@ namespace Nuclex { namespace Support {
         }
       }
 
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(BitTricksTest, CanGetLogBase2Of32BitsValue) {
+    for(std::size_t index = 0; index < 31; ++index) {
+      if(index >= 1) {
+        EXPECT_EQ(
+          index - 1U,
+          BitTricks::GetLogBase2(std::uint32_t((1U << index) - 1))
+        );
+      }
+      EXPECT_EQ(
+        index,
+        BitTricks::GetLogBase2(std::uint32_t(1U << index))
+      );
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(BitTricksTest, CanGetLogBase2Of64BitsValue) {
+    for(std::size_t index = 0; index < 63; ++index) {
+      if(index >= 1) {
+        EXPECT_EQ(
+          index - 1U,
+          BitTricks::GetLogBase2(std::uint64_t((1ULL << index) - 1))
+        );
+      }
+      EXPECT_EQ(
+        index,
+        BitTricks::GetLogBase2(std::uint64_t(1ULL << index))
+      );
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(BitTricksTest, CanGetLogBase10Of32BitsValue) {
+    EXPECT_EQ(0U, BitTricks::GetLogBase10(std::uint32_t(1)));
+
+    for(std::size_t log10 = 1; log10 < 10; ++log10) {
+      std::uint32_t nextHigher = static_cast<std::uint32_t>(std::pow(10, log10));
+      std::uint32_t nextLower = nextHigher - 1;
+
+      EXPECT_EQ(log10 - 1, BitTricks::GetLogBase10(nextLower));
+      EXPECT_EQ(log10, BitTricks::GetLogBase10(nextHigher));
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(BitTricksTest, CanGetLogBase10Of64BitsValue) {
+    EXPECT_EQ(0U, BitTricks::GetLogBase10(std::uint64_t(1)));
+
+    for(std::size_t log10 = 1; log10 < 20; ++log10) {
+      std::uint64_t nextHigher = static_cast<std::uint64_t>(std::pow(10, log10));
+      std::uint64_t nextLower = nextHigher - 1;
+
+      EXPECT_EQ(log10 - 1, BitTricks::GetLogBase10(nextLower));
+      EXPECT_EQ(log10, BitTricks::GetLogBase10(nextHigher));
     }
   }
 
