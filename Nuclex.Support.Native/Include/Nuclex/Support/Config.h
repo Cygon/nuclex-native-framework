@@ -29,7 +29,7 @@ License along with this library
 
 // Platform recognition
 #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
-  #define NUCLEX_SUPPORT_WINRT 1
+  #error The Nuclex.Support.Native library does not support WinRT
 #elif defined(WIN32) || defined(_WIN32)
   #define NUCLEX_SUPPORT_WIN32 1
 #else
@@ -38,26 +38,52 @@ License along with this library
 
 // --------------------------------------------------------------------------------------------- //
 
-// C++ language features
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) // Visual Studio 2015 has the C++14 features we use
-  #define NUCLEX_SUPPORT_CXX14 1
-#elif defined(__clang__) && defined(__cplusplus) && (__cplusplus >= 201402)
-  #define NUCLEX_SUPPORT_CXX14 1
-#elif (defined(__GNUC__) || defined(__GNUG__)) && defined(__cplusplus) && (__cplusplus >= 201402)
-  #define NUCLEX_SUPPORT_CXX14 1
+// Compiler support checking
+#if defined(_MSC_VER)
+  #if (_MSC_VER < 1910) // Visual Studio 2017 has the C++17 features we use
+    #error At least Visual Studio 2017 is required to compile Nuclex.Support.Native
+  #elif defined(_MSVC_LANG) && (_MSVC_LANG >= 201703L)
+    #define NUCLEX_SUPPORT_CXX17 1
+  #endif
+#elif defined(__clang__) && defined(__clang_major__)
+  #if (__clang_major__ < 5) // clang 5.0 has the C++17 features we use
+    #error At least clang 5.0 is required to compile Nuclex.Support.Native
+  #elif defined(__cplusplus) && (__cplusplus >= 201703L)
+    #define NUCLEX_SUPPORT_CXX17 1
+  #endif
+#elif defined(__GNUC__)
+  #if (__GNUC__ < 8) // GCC 8.0 has the C++17 features we use
+    #error At least GCC 8.0 is required to compile Nuclex.Support.Native
+  #elif defined(__cplusplus) && (__cplusplus >= 201703L)
+    #define NUCLEX_SUPPORT_CXX17 1
+  #endif
 #else
-  #error The Nuclex.Pixels.Native library requires a C++14 compiler
+  #error Unknown compiler. Nuclex.Support.Native is tested with GCC, clang and MSVC only
+#endif
+
+// Due to features like std::optional, std::any and 'if constexpr' anything earlier
+// than ISO C++ 17 will only result in compilation errors.
+#if !defined(NUCLEX_SUPPORT_CXX17)
+  #error The Nuclex.Support.Native library must be compiled in least C++17 mode
+#endif
+
+// We've got tons of u8"hello" strings that will become char8_t in C++20 and fail to build!
+// Bail out instead of letting the user scratch their head over weird compiler errors.
+#if defined(_MSVC_LANG) && (_MSVC_LANG >= 202002)
+  #error The Nuclex.Support.Native library does not work in C++20 mode yet
+#elif defined(__cplusplus) && (__cplusplus >= 202002)
+  #error The Nuclex.Support.Native library does not work in C++20 mode yet
 #endif
 
 // --------------------------------------------------------------------------------------------- //
 
 // Endianness detection
 #if defined(_MSC_VER) // MSVC is always little endian, including Windows on ARM
-  #define NUCLEX_SUPPORT_LITTLE_ENDIAN
+  #define NUCLEX_SUPPORT_LITTLE_ENDIAN 1
 #elif defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__) // GCC
-  #define NUCLEX_SUPPORT_LITTLE_ENDIAN
+  #define NUCLEX_SUPPORT_LITTLE_ENDIAN 1
 #elif defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__) // GCC
-  #define NUCLEX_SUPPORT_BIG_ENDIAN
+  #define NUCLEX_SUPPORT_BIG_ENDIAN 1
 #else
   #error Could not determine whether platform is big or little endian
 #endif
@@ -81,7 +107,7 @@ License along with this library
     #endif
   #endif
 
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) || defined(__clang__)
 
   #if defined(NUCLEX_SUPPORT_STATICLIB) || defined(NUCLEX_SUPPORT_EXECUTABLE)
     #define NUCLEX_SUPPORT_API
@@ -104,7 +130,8 @@ License along with this library
 
 // --------------------------------------------------------------------------------------------- //
 
-#if defined(__GNUC__)
+// Optimization macros
+#if defined(__GNUC__) || defined(__clang__)
 
   #if !defined(likely)
     #define likely(x) __builtin_expect((x), 1)

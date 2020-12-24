@@ -23,7 +23,10 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
-//#include <typeinfo>
+#if !defined(NUCLEX_SUPPORT_SOURCE)
+  #warning Nuclex::Support::Optional has been deprecated in favor of C++17 std::optional
+#endif
+
 #include <type_traits>
 #include <stdexcept>
 
@@ -41,22 +44,22 @@ namespace Nuclex { namespace Support {
   class Optional {
 
     /// <summary>An <see cref="Optional" /> instance that is empty</summary>
-    public: const static Optional Empty;
+    public: NUCLEX_SUPPORT_API const static Optional Empty;
 
     /// <summary>Initializes a new optional not holding a value</summary>
-    public: Optional() :
+    public: NUCLEX_SUPPORT_API Optional() :
       carriesValue(false) {}
 
     /// <summary>Initializes a new Optional containing the specified value</summary>
     /// <param name="value">Value that will be carried by the optional</param>
-    public: Optional(const TValue &value) :
+    public: NUCLEX_SUPPORT_API Optional(const TValue &value) :
       carriesValue(true) {
       new(this->valueMemory) TValue(value);
     }
 
     /// <summary>Initializes a new Optional containing the specified value</summary>
     /// <param name="value">Value that will be carried by the optional</param>
-    public: Optional(TValue &&value) :
+    public: NUCLEX_SUPPORT_API Optional(TValue &&value) :
       carriesValue(true) {
       new(this->valueMemory) TValue(std::move(value));
     }
@@ -143,7 +146,7 @@ namespace Nuclex { namespace Support {
     /// <summary>Retrieves the value stored in the any</summary>
     /// <typeparam name="TValue">Type of value that will be retrieved from the any</typeparam>
     /// <returns>The value stored by the any</returns>
-    public: const TValue &Get() const {
+    public: NUCLEX_SUPPORT_API const TValue &Get() const {
       if(!this->carriesValue) {
         throw std::logic_error(u8"Optional does not contain a value");
       }
@@ -154,7 +157,7 @@ namespace Nuclex { namespace Support {
     /// <summary>Retrieves the value stored in the any</summary>
     /// <typeparam name="TValue">Type of value that will be retrieved from the any</typeparam>
     /// <returns>The value stored by the any</returns>
-    public: TValue &Get() {
+    public: NUCLEX_SUPPORT_API TValue &Get() {
       if(!this->carriesValue) {
         throw std::logic_error(u8"Optional does not contain a value");
       }
