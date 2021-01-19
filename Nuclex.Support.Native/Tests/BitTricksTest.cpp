@@ -26,6 +26,50 @@ License along with this library
 
 #include <random> // lots, for testing with random numbers
 
+namespace {
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Calculates the n-th power of 10</summary>
+  /// <param name="power">What power of 10 will be calculated</param>
+  /// <returns>10 to the power of the specified value</returns>
+  template<typename TResult>
+  inline TResult Pow10(std::size_t power) = delete;
+
+  /// <summary>Calculates the n-th power of 10 as a 32 bit integer</summary>
+  /// <param name="power">What power of 10 will be calculated</param>
+  /// <returns>10 to the power of the specified value</returns>
+  template<>
+  inline std::uint32_t Pow10<std::uint32_t>(std::size_t power) {
+    static const std::uint32_t powersOfTen[] = {
+      1U, 10U, 100U, 1000U, 10000U, 100000U, 1000000U, 10000000U, 100000000U, 1000000000U
+    };
+    return powersOfTen[power];
+  }
+
+  /// <summary>Calculates the n-th power of 10 as a 64 bit integer</summary>
+  /// <param name="power">What power of 10 will be calculated</param>
+  /// <returns>10 to the power of the specified value</returns>
+  /// <remarks>
+  ///   Doing this with std::pow() will start to yield imprecise results at the higher
+  ///   ranges of 64 bit integers (at least with fast math enabled), this integer-only
+  ///   version of the method gives an accurate result in all cases
+  /// </remarks>
+  template<>
+  inline std::uint64_t Pow10<std::uint64_t>(std::size_t power) {
+    static const std::uint64_t powersOfTen[20] = {
+      1ULL, 10ULL, 100ULL, 1000ULL, 10000ULL, 100000ULL, 1000000ULL, 10000000ULL,
+      100000000ULL, 1000000000ULL, 10000000000ULL, 100000000000ULL, 1000000000000ULL,
+      10000000000000ULL, 100000000000000ULL, 1000000000000000ULL, 10000000000000000ULL,
+      100000000000000000ULL, 1000000000000000000ULL, 10000000000000000000ULL
+    };
+    return powersOfTen[power];
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+} // anonymous namespace
+
 namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //
@@ -176,7 +220,7 @@ namespace Nuclex { namespace Support {
     EXPECT_EQ(0U, BitTricks::GetLogBase10(std::uint32_t(1)));
 
     for(std::size_t log10 = 1; log10 < 10; ++log10) {
-      std::uint32_t nextHigher = static_cast<std::uint32_t>(std::pow(10, log10));
+      std::uint32_t nextHigher = Pow10<std::uint32_t>(log10);
       std::uint32_t nextLower = nextHigher - 1;
 
       EXPECT_EQ(log10 - 1, BitTricks::GetLogBase10(nextLower));
@@ -190,7 +234,7 @@ namespace Nuclex { namespace Support {
     EXPECT_EQ(0U, BitTricks::GetLogBase10(std::uint64_t(1)));
 
     for(std::size_t log10 = 1; log10 < 20; ++log10) {
-      std::uint64_t nextHigher = static_cast<std::uint64_t>(std::pow(10, log10));
+      std::uint64_t nextHigher = Pow10<std::uint64_t>(log10);
       std::uint64_t nextLower = nextHigher - 1;
 
       EXPECT_EQ(log10 - 1, BitTricks::GetLogBase10(nextLower));
