@@ -23,9 +23,41 @@ License along with this library
 
 #include "Nuclex/Support/Text/Logger.h"
 
-// --------------------------------------------------------------------------------------------- //
+namespace {
 
-// This file is only here to guarantee that its associated header has no hidden
-// dependencies and can be included on its own
+  // ------------------------------------------------------------------------------------------- //
 
-// --------------------------------------------------------------------------------------------- //
+  /// <summary>Implementation of a logger that does not do anything</summary>
+  class NullLogger : public Nuclex::Support::Text::Logger {
+
+    /// <summary>Frees all resources owned by the logger</summary>
+    public: virtual ~NullLogger() = default;
+
+    /// <summary>Whether the logger is actually doing anything with the log messages</summary>
+    /// <returns>True if the log messages are processed in any way, false otherwise</returns>
+    /// <remarks>
+    ///   Forming the log message strings may be non-trivial and cause memory allocations, too,
+    ///   so by checking this method just once, you can skip all logging if they would be
+    ///   discarded anyway.
+    /// </remarks>
+    public: virtual bool IsLogging() const override { return false; }
+
+  };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  NullLogger SharedNullLogger;
+
+  // ------------------------------------------------------------------------------------------- //
+
+} // anonymous namespace
+
+namespace Nuclex { namespace Support { namespace Text {
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Logger &Logger::Null = SharedNullLogger;
+
+  // ------------------------------------------------------------------------------------------- //
+
+}}} // namespace Nuclex::Support::Text

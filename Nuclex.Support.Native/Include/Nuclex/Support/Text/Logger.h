@@ -23,19 +23,7 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
-#include <string>
-
-// DONE: Rename FeedbackReceiver to Logger?
-//   This class is purely for logging and many other logging libraries, such as
-//   log4j / log4net, use an ILogger interface in their design.
-//
-//   But: this is just an interface, it doesn't 'log' per se. And 'LogSink'
-//   is shorter but nobody understands Microsoftese (nor do we want it...)
-
-// CHECK: Use simple verbs for the logging methods?
-//   LogMessage()  ->  Inform()
-//   LogWarning()  ->  Warn()
-//   LogError()    ->  ? Complain() ? Panic() ? Bail() ?
+#include <string> // for std::string
 
 namespace Nuclex { namespace Support { namespace Text {
 
@@ -44,6 +32,9 @@ namespace Nuclex { namespace Support { namespace Text {
   /// <summary>Interface to accept diagnostic messages and information</summary>
   class Logger {
 
+    /// <summary>A logger that doesn't log anything</summary>
+    public: NUCLEX_SUPPORT_API static Logger &Null;
+
     #pragma region class IndentationScope
 
     /// <summary>Simple scope that adds indentation to a logger while it exists</summary>
@@ -51,12 +42,12 @@ namespace Nuclex { namespace Support { namespace Text {
 
       /// <summary>Adds indentation to the specified logger</summary>
       /// <param name="logger">Logger to which an indentation level will be added</param>
-      public: IndentationScope(Logger &logger) : logger(logger) {
+      public: NUCLEX_SUPPORT_API IndentationScope(Logger &logger) : logger(logger) {
         this->logger.Indent();
       }
 
       /// <summary>Goes back up by one indentation level on the logger</summary>
-      public: ~IndentationScope() {
+      public: NUCLEX_SUPPORT_API ~IndentationScope() {
         this->logger.Unindent();
       }
 
@@ -103,7 +94,7 @@ namespace Nuclex { namespace Support { namespace Text {
     ///   so by checking this method just once, you can skip all logging if they would be
     ///   discarded anyway.
     /// </remarks>
-    public: NUCLEX_SUPPORT_API virtual bool IsLogging() const { return false; }
+    public: NUCLEX_SUPPORT_API virtual bool IsLogging() const { return true; }
 
     /// <summary>Logs a diagnostic message</summary>
     /// <param name="message">Message the operation wishes to log</param>
@@ -112,7 +103,7 @@ namespace Nuclex { namespace Support { namespace Text {
     ///   things are indeed happening the way you intended to. These messages typically
     ///   go into some log, a details window or are discarded outright.
     /// </remarks>
-    public: NUCLEX_SUPPORT_API virtual void LogMessage(const std::string &message) {
+    public: NUCLEX_SUPPORT_API virtual void Inform(const std::string &message) {
       (void)message;
     }
 
@@ -130,7 +121,7 @@ namespace Nuclex { namespace Support { namespace Text {
     ///     the operation completed with warnings.
     ///   </para>
     /// </remarks>
-    public: NUCLEX_SUPPORT_API virtual void LogWarning(const std::string &warning) {
+    public: NUCLEX_SUPPORT_API virtual void Warn(const std::string &warning) {
       (void)warning;
     }
 
@@ -147,29 +138,9 @@ namespace Nuclex { namespace Support { namespace Text {
     ///     the operation has failed.
     ///   </para>
     /// </remarks>
-    public: NUCLEX_SUPPORT_API virtual void LogError(const std::string &error) {
+    public: NUCLEX_SUPPORT_API virtual void Complain(const std::string &error) {
       (void)error;
     }
-
-#if defined(WOULD_BE_NICE_IF_PORTABLE)
-
-    /// <summary>Whether the feedback receiver is checking logged messages at all</summary>
-    /// <returns>True if the feedback receiver is checking logged messages, false otherwise</returns>
-    /// <remarks>
-    ///   If your messages are costly to form, you can check this property once in your
-    ///   operation to see whether issuing log messages is needed at all.
-    /// </remarks>
-    public: inline bool IsLogging() const {
-      //FeedbackReceiver *dummy = nullptr;
-      //(FeedbackReceiver::void (*baseMethod)(const std::string &)) =
-      return (
-        (&this->LogMessage != &FeedbackReceiver::LogMessage) ||
-        (&this->LogWarning != &FeedbackReceiver::LogWarning) ||
-        (&this->LogError != &FeedbackReceiver::LogError)
-      );
-    }
-
-#endif
 
   };
 
