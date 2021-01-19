@@ -61,10 +61,10 @@ License along with this library
   #error Unknown compiler. Nuclex.Support.Native is tested with GCC, clang and MSVC only
 #endif
 
-// Due to features like std::optional, std::any and 'if constexpr' anything earlier
-// than ISO C++ 17 will only result in compilation errors.
+// This library uses writable std::string::data(), 'if constexpr' and new C++17
+// containers, so anything earlier than C++ 17 will only result in compilation errors.
 #if !defined(NUCLEX_SUPPORT_CXX17)
-  #error The Nuclex.Support.Native library must be compiled in least C++17 mode
+  #error The Nuclex.Support.Native library must be compiled in at least C++17 mode
 #endif
 
 // We've got tons of u8"hello" strings that will become char8_t in C++20 and fail to build!
