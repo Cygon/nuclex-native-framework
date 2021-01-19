@@ -38,16 +38,38 @@
 #define DOUBLE_EXPONENT_BIAS 1023
 
 #if defined(_MSC_VER)
-#include <intrin.h>
 
-static inline uint32_t floor_log2(const uint64_t value) {
-  unsigned long index;
-  return _BitScanReverse64(&index, value) ? index : 64;
-}
+  // 64-bit builds have _BitScanReverse64
+  #if defined(_M_X64)
+    #include <intrin.h>
+
+    static inline uint32_t floor_log2(uint64_t value) {
+      unsigned long index;
+      return _BitScanReverse64(&index, value) ? index : 64;
+    }
+  #else // 32-bit builds, however, don't
+    static inline uint32_t floor_log2(uint64_t value) {
+      static const unsigned char deBruijnBitPosition[64] = {
+        0, 47, 1, 56, 48, 27, 2, 60, 57, 49, 41, 37, 28, 16, 3, 61,
+        54, 58, 35, 52, 50, 42, 21, 44, 38, 32, 29, 23, 17, 11, 4, 62,
+        46, 55, 26, 59, 40, 36, 15, 53, 34, 51, 20, 43, 31, 22, 10, 45,
+        25, 39, 14, 33, 19, 30, 9, 24, 13, 18, 8, 12, 7, 6, 5, 63
+      };
+
+      value |= value >> 1;
+      value |= value >> 2;
+      value |= value >> 4;
+      value |= value >> 8;
+      value |= value >> 16;
+      value |= value >> 32;
+
+      return deBruijnBitPosition[(value * 0x03F79D71B4CB0A89ULL) >> 58];
+    }
+  #endif
 
 #else
 
-static inline uint32_t floor_log2(const uint64_t value) {
+static inline uint32_t floor_log2(uint64_t value) {
   return 63 - __builtin_clzll(value);
 }
 
