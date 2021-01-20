@@ -51,6 +51,12 @@ namespace Nuclex { namespace Support { namespace Text {
     /// <param name="wildcard">Wildcard against which the text will be matched</param>
     /// <param name="caseSensitive">Whether the comparison will be case sensitive</param>
     /// <returns>True if the specified text matches the wildcard</returns>
+    /// <remarks>
+    ///   Wildcards refer to the simple placeholder symbols employed by many shells,
+    ///   where a '?' acts as a stand-in for one UTF-8 character and a '*' acts as
+    ///   a stand-in for zero or more UTF-8 characters. For example &quot;*l?o&quot;
+    ///   would match &quot;Hello&quot; but not &quot;low&quot;.
+    /// </remarks>
     public: NUCLEX_SUPPORT_API static bool FitsWildcard(
       const std::string &text, const std::string &wildcard, bool caseSensitive = false
     );

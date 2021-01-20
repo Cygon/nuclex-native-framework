@@ -35,7 +35,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     ASSERT_DEATH(
       test.Skip(1),
-      ".*Amount of data skipped must be less or equal to the amount of data in the buffer.*"
+      u8".*Amount of data skipped must be less or equal to the amount of data in the buffer.*"
     );
   }
 #endif
@@ -48,7 +48,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     ASSERT_DEATH(
       test.Read(retrieved, 1),
-      ".*Amount of data read must be less or equal to the amount of data in the buffer.*"
+      u8".*Amount of data read must be less or equal to the amount of data in the buffer.*"
     );
   }
 #endif

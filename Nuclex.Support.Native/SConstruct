@@ -11,10 +11,24 @@ nuclex = importlib.import_module('nuclex')
 
 # ----------------------------------------------------------------------------------------------- #
 
+use_gcc10 = False
+use_clang = False
+
+# ----------------------------------------------------------------------------------------------- #
+
 # Standard C/C++ build environment with Nuclex extension methods
 common_environment = nuclex.create_cplusplus_environment()
-#common_environment['ENV'] = os.environ
-#common_environment['CXX'] = 'clang++'
+
+if use_gcc10:
+    common_environment['CXX'] = 'g++-10.2.0'
+    common_environment['CC'] = 'gcc-10.2.0'
+
+if use_clang:
+    common_environment['ENV'] = os.environ
+    common_environment['CXX'] = 'clang++-11'
+    common_environment['CC'] = 'clang-11'
+    #common_environment.Append(LINKFLAGS='-flto')
+    #common_environment.Append(LINKFLAGS='-fuse-ld=gold')
 
 # Compile the main library
 library_environment = common_environment.Clone()

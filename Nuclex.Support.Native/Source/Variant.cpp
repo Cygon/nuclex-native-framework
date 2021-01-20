@@ -22,7 +22,7 @@ License along with this library
 #define NUCLEX_SUPPORT_SOURCE 1
 
 #include "Nuclex/Support/Variant.h"
-#include "Nuclex/Support/Text/Lexical.h"
+#include "Nuclex/Support/Text/LexicalCast.h"
 #include "Nuclex/Support/Text/StringConverter.h"
 
 #include <stdexcept>

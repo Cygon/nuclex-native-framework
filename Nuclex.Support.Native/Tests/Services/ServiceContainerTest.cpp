@@ -32,6 +32,9 @@ namespace {
   /// <summary>Example service providing a few simple math methods</summary>
   class CalculatorService {
 
+    /// <summary>Frees all resources owned by a calculator instance</summary>
+    public: virtual ~CalculatorService() = default;
+
     /// <summary>Calculates the sum of two integers</summary>
     /// <param name="first">First integer that will be part of the sum</param>
     /// <param name="second">Second integer that will be part of the sum</param>
@@ -50,6 +53,9 @@ namespace {
 
   /// <summary>Example implementation of the calculator service</summary>
   class BrokenCalculator : public virtual CalculatorService {
+
+    /// <summary>Frees all resources owned by a calculator instance</summary>
+    public: virtual ~BrokenCalculator() = default;
 
     /// <summary>Calculates the sum of two integers</summary>
     /// <param name="first">First integer that will be part of the sum</param>
