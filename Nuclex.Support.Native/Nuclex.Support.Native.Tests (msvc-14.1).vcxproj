@@ -218,8 +218,8 @@
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceContainer.h" />
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceFactory.inl" />
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceProvider.h" />
-    <ClInclude Include="Include\Nuclex\Support\Text\Lexical.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\LexicalCast.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />
@@ -280,8 +280,8 @@
     <ClInclude Include="Source\Text\Utf8\checked.h" />
     <ClInclude Include="Source\Text\Utf8\core.h" />
     <ClInclude Include="Source\Text\Utf8\unchecked.h" />
-    <ClCompile Include="Source\Text\Lexical.cpp" />
     <ClCompile Include="Source\Text\LexicalAppend.cpp" />
+    <ClCompile Include="Source\Text\LexicalCast.cpp" />
     <ClCompile Include="Source\Text\Logger.cpp" />
     <ClCompile Include="Source\Text\StringConverter.cpp" />
     <ClCompile Include="Source\Text\StringMatcher.cpp" />
@@ -302,22 +302,22 @@
     <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Tests\BitTricksTest.cpp" />
     <ClCompile Include="Tests\Collections\DynamicArrayTest.cpp" />
     <ClCompile Include="Tests\Collections\RingBufferTest.cpp" />
     <ClCompile Include="Tests\Collections\ShiftBufferDeathTest.cpp" />
     <ClCompile Include="Tests\Collections\ShiftBufferTest.cpp" />
     <ClCompile Include="Tests\Events\DelegateTests.cpp" />
     <ClCompile Include="Tests\Events\EventTests.cpp" />
-    <ClCompile Include="Tests\OptionalTests.cpp" />
-    <ClCompile Include="Tests\ScopeGuardTest.cpp" />
     <ClCompile Include="Tests\Services\LazyServiceInjectorTest.cpp" />
     <ClCompile Include="Tests\Services\ServiceContainerTest.cpp" />
     <ClCompile Include="Tests\Text\LexicalAppendTest.cpp" />
-    <ClCompile Include="Tests\Text\LexicalTest.cpp" />
+    <ClCompile Include="Tests\Text\LexicalCastTest.cpp" />
     <ClCompile Include="Tests\Text\StringConverterTest.cpp" />
     <ClCompile Include="Tests\Text\StringMatcherTest.cpp" />
     <ClCompile Include="Tests\AnyTests.cpp" />
+    <ClCompile Include="Tests\BitTricksTest.cpp" />
+    <ClCompile Include="Tests\OptionalTests.cpp" />
+    <ClCompile Include="Tests\ScopeGuardTest.cpp" />
     <ClCompile Include="Tests\VariantTests.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -143,10 +143,10 @@
     <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl">
       <Filter>Include\Services</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\Lexical.h">
+    <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h">
+    <ClInclude Include="Include\Nuclex\Support\Text\LexicalCast.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h">
@@ -325,10 +325,10 @@
     <ClInclude Include="Source\Text\Utf8Fold\Utf8Fold.h">
       <Filter>Source\Text\Utf8Fold</Filter>
     </ClInclude>
-    <ClCompile Include="Source\Text\Lexical.cpp">
+    <ClCompile Include="Source\Text\LexicalAppend.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Text\LexicalAppend.cpp">
+    <ClCompile Include="Source\Text\LexicalCast.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
     <ClCompile Include="Source\Text\Logger.cpp">
@@ -387,10 +387,10 @@
     <ClCompile Include="Tests\Services\ServiceContainerTest.cpp">
       <Filter>Tests\Services</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Text\LexicalTest.cpp">
+    <ClCompile Include="Tests\Text\LexicalAppendTest.cpp">
       <Filter>Tests\Text</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Text\LexicalAppendTest.cpp">
+    <ClCompile Include="Tests\Text\LexicalCastTest.cpp">
       <Filter>Tests\Text</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Text\StringConverterTest.cpp">
