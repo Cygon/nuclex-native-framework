@@ -26,17 +26,12 @@ License along with this library
 
 #include <string> // for std::string
 
-// CHECK: Rename to AppendString? - aka append_string() similar to to_string()?
-//   It does lexical conversion, so does it deserve the lexical in its name?
-//   The target is always a string, though.
-
 namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Appends strings and numeric types as text to an UTF-8 string</summary>
-  /// <param name="target">Address at which the UTF-8 characters will be stored</param>
-  /// <param name="availableBytes">Number of bytes available at the provided address</param>
+  /// <param name="target">String to which the UTF-8 characters will be appended</param>
   /// <param name="from">What will be appended to the UTF-8 string</param>
   /// <returns>
   ///   The number of bytes appended to the UTF-8 string or the number of bytes needed

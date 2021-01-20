@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "Nuclex/Support/Text/Lexical.h"
+#include "Nuclex/Support/Text/LexicalCast.h"
 
 #include "Dragon4/PrintFloat.h"
 #include "Erthink/erthink_u2a.h"

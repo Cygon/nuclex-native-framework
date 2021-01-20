@@ -24,11 +24,11 @@ License along with this library
 #include "Nuclex/Support/Text/LexicalAppend.h"
 #include "Nuclex/Support/BitTricks.h"
 
-#include <algorithm> // for std::copy_n()
 #include <limits> // for std::numeric_limits
+#include <algorithm> // for std::copy_n()
 
 #include "Dragon4/PrintFloat.h"
-#include "Erthink/erthink_u2a.h" // DANGER! Including this breaks MSVC <algorithm> header!
+#include "Erthink/erthink_u2a.h"
 #include "Ryu/ryu_parse.h"
 
 namespace {

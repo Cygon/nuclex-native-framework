@@ -18,15 +18,13 @@ License along with this library
 */
 #pragma endregion // CPL License
 
-#ifndef NUCLEX_SUPPORT_TEXT_LEXICAL_H
-#define NUCLEX_SUPPORT_TEXT_LEXICAL_H
+#ifndef NUCLEX_SUPPORT_TEXT_LEXICALCAST_H
+#define NUCLEX_SUPPORT_TEXT_LEXICALCAST_H
 
 #include "Nuclex/Support/Config.h"
 #include "Nuclex/Support/Text/StringConverter.h"
 
 #include <string>
-
-// TODO: Rename to LexicalCast.h
 
 namespace Nuclex { namespace Support { namespace Text {
 
@@ -402,4 +400,4 @@ namespace Nuclex { namespace Support { namespace Text {
 
 }}} // namespace Nuclex::Support::Text
 
-#endif // NUCLEX_SUPPORT_TEXT_LEXICAL_H
+#endif // NUCLEX_SUPPORT_TEXT_LEXICALCAST_H

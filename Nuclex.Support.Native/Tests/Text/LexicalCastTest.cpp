@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "Nuclex/Support/Text/Lexical.h"
+#include "Nuclex/Support/Text/LexicalCast.h"
 
 #include <gtest/gtest.h>
 
@@ -101,7 +101,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertBooleanToString) {
+  TEST(LexicalCastTest, CanConvertBooleanToString) {
     std::string text = lexical_cast<std::string>(true);
     EXPECT_EQ(text, u8"true");
     text = lexical_cast<std::string>(false);
@@ -110,7 +110,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToBoolean) {
+  TEST(LexicalCastTest, CanConvertStringToBoolean) {
     bool boolean_from_true_string = lexical_cast<bool>(u8"true");
     EXPECT_TRUE(boolean_from_true_string);
     bool boolean_from_false_string = lexical_cast<bool>(u8"false");
@@ -122,14 +122,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertUInt8ToString) {
+  TEST(LexicalCastTest, CanConvertUInt8ToString) {
     std::string text = lexical_cast<std::string>(std::uint8_t(234));
     EXPECT_EQ(text, u8"234");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToUInt8) {
+  TEST(LexicalCastTest, CanConvertStringToUInt8) {
     std::uint8_t value = lexical_cast<std::uint8_t>(u8"235");
     EXPECT_EQ(value, std::uint8_t(235));
 
@@ -139,14 +139,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertInt8ToString) {
+  TEST(LexicalCastTest, CanConvertInt8ToString) {
     std::string text = lexical_cast<std::string>(std::int8_t(-123));
     EXPECT_EQ(text, "-123");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToInt8) {
+  TEST(LexicalCastTest, CanConvertStringToInt8) {
     std::int8_t value = lexical_cast<std::int8_t>(u8"-124");
     EXPECT_EQ(value, std::int8_t(-124));
 
@@ -156,14 +156,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertUInt16ToString) {
+  TEST(LexicalCastTest, CanConvertUInt16ToString) {
     std::string text = lexical_cast<std::string>(std::uint16_t(56789));
     EXPECT_EQ(text, u8"56789");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToUInt16) {
+  TEST(LexicalCastTest, CanConvertStringToUInt16) {
     std::uint16_t value = lexical_cast<std::uint16_t>(u8"56790");
     EXPECT_EQ(value, std::uint16_t(56790));
 
@@ -173,14 +173,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertInt16ToString) {
+  TEST(LexicalCastTest, CanConvertInt16ToString) {
     std::string text = lexical_cast<std::string>(std::int16_t(-23456));
     EXPECT_EQ(text, u8"-23456");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToInt16) {
+  TEST(LexicalCastTest, CanConvertStringToInt16) {
     std::int16_t value = lexical_cast<std::int16_t>(u8"-23457");
     EXPECT_EQ(value, std::int16_t(-23457));
 
@@ -190,14 +190,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertUInt32ToString) {
+  TEST(LexicalCastTest, CanConvertUInt32ToString) {
     std::string text = lexical_cast<std::string>(std::uint32_t(3456789012));
     EXPECT_EQ(text, u8"3456789012");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToUInt32) {
+  TEST(LexicalCastTest, CanConvertStringToUInt32) {
     std::uint32_t value = lexical_cast<std::uint32_t>("3456789013");
     EXPECT_EQ(value, std::uint32_t(3456789013));
 
@@ -207,14 +207,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertInt32ToString) {
+  TEST(LexicalCastTest, CanConvertInt32ToString) {
     std::string text = lexical_cast<std::string>(std::int32_t(-1234567890));
     EXPECT_EQ(text, "-1234567890");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToInt32) {
+  TEST(LexicalCastTest, CanConvertStringToInt32) {
     std::int32_t value = lexical_cast<std::int32_t>("-1234567891");
     EXPECT_EQ(value, std::int32_t(-1234567891));
 
@@ -224,14 +224,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertUInt64ToString) {
+  TEST(LexicalCastTest, CanConvertUInt64ToString) {
     std::string text = lexical_cast<std::string>(std::uint64_t(12345678901234567890ULL));
     EXPECT_EQ(text, "12345678901234567890");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToUInt64) {
+  TEST(LexicalCastTest, CanConvertStringToUInt64) {
     std::uint64_t value = lexical_cast<std::uint64_t>("12345678901234567891");
     EXPECT_EQ(value, std::uint64_t(12345678901234567891ULL));
 
@@ -241,14 +241,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertInt64ToString) {
+  TEST(LexicalCastTest, CanConvertInt64ToString) {
     std::string text = lexical_cast<std::string>(std::int64_t(-8901234567890123456LL));
     EXPECT_EQ(text, "-8901234567890123456");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToInt64) {
+  TEST(LexicalCastTest, CanConvertStringToInt64) {
     std::int64_t value = lexical_cast<std::int64_t>("-8901234567890123457");
     EXPECT_EQ(value, std::int64_t(-8901234567890123457LL));
 
@@ -258,14 +258,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertFloatToString) {
+  TEST(LexicalCastTest, CanConvertFloatToString) {
     std::string text = lexical_cast<std::string>(float(0.0009765625f));
     EXPECT_EQ(text, "0.0009765625");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToFloat) {
+  TEST(LexicalCastTest, CanConvertStringToFloat) {
     float value = lexical_cast<float>("0.0009765625");
     EXPECT_EQ(value, float(0.0009765625));
 
@@ -275,14 +275,14 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertDoubleToString) {
+  TEST(LexicalCastTest, CanConvertDoubleToString) {
     std::string text = lexical_cast<std::string>(double(0.00000190735));
     EXPECT_EQ(text, "0.00000190735");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, CanConvertStringToDouble) {
+  TEST(LexicalCastTest, CanConvertStringToDouble) {
     double value = lexical_cast<double>("0.00000190735");
     EXPECT_EQ(value, double(0.00000190735));
 
@@ -292,9 +292,9 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, FloatToStringIsLocaleIndependent) {
+  TEST(LexicalCastTest, FloatToStringIsLocaleIndependent) {
     {
-      using namespace std; // My Linux system has setlocale in std::
+      using namespace std;
       setlocale(LC_NUMERIC, "de_DE.UTF-8");
     }
     std::string text = lexical_cast<std::string>(0.125f);
@@ -303,21 +303,21 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, FloatToStringAlwaysIncludesLeadingZero) {
+  TEST(LexicalCastTest, FloatToStringAlwaysIncludesLeadingZero) {
     std::string text = lexical_cast<std::string>(0.1f);
     EXPECT_EQ(text, "0.1");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, FloatToStringDecimalsAreOptional) {
+  TEST(LexicalCastTest, FloatToStringDecimalsAreOptional) {
     std::string text = lexical_cast<std::string>(1.0f);
     EXPECT_EQ(text, "1");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, FloatToStringHandlesNaN) {
+  TEST(LexicalCastTest, FloatToStringHandlesNaN) {
     std::string text = lexical_cast<std::string>(std::numeric_limits<float>::quiet_NaN());
     EXPECT_TRUE(textStartsWithNaN(text));
 
@@ -327,7 +327,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, FloatToStringHandlesInfinity) {
+  TEST(LexicalCastTest, FloatToStringHandlesInfinity) {
     std::string text = lexical_cast<std::string>(std::numeric_limits<float>::infinity());
     EXPECT_TRUE(textStartsWithInfOrMinusInf(text));
 
@@ -338,7 +338,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, FloatToStringOutputCanBeLong) {
+  TEST(LexicalCastTest, FloatToStringOutputCanBeLong) {
     const float PI = 3.14159265358979323846264338327950288419716939937510582097494459230781640628f;
     std::string text = lexical_cast<std::string>(PI);
 
@@ -354,7 +354,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, DoubleToStringIsLocaleIndependent) {
+  TEST(LexicalCastTest, DoubleToStringIsLocaleIndependent) {
     {
       using namespace std;
       setlocale(LC_NUMERIC, "de_DE.UTF-8");
@@ -365,21 +365,21 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, DoubleToStringAlwaysIncludesLeadingZero) {
+  TEST(LexicalCastTest, DoubleToStringAlwaysIncludesLeadingZero) {
     std::string text = lexical_cast<std::string>(0.1);
     EXPECT_EQ(text, "0.1");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, DoubleToStringDecimalsAreOptional) {
+  TEST(LexicalCastTest, DoubleToStringDecimalsAreOptional) {
     std::string text = lexical_cast<std::string>(1.0);
     EXPECT_EQ(text, "1");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, DoubleToStringHandlesNaN) {
+  TEST(LexicalCastTest, DoubleToStringHandlesNaN) {
     std::string text = lexical_cast<std::string>(std::numeric_limits<double>::quiet_NaN());
     EXPECT_TRUE(textStartsWithNaN(text));
 
@@ -389,7 +389,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, DoubleToStringHandlesInfinity) {
+  TEST(LexicalCastTest, DoubleToStringHandlesInfinity) {
     std::string text = lexical_cast<std::string>(std::numeric_limits<double>::infinity());
     EXPECT_TRUE(textStartsWithInfOrMinusInf(text));
 
@@ -400,7 +400,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalTest, DoubleToStringOutputCanBeLong) {
+  TEST(LexicalCastTest, DoubleToStringOutputCanBeLong) {
     const double PI = 3.14159265358979323846264338327950288419716939937510582097494459230781640628;
     std::string text = lexical_cast<std::string>(PI);
 
@@ -408,9 +408,9 @@ namespace Nuclex { namespace Support { namespace Text {
     // certain values exactly (specifically binary fractions, i.e. 1/1024 or 5/4096 but not
     // the numbers between them).
     //
-    // This is the number of decimals after which adding decimals that selects the closest
-    // respresentable float (for round-trip parsing) and adding more decimals would not
-    // actually change the resulting double-precision floating point value.
+    // This is the number of decimals that unambiguously selects the correct float (especially)
+    // for round-trip parsing) and where adding more decimals would not actually change
+    // the resulting double-precision floating point value when it is parsed back in.
     EXPECT_EQ(text, "3.141592653589793");
   }
 
