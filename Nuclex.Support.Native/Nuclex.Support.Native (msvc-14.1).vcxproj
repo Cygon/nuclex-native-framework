@@ -132,6 +132,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -181,6 +182,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -199,7 +201,6 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\RingBuffer.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h" />
-    <ClInclude Include="Include\Nuclex\Support\Errors\CyclicDependencyError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
@@ -215,8 +216,10 @@
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalCast.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h" />
     <ClInclude Include="Include\Nuclex\Support\Any.h" />
     <ClInclude Include="Include\Nuclex\Support\BitTricks.h" />
     <ClInclude Include="Include\Nuclex\Support\Config.h" />
@@ -274,11 +277,15 @@
     <ClInclude Include="Source\Text\Utf8\checked.h" />
     <ClInclude Include="Source\Text\Utf8\core.h" />
     <ClInclude Include="Source\Text\Utf8\unchecked.h" />
+    <ClCompile Include="Source\Text\CommandLine.cpp" />
+    <ClCompile Include="Source\Text\CommandLineArgument.cpp" />
     <ClCompile Include="Source\Text\LexicalAppend.cpp" />
     <ClCompile Include="Source\Text\LexicalCast.cpp" />
     <ClCompile Include="Source\Text\Logger.cpp" />
+    <ClCompile Include="Source\Text\StatusObserver.cpp" />
     <ClCompile Include="Source\Text\StringConverter.cpp" />
     <ClCompile Include="Source\Text\StringMatcher.cpp" />
+    <ClCompile Include="Source\Threading\Thread.cpp" />
     <ClCompile Include="Source\Any.cpp" />
     <ClCompile Include="Source\BitTricks.cpp" />
     <ClCompile Include="Source\Config.cpp" />
@@ -289,9 +296,11 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Documents\Copyright.md" />
+    <None Include="Documents\Adam Morrison - Fast Concurrent queues for x86 Processors.pdf" />
     <None Include="Documents\David Gay - Correctly Rounded Binary-Decimal and Decimal-Binary Conversions.pdf" />
     <Text Include="Documents\EventBenchmark.md" />
     <None Include="Documents\Florian Loitsch - Printing Floating-Point Numbers Quickly and Accurately with Integers.pdf" />
+    <None Include="Documents\Hakan Sundell - Fast and Lock-Free Concurrent Priority Queues.pdf" />
     <None Include="Documents\Marc Andrysco - Printing Floating-Point Numbers, An Always Correct Method.pdf" />
     <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf" />
   </ItemGroup>

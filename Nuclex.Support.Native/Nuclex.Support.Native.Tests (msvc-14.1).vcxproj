@@ -133,6 +133,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -185,6 +186,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -205,7 +207,7 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\RingBuffer.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h" />
-    <ClInclude Include="Include\Nuclex\Support\Errors\CyclicDependencyError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\StackArray.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
@@ -221,8 +223,11 @@
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalCast.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h" />
     <ClInclude Include="Include\Nuclex\Support\Any.h" />
     <ClInclude Include="Include\Nuclex\Support\BitTricks.h" />
     <ClInclude Include="Include\Nuclex\Support\Config.h" />
@@ -240,7 +245,7 @@
     <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp" />
     <ClCompile Include="Source\Collections\RingBuffer.cpp" />
     <ClCompile Include="Source\Collections\ShiftBuffer.cpp" />
-    <ClCompile Include="Source\Errors\CyclicDependencyError.cpp" />
+    <ClCompile Include="Source\Collections\StackArray.cpp" />
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp" />
     <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp" />
     <ClCompile Include="Source\Events\Delegate.cpp" />
@@ -261,6 +266,7 @@
     <ClInclude Include="Source\Text\Erthink\erthink_misc.h" />
     <ClInclude Include="Source\Text\Erthink\erthink_u2a.h" />
     <ClInclude Include="Source\Text\Ryu\common.h" />
+    <ClCompile Include="Source\Text\RollingLogger.cpp" />
     <ClCompile Include="Source\Text\Ryu\d2fixed.c" />
     <ClInclude Include="Source\Text\Ryu\d2fixed_full_table.h" />
     <ClCompile Include="Source\Text\Ryu\d2s.c" />
@@ -283,8 +289,10 @@
     <ClCompile Include="Source\Text\LexicalAppend.cpp" />
     <ClCompile Include="Source\Text\LexicalCast.cpp" />
     <ClCompile Include="Source\Text\Logger.cpp" />
+    <ClCompile Include="Source\Text\StatusObserver.cpp" />
     <ClCompile Include="Source\Text\StringConverter.cpp" />
     <ClCompile Include="Source\Text\StringMatcher.cpp" />
+    <ClCompile Include="Source\Threading\Thread.cpp" />
     <ClCompile Include="Source\Any.cpp" />
     <ClCompile Include="Source\BitTricks.cpp" />
     <ClCompile Include="Source\Config.cpp" />
@@ -295,9 +303,11 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Documents\Copyright.md" />
+    <None Include="Documents\Adam Morrison - Fast Concurrent queues for x86 Processors.pdf" />
     <None Include="Documents\David Gay - Correctly Rounded Binary-Decimal and Decimal-Binary Conversions.pdf" />
     <Text Include="Documents\EventBenchmark.md" />
     <None Include="Documents\Florian Loitsch - Printing Floating-Point Numbers Quickly and Accurately with Integers.pdf" />
+    <None Include="Documents\Hakan Sundell - Fast and Lock-Free Concurrent Priority Queues.pdf" />
     <None Include="Documents\Marc Andrysco - Printing Floating-Point Numbers, An Always Correct Method.pdf" />
     <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf" />
   </ItemGroup>
@@ -312,8 +322,10 @@
     <ClCompile Include="Tests\Services\ServiceContainerTest.cpp" />
     <ClCompile Include="Tests\Text\LexicalAppendTest.cpp" />
     <ClCompile Include="Tests\Text\LexicalCastTest.cpp" />
+    <ClCompile Include="Tests\Text\RollingLoggerTest.cpp" />
     <ClCompile Include="Tests\Text\StringConverterTest.cpp" />
     <ClCompile Include="Tests\Text\StringMatcherTest.cpp" />
+    <ClCompile Include="Tests\Threading\ThreadTest.cpp" />
     <ClCompile Include="Tests\AnyTests.cpp" />
     <ClCompile Include="Tests\BitTricksTest.cpp" />
     <ClCompile Include="Tests\OptionalTests.cpp" />

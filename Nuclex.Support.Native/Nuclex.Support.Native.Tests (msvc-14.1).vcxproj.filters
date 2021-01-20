@@ -26,6 +26,9 @@
     <Filter Include="Include\Text">
       <UniqueIdentifier>{3ae3b2e0-1fd9-477a-9fc9-1eb06bd74a6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\Threading">
+      <UniqueIdentifier>{24180d59-543e-4527-9fb6-ec853983543e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
@@ -57,6 +60,9 @@
     <Filter Include="Source\Text\Utf8Fold">
       <UniqueIdentifier>{a464efe7-4a41-43bd-8cc9-46d5ae179e0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Threading">
+      <UniqueIdentifier>{c3c71559-2291-4f45-8938-c3cf232c87c5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Tests">
       <UniqueIdentifier>{6bba9bc0-cf59-4753-8206-8b3ee0c353d1}</UniqueIdentifier>
     </Filter>
@@ -77,6 +83,9 @@
     </Filter>
     <Filter Include="Source\Errors">
       <UniqueIdentifier>{3f6da7d5-6d44-4081-8eda-bafe5849e090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Threading">
+      <UniqueIdentifier>{2781deb4-4664-4b67-a3ae-7d695e2ed2fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -104,8 +113,8 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Errors\CyclicDependencyError.h">
-      <Filter>Include\Errors</Filter>
+    <ClInclude Include="Include\Nuclex\Support\Collections\StackArray.h">
+      <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
       <Filter>Include\Errors</Filter>
@@ -152,6 +161,9 @@
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
@@ -178,6 +190,12 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\VariantType.h">
       <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h">
+      <Filter>Include\Threading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -209,9 +227,6 @@
       <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
-      <Filter>Source\Errors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Errors\CyclicDependencyError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Events\Delegate.cpp">
@@ -334,11 +349,17 @@
     <ClCompile Include="Source\Text\Logger.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Text\StatusObserver.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Text\StringConverter.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
     <ClCompile Include="Source\Text\StringMatcher.cpp">
       <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\Thread.cpp">
+      <Filter>Source\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Source\Any.cpp">
       <Filter>Source</Filter>
@@ -360,6 +381,9 @@
     </ClCompile>
     <ClCompile Include="Source\VariantType.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\RollingLogger.cpp">
+      <Filter>Source\Text</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -387,10 +411,13 @@
     <ClCompile Include="Tests\Services\ServiceContainerTest.cpp">
       <Filter>Tests\Services</Filter>
     </ClCompile>
+    <ClCompile Include="Tests\Text\LexicalCastTest.cpp">
+      <Filter>Tests\Text</Filter>
+    </ClCompile>
     <ClCompile Include="Tests\Text\LexicalAppendTest.cpp">
       <Filter>Tests\Text</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Text\LexicalCastTest.cpp">
+    <ClCompile Include="Tests\Text\RollingLoggerTest.cpp">
       <Filter>Tests\Text</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Text\StringConverterTest.cpp">
@@ -398,6 +425,9 @@
     </ClCompile>
     <ClCompile Include="Tests\Text\StringMatcherTest.cpp">
       <Filter>Tests\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\ThreadTest.cpp">
+      <Filter>Tests\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Tests\AnyTests.cpp">
       <Filter>Tests</Filter>
@@ -437,5 +467,11 @@
     <Text Include="Documents\EventBenchmark.md">
       <Filter>Documents</Filter>
     </Text>
+    <None Include="Documents\Adam Morrison - Fast Concurrent queues for x86 Processors.pdf">
+      <Filter>Documents</Filter>
+    </None>
+    <None Include="Documents\Hakan Sundell - Fast and Lock-Free Concurrent Priority Queues.pdf">
+      <Filter>Documents</Filter>
+    </None>
   </ItemGroup>
 </Project>

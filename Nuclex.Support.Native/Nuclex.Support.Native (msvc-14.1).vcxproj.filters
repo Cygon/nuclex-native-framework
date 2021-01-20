@@ -33,6 +33,9 @@
     <Filter Include="Include\Text">
       <UniqueIdentifier>{3ae3b2e0-1fd9-477a-9fc9-1eb06bd74a6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\Threading">
+      <UniqueIdentifier>{24180d59-543e-4527-9fb6-ec853983543e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Collections">
       <UniqueIdentifier>{3383d190-2e62-4a51-8b20-02524ed4b332}</UniqueIdentifier>
     </Filter>
@@ -50,6 +53,9 @@
     </Filter>
     <Filter Include="Source\Text\Utf8">
       <UniqueIdentifier>{7f8c6eb7-89ef-4d69-ba39-1aceecbfc54a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Threading">
+      <UniqueIdentifier>{c3c71559-2291-4f45-8938-c3cf232c87c5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Text\Dragon4">
       <UniqueIdentifier>{f43ef6f6-b7be-4ad0-afab-0ed118b69cca}</UniqueIdentifier>
@@ -95,9 +101,6 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Errors\CyclicDependencyError.h">
-      <Filter>Include\Errors</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
       <Filter>Include\Errors</Filter>
     </ClInclude>
@@ -137,11 +140,17 @@
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
       <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h">
+      <Filter>Include\Threading</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Any.h">
       <Filter>Include</Filter>
@@ -310,6 +319,12 @@
     <ClInclude Include="Source\Text\Utf8Fold\Utf8Fold.h">
       <Filter>Source\Text\Utf8Fold</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Text\CommandLine.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\CommandLineArgument.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Text\LexicalAppend.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
@@ -319,11 +334,17 @@
     <ClCompile Include="Source\Text\Logger.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Text\StatusObserver.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Text\StringConverter.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
     <ClCompile Include="Source\Text\StringMatcher.cpp">
       <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\Thread.cpp">
+      <Filter>Source\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Source\Any.cpp">
       <Filter>Source</Filter>
@@ -369,5 +390,11 @@
     <Text Include="Documents\EventBenchmark.md">
       <Filter>Documents</Filter>
     </Text>
+    <None Include="Documents\Adam Morrison - Fast Concurrent queues for x86 Processors.pdf">
+      <Filter>Documents</Filter>
+    </None>
+    <None Include="Documents\Hakan Sundell - Fast and Lock-Free Concurrent Priority Queues.pdf">
+      <Filter>Documents</Filter>
+    </None>
   </ItemGroup>
 </Project>
