@@ -12,7 +12,8 @@ working on all platforms tested (Linux, Windows, Raspberry).
 * Conversion between std::string and std::wstring
 * Case-insensitive UTF-8 string comparison
 * UTF-8 wildcard matching
-* Fast and lightweight events (publisher/subscriber pattern)
+
+* Fast and lightweight signal/slot implementation
 * Lean dependency injector with automatic constructor detection
 
 * Supports Windows, Linux and ARM Linux (Raspberry PI)
@@ -20,8 +21,8 @@ working on all platforms tested (Linux, Windows, Raspberry).
 * Everything is unit-tested
 
 
-lexical_cast
-------------
+lexical_cast & lexical_append
+-----------------------------
 
 This is almost identical to the `lexical_cast` function found in Boost,
 but it avoids the heavyweight iostreams library. By shipping its own
@@ -31,31 +32,32 @@ the same results independent of the system's locale.
 This is very nice if you have to serialize data (i.e. JSON or XML) on
 multiple platforms because the data is binary-reproducible.
 
-Uses [Dragon4](http://www.ryanjuckett.com/programming/printing-floating-point-numbers/),
-[Erthink](https://abf.io/erthink/erthink) and [Ryu](https://github.com/ulfjack/ryu)
-internally, which have licenses that allow this use. See Copyright.md
-in the Documents directory for more details.
-
 ```cpp
 std::string myString = lexical_cast<std::string>(12.34f);
 float myFloat = lexical_cast<float>(u8"43.21");
 ```
 
+Or to append text to an `std::string` or buffer without intermediate copies:
 
-StringConverter
----------------
+```cpp
+std::string scoreText = u8"Current score: ";
+lexical_append(scoreText, 110025);
+```
 
-Useful helper methods for string, such as conversion between UTF-8,
-UTF-16 and UTF-32 and case-insensitive UTF-8 string comparison (done right
-by using the case folding table released by the unicode consortium).
+Uses [Dragon4](http://www.ryanjuckett.com/programming/printing-floating-point-numbers/),
+[Erthink](https://abf.io/erthink/erthink) and [Ryu](https://github.com/ulfjack/ryu)
+internally, which have licenses that allow this use. See Copyright.md
+in the Documents directory for more details.
 
-Can also convert between "wide char" strings and UTF-8. Wide chars are
-the bad side of unicode that Windows programmers have to deal with, with
-many `TEXT()` macros expanding to `L"my string"` which generates UTF-16 on
-Windows and UTF-32 on Linux. 
 
-Uses [UTF8-CPP](https://github.com/nemtrif/utfcpp) and some custom code.
-See Copyright.md in the Documents directory for more details.
+StringConverter & StringMatcher
+-------------------------------
+
+Useful helper methods for strings, such as conversion between UTF-8,
+UTF-16 and UTF-32. Can also convert between "wide char" strings and UTF-8.
+Wide chars are the bad side of unicode that Windows programmers have to deal
+with, often the output of `TEXT()` macros that expanding to `L"my string"`,
+thus creating UTF-16 on Windows and UTF-32 on Linux.
 
 ```cpp
 // This works on any platform, whether wchar_t is UTF-16 or UTF-32
@@ -65,17 +67,25 @@ std::string utf8 = StringConverter::Utf8FromWide(L"Hello World");
 std::u16string alwaysUtf16 = StringConverter::Utf16FromUtf8(u8"Hello World");
 ```
 
-
-StringMatcher
--------------
-
-A UTF-8 wildcard matcher for strings.
+Also performs case-insensitive UTF-8 string comparison (done right by using
+the case folding table released by the unicode consortium) and UTF-8 wildcard
+matching as known from various shells:
 
 ```cpp
-bool retursTrue = StringMatcher::FitsWilcard(
+// Comparison uses current case folding table and should be as safe as ICU.
+bool areEqual = StringMatcher::AreEqual(u8"Hello", u8"hello");
+
+```cpp
+bool returnsTrue = StringMatcher::FitsWilcard(
   u8"Cupboard-Albedo.png", u8"*-Albedo.png"
 );
+bool alsoReturnsTrue = StringMatcher::FitsWildcarD(
+  u8"食器棚〜Albedo.png", u8"*〜Albedo.png"
+);
 ```
+
+Uses [UTF8-CPP](https://github.com/nemtrif/utfcpp) and some custom code.
+See Copyright.md in the Documents directory for more details.
 
 
 Events (Signal/Slot system)
@@ -106,6 +116,10 @@ int main() {
 
 You can find some benchmarks on my blog:
 [Nuclex Signal/Slot Library: Benchmarks](http://blog.nuclex-games.com/2019/10/nuclex-signal-slot-benchmarks)
+
+I'm naming these *events* rather than *signals* because the term *signal*
+is taken by `std::signal` for something entirely different and and least
+in Microsoft land, the term *event* is pretty common for this concept.
 
 
 Dependency Injector
@@ -198,3 +212,20 @@ This implementation differs from `std::variant` of C++ 17 (which lets you
 choose which types it can store). The `Nuclex::Support::Variant` can store
 all primitive C++ types, strings and objects (within `Nuclex::Support::Any`)
 and provides reasonable conversion between all of these.
+
+
+Containers
+----------
+
+`Nuclex::Support` offers a few interfaces in case you want to expose lists,
+sets and key/value pairs in a public API.
+
+There are also a few specialty collections, such as a `RingBuffer` class optimized
+for batch-processing.
+
+There's also an alternative streaming buffer under the name `ShiftBuffer` which
+offers better performance if your use case typically empties (or mostly empties)
+the container when taking data out of it.
+
+It also keeps data linear, allowing you to get buffer pointers into the actual
+buffered data, thus avoiding unneccessary `memcpy()` / `std::copy_n()` calls.
