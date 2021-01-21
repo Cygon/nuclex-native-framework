@@ -23,10 +23,6 @@ License along with this library
 
 // --------------------------------------------------------------------------------------------- //
 
-/// \mainpage
-
-// --------------------------------------------------------------------------------------------- //
-
 // Platform recognition
 #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
   #error The Nuclex.Support.Native library does not support WinRT

@@ -17,12 +17,15 @@ set(BUILD_DOCS OFF CACHE BOOL "Whether to generate documentation via Doxygen")
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
 
+# Alternative for precompiled GoogleTest library would be
 #set(GoogleTest_DIR "../ThirdParty/gtest")
 #find_package(GoogleTest REQUIRED CONFIG)
 
 find_package(Threads REQUIRED)
 
-find_package(Doxygen)
+if(BUILD_DOCS)
+	find_package(Doxygen)
+endif()
 
 # -------------------------------------------------------------------------------------------------
 
@@ -123,6 +126,22 @@ install(
 	TARGETS NuclexSupportNativeTests
 	RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
 )
+
+# -------------------------------------------------------------------------------------------------
+
+if(BUILD_DOCS)
+
+	if(NOT DOXYGEN_FOUND)
+		message(FATAL_ERROR "Can't build documentation because Doxygen was not found")
+	endif()
+
+	add_custom_target(
+		NuclexSupportNativeDocs ALL
+		COMMAND ${DOXYGEN_EXECUTABLE} "Nuclex.Support.Native.cfg"
+		WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+	)
+
+endif()
 
 # -------------------------------------------------------------------------------------------------
 
