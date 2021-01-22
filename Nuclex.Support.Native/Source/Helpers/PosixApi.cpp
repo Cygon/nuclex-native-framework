@@ -26,6 +26,7 @@ License along with this library
 #if !defined(NUCLEX_SUPPORT_WIN32)
 
 #include "../Text/Utf8/checked.h"
+#include "Nuclex/Support/Text/LexicalAppend.h"
 
 #include <vector> // for std::vector
 #include <cstring> // string.h for strerror()
@@ -81,7 +82,7 @@ namespace Nuclex { namespace Support { namespace Helpers {
     int errorNumberFromStrError = errno;
     if(errorNumberFromStrError != 0) {
       std::string errorMessage(u8"Error ");
-      errorMessage.append(std::to_string(errorNumber));
+      Text::lexical_append(errorMessage, errorNumber);
       errorMessage.append(u8" (and error message lookup failed)");
       return errorMessage;
     }
@@ -120,7 +121,7 @@ namespace Nuclex { namespace Support { namespace Helpers {
       // We failed to look up the error message. At least output the original
       // error number and remark that we weren't able to look up the error message.
       std::string errorMessage(u8"Error ");
-      errorMessage.append(std::to_string(errorNumber)); // TODO: Use lexical_append here!
+      Text::lexical_append(errorMessage, errorNumber);
       errorMessage.append(u8" (and error message lookup failed)");
       return errorMessage;
 

@@ -343,7 +343,7 @@ namespace Nuclex { namespace Support { namespace Text {
       return 0.0f;
     } else {
       double result;
-      enum ::Status status = s2d(from, &result);
+      enum ::Status status = ::s2d(from, &result);
       if(status == SUCCESS) {
         return static_cast<float>(result);
       } else {
@@ -356,7 +356,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> float lexical_cast<>(const std::string &from) {
     double result;
-    enum ::Status status = s2d_n(from.c_str(), static_cast<int>(from.length()), &result);
+    enum ::Status status = ::s2d_n(from.c_str(), static_cast<int>(from.length()), &result);
     if(status == SUCCESS) {
       return static_cast<float>(result);
     } else {
@@ -382,7 +382,7 @@ namespace Nuclex { namespace Support { namespace Text {
       return 0.0;
     } else {
       double result;
-      enum ::Status status = s2d(from, &result);
+      enum ::Status status = ::s2d(from, &result);
       if(status == SUCCESS) {
         return result;
       } else {
@@ -395,7 +395,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> double lexical_cast<>(const std::string &from) {
     double result;
-    enum ::Status status = s2d_n(from.c_str(), static_cast<int>(from.length()), &result);
+    enum ::Status status = ::s2d_n(from.c_str(), static_cast<int>(from.length()), &result);
     if(status == SUCCESS) {
       return result;
     } else {

@@ -29,7 +29,39 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Interface to accept diagnostic messages and information</summary>
+  /// <summary>Accepts diagnostic messages and information for error reporting</summary>
+  /// <remarks>
+  ///   <para>
+  ///     This interface is provided by Nuclex::Support, i.e. at the foundational layer
+  ///     of the framework in order to allow components at all levels to support logging.
+  ///   </para>
+  ///   <para>
+  ///     Writing logs files can serve various purposes, from monitoring the actions of
+  ///     a server-based application to aiding debugging after applications have been
+  ///     rolled out to production and error diagnosis cannot connect a debugger anymore.
+  ///   </para>
+  ///   <para>
+  ///     Here's an example showing basic usage of the logger interface:
+  ///   </para>
+  ///   <example>
+  ///     <code>
+  ///       void example(Logger &logger) {
+  ///         logger.Inform(u8"Performing action XY");
+  ///         {
+  ///           Logger::IndentationScope xyLoggerScope(logger);
+  ///
+  ///           logger.Inform(u8"Now doing this");
+  ///           logger.Inform(u8"Now doing that");
+  ///         }
+  ///
+  ///         int i = rand();
+  ///         if(i < 42) {
+  ///           logger.Warn("The random number generator has a bad day");
+  ///         }
+  ///       }
+  ///     </code>
+  ///   </example>
+  /// </remarks>
   class Logger {
 
     /// <summary>A logger that doesn't log anything</summary>

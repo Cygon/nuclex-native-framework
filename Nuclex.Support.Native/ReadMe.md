@@ -56,7 +56,7 @@ StringConverter & StringMatcher
 Useful helper methods for strings, such as conversion between UTF-8,
 UTF-16 and UTF-32. Can also convert between "wide char" strings and UTF-8.
 Wide chars are the bad side of unicode that Windows programmers have to deal
-with, often the output of `TEXT()` macros that expanding to `L"my string"`,
+with, often coming from `TEXT()` macros that expand to `L"my string"`,
 thus creating UTF-16 on Windows and UTF-32 on Linux.
 
 ```cpp
@@ -68,12 +68,14 @@ std::u16string alwaysUtf16 = StringConverter::Utf16FromUtf8(u8"Hello World");
 ```
 
 Also performs case-insensitive UTF-8 string comparison (done right by using
-the case folding table released by the unicode consortium) and UTF-8 wildcard
-matching as known from various shells:
+the case folding table released by the unicode consortium):
 
 ```cpp
 // Comparison uses current case folding table and should be as safe as ICU.
 bool areEqual = StringMatcher::AreEqual(u8"Hello", u8"hello");
+````
+
+And UTF-8 wildcard matching as known from various shells:
 
 ```cpp
 bool returnsTrue = StringMatcher::FitsWilcard(
@@ -173,35 +175,6 @@ int main() {
 }
 ```
 
-
-Any
----
-
-Opaquely wraps a type so it can be transmitted between two pieces of code
-without making public APIs dependent on a library- or OS-specific type.
-
-Imagine this:
-
-```cpp
-class AwesomeVulkanRenderer {
-
-  public: SetRenderWindow(const Nuclex::Support::Any &windowHandle);
-
-};
-```
-
-The renderer's public header does not need to include `X11/Xlib.h` or
-`Windows.h`, the `Any` can be passed to it (and to some internal factory
-class or whatever, too). Only code that has the key (included `X11/Xlib.h`
-or `Windows.h`), namely the code responsible for setting up an OS-level
-window, would be able to fetch the correct value.
-
-If you simply used a `void *` or `uintptr_t`, you could pass random nonsense
-to the renderer.
-
-This will be replaced with `std::any` in C++ 17.
-
-
 Variant
 -------
 
@@ -221,11 +194,11 @@ Containers
 sets and key/value pairs in a public API.
 
 There are also a few specialty collections, such as a `RingBuffer` class optimized
-for batch-processing.
+for batch-processing and an alternative streaming buffer under the name
+`ShiftBuffer` which offers better performance if your use case typically empties
+(or mostly empties) the container when taking data out of it.
 
-There's also an alternative streaming buffer under the name `ShiftBuffer` which
-offers better performance if your use case typically empties (or mostly empties)
-the container when taking data out of it.
-
-It also keeps data linear, allowing you to get buffer pointers into the actual
-buffered data, thus avoiding unneccessary `memcpy()` / `std::copy_n()` calls.
+Shift buffers keep all data linear (no wrap-around) and wait for an opportunity
+to cheaply empty the buffer (i.e. when none or only a few bytes remain in it).
+When reading from the buffer, you can obtain a pointer into the buffer's memory,
+thus handling the data without an unnecessary `memcpy()` / `std::copy_n()` call.
