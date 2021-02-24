@@ -318,6 +318,51 @@ endif()
 
 # ----------------------------------------------------------------------------------------------- #
 
+function(install_debug_symbols target_name)
+
+    if(CMAKE_COMPILER_IS_MSVC)
+        get_target_property(target_type ${target_name} TYPE)
+
+        if(target_type STREQUAL "STATIC_LIBRARY")
+
+            # Maybe another 10 years are needed for CMake to cover the basics.
+            # https://gitlab.kitware.com/cmake/cmake/-/issues/16935
+            #
+            #install(FILES $<TARGET_COMPILE_PDB_FILE:${target_name}> DESTINATION bin OPTIONAL)
+
+            # Returns a bullshit my_variable-NOTFOUND value when the property doesn't exist
+            get_target_property(output_name ${target_name} OUTPUT_NAME)
+            if(output_name STREQUAL "output_name-NOTFOUND")
+                set(output_name "${target_name}")
+            endif()
+
+            # Change name from bullshit.lib to bullshit.pdb (or from bullshit to bullshit.pdb)
+            string(REPLACE ".lib" "" output_name ${output_name})
+            string(APPEND output_name ".pdb")
+
+            # If there is only one target, this is the output path obj/cmake-Debug/Debug/
+            # If there are multiple targets, TARGET_FILE_DIR reports a nonsensical path.
+            # So we're fucked.
+            install(
+                FILES "$<TARGET_FILE_DIR:${target_name}>/${output_name}"
+                DESTINATION "${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}/" OPTIONAL
+            )
+
+        else()
+
+            install(
+                FILES $<TARGET_PDB_FILE:${target_name}>
+                DESTINATION "${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}/" OPTIONAL
+            )
+
+        endif()
+
+    endif()
+
+endfunction()
+
+# ----------------------------------------------------------------------------------------------- #
+
 function(enable_target_compiler_warnings target_name)
 
     if(CMAKE_COMPILER_IS_MSVC OR CMAKE_COMPILER_IS_INTEL)
