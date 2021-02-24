@@ -21,10 +21,10 @@ License along with this library
 #ifndef NUCLEX_SUPPORT_COLLECTIONS_BUFFERTEST_H
 #define NUCLEX_SUPPORT_COLLECTIONS_BUFFERTEST_H
 
-#include "Nuclex/Support/Collections/ShiftBuffer.h"
 #include <gtest/gtest.h>
 
 #include <vector> // for std::vector
+#include <memory> // for std::shared_ptr
 
 namespace {
 

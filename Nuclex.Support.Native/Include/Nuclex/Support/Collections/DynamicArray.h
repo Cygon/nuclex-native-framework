@@ -24,7 +24,7 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 #include "Nuclex/Support/Collections/IndexedCollection.h"
 
-#include <vector>
+#include <vector> // for std::vector
 
 namespace Nuclex { namespace Support { namespace Collections {
 

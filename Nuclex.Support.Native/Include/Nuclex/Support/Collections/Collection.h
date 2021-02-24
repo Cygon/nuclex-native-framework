@@ -23,7 +23,7 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
-#include <cstddef>
+#include <cstddef> // for std::size_t
 
 namespace Nuclex { namespace Support { namespace Collections {
 
@@ -57,7 +57,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
       /// <summary>Advances to the next item in the collection, if available</summary>
       /// <returns>True if there was a next item, false if the end was reached</returns>
-      public: bool Advance();
+      public: virtual bool Advance() = 0;
 
       /// <summary>Retrieves the item at the current enumerator position</summary>
       /// <remarks>
@@ -65,7 +65,7 @@ namespace Nuclex { namespace Support { namespace Collections {
       ///   <see cref="Advance" /> as the very first method of a new enumerator
       ///   (and if the collection is empty, that first call will return false).
       /// </remarks>
-      public: const TValue &Get();
+      public: virtual const TValue &Get() const = 0;
 
       private: Enumerator(const Enumerator &) = delete;
       private: Enumerator &operator =(const Enumerator &) = delete;
