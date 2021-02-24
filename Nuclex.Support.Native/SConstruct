@@ -19,6 +19,9 @@ use_clang = False
 # Standard C/C++ build environment with Nuclex extension methods
 common_environment = nuclex.create_cplusplus_environment()
 
+if platform.system() != 'Windows':
+    common_environment.add_library('pthread')
+
 if use_gcc10:
     common_environment['CXX'] = 'g++-10.2.0'
     common_environment['CC'] = 'gcc-10.2.0'
@@ -37,6 +40,7 @@ library_binaries = library_environment.build_library('Nuclex.Support.Native')
 # Compile the unit test executable
 unit_test_environment = common_environment.Clone()
 unit_test_environment.add_preprocessor_constant('NUCLEX_SUPPORT_EXECUTABLE')
+#unit_test_environment.add_preprocessor_constant('NUCLEX_SUPPORT_ENABLE_BENCHMARKS')
 unit_test_binaries = unit_test_environment.build_unit_tests(
     'Nuclex.Support.Native.Tests'
 )
