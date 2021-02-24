@@ -24,9 +24,8 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 #include "Nuclex/Support/Events/Delegate.h"
 
-#include <functional>
-#include <algorithm>
-#include <vector>
+#include <algorithm> // for std::copy_n()
+#include <vector> // for std::vector
 
 namespace Nuclex { namespace Support { namespace Events {
 
@@ -48,11 +47,11 @@ namespace Nuclex { namespace Support { namespace Events {
   ///   </para>
   ///   <para>
   ///     The design makes a few assumptions on the usage patterns it optimizes for. It assumes
-  ///     thatevents typically have a very small number of subscribers and that events should be
+  ///     that events typically have a very small number of subscribers and that events should be
   ///     as lean as possible (i.e. rather than expose a single big multi-purpose notification,
   ///     classes would expose multiple granular events to notify about different things).
   ///     It also assumes that firing will happen much more often than subscribing/unsubscribing,
-  ///     and subscribing is given slightly more performance priority than than unsubscribing.
+  ///     and subscribing is given slightly more performance priority than unsubscribing.
   ///   </para>
   ///   <para>
   ///     This variant of the event class is not thread safe. The order in which subscribers
@@ -90,7 +89,7 @@ namespace Nuclex { namespace Support { namespace Events {
   ///         // Fire the event
   ///         std::vector&lt;int&gt; returnedValues = test(123, &quot;Hello&quot;);
   ///
-  ///         // Fire the event again and discard all returned values
+  ///         // Fire the event again but don't collect returned values
   ///         test.Emit(123, &quot;Hello&quot;);
   ///       }
   ///     </code>
@@ -115,6 +114,16 @@ namespace Nuclex { namespace Support { namespace Events {
     /// <summary>Type of delegate used to call the event's subscribers</summary>
     public: typedef Delegate<TResult(TArguments...)> DelegateType;
 
+    /// <summary>List of results returned by subscribers</summary>
+    /// <remarks>
+    ///   Having an std::vector&lt;void&gt; anywhere, even in a SFINAE-disabled method,
+    ///   will trigger deprecation compiler warnings on Microsoft compilers.
+    ///   Consider this type to be an alias for std::vector&lt;TResult&gt; and nothing else.
+    /// </remarks>
+    private: typedef std::vector<
+      typename std::conditional<std::is_void<TResult>::value, char, TResult>::type
+    > ResultVectorType;
+
     /// <summary>Initializes a new event</summary>
     public: Event() :
       subscriberCount(0) {}
@@ -136,13 +145,14 @@ namespace Nuclex { namespace Support { namespace Events {
     /// <param name="arguments">Arguments that will be passed to the event</param>
     /// <returns>An list of the values returned by the event subscribers</returns>
     /// <remarks>
-    ///   This overload is enabled if the event signature returns anything other than 'void' 
+    ///   This overload is enabled if the event signature returns anything other than 'void'.
+    ///   The returned value is an std::vector&lt;TResult&gt; in all cases.
     /// </remarks>
     public: template<typename T = TResult>
     typename std::enable_if<
-      !std::is_void<T>::value, std::vector<TResult>
+      !std::is_void<T>::value, ResultVectorType
     >::type operator()(TArguments&&... arguments) const {
-      std::vector<TResult> results;
+      ResultVectorType results; // ResultVectorType is an alias for std::vector<TResult>
       results.reserve(this->subscriberCount);
       EmitAndCollect(std::back_inserter(results), std::forward<TArguments>(arguments)...);
       return results;
@@ -470,7 +480,7 @@ namespace Nuclex { namespace Support { namespace Events {
 
       /// <summary>Number of subscribers for which space has been reserved on the heap</summary>      
       public: std::size_t ReservedSubscriberCount;
-      /// <summary>Dynamically allocated memory  the subscribers are stored in</summary>
+      /// <summary>Dynamically allocated memory the subscribers are stored in</summary>
       public: std::uint8_t *Buffer;
 
     };

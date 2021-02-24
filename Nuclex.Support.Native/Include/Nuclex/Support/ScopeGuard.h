@@ -23,8 +23,8 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
-#include <type_traits>
-#include <utility>
+#include <cstddef> // for std::nullptr_t
+#include <utility> // for std::forward
 
 namespace Nuclex { namespace Support {
 

@@ -45,7 +45,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///   <para>
   ///     <code>
   ///       int currentScore = 31241;
-  ///       std::string scoreText(14 + 11 + 1, '\0');
+  ///       std::string scoreText(14 + 11 + 1, '\0'); // optional: reserve exact length
   ///
   ///       scoreText.append(u8&quot;The score is: &quot;);
   ///       lexical_append(scoreText, currentScore);

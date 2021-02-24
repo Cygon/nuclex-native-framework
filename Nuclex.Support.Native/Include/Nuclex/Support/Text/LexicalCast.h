@@ -82,8 +82,8 @@ namespace Nuclex { namespace Support { namespace Text {
   /// <remarks>
   ///   <para>
   ///     This cast offers a portable way to convert between numeric and string types without
-  ///     resorting to cumbersome sprintf() constructs or relying on deprecated and functions
-  ///     such as gcvt() or itoa(). 
+  ///     resorting to cumbersome sprintf() constructs or relying on deprecated functions such
+  ///     as gcvt() or itoa(). 
   ///   </para>
   ///   <para>
   ///     Lexical casts are guaranteed to completely ignore system locale and any other
@@ -151,8 +151,8 @@ namespace Nuclex { namespace Support { namespace Text {
   /// <remarks>
   ///   <para>
   ///     This cast offers a portable way to convert between numeric and string types without
-  ///     resorting to cumbersome sprintf() constructs or relying on deprecated and functions
-  ///     such as gcvt() or itoa(). 
+  ///     resorting to cumbersome sprintf() constructs or relying on deprecated functions such
+  ///     as gcvt() or itoa(). 
   ///   </para>
   ///   <para>
   ///     Lexical casts are guaranteed to completely ignore system locale and any other
