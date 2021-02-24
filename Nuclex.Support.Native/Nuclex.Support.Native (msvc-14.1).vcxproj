@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -194,13 +194,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPSC.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.SPSC.inl" />
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\IndexedCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableDynamicArray.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\RingBuffer.h" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\RingQueue.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
@@ -230,18 +235,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Collections\Collection.cpp" />
+    <ClCompile Include="Source\Collections\ConcurrentCollection.cpp" />
+    <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp" />
     <ClCompile Include="Source\Collections\DynamicArray.cpp" />
     <ClCompile Include="Source\Collections\IndexedCollection.cpp" />
     <ClCompile Include="Source\Collections\ObservableCollection.cpp" />
     <ClCompile Include="Source\Collections\ObservableDynamicArray.cpp" />
     <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp" />
-    <ClCompile Include="Source\Collections\RingBuffer.cpp" />
-    <ClCompile Include="Source\Collections\ShiftBuffer.cpp" />
-    <ClCompile Include="Source\Errors\CyclicDependencyError.cpp" />
+    <ClCompile Include="Source\Collections\RingQueue.cpp" />
+    <ClCompile Include="Source\Collections\ShiftQueue.cpp" />
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp" />
     <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp" />
     <ClCompile Include="Source\Events\Delegate.cpp" />
     <ClCompile Include="Source\Events\Event.cpp" />
+    <ClCompile Include="Source\Helpers\PosixApi.cpp" />
+    <ClInclude Include="Source\Helpers\PosixApi.h" />
+    <ClCompile Include="Source\Helpers\WindowsApi.cpp" />
+    <ClInclude Include="Source\Helpers\WindowsApi.h" />
     <ClCompile Include="Source\Services\LazyServiceInjector.cpp" />
     <ClCompile Include="Source\Services\ServiceContainer.cpp" />
     <ClCompile Include="Source\Services\ServiceProvider.cpp" />
@@ -277,8 +287,6 @@
     <ClInclude Include="Source\Text\Utf8\checked.h" />
     <ClInclude Include="Source\Text\Utf8\core.h" />
     <ClInclude Include="Source\Text\Utf8\unchecked.h" />
-    <ClCompile Include="Source\Text\CommandLine.cpp" />
-    <ClCompile Include="Source\Text\CommandLineArgument.cpp" />
     <ClCompile Include="Source\Text\LexicalAppend.cpp" />
     <ClCompile Include="Source\Text\LexicalCast.cpp" />
     <ClCompile Include="Source\Text\Logger.cpp" />

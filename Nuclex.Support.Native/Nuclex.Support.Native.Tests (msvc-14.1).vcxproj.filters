@@ -17,6 +17,9 @@
     <Filter Include="Include\Collections">
       <UniqueIdentifier>{bb7bb4c9-39c3-4ac7-b033-c752c0cec4d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\Errors">
+      <UniqueIdentifier>{0efb8298-425d-438c-ac9c-e1aba6120891}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Include\Events">
       <UniqueIdentifier>{6309d6df-9d85-4228-a827-5c27b5922499}</UniqueIdentifier>
     </Filter>
@@ -36,8 +39,14 @@
     <Filter Include="Source\Collections">
       <UniqueIdentifier>{3383d190-2e62-4a51-8b20-02524ed4b332}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Errors">
+      <UniqueIdentifier>{3f6da7d5-6d44-4081-8eda-bafe5849e090}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Events">
       <UniqueIdentifier>{e3f61b78-199d-4daf-9335-3bfce32621d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Helpers">
+      <UniqueIdentifier>{41337d1c-187d-4d7b-8eea-9eb521d00b08}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Services">
       <UniqueIdentifier>{8776ca34-6ac1-43ca-9e2f-723d4bc5843b}</UniqueIdentifier>
@@ -72,17 +81,11 @@
     <Filter Include="Tests\Events">
       <UniqueIdentifier>{8d3a2c7c-0eac-4fd9-93e8-cf42d1a55f7b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tests\Text">
-      <UniqueIdentifier>{e379eb40-5772-47b9-96be-58023afd7cd0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tests\Services">
       <UniqueIdentifier>{0284c8eb-686e-418f-a221-c574bc42ea8d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Errors">
-      <UniqueIdentifier>{0efb8298-425d-438c-ac9c-e1aba6120891}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Errors">
-      <UniqueIdentifier>{3f6da7d5-6d44-4081-8eda-bafe5849e090}</UniqueIdentifier>
+    <Filter Include="Tests\Text">
+      <UniqueIdentifier>{e379eb40-5772-47b9-96be-58023afd7cd0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Tests\Threading">
       <UniqueIdentifier>{2781deb4-4664-4b67-a3ae-7d695e2ed2fa}</UniqueIdentifier>
@@ -90,6 +93,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPSC.inl">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.SPSC.inl">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
@@ -107,13 +125,10 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\RingBuffer.h">
+    <ClInclude Include="Include\Nuclex\Support\Collections\RingQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\StackArray.h">
+    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
@@ -161,6 +176,9 @@
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
@@ -169,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
       <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h">
+      <Filter>Include\Threading</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Any.h">
       <Filter>Include</Filter>
@@ -191,15 +212,15 @@
     <ClInclude Include="Include\Nuclex\Support\VariantType.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h">
-      <Filter>Include\Threading</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Collections\Collection.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\ConcurrentCollection.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\DynamicArray.cpp">
@@ -217,16 +238,16 @@
     <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\RingBuffer.cpp">
+    <ClCompile Include="Source\Collections\RingQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\ShiftBuffer.cpp">
+    <ClCompile Include="Source\Collections\ShiftQueue.cpp">
       <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
-      <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\CyclicDependencyError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Events\Delegate.cpp">
@@ -234,6 +255,18 @@
     </ClCompile>
     <ClCompile Include="Source\Events\Event.cpp">
       <Filter>Source\Events</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Helpers\PosixApi.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Helpers\PosixApi.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Helpers\WindowsApi.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Helpers\WindowsApi.cpp">
+      <Filter>Source\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Services\LazyServiceInjector.cpp">
       <Filter>Source\Services</Filter>
@@ -349,6 +382,9 @@
     <ClCompile Include="Source\Text\Logger.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Text\RollingLogger.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Text\StatusObserver.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
@@ -382,22 +418,46 @@
     <ClCompile Include="Source\VariantType.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Text\RollingLogger.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Tests\Collections\BufferTest.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClInclude Include="Tests\Collections\BufferTest.h">
+      <Filter>Tests\Collections</Filter>
+    </ClInclude>
+    <ClCompile Include="Tests\Collections\ConcurrentBufferTest.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClInclude Include="Tests\Collections\ConcurrentBufferTest.h">
+      <Filter>Tests\Collections</Filter>
+    </ClInclude>
+    <ClCompile Include="Tests\Collections\ConcurrentRingBufferTest_MPMC.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Collections\ConcurrentRingBufferTest_MPSC.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Collections\ConcurrentRingBufferTest_SPSC.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
     <ClCompile Include="Tests\Collections\DynamicArrayTest.cpp">
       <Filter>Tests\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Collections\RingBufferTest.cpp">
+    <ClCompile Include="Tests\Collections\RingQueueDeathTest.cpp">
       <Filter>Tests\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Collections\ShiftBufferTest.cpp">
+    <ClCompile Include="Tests\Collections\RingQueueTest.cpp">
       <Filter>Tests\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Collections\ShiftBufferDeathTest.cpp">
+    <ClCompile Include="Tests\Collections\ShiftQueueTest.cpp">
       <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Collections\ShiftQueueDeathTest.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Events\ConcurrentEventTests.cpp">
+      <Filter>Tests\Events</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Events\DelegateTests.cpp">
       <Filter>Tests\Events</Filter>

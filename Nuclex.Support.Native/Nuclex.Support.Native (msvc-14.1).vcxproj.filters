@@ -1,28 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Include">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>
-      </Extensions>
-    </Filter>
-    <Filter Include="Source">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Documents">
-      <UniqueIdentifier>{c58695d4-9cc1-47b4-8c0c-d930830ae758}</UniqueIdentifier>
+      <UniqueIdentifier>{41f93295-bbce-4d4c-b942-4515c11b357d}</UniqueIdentifier>
       <Extensions>md;txt;pdf</Extensions>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>
+      </Extensions>
     </Filter>
     <Filter Include="Include\Collections">
       <UniqueIdentifier>{bb7bb4c9-39c3-4ac7-b033-c752c0cec4d7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Errors">
-      <UniqueIdentifier>{1dc09e54-f0cf-4478-9c9c-be4efd549154}</UniqueIdentifier>
+      <UniqueIdentifier>{0efb8298-425d-438c-ac9c-e1aba6120891}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Events">
       <UniqueIdentifier>{6309d6df-9d85-4228-a827-5c27b5922499}</UniqueIdentifier>
@@ -36,14 +32,21 @@
     <Filter Include="Include\Threading">
       <UniqueIdentifier>{24180d59-543e-4527-9fb6-ec853983543e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
     <Filter Include="Source\Collections">
       <UniqueIdentifier>{3383d190-2e62-4a51-8b20-02524ed4b332}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Errors">
-      <UniqueIdentifier>{ffeea27e-febf-46a4-b298-21dad86f6077}</UniqueIdentifier>
+      <UniqueIdentifier>{3f6da7d5-6d44-4081-8eda-bafe5849e090}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Events">
       <UniqueIdentifier>{e3f61b78-199d-4daf-9335-3bfce32621d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Helpers">
+      <UniqueIdentifier>{41337d1c-187d-4d7b-8eea-9eb521d00b08}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Services">
       <UniqueIdentifier>{8776ca34-6ac1-43ca-9e2f-723d4bc5843b}</UniqueIdentifier>
@@ -51,33 +54,42 @@
     <Filter Include="Source\Text">
       <UniqueIdentifier>{f20ce72c-f037-4bfc-8e47-a38db78850de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Text\Dragon4">
+      <UniqueIdentifier>{a269f932-f334-49f2-b999-0fef78045fdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text\Erthink">
+      <UniqueIdentifier>{1fb4616e-8299-4ad2-bc51-3a40b06d192f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text\Ryu">
+      <UniqueIdentifier>{6d6734f5-932c-4dcd-bb67-6a9b69db0f2e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Text\Utf8">
       <UniqueIdentifier>{7f8c6eb7-89ef-4d69-ba39-1aceecbfc54a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text\Utf8Fold">
+      <UniqueIdentifier>{a464efe7-4a41-43bd-8cc9-46d5ae179e0f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Threading">
       <UniqueIdentifier>{c3c71559-2291-4f45-8938-c3cf232c87c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Text\Dragon4">
-      <UniqueIdentifier>{f43ef6f6-b7be-4ad0-afab-0ed118b69cca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Text\Erthink">
-      <UniqueIdentifier>{49b9907f-256d-49bf-93e9-692d25ed43ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Text\Ryu">
-      <UniqueIdentifier>{cfa952a6-dd10-49d1-a49c-9c59d88455b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Text\Utf8Fold">
-      <UniqueIdentifier>{2c01f8a8-1f42-44fc-9239-c3b205b0181f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
-      <Filter>Include\Events</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h">
-      <Filter>Include\Events</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPSC.inl">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.SPSC.inl">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
@@ -95,10 +107,10 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\RingBuffer.h">
+    <ClInclude Include="Include\Nuclex\Support\Collections\RingQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftBuffer.h">
+    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
@@ -106,6 +118,12 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h">
       <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
+      <Filter>Include\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h">
+      <Filter>Include\Events</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Services\LazyServiceInjector.h">
       <Filter>Include\Services</Filter>
@@ -178,6 +196,12 @@
     <ClCompile Include="Source\Collections\Collection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Collections\ConcurrentCollection.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Collections\DynamicArray.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
@@ -193,14 +217,11 @@
     <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\RingBuffer.cpp">
+    <ClCompile Include="Source\Collections\RingQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\ShiftBuffer.cpp">
+    <ClCompile Include="Source\Collections\ShiftQueue.cpp">
       <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Errors\CyclicDependencyError.cpp">
-      <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
       <Filter>Source\Errors</Filter>
@@ -213,6 +234,18 @@
     </ClCompile>
     <ClCompile Include="Source\Events\Event.cpp">
       <Filter>Source\Events</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Helpers\PosixApi.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Helpers\PosixApi.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Helpers\WindowsApi.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Helpers\WindowsApi.cpp">
+      <Filter>Source\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Services\LazyServiceInjector.cpp">
       <Filter>Source\Services</Filter>
@@ -319,12 +352,6 @@
     <ClInclude Include="Source\Text\Utf8Fold\Utf8Fold.h">
       <Filter>Source\Text\Utf8Fold</Filter>
     </ClInclude>
-    <ClCompile Include="Source\Text\CommandLine.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\CommandLineArgument.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Text\LexicalAppend.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
