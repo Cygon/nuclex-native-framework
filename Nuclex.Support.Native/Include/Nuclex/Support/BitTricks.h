@@ -39,13 +39,13 @@ License along with this library
   // The Microsoft compiler only offers an AVX constant, so for a bunch of CPUs
   // between 2008 and 2012 popcnt is available but we have no way of knowing...
   #if defined(__AVX__)
-    #define NUCLEX_SUPPORT_POPCNT_SUPPORTED 1
+    #define NUCLEX_SUPPORT_POPCNT_AVAILABLE 1
   #endif
 #elif defined(__clang__) || (defined(__GNUC__) || defined(__GNUG__))
   // GCC and clang split the target architecture into individual feature sets.
   // The popcnt instruction was introduced with SSE4A (AMD) and SSE 4.1 (Intel)
   #if defined(__SSE4A__) || defined(__SSE4_1__)
-    #define NUCLEX_SUPPORT_POPCNT_SUPPORTED 1
+    #define NUCLEX_SUPPORT_POPCNT_AVAILABLE 1
   #endif
 #endif
 
@@ -59,14 +59,12 @@ namespace Nuclex { namespace Support {
     /// <summary>Counts the number of bits set in a 32 bit integer</summary>
     /// <param name="value">Value whose bits will be counted</param>
     /// <returns>The number of bits set in the 32 bit integer</returns>
-    public: NUCLEX_SUPPORT_API static inline unsigned char CountBits(
-      std::uint32_t value
-    ) {
-#if defined(_MSC_VER) && defined(NUCLEX_SUPPORT_POPCNT_SUPPORTED)
+    public: NUCLEX_SUPPORT_API static unsigned char CountBits(std::uint32_t value) {
+#if defined(_MSC_VER) && defined(NUCLEX_SUPPORT_POPCNT_AVAILABLE)
       return static_cast<unsigned char>(__popcnt(value));
 #elif ( \
   (defined(__clang__) || (defined(__GNUC__) || defined(__GNUG__))) && \
-  defined(NUCLEX_SUPPORT_POPCNT_SUPPORTED) \
+  defined(NUCLEX_SUPPORT_POPCNT_AVAILABLE) \
 )
       return static_cast<unsigned char>(__builtin_popcount(value));
 #else
@@ -80,14 +78,12 @@ namespace Nuclex { namespace Support {
     /// <summary>Counts the number of bits set in a 64 bit integer</summary>
     /// <param name="value">Value whose bits will be counted</param>
     /// <returns>The number of bits set in the 64 bit integer</returns>
-    public: NUCLEX_SUPPORT_API static inline unsigned char CountBits(
-      std::uint64_t value
-    ) {
-#if defined(_MSC_VER) && defined(NUCLEX_SUPPORT_POPCNT_SUPPORTED) && defined(_M_X64)
+    public: NUCLEX_SUPPORT_API static unsigned char CountBits(std::uint64_t value) {
+#if defined(_MSC_VER) && defined(NUCLEX_SUPPORT_POPCNT_AVAILABLE) && defined(_M_X64)
       return static_cast<unsigned char>(__popcnt64(value));
 #elif ( \
   (defined(__clang__) || (defined(__GNUC__) || defined(__GNUG__))) && \
-  defined(NUCLEX_SUPPORT_POPCNT_SUPPORTED) \
+  defined(NUCLEX_SUPPORT_POPCNT_AVAILABLE) \
 )
       return static_cast<unsigned char>(__builtin_popcountll(value));
 #else
@@ -106,9 +102,7 @@ namespace Nuclex { namespace Support {
     /// <remarks>
     ///   The result is undefined if the input value is 0
     /// </remarks>
-    public: NUCLEX_SUPPORT_API static inline unsigned char CountLeadingZeroBits(
-      std::uint32_t value
-    ) {
+    public: NUCLEX_SUPPORT_API static unsigned char CountLeadingZeroBits(std::uint32_t value) {
 #if defined(_MSC_VER)
       //return static_cast<unsigned char>(__lzcnt(value));
       unsigned long bitIndex;
@@ -140,9 +134,7 @@ namespace Nuclex { namespace Support {
     /// <remarks>
     ///   The result is undefined if the input value is 0
     /// </remarks>
-    public: NUCLEX_SUPPORT_API static inline unsigned char CountLeadingZeroBits(
-      std::uint64_t value
-    ) {
+    public: NUCLEX_SUPPORT_API static unsigned char CountLeadingZeroBits(std::uint64_t value) {
 #if defined(_MSC_VER) && defined(_M_X64)
       //return static_cast<unsigned char>(__lzcnt64(value));
       unsigned long bitIndex;
@@ -177,9 +169,7 @@ namespace Nuclex { namespace Support {
     /// <returns>
     ///   The nearest power of two that is greater than or equal to the input value
     /// </returns>
-    public: NUCLEX_SUPPORT_API static inline std::uint32_t GetUpperPowerOfTwo(
-      std::uint32_t value
-    ) {
+    public: NUCLEX_SUPPORT_API static std::uint32_t GetUpperPowerOfTwo(std::uint32_t value) {
 #if defined(_MSC_VER)
       unsigned long bitIndex;
       _BitScanReverse(&bitIndex, value);
@@ -208,9 +198,7 @@ namespace Nuclex { namespace Support {
     /// <returns>
     ///   The nearest power of two that is greater than or equal to the input value
     /// </returns>
-    public: NUCLEX_SUPPORT_API static inline std::uint64_t GetUpperPowerOfTwo(
-      std::uint64_t value
-    ) {
+    public: NUCLEX_SUPPORT_API static std::uint64_t GetUpperPowerOfTwo(std::uint64_t value) {
 #if defined(_MSC_VER) && defined(_M_X64)
       unsigned long bitIndex;
       _BitScanReverse64(&bitIndex, value);
@@ -239,7 +227,7 @@ namespace Nuclex { namespace Support {
     /// <remarks>
     ///   The result is undefined if the input value is 0
     /// </remarks>
-    public: NUCLEX_SUPPORT_API static inline unsigned char GetLogBase2(std::uint32_t value) {
+    public: NUCLEX_SUPPORT_API static unsigned char GetLogBase2(std::uint32_t value) {
 #if defined(_MSC_VER)
       unsigned long bitIndex;
       _BitScanReverse(&bitIndex, value);
@@ -269,7 +257,7 @@ namespace Nuclex { namespace Support {
     /// <remarks>
     ///   The result is undefined if the input value is 0
     /// </remarks>
-    public: NUCLEX_SUPPORT_API static inline unsigned char GetLogBase2(std::uint64_t value) {
+    public: NUCLEX_SUPPORT_API static unsigned char GetLogBase2(std::uint64_t value) {
 #if defined(_MSC_VER) && defined(_M_X64)
       //return static_cast<unsigned char>(__lzcnt64(value));
       unsigned long bitIndex;
@@ -303,7 +291,7 @@ namespace Nuclex { namespace Support {
     /// <remarks>
     ///   The result is undefined if the input value is 0
     /// </remarks>
-    public: NUCLEX_SUPPORT_API static inline unsigned char GetLogBase10(std::uint32_t value) {
+    public: NUCLEX_SUPPORT_API static unsigned char GetLogBase10(std::uint32_t value) {
       static const std::uint32_t powersOfTen[10] = {
         1U, 10U, 100U, 1000U, 10000U, 100000U, 1000000U, 10000000U, 100000000U, 1000000000U,
       };
@@ -319,7 +307,7 @@ namespace Nuclex { namespace Support {
     /// <remarks>
     ///   The result is undefined if the input value is 0
     /// </remarks>
-    public: NUCLEX_SUPPORT_API static inline unsigned char GetLogBase10(std::uint64_t value) {
+    public: NUCLEX_SUPPORT_API static unsigned char GetLogBase10(std::uint64_t value) {
       static const std::uint64_t powersOfTen[20] = {
         1ULL, 10ULL, 100ULL, 1000ULL, 10000ULL, 100000ULL, 1000000ULL, 10000000ULL,
         100000000ULL, 1000000000ULL, 10000000000ULL, 100000000000ULL, 1000000000000ULL,
@@ -330,6 +318,36 @@ namespace Nuclex { namespace Support {
       // http://graphics.stanford.edu/~seander/bithacks.html#IntegerLog10
       std::uint64_t temp = (GetLogBase2(value) + 1) * 1233U >> 12;
       return static_cast<unsigned char>(temp - (value < powersOfTen[temp]));
+    }
+
+    /// <summary>Very fast random number generation from a seed value</summary>
+    /// <param name="seed">Seed from which a random number will be generated</param>
+    /// <returns>The next random number after the seed value</returns>
+    /// <remarks>
+    ///   This is a blazingly fast method of generating random numbers, but the entropy
+    ///   is not very high. It's useful if one need to generate kilobytes or megabytes of
+    ///   semi-random data. Don't even think about using this with cryptographic algorithms!
+    /// </remarks>
+    public: NUCLEX_SUPPORT_API static constexpr std::uint32_t XorShiftRandom(std::uint32_t seed) {
+      seed ^= (seed << 13);
+	seed ^= (seed >> 17);
+	seed ^= (seed << 5);
+	return seed;
+    }
+
+    /// <summary>Very fast random number generation from a seed value</summary>
+    /// <param name="seed">Seed from which a random number will be generated</param>
+    /// <returns>The next random number after the seed value</returns>
+    /// <remarks>
+    ///   This is a blazingly fast method of generating random numbers, but the entropy
+    ///   is not very high. It's useful if one need to generate kilobytes or megabytes of
+    ///   semi-random data. Don't even think about using this with cryptographic algorithms!
+    /// </remarks>
+    public: NUCLEX_SUPPORT_API static constexpr std::uint64_t XorShiftRandom(std::uint64_t seed) {
+      seed ^= (seed << 13);
+	seed ^= (seed >> 7);
+	seed ^= (seed << 17);
+      return seed;
     }
 
   };

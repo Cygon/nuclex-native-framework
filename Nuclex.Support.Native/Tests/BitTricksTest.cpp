@@ -244,4 +244,28 @@ namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(BitTricksTest, XorShiftRandomNumberGeneratorWorksWith32Bits) {
+    std::uint32_t randomNumber = 0x12345678;
+
+    for(std::size_t index = 0; index < 1000; ++index) {
+      std::uint32_t nextRandomNumber = BitTricks::XorShiftRandom(randomNumber);
+      EXPECT_NE(nextRandomNumber, randomNumber);
+      randomNumber = nextRandomNumber;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(BitTricksTest, XorShiftRandomNumberGeneratorWorksWith64Bits) {
+    std::uint64_t randomNumber = 0x1234567812345678;
+
+    for(std::size_t index = 0; index < 1000; ++index) {
+      std::uint64_t nextRandomNumber = BitTricks::XorShiftRandom(randomNumber);
+      EXPECT_NE(nextRandomNumber, randomNumber);
+      randomNumber = nextRandomNumber;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 }} // namespace Nuclex::Support
