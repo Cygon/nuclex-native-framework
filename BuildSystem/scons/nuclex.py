@@ -60,7 +60,7 @@ def create_cplusplus_environment():
         HEADER_DIRECTORY = 'Include',
         TESTS_DIRECTORY = 'Tests',
         TESTS_RESULT_FILE = "gtest-results.xml",
-        REFERENCES_DIRECTORY = 'ThirdParty'
+        REFERENCES_DIRECTORY = 'References'
     )
 
     # Pass the 'TERM' variable through to allow colored output on Linux terminals
@@ -91,7 +91,7 @@ def create_dotnet_environment():
         SOURCE_DIRECTORY = 'Source',
         TESTS_DIRECTORY = 'Tests',
         TESTS_RESULT_FILE = "nunit-results.xml",
-        REFERENCES_DIRECTORY = 'ThirdParty'
+        REFERENCES_DIRECTORY = 'References'
     )
 
     # Register extension methods and additional variables
@@ -384,46 +384,80 @@ def _set_standard_cplusplus_compiler_flags(environment):
             #environment.Append(CXXFLAGS='-march=bdver1') # Target CPUs from 2011 and later
             environment.Append(CXXFLAGS='-mtune=generic') # Target CPUs from 2003 and later
 
+        # C language and build settings
         environment.Append(CFLAGS='-fvisibility=hidden') # Default visibility: don't export
-        environment.Append(CFLAGS='-Wpedantic') # Enable all ISO C++ deviation warnings
-        environment.Append(CFLAGS='-Wall') # Show all common warnings
-        environment.Append(CFLAGS='-Wextra') # Show extra warnings
-        environment.Append(CFLAGS='-Wno-unknown-pragmas') # Don't warn about #pragma region
-        #environment.Append(CFLAGS=['-flinker-output=pie']) # Position-independent executable
         environment.Append(CFLAGS='-shared-libgcc') # Use shared C/C++ runtime library
         environment.Append(CFLAGS='-fpic') # Use position-independent code
-        environment.Append(CFLAGS='-funsafe-math-optimizations') # Allow float optimizations
-        #environment.Append(CFLAGS='-ffunction-sections')
-        #environment.Append(CFLAGS='-fdata-sections')
+        #environment.Append(CFLAGS=['-flinker-output=pie']) # Position-independent executable
+        environment.Append(CFLAGS='-fmerge-all-constants') # Data deduplication
 
+        # C math routine behavior
+        environment.Append(CFLAGS='-funsafe-math-optimizations') # Allow float optimizations
+        environment.Append(CFLAGS='-fno-trapping-math') # Don't detect 0-div / overflow
+        environment.Append(CFLAGS='-fno-signaling-nans') # NaN never causes exceptions
+        environment.Append(CFLAGS='-fno-math-errno') # Don't set errno for math calls
+        environment.Append(CFLAGS='-fno-rounding-math') # Blindly assume round-to-nearest
+        environment.Append(CFLAGS='-freciprocal-math') # Allow x/y to become x * (1/y)
+
+        # C comment settings
+        environment.Append(CFLAGS='-Wall') # Show all common warnings
+        environment.Append(CFLAGS='-Wextra') # Show extra warnings
+        environment.Append(CFLAGS='-Wpedantic') # Enable all ISO C++ deviation warnings
+        environment.Append(CFLAGS='-Wno-unknown-pragmas') # Don't warn about #pragma region
+
+        # C++ language and build settings
         environment.Append(CXXFLAGS='-fvisibility=hidden') # Default visibility: don't export
+        environment.Append(CXXFLAGS='-shared-libgcc') # Use shared C/C++ runtime library
+        environment.Append(CXXFLAGS='-fpic') # Use position-independent code
+        #environment.Append(CXXFLAGS=['-flinker-output=pie']) # Position-independent executable
+        environment.Append(CXXFLAGS='-std=c++17') # Use a widely supported but current C++
+        environment.Append(CXXFLAGS='-fmerge-all-constants') # Data deduplication
+        environment.Append(CXXFLAGS='-fvisibility-inlines-hidden') # Inline code is also hidden
+
+        # C++ math routine behavior
+        environment.Append(CXXFLAGS='-funsafe-math-optimizations') # Allow float optimizations
+        environment.Append(CXXFLAGS='-fno-trapping-math') # Don't detect 0-div / overflow
+        environment.Append(CXXFLAGS='-fno-signaling-nans') # NaN never causes exceptions
+        environment.Append(CXXFLAGS='-fno-math-errno') # Don't set errno for math calls
+        environment.Append(CXXFLAGS='-fno-rounding-math') # Blindly assume round-to-nearest
+        environment.Append(CXXFLAGS='-freciprocal-math') # Allow x/y to become x * (1/y)
+
+        # C++ comment settings
         environment.Append(CXXFLAGS='-Wpedantic') # Enable all ISO C++ deviation warnings
         environment.Append(CXXFLAGS='-Wall') # Show all common warnings
         environment.Append(CXXFLAGS='-Wextra') # Show extra warnings
         environment.Append(CXXFLAGS='-Wno-unknown-pragmas') # Don't warn about #pragma region
-        #environment.Append(CXXFLAGS=['-flinker-output=pie']) # Position-independent executable
-        environment.Append(CXXFLAGS='-shared-libgcc') # Use shared C/C++ runtime library
-        environment.Append(CXXFLAGS='-fpic') # Use position-independent code
-        environment.Append(CXXFLAGS='-funsafe-math-optimizations') # Allow float optimizations
+
+        #environment.Append(CFLAGS='-ffunction-sections')
+        #environment.Append(CFLAGS='-fdata-sections')
+
         #environment.Append(CXXFLAGS='-ffunction-sections')
         #environment.Append(CXXFLAGS='-fdata-sections')
-        environment.Append(CXXFLAGS='-std=c++17') # Use a widely supported but current C++
-        environment.Append(CXXFLAGS='-fvisibility-inlines-hidden') # Inline code is also hidden
 
         if _is_debug_build(environment):
-            #environment.Append(CFLAGS='-Og') # Tailor code for optimal debugging
             environment.Append(CFLAGS='-g3') # Generate debugging information
             environment.Append(CFLAGS='-ggdb') # Target the GDB debugger
+            #environment.Append(CFLAGS='-Og') # Tailor code for optimal debugging
+            #environment.Append(CFLAGS='-fbounds-checking') # Array bounds checking
 
-            #environment.Append(CXXFLAGS='-Og') # Tailor code for optimal debugging
             environment.Append(CXXFLAGS='-g3') # Generate debugging information
             environment.Append(CXXFLAGS='-ggdb') # Target the GDB debugger
+            #environment.Append(CXXFLAGS='-Og') # Tailor code for optimal debugging
+            #environment.Append(CXXFLAGS='-fbounds-checking') # Array bounds checking
+
         else:
             environment.Append(CFLAGS='-O3') # Optimize for speed
             environment.Append(CFLAGS='-flto') # Merge all code before compiling
 
             environment.Append(CXXFLAGS='-O3') # Optimize for speed
             environment.Append(CXXFLAGS='-flto') # Merge all code before compiling
+
+            environment.Append(CFLAGS='-s') # Strip debug information
+            environment.Append(CFLAGS='-fno-stack-protector') # Don't protect stack
+
+            environment.Append(CXXFLAGS='-s') # Strip debug information
+            environment.Append(CXXFLAGS='-fno-stack-protector') # Don't protect stack
+
 
 # ----------------------------------------------------------------------------------------------- #
 

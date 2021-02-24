@@ -325,9 +325,9 @@ def get_compiler_name(environment):
 
     if (compiler_executable == 'cl') or (compiler_executable == 'icc'):
         return 'msvc'
-    elif (compiler_executable == 'gcc') or (compiler_executable == 'g++'):
+    elif (compiler_executable.startswith('gcc')) or (compiler_executable.startswith('g++')):
         return 'gcc'
-    elif (compiler_executable == 'clang') or (compiler_executable == 'clang++'):
+    elif (compiler_executable.startswith('clang')) or (compiler_executable.startswith('clang++')):
         return 'clang'
     else:
         return compiler_executable
@@ -575,7 +575,7 @@ def _get_architecture_or_default(environment):
 
 def _build_library_name_regex(environment):
     """Builds a regular expression that matches library directory names.
-    
+
     @param  environment  SCons build environment provided additional information
     @remarks
         This regular expression can be used to extract compiler and version information
@@ -598,7 +598,7 @@ def _build_library_name_regex(environment):
         libraryRegex += '(windows)-('
     else:
         libraryRegex += '(linux)-('
-    
+
     # Require a compatible compiler, but accept any version of that compiler
     libraryRegex += ('|').join(_get_compatible_compiler_tags(environment))
     libraryRegex += ')(\d+|\d+\.\d+)-('
@@ -624,7 +624,7 @@ def _get_compatible_compiler_tags(environment):
     be mixed with the currently used compiler
 
     @param  environment  Build environment providing additional information
-    @returns A list of compiler tags that 
+    @returns A list of compiler tags that are compatible to the current active compiler
     @remarks
         This is used when linking libraries. On Linux, for example, libraries built by
         clang and GCC can be mixed so long as LTO is disabled. """
