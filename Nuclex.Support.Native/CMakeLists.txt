@@ -15,13 +15,13 @@ set(BUILD_DOCS OFF CACHE BOOL "Whether to generate documentation via Doxygen")
 
 # -------------------------------------------------------------------------------------------------
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
-
 # Alternative for precompiled GoogleTest library would be
 #set(GoogleTest_DIR "../ThirdParty/gtest")
 #find_package(GoogleTest REQUIRED CONFIG)
 
 find_package(Threads REQUIRED)
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
 
 if(BUILD_DOCS)
 	find_package(Doxygen)
@@ -102,8 +102,8 @@ target_sources(
 
 target_link_libraries(
 	NuclexSupportNativeTests
-	PRIVATE GoogleTest
-	PRIVATE GoogleTestMain
+	PRIVATE GoogleTest::Static
+	PRIVATE GoogleTest::Main
 	PRIVATE Threads::Threads
 )
 
@@ -122,10 +122,14 @@ install(
 	RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
 )
 
+install_debug_symbols(NuclexSupportNative)
+
 install(
 	TARGETS NuclexSupportNativeTests
 	RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
 )
+
+install_debug_symbols(NuclexSupportNativeTests)
 
 # -------------------------------------------------------------------------------------------------
 
@@ -137,7 +141,7 @@ if(BUILD_DOCS)
 
 	add_custom_target(
 		NuclexSupportNativeDocs ALL
-		COMMAND ${DOXYGEN_EXECUTABLE} "Nuclex.Support.Native.cfg"
+		COMMAND ${DOXYGEN_EXECUTABLE} "Nuclex.Support.Native.doxygen.cfg"
 		WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
 	)
 
