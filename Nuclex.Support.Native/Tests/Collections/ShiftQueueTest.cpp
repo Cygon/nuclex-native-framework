@@ -21,61 +21,61 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "Nuclex/Support/Collections/ShiftBuffer.h"
+#include "Nuclex/Support/Collections/ShiftQueue.h"
 #include "BufferTest.h"
 
 namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, InstancesCanBeCreated) {
+  TEST(ShiftQueueTest, InstancesCanBeCreated) {
     EXPECT_NO_THROW(
-      ShiftBuffer<std::uint8_t> trivialTest;
-      ShiftBuffer<TestItem> customTest;
+      ShiftQueue<std::uint8_t> trivialTest;
+      ShiftQueue<TestItem> customTest;
     );
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, NewInstanceContainsNoItems) {
-    ShiftBuffer<std::uint8_t> trivialTest;
+  TEST(ShiftQueueTest, NewInstanceContainsNoItems) {
+    ShiftQueue<std::uint8_t> trivialTest;
     EXPECT_EQ(trivialTest.Count(), 0U);
 
-    ShiftBuffer<TestItem> customTest;
+    ShiftQueue<TestItem> customTest;
     EXPECT_EQ(customTest.Count(), 0U);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, StartsWithNonZeroDefaultCapacity) {
-    ShiftBuffer<std::uint8_t> trivialTest;
+  TEST(ShiftQueueTest, StartsWithNonZeroDefaultCapacity) {
+    ShiftQueue<std::uint8_t> trivialTest;
     EXPECT_GT(trivialTest.GetCapacity(), 0U);
 
-    ShiftBuffer<TestItem> customTest;
+    ShiftQueue<TestItem> customTest;
     EXPECT_GT(customTest.GetCapacity(), 0U);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, CanStartWithCustomCapacity) {
-    ShiftBuffer<std::uint8_t> trivialTest(512U);
+  TEST(ShiftQueueTest, CanStartWithCustomCapacity) {
+    ShiftQueue<std::uint8_t> trivialTest(512U);
     EXPECT_GE(trivialTest.GetCapacity(), 512U);
 
-    ShiftBuffer<TestItem> customTest(512U);
+    ShiftQueue<TestItem> customTest(512U);
     EXPECT_GE(customTest.GetCapacity(), 512U);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, HasCopyConstructor) {
-    ShiftBuffer<std::uint8_t> test;
+  TEST(ShiftQueueTest, HasCopyConstructor) {
+    ShiftQueue<std::uint8_t> test;
 
     std::uint8_t items[10] = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U };
     test.Write(items, 10);
 
     EXPECT_EQ(test.Count(), 10U);
 
-    ShiftBuffer<std::uint8_t> copy(test);
+    ShiftQueue<std::uint8_t> copy(test);
 
     EXPECT_EQ(copy.Count(), 10U);
 
@@ -92,15 +92,15 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, HasMoveConstructor) {
-    ShiftBuffer<std::uint8_t> test;
+  TEST(ShiftQueueTest, HasMoveConstructor) {
+    ShiftQueue<std::uint8_t> test;
 
     std::uint8_t items[10] = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U };
     test.Write(items, 10);
 
     EXPECT_EQ(test.Count(), 10U);
 
-    ShiftBuffer<std::uint8_t> moved(std::move(test));
+    ShiftQueue<std::uint8_t> moved(std::move(test));
 
     EXPECT_EQ(moved.Count(), 10U);
 
@@ -116,8 +116,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, ItemsCanBeAppended) {
-    ShiftBuffer<std::uint8_t> test;
+  TEST(ShiftQueueTest, ItemsCanBeAppended) {
+    ShiftQueue<std::uint8_t> test;
 
     std::uint8_t items[128];
     test.Write(items, 128);
@@ -127,8 +127,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, ItemsCanBeAppendedWithMoveSemantics) {
-    ShiftBuffer<std::uint8_t> test;
+  TEST(ShiftQueueTest, ItemsCanBeAppendedWithMoveSemantics) {
+    ShiftQueue<std::uint8_t> test;
 
     std::uint8_t items[128];
     test.Shove(items, 128);
@@ -138,8 +138,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, ItemsCanBeReadAndWritten) {
-    ShiftBuffer<std::uint8_t> test;
+  TEST(ShiftQueueTest, ItemsCanBeReadAndWritten) {
+    ShiftQueue<std::uint8_t> test;
 
     std::uint8_t items[128];
     for(std::size_t index = 0; index < 128; ++index) {
@@ -161,56 +161,56 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, WritingInvokesCopyConstructor) {
-    checkWritingInvokesCopyConstructor<ShiftBuffer>();
+  TEST(ShiftQueueTest, WritingInvokesCopyConstructor) {
+    checkWritingInvokesCopyConstructor<ShiftQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, ShovingInvokesMoveConstructor) {
-    checkShovingInvokesMoveConstructor<ShiftBuffer>();
+  TEST(ShiftQueueTest, ShovingInvokesMoveConstructor) {
+    checkShovingInvokesMoveConstructor<ShiftQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, MoveSemanticsAreUsedWhenCapacityChanges) {
-    checkMoveSemanticsAreUsedWhenCapacityChanges<ShiftBuffer>();
+  TEST(ShiftQueueTest, MoveSemanticsAreUsedWhenCapacityChanges) {
+    checkMoveSemanticsAreUsedWhenCapacityChanges<ShiftQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, ReadUsesMoveSemanticsAndCallsDestructor) {
-    checkReadUsesMoveSemanticsAndCallsDestructor<ShiftBuffer>();
+  TEST(ShiftQueueTest, ReadUsesMoveSemanticsAndCallsDestructor) {
+    checkReadUsesMoveSemanticsAndCallsDestructor<ShiftQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, BufferDestroysLeftOverItemsWhenDestroyed) {
-    checkBufferDestroysLeftOverItemsWhenDestroyed<ShiftBuffer>();
+  TEST(ShiftQueueTest, BufferDestroysLeftOverItemsWhenDestroyed) {
+    checkBufferDestroysLeftOverItemsWhenDestroyed<ShiftQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, ExceptionDuringCapacityChangeCausesNoLeaks) {
-    checkExceptionDuringCapacityChangeCausesNoLeaks<ShiftBuffer>();
+  TEST(ShiftQueueTest, ExceptionDuringCapacityChangeCausesNoLeaks) {
+    checkExceptionDuringCapacityChangeCausesNoLeaks<ShiftQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, ExceptionDuringWriteCausesNoLeaks) {
-    checkExceptionDuringWriteCausesNoLeaks<ShiftBuffer>();
+  TEST(ShiftQueueTest, ExceptionDuringWriteCausesNoLeaks) {
+    checkExceptionDuringWriteCausesNoLeaks<ShiftQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, ExceptionDuringShoveCausesNoLeaks) {
-    checkExceptionDuringShoveCausesNoLeaks<ShiftBuffer>();
+  TEST(ShiftQueueTest, ExceptionDuringShoveCausesNoLeaks) {
+    checkExceptionDuringShoveCausesNoLeaks<ShiftQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(ShiftBufferTest, ExceptionDuringReadCausesNoLeaks) {
-    checkExceptionDuringReadCausesNoLeaks<ShiftBuffer>();
+  TEST(ShiftQueueTest, ExceptionDuringReadCausesNoLeaks) {
+    checkExceptionDuringReadCausesNoLeaks<ShiftQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //

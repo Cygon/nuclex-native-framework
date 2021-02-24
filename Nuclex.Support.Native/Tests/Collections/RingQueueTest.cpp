@@ -21,63 +21,63 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "Nuclex/Support/Collections/RingBuffer.h"
+#include "Nuclex/Support/Collections/RingQueue.h"
 #include "BufferTest.h"
 
 namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, InstancesCanBeCreated) {
+  TEST(RingQueueTest, InstancesCanBeCreated) {
     EXPECT_NO_THROW(
-      RingBuffer<std::uint8_t> trivialTest;
+      RingQueue<std::uint8_t> trivialTest;
     );
     EXPECT_NO_THROW(
-      RingBuffer<TestItem> complexTest;
+      RingQueue<TestItem> complexTest;
     );
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, NewInstanceContainsNoItems) {
-    RingBuffer<std::uint8_t> trivialTest;
+  TEST(RingQueueTest, NewInstanceContainsNoItems) {
+    RingQueue<std::uint8_t> trivialTest;
     EXPECT_EQ(trivialTest.Count(), 0U);
 
-    RingBuffer<TestItem> complexTest;
+    RingQueue<TestItem> complexTest;
     EXPECT_EQ(complexTest.Count(), 0U);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, StartsWithNonZeroDefaultCapacity) {
-    RingBuffer<std::uint8_t> trivialTest;
+  TEST(RingQueueTest, StartsWithNonZeroDefaultCapacity) {
+    RingQueue<std::uint8_t> trivialTest;
     EXPECT_GT(trivialTest.GetCapacity(), 0U);
 
-    RingBuffer<TestItem> complexTest;
+    RingQueue<TestItem> complexTest;
     EXPECT_GT(complexTest.GetCapacity(), 0U);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, CanStartWithCustomCapacity) {
-    RingBuffer<std::uint8_t> trivialTest(512U);
+  TEST(RingQueueTest, CanStartWithCustomCapacity) {
+    RingQueue<std::uint8_t> trivialTest(512U);
     EXPECT_GE(trivialTest.GetCapacity(), 512U);
 
-    RingBuffer<TestItem> complexTest(512U);
+    RingQueue<TestItem> complexTest(512U);
     EXPECT_GE(complexTest.GetCapacity(), 512U);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, HasCopyConstructor) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueTest, HasCopyConstructor) {
+    RingQueue<std::uint8_t> test;
 
     std::uint8_t items[10] = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U };
     test.Write(items, 10);
 
     EXPECT_EQ(test.Count(), 10U);
 
-    RingBuffer<std::uint8_t> copy(test);
+    RingQueue<std::uint8_t> copy(test);
 
     EXPECT_EQ(copy.Count(), 10U);
 
@@ -94,15 +94,15 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, HasMoveConstructor) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueTest, HasMoveConstructor) {
+    RingQueue<std::uint8_t> test;
 
     std::uint8_t items[10] = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U };
     test.Write(items, 10);
 
     EXPECT_EQ(test.Count(), 10U);
 
-    RingBuffer<std::uint8_t> moved(std::move(test));
+    RingQueue<std::uint8_t> moved(std::move(test));
 
     EXPECT_EQ(moved.Count(), 10U);
 
@@ -118,8 +118,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, ItemsCanBeAppended) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueTest, ItemsCanBeAppended) {
+    RingQueue<std::uint8_t> test;
 
     std::uint8_t items[128];
     test.Write(items, 128);
@@ -129,8 +129,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, ItemsCanBeAppendedAndDequeued) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueTest, ItemsCanBeAppendedAndDequeued) {
+    RingQueue<std::uint8_t> test;
 
     std::uint8_t items[128];
     for(std::size_t index = 0; index < 128; ++index) {
@@ -152,8 +152,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, AppendAndDequeueHandleWrapAround) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueTest, AppendAndDequeueHandleWrapAround) {
+    RingQueue<std::uint8_t> test;
 
     std::size_t capacity = test.GetCapacity();
 
@@ -190,8 +190,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, WholeBufferCanBeFilledAndEmptied) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueTest, WholeBufferCanBeFilledAndEmptied) {
+    RingQueue<std::uint8_t> test;
 
     std::size_t capacity = test.GetCapacity();
 
@@ -216,8 +216,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, AppendCanHitBufferEnd) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueTest, AppendCanHitBufferEnd) {
+    RingQueue<std::uint8_t> test;
 
     std::size_t capacity = test.GetCapacity();
 
@@ -263,8 +263,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, DequeueCanHitBufferEnd) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueTest, DequeueCanHitBufferEnd) {
+    RingQueue<std::uint8_t> test;
 
     std::size_t capacity = test.GetCapacity();
 
@@ -314,56 +314,56 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, WritingInvokesCopyConstructor) {
-    checkWritingInvokesCopyConstructor<RingBuffer>();
+  TEST(RingQueueTest, WritingInvokesCopyConstructor) {
+    checkWritingInvokesCopyConstructor<RingQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, ShovingInvokesMoveConstructor) {
-    //checkShovingInvokesMoveConstructor<RingBuffer>();
+  TEST(RingQueueTest, ShovingInvokesMoveConstructor) {
+    //checkShovingInvokesMoveConstructor<RingQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, MoveSemanticsAreUsedWhenCapacityChanges) {
-    checkMoveSemanticsAreUsedWhenCapacityChanges<RingBuffer>();
+  TEST(RingQueueTest, MoveSemanticsAreUsedWhenCapacityChanges) {
+    checkMoveSemanticsAreUsedWhenCapacityChanges<RingQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, ReadUsesMoveSemanticsAndCallsDestructor) {
-    checkReadUsesMoveSemanticsAndCallsDestructor<RingBuffer>();
+  TEST(RingQueueTest, ReadUsesMoveSemanticsAndCallsDestructor) {
+    checkReadUsesMoveSemanticsAndCallsDestructor<RingQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, BufferDestroysLeftOverItemsWhenDestroyed) {
-    checkBufferDestroysLeftOverItemsWhenDestroyed<RingBuffer>();
+  TEST(RingQueueTest, BufferDestroysLeftOverItemsWhenDestroyed) {
+    checkBufferDestroysLeftOverItemsWhenDestroyed<RingQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, ExceptionDuringCapacityChangeCausesNoLeaks) {
-    checkExceptionDuringCapacityChangeCausesNoLeaks<RingBuffer>();
+  TEST(RingQueueTest, ExceptionDuringCapacityChangeCausesNoLeaks) {
+    checkExceptionDuringCapacityChangeCausesNoLeaks<RingQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, ExceptionDuringWriteCausesNoLeaks) {
-    checkExceptionDuringWriteCausesNoLeaks<RingBuffer>();
+  TEST(RingQueueTest, ExceptionDuringWriteCausesNoLeaks) {
+    checkExceptionDuringWriteCausesNoLeaks<RingQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, ExceptionDuringShoveCausesNoLeaks) {
-    //checkExceptionDuringShoveCausesNoLeaks<RingBuffer>();
+  TEST(RingQueueTest, ExceptionDuringShoveCausesNoLeaks) {
+    //checkExceptionDuringShoveCausesNoLeaks<RingQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(RingBufferTest, ExceptionDuringReadCausesNoLeaks) {
-    checkExceptionDuringReadCausesNoLeaks<RingBuffer>();
+  TEST(RingQueueTest, ExceptionDuringReadCausesNoLeaks) {
+    checkExceptionDuringReadCausesNoLeaks<RingQueue>();
   }
 
   // ------------------------------------------------------------------------------------------- //

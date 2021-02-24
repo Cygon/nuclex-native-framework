@@ -18,8 +18,8 @@ License along with this library
 */
 #pragma endregion // CPL License
 
-#ifndef NUCLEX_SUPPORT_COLLECTIONS_RINGBUFFER_H
-#define NUCLEX_SUPPORT_COLLECTIONS_RINGBUFFER_H
+#ifndef NUCLEX_SUPPORT_COLLECTIONS_RINGQUEUE_H
+#define NUCLEX_SUPPORT_COLLECTIONS_RINGQUEUE_H
 
 #include "Nuclex/Support/Config.h"
 #include "Nuclex/Support/BitTricks.h"
@@ -37,19 +37,27 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   /// <summary>A ring buffer that can grow and read/write in batches</summary>
   /// <remarks>
-  ///   This differs from std::queue in two ways: 1) it is optimized for a constant
-  ///   ring buffer size (i.e. the capacity can grow, but is assumed to settle quickly)
-  ///   and 2) it provides efficient batch operations.
+  ///   <para>
+  ///     <strong>Thread safety:</strong> each instance should be accessed by a single thread
+  ///   </para>
+  ///   <para>
+  ///     <strong>Container type:</strong> unbounded ring buffer with batch operations
+  ///   </para>
+  ///   <para>
+  ///     This differs from std::queue in two ways: 1) it is optimized for a constant
+  ///     ring buffer size (i.e. the capacity can grow, but is assumed to settle quickly)
+  ///     and 2) it provides efficient batch operations.
+  ///   </para>
   /// </remarks>
   template<typename TItem>
-  class RingBuffer {
+  class RingQueue {
 
     /// <summary>Constant used to indicate an invalid index</summary>
     private: static const std::size_t InvalidIndex = static_cast<std::size_t>(-1);
 
     /// <summary>Initializes a new ring buffer</summary>
     /// <param name="capacity">Storage space in the ring buffer at the beginning</param>
-    public: RingBuffer(std::size_t capacity = 256) :
+    public: RingQueue(std::size_t capacity = 256) :
       itemMemory(
         new std::uint8_t[sizeof(TItem[2]) * BitTricks::GetUpperPowerOfTwo(capacity) / 2]
       ),
@@ -59,7 +67,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     /// <summary>Initializes a ring buffer as a copy of another ring buffer</summary>
     /// <param name="other">Other ring buffer that will be copied</param>
-    public: RingBuffer(const RingBuffer &other) :
+    public: RingQueue(const RingQueue &other) :
       itemMemory(new std::uint8_t[sizeof(TItem[2]) * other.capacity / 2]),
       capacity(other.capacity),
       startIndex(InvalidIndex),
@@ -82,7 +90,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     /// <summary>Initializes a ring buffer taking over another ring buffer</summary>
     /// <param name="other">Other ring buffer that will be taken over</param>
-    public: RingBuffer(RingBuffer &&other) :
+    public: RingQueue(RingQueue &&other) :
       itemMemory(std::move(other.itemMemory)),
       capacity(other.capacity),
       startIndex(other.startIndex),
@@ -94,7 +102,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     }
 
     /// <summary>Destroys the ring buffer and all items in it</summary>
-    public: ~RingBuffer() {
+    public: ~RingQueue() {
       if(this->itemMemory != nullptr) { // Can be NULL if container donated its guts
 
         // If the buffer contains items, they, too, need to be destroyed
@@ -908,4 +916,4 @@ namespace Nuclex { namespace Support { namespace Collections {
 
 }}} // namespace Nuclex::Support::Collections
 
-#endif // NUCLEX_SUPPORT_COLLECTIONS_RINGBUFFER_H
+#endif // NUCLEX_SUPPORT_COLLECTIONS_RINGQUEUE_H

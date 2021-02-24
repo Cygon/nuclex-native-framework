@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "Nuclex/Support/Collections/RingBuffer.h"
+#include "Nuclex/Support/Collections/RingQueue.h"
 #include <gtest/gtest.h>
 
 #include <vector> // for std::vector
@@ -30,8 +30,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 #if !defined(NDEBUG)
-  TEST(RingBufferDeathTest, DequeuingFromEmptyBufferTriggersAssertion) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueDeathTest, DequeuingFromEmptyBufferTriggersAssertion) {
+    RingQueue<std::uint8_t> test;
 
     std::uint8_t items[128];
     ASSERT_DEATH(
@@ -42,8 +42,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 #endif
   // ------------------------------------------------------------------------------------------- //
 #if !defined(NDEBUG)
-  TEST(RingBufferDeathTest, DequeuingTooManyItemsTriggersAssertion) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueDeathTest, DequeuingTooManyItemsTriggersAssertion) {
+    RingQueue<std::uint8_t> test;
 
     std::uint8_t items[100];
     test.Write(items, 99);
@@ -56,8 +56,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 #endif
   // ------------------------------------------------------------------------------------------- //
 #if !defined(NDEBUG)
-  TEST(RingBufferDeathTest, DequeuingTooManyItemsInWrappedBufferTriggersAssertion) {
-    RingBuffer<std::uint8_t> test;
+  TEST(RingQueueDeathTest, DequeuingTooManyItemsInWrappedBufferTriggersAssertion) {
+    RingQueue<std::uint8_t> test;
 
     std::size_t capacity = test.GetCapacity();
 

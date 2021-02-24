@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "Nuclex/Support/Collections/ShiftBuffer.h"
+#include "Nuclex/Support/Collections/ShiftQueue.h"
 #include <gtest/gtest.h>
 
 #include <vector> // for std::vector
@@ -30,8 +30,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   // ------------------------------------------------------------------------------------------- //
 #if !defined(NDEBUG)
-  TEST(ShiftBufferDeathTest, SkippingOnEmptyBufferTriggersAssertion) {
-    ShiftBuffer<std::uint8_t> test;
+  TEST(ShiftQueueDeathTest, SkippingOnEmptyBufferTriggersAssertion) {
+    ShiftQueue<std::uint8_t> test;
 
     ASSERT_DEATH(
       test.Skip(1),
@@ -41,8 +41,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 #endif
   // ------------------------------------------------------------------------------------------- //
 #if !defined(NDEBUG)
-  TEST(ShiftBufferDeathTest, ReadingFromEmptyBufferTriggersAssertion) {
-    ShiftBuffer<std::uint8_t> test;
+  TEST(ShiftQueueDeathTest, ReadingFromEmptyBufferTriggersAssertion) {
+    ShiftQueue<std::uint8_t> test;
 
     std::uint8_t retrieved[1];
 
