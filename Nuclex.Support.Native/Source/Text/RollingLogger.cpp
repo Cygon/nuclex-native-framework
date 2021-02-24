@@ -314,7 +314,8 @@ namespace Nuclex { namespace Support { namespace Text {
 
     // Finally, form the time stamp in the log line
     {
-      const std::size_t nanoSecondsPerMilliSecond = 1000000U;
+      const std::size_t nanosecondsPerMillisecond = 1000000U;
+
       std::string::value_type *currentCharacter = line.data();
       currentCharacter[0] = TimestampDigits[splitUtcTime.tm_hour][0];
       currentCharacter[1] = TimestampDigits[splitUtcTime.tm_hour][1];
@@ -325,7 +326,9 @@ namespace Nuclex { namespace Support { namespace Text {
       currentCharacter[6] = TimestampDigits[splitUtcTime.tm_sec][0];
       currentCharacter[7] = TimestampDigits[splitUtcTime.tm_sec][1];
       currentCharacter[8] = '.';
-      lexical_append(currentCharacter + 9, 3, time.tv_nsec / nanoSecondsPerMilliSecond);
+
+      std::size_t timeMilliseconds = time.tv_nsec / nanosecondsPerMillisecond;
+      lexical_append(currentCharacter + 9, 3, timeMilliseconds);
       currentCharacter[12] = ' ';
     }
 
