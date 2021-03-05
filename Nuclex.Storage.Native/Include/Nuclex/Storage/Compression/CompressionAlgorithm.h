@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -70,15 +70,33 @@ namespace Nuclex { namespace Storage { namespace Compression {
     /// </remarks>
     public: virtual std::array<std::uint8_t, 8> GetId() const = 0;
 
+    /// <summary>Whether this compression algorithm is experimental</summary>
+    /// <returns>True if the compression algorithm is experimental, false otherwise</returns>
+    /// <remarks>
+    ///   <para>
+    ///     This is a reliability rating: algorithms which are in widespread use are
+    ///     regarded as safe (i.e. you're not going to encounter situations in the wild
+    ///     where the data doesn't decompress or where the compressor segfaults).
+    ///   </para>
+    ///   <para>
+    ///     Experimental compression algorithms may be just as safe, but aren't proven
+    ///     yet. They're perfectly fine for offline compression (i.e. game assets)
+    ///     where you can test ahead of time that they decompress correctly.
+    ///   </para>
+    /// </remarks>
+    public: virtual bool IsExperimental() const { return false; }
+
     /// <summary>
-    ///   Returns the average number of CPU cycles this algorithm runs for to
+    ///   Returns the average number of CPU cycles this algorithm takes to
     ///   compress one kilobyte of data
-    /// <summary>
-    /// <returns>The avergae number of CPU cycles to comrpess one kilobyte</returns>
+    /// </summary>
+    /// <returns>The average number of CPU cycles to compress one kilobyte</returns>
     /// <remarks>
     ///   This number is established by running a compression benchmark on various
-    ///   files (the pros call it a &quot;corpus&quot;) relevant to the libraries usage,
-    ///   in case of the shipping metrics use for game-specific file formats.
+    ///   files (the pros call it a &quot;corpus&quot;) relevant to the library's usage,
+    ///   using as many different CPUs as possible. It is useful to make educated guesses
+    ///   about relative peformance between compression algorithms and perhaps even
+    ///   roughly estimate compression times for a system.
     /// </remarks>
     public: virtual std::size_t GetCompressionCyclesPerKilobyte() const = 0;
 
@@ -88,9 +106,10 @@ namespace Nuclex { namespace Storage { namespace Compression {
     /// </summary>
     /// <returns>The average ratio of compressed size to uncompressed size</returns>
     /// <remarks>
-    ///   This number is established by running a compression benchmark on various
-    ///   files (the pros call it a &quot;corpus&quot;) relevant to the libraries usage,
-    ///   in case of the shipping metrics use for game-specific file formats.
+    ///   This number is also established by running compression tests on sets of typical
+    ///   files that will be accessed (in case of the values that ship with this library,
+    ///   various images, 3D models and audio file formats were used to establish a ratio
+    ///   that would be typical for packaged game assets)
     /// </remarks>
     public: virtual float GetAverageCompressionRatio() const = 0;
 
@@ -104,11 +123,15 @@ namespace Nuclex { namespace Storage { namespace Compression {
     /// </remarks>
     public: virtual const std::vector<std::string> &GetSuitableExtensions() const;
 #endif
-/*
+
     /// <summary>Creates a new data compressor</summary>
-    /// <returns>A new data compressor of the specified type</returns>
-    public: virtual std::unique_ptr<Compressor> &&Create() const = 0;
-*/
+    /// <returns>A new data compressor of the algorithm's type</returns>
+    public: virtual std::unique_ptr<Compressor> CreateCompressor() const = 0;
+
+    /// <summary>Creates a new data decompressor</summary>
+    /// <returns>A new data decompressor of the algorithm's type</returns>
+    public: virtual std::unique_ptr<Decompressor> CreateDecompressor() const = 0;
+
   };
 
   // ------------------------------------------------------------------------------------------- //
@@ -116,3 +139,4 @@ namespace Nuclex { namespace Storage { namespace Compression {
 }}} // namespace Nuclex::Storage::Compression
 
 #endif // NUCLEX_STORAGE_COMPRESSION_COMPRESSORFACTORY_H
+

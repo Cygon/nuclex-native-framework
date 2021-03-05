@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2020 Nuclex Development Labs
+Copyright (C) 2002-2019 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_STORAGE_SOURCE 1
 
-#include "Nuclex/Storage/Compression/CompressionAlgorithm.h"
+#include "Nuclex/Storage/Compression/StopReason.h"
 
 // --------------------------------------------------------------------------------------------- //
 

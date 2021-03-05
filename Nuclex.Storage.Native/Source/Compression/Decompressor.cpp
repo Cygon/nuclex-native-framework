@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_STORAGE_SOURCE 1
 
-#include "Nuclex/Storage/Compression/CompressionAlgorithm.h"
+#include "Nuclex/Storage/Compression/Decompressor.h"
 
 // --------------------------------------------------------------------------------------------- //
 
