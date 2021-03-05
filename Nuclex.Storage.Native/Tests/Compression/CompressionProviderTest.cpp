@@ -42,12 +42,12 @@ namespace Nuclex { namespace Storage { namespace Compression {
     CompressionProvider test;
 
     std::size_t expectedMinimumCount = 0;
+#if defined(NUCLEX_STORAGE_HAVE_BROTLI)
+    expectedMinimumCount += 3;
+#endif
 #if defined(NUCLEX_STORAGE_HAVE_ZLIB)
     expectedMinimumCount += 3;
 #endif
-//#if defined(NUCLEX_STORAGE_HAVE_BROTLI)
-//    expectedMinimumCount += 3;
-//#endif
 //#if defined(NUCLEX_STORAGE_HAVE_CSC)
 //    expectedMinimumCount += 3;
 //#endif
