@@ -24,14 +24,12 @@ License along with this library
 #include "Nuclex/Storage/Compression/CompressionProvider.h"
 
 #include "Brotli/BrotliCompressionAlgorithm.h"
-#include "ZLib/DeflateCompressionAlgorithm.h"
+#include "Csc/CscCompressionAlgorithm.h"
 #include "LZip/LzmaCompressionAlgorithm.h"
-//#include "Csc/CscCompressionAlgorithm.h"
+#include "ZLib/DeflateCompressionAlgorithm.h"
 
 #include <cassert> // assert()
 #include <stdexcept> // std::runtime_error
-
-#undef NUCLEX_STORAGE_HAVE_CSC
 
 namespace {
 
