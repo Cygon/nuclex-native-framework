@@ -23,7 +23,15 @@ License along with this library
 
 #include "ZLibHelper.h"
 
+#if defined(NUCLEX_STORAGE_HAVE_ZLIB)
+
 #include <cstring>
+
+#if defined(NUCLEX_STORAGE_WIN32)
+#include "../../Helpers/WindowsApi.h"
+#else
+#include "../../Helpers/PosixApi.h"
+#endif
 
 namespace Nuclex { namespace Storage { namespace Compression { namespace ZLib {
 
@@ -57,7 +65,11 @@ namespace Nuclex { namespace Storage { namespace Compression { namespace ZLib {
         std::string errorMessage(u8"System error ");
         errorMessage.append(std::to_string(errorNumber));
         errorMessage.append(u8": ");
-        errorMessage.append(::strerror(errorNumber));
+#if defined(NUCLEX_STORAGE_WIN32)
+        errorMessage.append(Nuclex::Storage::Helpers::WindowsApi::GetErrorMessage(errorNumber));
+#else
+        errorMessage.append(Nuclex::Storage::Helpers::PosixApi::GetErrorMessage(errorNumber));
+#endif
         appendStreamErrorMessageIfAvailable(errorMessage, stream);
         return errorMessage;
       }
@@ -110,3 +122,5 @@ namespace Nuclex { namespace Storage { namespace Compression { namespace ZLib {
   // ------------------------------------------------------------------------------------------- //
 
 }}}} // namespace Nuclex::Storage::Compression::ZLib
+
+#endif // defined(NUCLEX_STORAGE_HAVE_ZLIB)

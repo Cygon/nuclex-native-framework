@@ -23,17 +23,15 @@ License along with this library
 
 #include "Nuclex/Storage/Compression/CompressionProvider.h"
 
-#include "Nuclex/Storage/Compression/CompressionAlgorithm.h"
+#include "ZLib/DeflateCompressionAlgorithm.h"
 //#include "Brotli/BrotliCompressionAlgorithm.h"
 //#include "Csc/CscCompressionAlgorithm.h"
 //#include "LZip/LzmaCompressionAlgorithm.h"
-//#include "ZLib/DeflateCompressionAlgorithm.h"
 
 #include <cassert> // assert()
 #include <stdexcept> // std::runtime_error
 
 #undef NUCLEX_STORAGE_HAVE_CSC
-#undef NUCLEX_STORAGE_HAVE_ZLIB
 #undef NUCLEX_STORAGE_HAVE_BROTLI
 #undef NUCLEX_STORAGE_HAVE_LZIP
 
@@ -166,7 +164,7 @@ namespace Nuclex { namespace Storage { namespace Compression {
         return *this->algorithms[index].get();
       }
     }
-    
+
     throw std::runtime_error(
       u8"Compression algorithm with specified id is not known. If you're attempting to "
       u8"decompress existing data using this algorithm, perhaps the version of Nuclex.Storage "

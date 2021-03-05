@@ -22,6 +22,9 @@ License along with this library
 #define NUCLEX_STORAGE_COMPRESSION_ZLIB_ZLIBCOMPRESSIONALGORITHM_H
 
 #include "Nuclex/Storage/Config.h"  
+
+#if defined(NUCLEX_STORAGE_HAVE_ZLIB)
+
 #include "Nuclex/Storage/Compression/CompressionAlgorithm.h"  
 
 namespace Nuclex { namespace Storage { namespace Compression { namespace ZLib {
@@ -31,9 +34,21 @@ namespace Nuclex { namespace Storage { namespace Compression { namespace ZLib {
   /// <summary>Provides compressors and decompressors using the ZLib algorithm</summary>
   class DeflateCompressionAlgorithm : public CompressionAlgorithm {
 
+    /// <summary>Level parameter that results in the fastest compression</summary>
+    public: static const int FastestLevel;
+    /// <summary>Level parameter that results in the highest ratio compression</summary>
+    public: static const int StrongestLevel;
+    /// <summary>Level parameter that results in reasonable compression</summary>
+    /// <remarks>
+    ///   There's usually a point where a compression algorithm's time requirement
+    ///   rises exponentially while the gains on terms of compression ratio are just
+    ///   minimal. This level tries to reflect a point before.
+    /// </remarks>
+    public: static const int DefaultLevel;
+
     /// <summary>Initializes the ZLib compressor and decompressor factory</summary>
     /// <param name="level">ZLib compression level that will be used</param>
-    public: DeflateCompressionAlgorithm(int level);
+    public: DeflateCompressionAlgorithm(int level = DefaultLevel);
 
     /// <summary>Frees all resources owned by the instance</summary>
     public: virtual ~DeflateCompressionAlgorithm() override = default;
@@ -56,7 +71,7 @@ namespace Nuclex { namespace Storage { namespace Compression { namespace ZLib {
     ///   Returns the average number of CPU cycles this algorithm runs for to
     ///   compress one kilobyte of data
     /// <summary>
-    /// <returns>The avergae number of CPU cycles to comrpess one kilobyte</returns>
+    /// <returns>The average number of CPU cycles to comrpess one kilobyte</returns>
     public: std::size_t GetCompressionCyclesPerKilobyte() const override {
       return 10000;
     };
@@ -70,6 +85,14 @@ namespace Nuclex { namespace Storage { namespace Compression { namespace ZLib {
       return 0.8f;
     }
 
+    /// <summary>Creates a new data compressor</summary>
+    /// <returns>A new data compressor of the algorithm's type</returns>
+    public: std::unique_ptr<Compressor> CreateCompressor() const override;
+
+    /// <summary>Creates a new data decompressor</summary>
+    /// <returns>A new data decompressor of the algorithm's type</returns>
+    public: std::unique_ptr<Decompressor> CreateDecompressor() const override;
+
     /// <summary>The name of the compression algorithm</summary>
     private: std::string name;
     /// <summary>Compression level that will be used when compressing things</summary>
@@ -80,5 +103,7 @@ namespace Nuclex { namespace Storage { namespace Compression { namespace ZLib {
   // ------------------------------------------------------------------------------------------- //
 
 }}}} // namespace Nuclex::Storage::Compression::ZLib
+
+#endif // defined(NUCLEX_STORAGE_HAVE_ZLIB)
 
 #endif // NUCLEX_STORAGE_COMPRESSION_ZLIB_ZLIBCOMPRESSOR_H

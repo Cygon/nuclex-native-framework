@@ -21,7 +21,9 @@ License along with this library
 #ifndef NUCLEX_STORAGE_COMPRESSION_ZLIB_ZLIBHELPER_H
 #define NUCLEX_STORAGE_COMPRESSION_ZLIB_ZLIBHELPER_H
 
-#include "Nuclex/Storage/Config.h"  
+#include "Nuclex/Storage/Config.h"
+
+#if defined(NUCLEX_STORAGE_HAVE_ZLIB)
 
 #include <zlib.h>
 
@@ -49,5 +51,7 @@ namespace Nuclex { namespace Storage { namespace Compression { namespace ZLib {
   // ------------------------------------------------------------------------------------------- //
 
 }}}} // namespace Nuclex::Storage::Compression::ZLib
+
+#endif // defined(NUCLEX_STORAGE_HAVE_ZLIB)
 
 #endif // NUCLEX_STORAGE_COMPRESSION_ZLIB_ZLIBHELPER_H

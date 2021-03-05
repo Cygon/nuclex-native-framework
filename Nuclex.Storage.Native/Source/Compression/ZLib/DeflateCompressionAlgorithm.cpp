@@ -23,6 +23,11 @@ License along with this library
 
 #include "DeflateCompressionAlgorithm.h"
 
+#if defined(NUCLEX_STORAGE_HAVE_ZLIB)
+
+#include "DeflateCompressor.h"
+#include "DeflateDecompressor.h"
+
 #include <zlib.h>
 
 namespace {
@@ -59,10 +64,36 @@ namespace Nuclex { namespace Storage { namespace Compression { namespace ZLib {
 
   // ------------------------------------------------------------------------------------------- //
 
+  const int DeflateCompressionAlgorithm::FastestLevel = Z_BEST_SPEED;
+
+  // ------------------------------------------------------------------------------------------- //
+
+  const int DeflateCompressionAlgorithm::StrongestLevel = Z_BEST_COMPRESSION;
+
+  // ------------------------------------------------------------------------------------------- //
+
+  const int DeflateCompressionAlgorithm::DefaultLevel = 5; // Z_DEFAULT_COMPRESSION;
+
+  // ------------------------------------------------------------------------------------------- //
+
   DeflateCompressionAlgorithm::DeflateCompressionAlgorithm(int level) :
     name(buildAlgorithmName(level)),
     level(level) {}
 
   // ------------------------------------------------------------------------------------------- //
 
+  std::unique_ptr<Compressor> DeflateCompressionAlgorithm::CreateCompressor() const {
+    return std::make_unique<DeflateCompressor>(this->level);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::unique_ptr<Decompressor> DeflateCompressionAlgorithm::CreateDecompressor() const {
+    return std::make_unique<DeflateDecompressor>();
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 }}}} // namespace Nuclex::Storage::Compression::ZLib
+
+#endif // defined(NUCLEX_STORAGE_HAVE_ZLIB)
