@@ -5,6 +5,7 @@ import shutil
 import sys
 import importlib
 import tarfile
+import zipfile
 #import requests
 
 """
@@ -133,6 +134,36 @@ def extract_compressed_tarball(
     tar_archive = tarfile.open(tarball_path)
     tar_archive.extractall(path=temporary_directory)
     tar_archive.close()
+
+    _move_files_in_subdirectory_level(temporary_directory, target_directory, strip_components)
+
+    shutil.rmtree(temporary_directory)
+
+# ----------------------------------------------------------------------------------------------- #
+
+def extract_compressed_zipfile(
+    zipfile_path, target_directory, strip_components = 0
+):
+    """Extracts a .zip archive using only Python code.
+
+    @param  zipfile_path      Path of the .zip file that will be extracted
+    @param  target_directory  Directory into which the contents will be extracted
+    @param  strip_components  Number of directory levels to ignore when extracting
+                              (i.e. 1 if the .zip contains only a dir at the top level)"""
+
+    if not os.path.isdir(target_directory):
+        os.mkdir(target_directory)
+
+    temporary_directory = os.path.join(
+        os.path.dirname(os.path.abspath(target_directory)), '_tmp'
+    )
+
+    with zipfile.ZipFile(zipfile_path, 'r') as zip_archive:
+        zip_archive.extractall(temporary_directory)
+
+    #zip_archive = zipfile.open(zipfile_path)
+    #zip_archive.extractall(path=temporary_directory)
+    #zip_archive.close()
 
     _move_files_in_subdirectory_level(temporary_directory, target_directory, strip_components)
 

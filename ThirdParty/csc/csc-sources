@@ -1,0 +1,14 @@
+build/src/archiver/csa_adler32.cpp
+build/src/archiver/csa_indexpack.cpp
+build/src/libcsc/csc_analyzer.cpp
+build/src/libcsc/csc_coder.cpp
+build/src/libcsc/csc_dec.cpp
+build/src/libcsc/csc_default_alloc.cpp
+build/src/libcsc/csc_enc.cpp
+build/src/libcsc/csc_encoder_main.cpp
+build/src/libcsc/csc_filters.cpp
+build/src/libcsc/csc_lz.cpp
+build/src/libcsc/csc_memio.cpp
+build/src/libcsc/csc_mf.cpp
+build/src/libcsc/csc_model.cpp
+build/src/libcsc/csc_profiler.cpp

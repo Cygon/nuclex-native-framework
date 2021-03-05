@@ -1,0 +1,130 @@
+#!/usr/bin/env python
+
+import sys
+import importlib
+import os
+
+# Nuclex SCons libraries
+sys.path.append('../../BuildSystem/scons')
+nuclex = importlib.import_module('nuclex')
+archive = importlib.import_module('archive')
+
+# ----------------------------------------------------------------------------------------------- #
+
+universal_csc_target_name = 'csc'
+
+environment = nuclex.create_cplusplus_environment()
+#environment['ENV'] = os.environ
+#environment['CXX'] = 'clang++'
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 0: preparatory work
+
+# Fetch the list of headers used when compiling
+csc_headers_file = environment.File('csc-headers')
+csc_header_files = archive.split_lines(csc_headers_file.get_text_contents())
+
+# Fetch the list of sources to compile csc
+csc_sources_file = environment.File('csc-sources')
+csc_source_files = archive.split_lines(csc_sources_file.get_text_contents())
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 1: Download the current release
+
+# Fetch the available download URLs from a file
+download_url_file = environment.File('csc-download-urls')
+download_urls = archive.split_lines(download_url_file.get_text_contents())
+
+# Determine the target filename for the download (below 'downloads' folder)
+archive_filename = os.path.basename(download_urls[0])
+archive_file = environment.File(os.path.join('downloads', archive_filename))
+
+# Tell SCons how to "produce" the downloaded archive (by calling wget)
+if not archive_file.exists():
+    download_archive = environment.Command(
+        source = download_url_file,
+        #action = 'wget ' + download_urls[0] + ' --output-document=$TARGET',
+        action = archive.download_url_in_urlfile,
+        target = archive_file
+    )
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 2: Extract the release into the build directory
+
+def extract_compressed_zipfile(target, source, env):
+    """Extracts the distribution .tar.gz archive and applies a patch that ensures
+    the same headers will work on Windows and average Linux distributions.
+
+    @param  target  Output files, not used by the function but passed along so
+                    SCons can look at them and knows its dependency tree
+    @param  source  Source files, expected to be an array containing the .tar.gz
+                    path and the unified diff path
+    @param  env     SCons build environment"""
+
+    archive.extract_compressed_zipfile(str(source[0]), 'build', 1)
+
+# Tell SCons how to "produce" the sources & headers (by calling tar)
+extract_archive = environment.Command(
+    source = archive_file,
+    action = extract_compressed_zipfile,
+    target = csc_source_files + csc_header_files + [ 'build/src/libcsc/csc.cpp' ]
+)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 3: Compile the csc library
+
+csc_environment = environment.Clone()
+
+del csc_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+csc_environment['HEADER_DIRECTORY'] = 'build'
+
+csc_environment.add_include_directory('build/src/archiver')
+csc_environment.add_include_directory('build/src/libcsc')
+
+csc_environment.add_preprocessor_constant('_7Z_TYPES_')
+
+csc_environment.add_source_directory(
+    'build/src',
+    csc_source_files,
+    scons_issue_2908_workaround_needed = True
+)
+
+compile_csc_library = csc_environment.build_library(
+    universal_csc_target_name,
+    static = True
+)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 4: Compile the csc executable
+
+cscx_environment = environment.Clone()
+
+del cscx_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
+cscx_environment['HEADER_DIRECTORY'] = 'build/src'
+cscx_environment['INTERMEDIATE_SUFFIX'] = 'cscx'
+
+cscx_environment.add_preprocessor_constant('_7Z_TYPES_')
+
+cscx_environment.add_include_directory('build/src/archiver')
+cscx_environment.add_include_directory('build/src/libcsc')
+
+cscx_environment.add_source_directory(
+    'build/src',
+    csc_source_files + [ 'build/src/libcsc/csc.cpp' ],
+    scons_issue_2908_workaround_needed = True
+)
+
+compile_csc_executable = cscx_environment.build_executable(
+    'cscx', #universal_cscx_target_name,
+    console = True
+)
+
+# ----------------------------------------------------------------------------------------------- #
+# Step 5: Put the header in the main package directory
+
+for header in csc_header_files:
+    if header.startswith('build/src/libcsc/'):
+        install_path = os.path.join('Include', header[17:])
+        environment.InstallAs(install_path, header)
+
+# ----------------------------------------------------------------------------------------------- #
