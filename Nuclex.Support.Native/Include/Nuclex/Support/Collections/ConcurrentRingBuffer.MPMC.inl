@@ -69,7 +69,9 @@ namespace Nuclex { namespace Support { namespace Collections {
     TElement, ConcurrentAccessBehavior::MultipleProducersMultipleConsumers
   > {
 
-    /// <summary>Initializes a new concurrent queue for a single producer and consumer</summary>
+    /// <summary>
+    ///   Initializes a new concurrent queue for multiple producers and consumers
+    /// </summary>
     /// <param name="capacity">Maximum amount of items the queue can hold</param>
     public: ConcurrentRingBuffer(std::size_t capacity) :
       capacity(capacity),

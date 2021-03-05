@@ -51,7 +51,9 @@ namespace Nuclex { namespace Support { namespace Collections {
   template<typename TElement>
   class ConcurrentRingBuffer<TElement, ConcurrentAccessBehavior::MultipleProducersSingleConsumer> {
 
-    /// <summary>Initializes a new concurrent queue for a single producer and consumer</summary>
+    /// <summary>
+    ///   Initializes a new concurrent queue for a multiple producers and a single consumer
+    /// </summary>
     /// <param name="capacity">Maximum amount of items the queue can hold</param>
     public: ConcurrentRingBuffer(std::size_t capacity) :
       capacity(capacity),
