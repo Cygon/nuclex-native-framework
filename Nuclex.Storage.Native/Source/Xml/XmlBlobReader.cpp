@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -26,8 +26,8 @@ License along with this library
 
 #include "XmlBlobReader.Impl.h"
 
-#include "../Helpers/StringHelper.h"
-#include "../Helpers/Lexical.h"
+#include "Nuclex/Support/Text/StringConverter.h"
+#include "Nuclex/Support/Text/LexicalCast.h"
 
 namespace Nuclex { namespace Storage { namespace Xml {
 
@@ -90,9 +90,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(bool &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<bool>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<bool>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<bool>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<bool>(*this->enteredAttribute);
     }
   }
 
@@ -100,9 +100,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(std::uint8_t &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<std::uint8_t>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<std::uint8_t>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<std::uint8_t>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<std::uint8_t>(*this->enteredAttribute);
     }
   }
 
@@ -110,9 +110,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(std::int8_t &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<std::int8_t>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<std::int8_t>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<std::int8_t>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<std::int8_t>(*this->enteredAttribute);
     }
   }
 
@@ -120,9 +120,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(std::uint16_t &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<std::uint16_t>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<std::uint16_t>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<std::uint16_t>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<std::uint16_t>(*this->enteredAttribute);
     }
   }
 
@@ -130,9 +130,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(std::int16_t &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<std::int16_t>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<std::int16_t>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<std::int16_t>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<std::int16_t>(*this->enteredAttribute);
     }
   }
 
@@ -140,9 +140,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(std::uint32_t &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<std::uint32_t>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<std::uint32_t>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<std::uint32_t>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<std::uint32_t>(*this->enteredAttribute);
     }
   }
 
@@ -150,9 +150,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(std::int32_t &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<std::int32_t>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<std::int32_t>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<std::int32_t>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<std::int32_t>(*this->enteredAttribute);
     }
   }
 
@@ -160,9 +160,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(std::uint64_t &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<std::uint64_t>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<std::uint64_t>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<std::uint64_t>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<std::uint64_t>(*this->enteredAttribute);
     }
   }
 
@@ -170,9 +170,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(std::int64_t &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<std::int64_t>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<std::int64_t>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<std::int64_t>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<std::int64_t>(*this->enteredAttribute);
     }
   }
 
@@ -180,9 +180,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(float &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<float>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<float>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<float>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<float>(*this->enteredAttribute);
     }
   }
 
@@ -190,9 +190,9 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobReader::Read(double &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::lexical_cast<double>(this->impl->GetElementText());
+      target = Nuclex::Support::Text::lexical_cast<double>(this->impl->GetElementText());
     } else {
-      target = Helpers::lexical_cast<double>(*this->enteredAttribute);
+      target = Nuclex::Support::Text::lexical_cast<double>(*this->enteredAttribute);
     }
   }
 
@@ -210,9 +210,13 @@ namespace Nuclex { namespace Storage { namespace Xml {
   
   void XmlBlobReader::Read(std::wstring &target) {
     if(this->enteredAttribute == nullptr) {
-      target = Helpers::StringHelper::WideCharFromUtf8(this->impl->GetElementText());
+      target = Nuclex::Support::Text::StringConverter::WideFromUtf8(
+        this->impl->GetElementText()
+      );
     } else {
-      target = Helpers::StringHelper::WideCharFromUtf8(*this->enteredAttribute);
+      target = Nuclex::Support::Text::StringConverter::WideFromUtf8(
+        *this->enteredAttribute
+      );
     }
   }
 

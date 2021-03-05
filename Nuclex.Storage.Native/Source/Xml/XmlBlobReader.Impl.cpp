@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -31,7 +31,7 @@ namespace {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Checks whether the specified character is a whitespace</summary>
-  /// <param name="character">Character that will be checked for being a whitespace</param>
+  /// <param elementName="character">Character that will be checked for being a whitespace</param>
   /// <returns>True if the character is a whitespace character, false otherwise</returns>
   bool IsWhitespace(char character) {
     return
@@ -139,10 +139,10 @@ namespace Nuclex { namespace Storage { namespace Xml {
   // ------------------------------------------------------------------------------------------- //
 
   void XmlBlobReader::Impl::elementStartEncountered(
-    const char *name,
+    const char *elementName,
     const char **firstAttribute, std::size_t attributeCount
   ) {
-    this->name.assign(name);
+    this->name.assign(elementName);
 
     this->attributes.resize(attributeCount);
     for(std::size_t index = 0; index < attributeCount; ++index) {
@@ -161,14 +161,14 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void XmlBlobReader::Impl::elementEndEncountered(const char *name) {
+  void XmlBlobReader::Impl::elementEndEncountered(const char *elementName) {
     if(this->isSuspended) {
       this->elementEndOutstanding = true;
       return;
     }
 
     this->attributes.clear();
-    this->name.assign(name);
+    this->name.assign(elementName);
 
     bool resumable = true;
     this->parser.StopParser(resumable);
@@ -179,19 +179,19 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void XmlBlobReader::Impl::textEncountered(const char *text, int length) {
+  void XmlBlobReader::Impl::textEncountered(const char *encounteredText, int length) {
     if(length <= 0) {
       return;
     }
 
     int firstCharacterIndex = 0;
-    while(IsWhitespace(text[firstCharacterIndex])) {
+    while(IsWhitespace(encounteredText[firstCharacterIndex])) {
       ++firstCharacterIndex;
     }
 
     if(firstCharacterIndex < length) {
       this->attributes.clear();
-      this->text.assign(text, static_cast<std::string::size_type>(length));
+      this->text.assign(encounteredText, static_cast<std::string::size_type>(length));
 
       bool resumable = true;
       this->parser.StopParser(resumable);

@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -24,6 +24,8 @@ License along with this library
 #include "Nuclex/Storage/Config.h"
 #include "Nuclex/Storage/Xml/XmlBlobWriter.h"
 #include "Nuclex/Storage/Blob.h"
+
+#include <stdexcept> // for std::runtime_error
 
 namespace Nuclex { namespace Storage { namespace Xml {
 

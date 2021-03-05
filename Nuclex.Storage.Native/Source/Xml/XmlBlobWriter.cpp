@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2019 Nuclex Development Labs
+Copyright (C) 2002-2020 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -25,8 +25,8 @@ License along with this library
 #include "Nuclex/Storage/Blob.h"
 #include "XmlBlobWriter.Impl.h"
 
-#include "../Helpers/Lexical.h"
-#include "../Helpers/StringHelper.h"
+#include "Nuclex/Support/Text/StringConverter.h"
+#include "Nuclex/Support/Text/LexicalCast.h"
 
 namespace Nuclex { namespace Storage { namespace Xml {
 
@@ -186,11 +186,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(bool value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -198,11 +198,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(std::uint8_t value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -210,11 +210,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(std::int8_t value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -222,11 +222,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(std::uint16_t value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -234,11 +234,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(std::int16_t value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -246,11 +246,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(std::uint32_t value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -258,11 +258,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(std::int32_t value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -270,11 +270,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(std::uint64_t value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -282,11 +282,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(std::int64_t value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -294,11 +294,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(float value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -306,11 +306,11 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(double value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::lexical_cast<std::string>(value));
+      this->impl->SetAttributeValue(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else if(this->isInComment) {
-      writeComment(Helpers::lexical_cast<std::string>(value));
+      writeComment(Nuclex::Support::Text::lexical_cast<std::string>(value));
     } else {
-      writeData(Helpers::lexical_cast<std::string>(value));
+      writeData(Nuclex::Support::Text::lexical_cast<std::string>(value));
     }
   }
 
@@ -330,11 +330,13 @@ namespace Nuclex { namespace Storage { namespace Xml {
 
   void XmlBlobWriter::Write(const std::wstring &value) {
     if(this->isInAttribute) {
-      this->impl->SetAttributeValue(Helpers::StringHelper::Utf8FromWideChar(value));
+      this->impl->SetAttributeValue(
+        Nuclex::Support::Text::StringConverter::Utf8FromWide(value)
+      );
     } else if(this->isInComment) {
-      writeComment(Helpers::StringHelper::Utf8FromWideChar(value));
+      writeComment(Nuclex::Support::Text::StringConverter::Utf8FromWide(value));
     } else {
-      writeData(Helpers::StringHelper::Utf8FromWideChar(value));
+      writeData(Nuclex::Support::Text::StringConverter::Utf8FromWide(value));
     }
   }
 
