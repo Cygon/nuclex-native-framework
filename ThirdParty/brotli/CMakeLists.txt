@@ -118,6 +118,11 @@ set_target_properties(Brotli PROPERTIES OUTPUT_NAME "brotli")
 # -------------------------------------------------------------------------------------------------
 
 install(
+	DIRECTORY build/c/include/brotli
+	DESTINATION ${PROJECT_SOURCE_DIR}/Include
+)
+
+install(
 	FILES ${headerFiles}
 	DESTINATION ${PROJECT_SOURCE_DIR}/Include
 )
