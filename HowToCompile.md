@@ -1,42 +1,50 @@
 How to Compile
 ==============
 
-The libraries in this repository use [https://scons.org/](SCons),
-a Python-based build system to compile.
+To build the libraries, you can use either
 
-For the convenience of Windows users, a Visual Studio solution
-is also provided.
+ * [https://scons.org/](SCons) (a Python-based build system)
+ * [https://cmake.org/](CMake) (a build system based on poor design)
 
-**No matter what you use, you'll have to compile the third-party
-libraries first!**
+Projects for Visual Studio 2017 are also provided. You will have to
+compile external libraries with SCons or CMake first before you can
+use these.
 
-(I'll provide a master SCons script that will take care of all
-the third-party libraries with one call in the future!)
-
-
-Linux Users
------------
-
-1. Install SCons via your package manager (i.e. `emerge scons` or `sudo apt-get install scons`)
-2. Go into each directory in the ThirdParty folder and run SCons there like this:
-
-```
-scons -j8 DEBUG=1
-scons -j8
-```
-
-3. Now you can do the same in the Nuclex.*.Native directories or use the Visual Studio code workspace.
+Because CMake has become somewhat of a a standard for C++ projects,
+I'll provide instructions for building with CMake here.
 
 
-Windows Users
+Visual Studio 2017
+------------------
+
+You can open the `NuclexNativeFramework (msvc-14.1).sln` file.
+
+Make sure to build the libraries with CMake once (my libraries
+include a bunch of third-party dependencies that need to be downloaded
+and built first - either SCons or CMake take care of that).
+
+
+CMake (Linux)
 -------------
 
-1. Install the Windows distribution of SCons
-2. Go into each directory in the ThirdParty folder and run SCons there like this:
+You need CMake 3.18 or later for this.
 
-```
-scons -j8 DEBUG=1
-scons -j8
-```
+Linux users should simply run `build.sh` found at the root directory
+level. It will call the `build.sh` in each library directory,
+which in turn builds each library by calling `cmake`.
 
-3. Now you can do the same in the Nuclex.*.Native directories or use the Visual Studio solution
+If you want to build just a single library, you can also run
+the `build.sh` of that library directly.
+
+
+CMake (Windows)
+---------------
+
+You need CMake 3.18 or later for this.
+
+Windows users can simply run `build.cmd` found at the root directory
+level. It will call the `build.cmd` in each library directory,
+which in turn builds each library by calling `cmake`.
+
+If you want to build just a single library, you can also run
+the `build.cmd` of that library directly.
