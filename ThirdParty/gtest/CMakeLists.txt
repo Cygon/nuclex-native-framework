@@ -100,7 +100,7 @@ set_target_properties(GoogleTestMain PROPERTIES OUTPUT_NAME "gtest_main")
 # -------------------------------------------------------------------------------------------------
 
 install(
-	FILES ${headerFiles}
+	DIRECTORY build/googletest/include/gtest
 	DESTINATION ${PROJECT_SOURCE_DIR}/Include
 )
 
@@ -109,14 +109,10 @@ install(
 	ARCHIVE	DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
 )
 
-install_debug_symbols(GoogleTest)
-
 install(
 	TARGETS GoogleTestMain
 	ARCHIVE	DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
 )
-
-install_debug_symbols(GoogleTestMain)
 
 # -------------------------------------------------------------------------------------------------
 
