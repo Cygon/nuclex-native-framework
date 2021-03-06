@@ -9,3 +9,7 @@ popd
 pushd "$scriptDirectory/Nuclex.Storage.Native"
 ./build.sh
 popd
+
+pushd "$scriptDirectory/Nuclex.Pixels.Native"
+./build.sh
+popd
