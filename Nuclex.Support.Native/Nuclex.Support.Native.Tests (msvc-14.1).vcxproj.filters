@@ -247,7 +247,7 @@
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Errors\CyclicDependencyError.cpp">
+    <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Events\Delegate.cpp">
@@ -455,9 +455,6 @@
     </ClCompile>
     <ClCompile Include="Tests\Collections\ShiftQueueDeathTest.cpp">
       <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Events\ConcurrentEventTests.cpp">
-      <Filter>Tests\Events</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Events\DelegateTests.cpp">
       <Filter>Tests\Events</Filter>
