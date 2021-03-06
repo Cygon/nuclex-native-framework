@@ -37,7 +37,7 @@ namespace {
     bitmapMemory.Height = 100;
     bitmapMemory.Stride = 1000;
     bitmapMemory.PixelFormat = Nuclex::Pixels::PixelFormat::R8_G8_B8_A8_Unsigned;
-    bitmapMemory.Pixels = nullptr;
+    bitmapMemory.Pixels = reinterpret_cast<void *>(10000);
 
     return bitmapMemory;
   }
@@ -52,13 +52,13 @@ namespace Nuclex { namespace Pixels {
     BitmapMemory bitmapMemory = makeDummyBitmapMemory();
     PixelIterator accessor(bitmapMemory);
 
-    EXPECT_EQ((void *)0, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10000), accessor.GetAddress());
     EXPECT_EQ(0U, accessor.GetX());
     ++accessor;
-    EXPECT_EQ((void *)4, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10004), accessor.GetAddress());
     EXPECT_EQ(1U, accessor.GetX());
     ++accessor;
-    EXPECT_EQ((void *)8, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10008), accessor.GetAddress());
     EXPECT_EQ(2U, accessor.GetX());
   }
 
@@ -71,13 +71,13 @@ namespace Nuclex { namespace Pixels {
     ++accessor;
     ++accessor;
 
-    EXPECT_EQ((void *)8, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10008), accessor.GetAddress());
     EXPECT_EQ(2U, accessor.GetX());
     --accessor;
-    EXPECT_EQ((void *)4, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10004), accessor.GetAddress());
     EXPECT_EQ(1U, accessor.GetX());
     --accessor;
-    EXPECT_EQ((void *)0, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10000), accessor.GetAddress());
     EXPECT_EQ(0U, accessor.GetX());
   }
 
@@ -92,14 +92,14 @@ namespace Nuclex { namespace Pixels {
     }
 
     // 100 pixels = 400 bytes
-    EXPECT_EQ((void *)396, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10396), accessor.GetAddress());
     EXPECT_EQ(99U, accessor.GetX());
     EXPECT_EQ(0U, accessor.GetY());
 
     ++accessor;
 
     // 1000 bytes stride = start of second line at 1000 bytes
-    EXPECT_EQ((void *)1000, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(11000), accessor.GetAddress());
     EXPECT_EQ(0U, accessor.GetX());
     EXPECT_EQ(1U, accessor.GetY());
   }
@@ -114,13 +114,13 @@ namespace Nuclex { namespace Pixels {
       ++accessor;
     }
 
-    EXPECT_EQ((void *)1000, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(11000), accessor.GetAddress());
     EXPECT_EQ(0U, accessor.GetX());
     EXPECT_EQ(1U, accessor.GetY());
 
     --accessor;
 
-    EXPECT_EQ((void *)396, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10396), accessor.GetAddress());
     EXPECT_EQ(99U, accessor.GetX());
     EXPECT_EQ(0U, accessor.GetY());
   }
@@ -133,7 +133,7 @@ namespace Nuclex { namespace Pixels {
 
     accessor += 10;
 
-    EXPECT_EQ((void *)40, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10040), accessor.GetAddress());
     EXPECT_EQ(10U, accessor.GetX());
   }
 
@@ -147,7 +147,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 10;
     accessor += 89;
 
-    EXPECT_EQ((void *)396, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10396), accessor.GetAddress());
     EXPECT_EQ(99U, accessor.GetX());
     EXPECT_EQ(0U, accessor.GetY());
   }
@@ -161,7 +161,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 10;
     accessor += 90;
 
-    EXPECT_EQ((void *)1000, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(11000), accessor.GetAddress());
     EXPECT_EQ(0U, accessor.GetX());
     EXPECT_EQ(1U, accessor.GetY());
   }
@@ -175,7 +175,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 10;
     accessor += 220;
 
-    EXPECT_EQ((void *)2120, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(12120), accessor.GetAddress());
     EXPECT_EQ(30U, accessor.GetX());
     EXPECT_EQ(2U, accessor.GetY());
   }
@@ -201,7 +201,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 50;
     accessor -= 20;
 
-    EXPECT_EQ((void *)120, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10120), accessor.GetAddress());
     EXPECT_EQ(30U, accessor.GetX());
     EXPECT_EQ(0U, accessor.GetY());
   }
@@ -215,7 +215,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 250;
     accessor -= 80;
 
-    EXPECT_EQ((void *)1280, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(11280), accessor.GetAddress());
     EXPECT_EQ(70U, accessor.GetX());
     EXPECT_EQ(1U, accessor.GetY());
   }
@@ -229,7 +229,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 1520;
     accessor -= 740;
 
-    EXPECT_EQ((void *)7320, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(17320), accessor.GetAddress());
     EXPECT_EQ(80U, accessor.GetX());
     EXPECT_EQ(7U, accessor.GetY());
   }
@@ -243,7 +243,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 430;
     accessor -= 30;
 
-    EXPECT_EQ((void *)4000, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(14000), accessor.GetAddress());
     EXPECT_EQ(0U, accessor.GetX());
     EXPECT_EQ(4U, accessor.GetY());
   }
@@ -257,7 +257,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 4321;
     accessor -= 4321;
 
-    EXPECT_EQ((void *)0, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10000), accessor.GetAddress());
     EXPECT_EQ(0U, accessor.GetX());
     EXPECT_EQ(0U, accessor.GetY());
   }
@@ -271,7 +271,7 @@ namespace Nuclex { namespace Pixels {
     accessor.MoveTo(12, 34);
 
     // y(34) * stride(1000) + ( x(12) * bytesPerPixel(4) ) = 34048
-    EXPECT_EQ((void *)34048, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(44048), accessor.GetAddress());
     EXPECT_EQ(12U, accessor.GetX());
     EXPECT_EQ(34U, accessor.GetY());
   }
@@ -284,7 +284,7 @@ namespace Nuclex { namespace Pixels {
 
     accessor.MoveTo(0, 0);
 
-    EXPECT_EQ((void *)0, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(10000), accessor.GetAddress());
     EXPECT_EQ(0U, accessor.GetX());
     EXPECT_EQ(0U, accessor.GetY());
   }
@@ -309,7 +309,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 950;
     accessor -= Lines(1);
 
-    EXPECT_EQ((void *)8200, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(18200), accessor.GetAddress());
     EXPECT_EQ(50U, accessor.GetX());
     EXPECT_EQ(8U, accessor.GetY());
   }
@@ -323,7 +323,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 10;
     accessor += Lines(1);
 
-    EXPECT_EQ((void *)1040, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(11040), accessor.GetAddress());
     EXPECT_EQ(10U, accessor.GetX());
     EXPECT_EQ(1U, accessor.GetY());
   }
@@ -337,7 +337,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 820;
     accessor -= Lines(3);
 
-    EXPECT_EQ((void *)5080, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(15080), accessor.GetAddress());
     EXPECT_EQ(20U, accessor.GetX());
     EXPECT_EQ(5U, accessor.GetY());
   }
@@ -351,7 +351,7 @@ namespace Nuclex { namespace Pixels {
     accessor += 470;
     accessor += Lines(9);
 
-    EXPECT_EQ((void *)13280, accessor.GetAddress());
+    EXPECT_EQ(reinterpret_cast<void *>(23280), accessor.GetAddress());
     EXPECT_EQ(70U, accessor.GetX());
     EXPECT_EQ(13U, accessor.GetY());
   }
