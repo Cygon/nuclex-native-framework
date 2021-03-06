@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{305b4ed9-caf4-4609-9146-9312b9c90cca}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>NuclexStorageNative</RootNamespace>
+    <ProjectName>Nuclex.Storage.Native.Tests (msvc-14.1)</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Platform)'=='Win32'">
+    <SanePlatform>x86</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <SanePlatform>amd64</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='ARM'">
+    <SanePlatform>armhf</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Storage.Native.Tests</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Storage.Native.Tests</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Storage.Native.Tests</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-tests\</IntDir>
+    <TargetName>Nuclex.Storage.Native.Tests</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;NUCLEX_STORAGE_EXECUTABLE;NUCLEX_STORAGE_HAVE_BROTLI;NUCLEX_STORAGE_HAVE_CSC;NUCLEX_STORAGE_HAVE_LZIP;NUCLEX_STORAGE_HAVE_ZLIB;_7Z_TYPES_;ZLIB_CONST
+;NO_GZIP;Z_SOLO
+;XML_POOR_ENTROPY;XML_STATIC;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\csc\Include\;$(ProjectDir)..\ThirdParty\brotli\Include\;$(ProjectDir)..\ThirdParty\lzip\Include\;$(ProjectDir)..\ThirdParty\zlib\Include\;$(ProjectDir)..\ThirdParty\zpaq\Include\;$(ProjectDir)..\ThirdParty\expat\Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <StringPooling>true</StringPooling>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4634</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;zlib.lib;brotli.lib;csc.lib;lzip.lib;expat.lib;gtest.lib;gtest_main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\brotli\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\csc\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\bsc\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\lzip\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zpaq\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\expat\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\gtest\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Storage.Native.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;NUCLEX_STORAGE_EXECUTABLE;NUCLEX_STORAGE_HAVE_BROTLI;NUCLEX_STORAGE_HAVE_CSC;NUCLEX_STORAGE_HAVE_LZIP;NUCLEX_STORAGE_HAVE_ZLIB;_7Z_TYPES_;ZLIB_CONST
+;NO_GZIP;Z_SOLO
+;XML_POOR_ENTROPY;XML_STATIC;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\csc\Include\;$(ProjectDir)..\ThirdParty\brotli\Include\;$(ProjectDir)..\ThirdParty\lzip\Include\;$(ProjectDir)..\ThirdParty\zlib\Include\;$(ProjectDir)..\ThirdParty\zpaq\Include\;$(ProjectDir)..\ThirdParty\expat\Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <StringPooling>true</StringPooling>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4634</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;zlib.lib;brotli.lib;csc.lib;lzip.lib;expat.lib;gtest.lib;gtest_main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\brotli\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\csc\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\bsc\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\lzip\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zpaq\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\expat\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\gtest\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Storage.Native.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_STORAGE_EXECUTABLE;NUCLEX_STORAGE_HAVE_BROTLI;NUCLEX_STORAGE_HAVE_CSC;NUCLEX_STORAGE_HAVE_LZIP;NUCLEX_STORAGE_HAVE_ZLIB;_7Z_TYPES_;ZLIB_CONST
+;NO_GZIP;Z_SOLO
+;XML_POOR_ENTROPY;XML_STATIC;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\csc\Include\;$(ProjectDir)..\ThirdParty\brotli\Include\;$(ProjectDir)..\ThirdParty\lzip\Include\;$(ProjectDir)..\ThirdParty\zlib\Include\;$(ProjectDir)..\ThirdParty\zpaq\Include\;$(ProjectDir)..\ThirdParty\expat\Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4634</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;zlib.lib;brotli.lib;csc.lib;lzip.lib;expat.lib;gtest.lib;gtest_main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\brotli\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\csc\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\bsc\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\lzip\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zpaq\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\expat\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\gtest\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Storage.Native.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_STORAGE_EXECUTABLE;NUCLEX_STORAGE_HAVE_BROTLI;NUCLEX_STORAGE_HAVE_CSC;NUCLEX_STORAGE_HAVE_LZIP;NUCLEX_STORAGE_HAVE_ZLIB;_7Z_TYPES_;ZLIB_CONST
+;NO_GZIP;Z_SOLO
+;XML_POOR_ENTROPY;XML_STATIC;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\csc\Include\;$(ProjectDir)..\ThirdParty\brotli\Include\;$(ProjectDir)..\ThirdParty\lzip\Include\;$(ProjectDir)..\ThirdParty\zlib\Include\;$(ProjectDir)..\ThirdParty\zpaq\Include\;$(ProjectDir)..\ThirdParty\expat\Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4634</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;zlib.lib;brotli.lib;csc.lib;lzip.lib;expat.lib;gtest.lib;gtest_main.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\brotli\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\csc\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\bsc\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\lzip\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zpaq\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\expat\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\gtest\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Storage.Native.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Storage\Binary\BinaryBlobReader.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Binary\BinaryBlobWriter.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Binary\BinaryReader.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Binary\BinaryWriter.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Binary\InputStream.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Binary\OutputStream.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Compression\CompressionAlgorithm.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Compression\CompressionProvider.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Compression\Compressor.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Compression\Decompressor.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Errors\BadPathError.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Errors\CompressionError.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Errors\FileAccessError.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Errors\PermissionError.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlBinaryFormat.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlReadEvent.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlReader.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlWriter.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlBlobReader.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlBlobWriter.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlParseError.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Blob.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Config.h" />
+    <ClInclude Include="Include\Nuclex\Storage\MemoryBlob.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Reader.h" />
+    <ClInclude Include="Include\Nuclex\Storage\Writer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Binary\BinaryBlobReader.cpp" />
+    <ClCompile Include="Source\Binary\BinaryBlobWriter.cpp" />
+    <ClCompile Include="Source\Binary\BinaryReader.cpp" />
+    <ClCompile Include="Source\Binary\BinaryWriter.cpp" />
+    <ClCompile Include="Source\Binary\InputStream.cpp" />
+    <ClCompile Include="Source\Binary\OutputStream.cpp" />
+    <ClCompile Include="Source\Compression\Brotli\BrotliCompressionAlgorithm.cpp" />
+    <ClInclude Include="Source\Compression\Brotli\BrotliCompressionAlgorithm.h" />
+    <ClCompile Include="Source\Compression\Brotli\BrotliCompressor.cpp" />
+    <ClInclude Include="Source\Compression\Brotli\BrotliCompressor.h" />
+    <ClCompile Include="Source\Compression\Brotli\BrotliDecompressor.cpp" />
+    <ClInclude Include="Source\Compression\Brotli\BrotliDecompressor.h" />
+    <ClCompile Include="Source\Compression\Csc\CscCompressor.cpp" />
+    <ClInclude Include="Source\Compression\Csc\CscCompressor.h" />
+    <ClCompile Include="Source\Compression\Csc\CscCompressionAlgorithm.cpp" />
+    <ClInclude Include="Source\Compression\Csc\CscCompressionAlgorithm.h" />
+    <ClCompile Include="Source\Compression\Csc\CscDecompressor.cpp" />
+    <ClInclude Include="Source\Compression\Csc\CscDecompressor.h" />
+    <ClCompile Include="Source\Compression\Csc\CscHelper.cpp" />
+    <ClInclude Include="Source\Compression\Csc\CscHelper.h" />
+    <ClCompile Include="Source\Compression\LZip\LzmaCompressionAlgorithm.cpp" />
+    <ClInclude Include="Source\Compression\LZip\LzmaCompressionAlgorithm.h" />
+    <ClCompile Include="Source\Compression\LZip\LzmaCompressor.cpp" />
+    <ClInclude Include="Source\Compression\LZip\LzmaCompressor.h" />
+    <ClCompile Include="Source\Compression\LZip\LzmaDecompressor.cpp" />
+    <ClInclude Include="Source\Compression\LZip\LzmaDecompressor.h" />
+    <ClCompile Include="Source\Compression\ZLib\DeflateCompressionAlgorithm.cpp" />
+    <ClInclude Include="Source\Compression\ZLib\DeflateCompressionAlgorithm.h" />
+    <ClCompile Include="Source\Compression\ZLib\DeflateCompressor.cpp" />
+    <ClInclude Include="Source\Compression\ZLib\DeflateCompressor.h" />
+    <ClCompile Include="Source\Compression\ZLib\DeflateDecompressor.cpp" />
+    <ClInclude Include="Source\Compression\ZLib\DeflateDecompressor.h" />
+    <ClCompile Include="Source\Compression\ZLib\ZLibHelper.cpp" />
+    <ClInclude Include="Source\Compression\ZLib\ZLibHelper.h" />
+    <ClCompile Include="Source\Compression\CompressionAlgorithm.cpp" />
+    <ClCompile Include="Source\Compression\CompressionProvider.cpp" />
+    <ClCompile Include="Source\Compression\Compressor.cpp" />
+    <ClCompile Include="Source\Compression\Decompressor.cpp" />
+    <ClCompile Include="Source\Errors\BadPathError.cpp" />
+    <ClCompile Include="Source\Errors\CompressionError.cpp" />
+    <ClCompile Include="Source\Errors\FileAccessError.cpp" />
+    <ClCompile Include="Source\Errors\PermissionError.cpp" />
+    <ClCompile Include="Source\Helpers\PosixApi.cpp" />
+    <ClInclude Include="Source\Helpers\PosixApi.h" />
+    <ClCompile Include="Source\Helpers\ReadBuffer.cpp" />
+    <ClCompile Include="Source\Helpers\WindowsApi.cpp" />
+    <ClInclude Include="Source\Helpers\ReadBuffer.h" />
+    <ClInclude Include="Source\Helpers\Utf8\checked.h" />
+    <ClInclude Include="Source\Helpers\Utf8\core.h" />
+    <ClInclude Include="Source\Helpers\Utf8\unchecked.h" />
+    <ClInclude Include="Source\Helpers\WindowsApi.h" />
+    <ClCompile Include="Source\Helpers\WriteBuffer.cpp" />
+    <ClInclude Include="Source\Helpers\WriteBuffer.h" />
+    <ClCompile Include="Source\Xml\ExpatApi.cpp" />
+    <ClInclude Include="Source\Xml\ExpatApi.h" />
+    <ClCompile Include="Source\Xml\ExpatParser.cpp" />
+    <ClInclude Include="Source\Xml\ExpatParser.h" />
+    <ClCompile Include="Source\Xml\XmlBinaryFormat.cpp" />
+    <ClCompile Include="Source\Xml\XmlBlobReader.cpp" />
+    <ClCompile Include="Source\Xml\XmlBlobWriter.cpp" />
+    <ClCompile Include="Source\Xml\XmlBlobReader.Impl.cpp" />
+    <ClInclude Include="Source\Xml\XmlBlobReader.Impl.h" />
+    <ClCompile Include="Source\Xml\XmlBlobWriter.Impl.cpp" />
+    <ClInclude Include="Source\Xml\XmlBlobWriter.Impl.h" />
+    <ClCompile Include="Source\Xml\XmlParseError.cpp" />
+    <ClCompile Include="Source\Xml\XmlReader.cpp" />
+    <ClCompile Include="Source\Xml\XmlReadEvent.cpp" />
+    <ClCompile Include="Source\Xml\XmlWriter.cpp" />
+    <ClCompile Include="Source\Blob.cpp" />
+    <ClCompile Include="Source\Config.cpp" />
+    <ClCompile Include="Source\MemoryBlob.cpp" />
+    <ClCompile Include="Source\Reader.cpp" />
+    <ClCompile Include="Source\Writer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Tests\Compression\Brotli\BrotliCompressorTest.cpp" />
+    <ClCompile Include="Tests\Compression\Brotli\BrotliDecompressorTest.cpp" />
+    <ClCompile Include="Tests\Compression\Csc\CscCompressorTest.cpp" />
+    <ClCompile Include="Tests\Compression\Csc\CscDecompressorTest.cpp" />
+    <ClCompile Include="Tests\Compression\LZip\LzmaCompressorTest.cpp" />
+    <ClCompile Include="Tests\Compression\LZip\LzmaDecompressorTest.cpp" />
+    <ClCompile Include="Tests\Compression\ZLib\DeflateCompressorTest.cpp" />
+    <ClCompile Include="Tests\Compression\ZLib\DeflateDecompressorTest.cpp" />
+    <ClCompile Include="Tests\Compression\CompressionProviderTest.cpp" />
+    <ClCompile Include="Tests\Compression\CompressorTest.cpp" />
+    <ClInclude Include="Tests\Compression\CompressorTest.h" />
+    <ClCompile Include="Tests\Helpers\PosixApiTest.cpp" />
+    <ClCompile Include="Tests\Helpers\ReadBufferDeathTest.cpp" />
+    <ClCompile Include="Tests\Helpers\ReadBufferTest.cpp" />
+    <ClCompile Include="Tests\Helpers\WindowsApiTest.cpp" />
+    <ClCompile Include="Tests\Helpers\WriteBufferTest.cpp" />
+    <ClCompile Include="Tests\MemoryBlobTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Documents\Conventions\Linux-BaseDir-Spec.txt" />
+    <Text Include="Documents\Conventions\Linux-Filesystem-Hierarchy-Standard.txt" />
+    <Text Include="Documents\Conventions\Linux Games Install And Directory Guide.html" />
+    <Text Include="Documents\Formats\7zFormat.txt" />
+    <Text Include="Documents\Formats\XzFormat.txt" />
+    <Text Include="Documents\Formats\ZipFormat.txt" />
+    <Text Include="Documents\7-Zip.md" />
+    <None Include="Documents\BinaryReaderWriter.uml" />
+    <Text Include="Documents\Copyright.md" />
+    <Text Include="Documents\DoxygenHtml\index.html" />
+    <None Include="Documents\FileManager.uml" />
+    <Text Include="Documents\FileSystem.md" />
+    <Text Include="Documents\linux-directories-for-game-developers.md" />
+    <Text Include="Documents\Mainpage.md" />
+    <Text Include="Documents\Plans.txt" />
+    <Text Include="Documents\SimilarLibraries.md" />
+    <Text Include="Documents\Xml.md" />
+    <Text Include="Documents\Zip.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="Nuclex.Support.Native.ref">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying %(Filename) into target directory...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying %(Filename) into target directory...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying %(Filename) into target directory...</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying %(Filename) into target directory...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</TreatOutputAsContent>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</TreatOutputAsContent>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</TreatOutputAsContent>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</TreatOutputAsContent>
+    </CustomBuild>
+    <None Include="Nuclex.Storage.Native.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

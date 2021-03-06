@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Documents">
+      <UniqueIdentifier>{c6410f65-85b6-4658-b4e0-fd3d3df7baa1}</UniqueIdentifier>
+      <Extensions>md;txt;pdf</Extensions>
+    </Filter>
+    <Filter Include="Documents\Conventions">
+      <UniqueIdentifier>{a0da8e3c-fd99-4da8-9b5a-fdc25fb2f180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Documents\DoxygenHtml">
+      <UniqueIdentifier>{7bdbe5bb-e96c-4d01-9f6d-1aff98a578a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Documents\Formats">
+      <UniqueIdentifier>{6b51cfc7-96f3-4e63-b010-85e3a3e3cba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{160aa546-bd7a-43aa-9b85-565e71a08866}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{198ed5bd-5fbb-4204-b6ee-0c3faac69ba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Binary">
+      <UniqueIdentifier>{210f22d3-a2dd-4d6a-a638-6d6571b0aa8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Compression">
+      <UniqueIdentifier>{b82ce2f0-bf50-47b0-8bab-0d2e53bf49b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Errors">
+      <UniqueIdentifier>{3c669f61-fba3-4799-a928-aa50fe7595d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\Xml">
+      <UniqueIdentifier>{9e8dcb73-802e-4b61-8b4c-831576fa227b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{8e81542a-9549-4b57-8bde-a3d1fcea551b}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source\Binary">
+      <UniqueIdentifier>{344f6ca3-a926-4691-af6c-601a78398f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Compression">
+      <UniqueIdentifier>{ad9ca94e-d97b-4465-95ad-feb91632d621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Compression\Brotli">
+      <UniqueIdentifier>{3502029a-681f-4d31-9729-d79b0ee4451e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Compression\Csc">
+      <UniqueIdentifier>{b652839d-f6be-47b9-b8bc-6edde927ddad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Compression\LZip">
+      <UniqueIdentifier>{1d04c749-6254-495a-9292-950c49bd6aa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Compression\ZLib">
+      <UniqueIdentifier>{e91f210c-9000-413b-905b-cf3ffab19324}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Errors">
+      <UniqueIdentifier>{cf745d01-8d3d-4a29-91a3-e346a9ee3a63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Helpers">
+      <UniqueIdentifier>{ce15eb27-435a-4209-9a89-d6edfb25849b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Helpers\Utf8">
+      <UniqueIdentifier>{7fd21f5a-8a61-45db-8040-e0939bd2468c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Xml">
+      <UniqueIdentifier>{302ff589-f39e-4c9d-b3f0-53d1c6df832e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Storage\Binary\BinaryBlobReader.h">
+      <Filter>Include\Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Binary\BinaryBlobWriter.h">
+      <Filter>Include\Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Binary\BinaryReader.h">
+      <Filter>Include\Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Binary\BinaryWriter.h">
+      <Filter>Include\Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Binary\InputStream.h">
+      <Filter>Include\Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Binary\OutputStream.h">
+      <Filter>Include\Binary</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Compression\CompressionProvider.h">
+      <Filter>Include\Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Compression\CompressionAlgorithm.h">
+      <Filter>Include\Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Compression\Compressor.h">
+      <Filter>Include\Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Compression\Decompressor.h">
+      <Filter>Include\Compression</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Errors\BadPathError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Errors\CompressionError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Errors\FileAccessError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Errors\PermissionError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlBinaryFormat.h">
+      <Filter>Include\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlBlobReader.h">
+      <Filter>Include\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlBlobWriter.h">
+      <Filter>Include\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlParseError.h">
+      <Filter>Include\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlReader.h">
+      <Filter>Include\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlReadEvent.h">
+      <Filter>Include\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Xml\XmlWriter.h">
+      <Filter>Include\Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Config.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Blob.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\MemoryBlob.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Reader.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Storage\Writer.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Binary\BinaryBlobReader.cpp">
+      <Filter>Source\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Binary\BinaryBlobWriter.cpp">
+      <Filter>Source\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Binary\BinaryReader.cpp">
+      <Filter>Source\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Binary\BinaryWriter.cpp">
+      <Filter>Source\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Binary\InputStream.cpp">
+      <Filter>Source\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Binary\OutputStream.cpp">
+      <Filter>Source\Binary</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Compression\Brotli\BrotliCompressor.cpp">
+      <Filter>Source\Compression\Brotli</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\Brotli\BrotliCompressor.h">
+      <Filter>Source\Compression\Brotli</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\Brotli\BrotliCompressionAlgorithm.cpp">
+      <Filter>Source\Compression\Brotli</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\Brotli\BrotliCompressionAlgorithm.h">
+      <Filter>Source\Compression\Brotli</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\Brotli\BrotliDecompressor.cpp">
+      <Filter>Source\Compression\Brotli</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\Brotli\BrotliDecompressor.h">
+      <Filter>Source\Compression\Brotli</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\Csc\CscCompressionAlgorithm.cpp">
+      <Filter>Source\Compression\Csc</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\Csc\CscCompressionAlgorithm.h">
+      <Filter>Source\Compression\Csc</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\Csc\CscCompressor.cpp">
+      <Filter>Source\Compression\Csc</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\Csc\CscCompressor.h">
+      <Filter>Source\Compression\Csc</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\Csc\CscDecompressor.cpp">
+      <Filter>Source\Compression\Csc</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\Csc\CscDecompressor.h">
+      <Filter>Source\Compression\Csc</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\Csc\CscHelper.cpp">
+      <Filter>Source\Compression\Csc</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\Csc\CscHelper.h">
+      <Filter>Source\Compression\Csc</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\LZip\LzmaCompressionAlgorithm.cpp">
+      <Filter>Source\Compression\LZip</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\LZip\LzmaCompressionAlgorithm.h">
+      <Filter>Source\Compression\LZip</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\LZip\LzmaCompressor.cpp">
+      <Filter>Source\Compression\LZip</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\LZip\LzmaCompressor.h">
+      <Filter>Source\Compression\LZip</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\LZip\LzmaDecompressor.cpp">
+      <Filter>Source\Compression\LZip</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\LZip\LzmaDecompressor.h">
+      <Filter>Source\Compression\LZip</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\ZLib\DeflateCompressionAlgorithm.cpp">
+      <Filter>Source\Compression\ZLib</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\ZLib\DeflateCompressionAlgorithm.h">
+      <Filter>Source\Compression\ZLib</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\ZLib\DeflateCompressor.cpp">
+      <Filter>Source\Compression\ZLib</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\ZLib\DeflateCompressor.h">
+      <Filter>Source\Compression\ZLib</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\ZLib\DeflateDecompressor.cpp">
+      <Filter>Source\Compression\ZLib</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\ZLib\DeflateDecompressor.h">
+      <Filter>Source\Compression\ZLib</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\ZLib\ZLibHelper.cpp">
+      <Filter>Source\Compression\ZLib</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Compression\ZLib\ZLibHelper.h">
+      <Filter>Source\Compression\ZLib</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Compression\CompressionAlgorithm.cpp">
+      <Filter>Source\Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Compression\CompressionProvider.cpp">
+      <Filter>Source\Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Compression\Compressor.cpp">
+      <Filter>Source\Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Compression\Decompressor.cpp">
+      <Filter>Source\Compression</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\BadPathError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\CompressionError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\FileAccessError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\PermissionError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Helpers\Utf8\checked.h">
+      <Filter>Source\Helpers\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Helpers\Utf8\core.h">
+      <Filter>Source\Helpers\Utf8</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Helpers\Utf8\unchecked.h">
+      <Filter>Source\Helpers\Utf8</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Helpers\PosixApi.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Helpers\PosixApi.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Helpers\ReadBuffer.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Helpers\ReadBuffer.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Helpers\WriteBuffer.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Helpers\WriteBuffer.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Helpers\WindowsApi.cpp">
+      <Filter>Source\Helpers</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Helpers\WindowsApi.h">
+      <Filter>Source\Helpers</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Xml\ExpatApi.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Xml\ExpatApi.h">
+      <Filter>Source\Xml</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Xml\ExpatParser.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Xml\ExpatParser.h">
+      <Filter>Source\Xml</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Xml\XmlBinaryFormat.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Xml\XmlBlobReader.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Xml\XmlBlobReader.Impl.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Xml\XmlBlobReader.Impl.h">
+      <Filter>Source\Xml</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Xml\XmlBlobWriter.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Xml\XmlBlobWriter.Impl.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Xml\XmlBlobWriter.Impl.h">
+      <Filter>Source\Xml</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Xml\XmlParseError.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Xml\XmlReader.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Xml\XmlReadEvent.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Xml\XmlWriter.cpp">
+      <Filter>Source\Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Blob.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Config.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Reader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Writer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MemoryBlob.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Documents\Conventions\Linux-BaseDir-Spec.txt">
+      <Filter>Documents\Conventions</Filter>
+    </Text>
+    <Text Include="Documents\Conventions\Linux-Filesystem-Hierarchy-Standard.txt">
+      <Filter>Documents\Conventions</Filter>
+    </Text>
+    <Text Include="Documents\Formats\XzFormat.txt">
+      <Filter>Documents\Formats</Filter>
+    </Text>
+    <Text Include="Documents\Formats\ZipFormat.txt">
+      <Filter>Documents\Formats</Filter>
+    </Text>
+    <Text Include="Documents\Formats\7zFormat.txt">
+      <Filter>Documents\Formats</Filter>
+    </Text>
+    <Text Include="Documents\7-Zip.md">
+      <Filter>Documents</Filter>
+    </Text>
+    <None Include="Documents\BinaryReaderWriter.uml">
+      <Filter>Documents</Filter>
+    </None>
+    <Text Include="Documents\Copyright.md">
+      <Filter>Documents</Filter>
+    </Text>
+    <None Include="Documents\FileManager.uml">
+      <Filter>Documents</Filter>
+    </None>
+    <Text Include="Documents\FileSystem.md">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="Documents\linux-directories-for-game-developers.md">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="Documents\Mainpage.md">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="Documents\Plans.txt">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="Documents\SimilarLibraries.md">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="Documents\Xml.md">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="Documents\Zip.md">
+      <Filter>Documents</Filter>
+    </Text>
+    <Text Include="Documents\DoxygenHtml\index.html">
+      <Filter>Documents\DoxygenHtml</Filter>
+    </Text>
+    <Text Include="Documents\Conventions\Linux Games Install And Directory Guide.html">
+      <Filter>Documents</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Nuclex.Storage.Native.def">
+      <Filter>Resources</Filter>
+    </None>
+    <CustomBuild Include="Nuclex.Support.Native.ref" />
+  </ItemGroup>
+</Project>
