@@ -1,5 +1,5 @@
 # Use Unix line endings. The end.
-* text=auto
+* text eol=lf
 
 # Explicitly declare text files you want to always be normalized and converted
 # to native line endings on checkout.
@@ -17,6 +17,7 @@ ReadMe.md text
 *.sln text eol=crlf
 *.vcxproj text eol=crlf
 *.filters text eol=crlf
+*.cmd text eol=crlf
 
 # Denote all files that are truly binary and should not be modified.
 *.png binary
