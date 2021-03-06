@@ -56,6 +56,10 @@ file(
 	COPY "${PROJECT_SOURCE_DIR}/dwaLookups.h"
 	DESTINATION "${PROJECT_SOURCE_DIR}/build/IlmImf/"
 )
+file(
+	COPY "${PROJECT_SOURCE_DIR}/ImfAttribute.cpp"
+	DESTINATION "${PROJECT_SOURCE_DIR}/build/IlmImf/"
+)
 
 # -------------------------------------------------------------------------------------------------
 
