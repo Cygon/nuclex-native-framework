@@ -12,6 +12,9 @@ project(
 include("../../BuildSystem/cmake/cplusplus.cmake")
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/../ilmbase ${CMAKE_BINARY_DIR}/ilmbase)
+if(NOT (TARGET ZLib))
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../zlib ${CMAKE_BINARY_DIR}/zlib)
+endif()
 
 # -------------------------------------------------------------------------------------------------
 
@@ -276,6 +279,7 @@ endif()
 target_link_libraries(
 	OpenEXR
 	PUBLIC IlmBase::Static
+	PUBLIC ZLib::Static
 )
 
 target_include_directories(

@@ -11,7 +11,9 @@ project(
 
 include("../../BuildSystem/cmake/cplusplus.cmake")
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/../zlib ${CMAKE_BINARY_DIR}/zlib)
+if(NOT (TARGET ZLib))
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../zlib ${CMAKE_BINARY_DIR}/zlib)
+endif()
 
 # -------------------------------------------------------------------------------------------------
 

@@ -72,6 +72,32 @@ set(
 
 # -------------------------------------------------------------------------------------------------
 
+add_library(ZLibSolo STATIC)
+add_library(ZLib::SoloStatic ALIAS ZLibSolo)
+
+target_compile_definitions(
+	ZLibSolo
+	PUBLIC ZLIB_CONST
+	PUBLIC NO_GZIP
+	PUBLIC Z_SOLO
+)
+
+target_include_directories(
+	ZLibSolo
+	PUBLIC "build"
+)
+
+target_sources(
+	ZLibSolo
+	PUBLIC ${headerFiles}
+	PRIVATE ${sourceFiles}
+)
+
+set_target_properties(ZLibSolo PROPERTIES PREFIX "")
+set_target_properties(ZLibSolo PROPERTIES OUTPUT_NAME "zlibsolo")
+
+# -------------------------------------------------------------------------------------------------
+
 add_library(ZLib STATIC)
 add_library(ZLib::Static ALIAS ZLib)
 
@@ -79,7 +105,6 @@ target_compile_definitions(
 	ZLib
 	PUBLIC ZLIB_CONST
 	PUBLIC NO_GZIP
-	PUBLIC Z_SOLO
 )
 
 target_include_directories(
@@ -103,6 +128,10 @@ install(
 	DESTINATION ${PROJECT_SOURCE_DIR}/Include
 )
 
+install(
+	TARGETS ZLibSolo
+	ARCHIVE	DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
+)
 install(
 	TARGETS ZLib
 	ARCHIVE	DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
