@@ -81,6 +81,7 @@ set(
 	"build/pngdebug.h"
 	"build/pngpriv.h"
 	"build/pngstruct.h"
+	"build/pnglibconf.h"
 )
 
 # -------------------------------------------------------------------------------------------------

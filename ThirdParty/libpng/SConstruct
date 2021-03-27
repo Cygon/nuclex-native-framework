@@ -95,6 +95,8 @@ libpng_environment = environment.Clone()
 del libpng_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
 libpng_environment['HEADER_DIRECTORY'] = 'build/src'
 
+libpng_environment.add_preprocessor_constant('ZLIB_CONST')
+
 #libpng_environment.add_include_directory('build/src/libpng')
 libpng_environment.add_source_directory(
     'build',
