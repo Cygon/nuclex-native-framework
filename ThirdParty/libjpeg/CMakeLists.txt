@@ -107,6 +107,7 @@ set(
 set(
 	headerFiles
 	"build/transupp.h"
+	"build/jconfig.h"
 	"build/jmorecfg.h"
 	"build/cderror.h"
 	"build/jpegint.h"
@@ -147,7 +148,7 @@ target_sources(
 )
 
 #set_target_properties(LibJPEG PROPERTIES PREFIX "")
-set_target_properties(LibJPEG PROPERTIES OUTPUT_NAME "libjpeg")
+set_target_properties(LibJPEG PROPERTIES OUTPUT_NAME "jpeg")
 
 # -------------------------------------------------------------------------------------------------
 
@@ -240,7 +241,7 @@ set_target_properties(
 if(WIN32)
 	set_target_properties(
 		LibJPEG::Static PROPERTIES
-		IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/bin/\${NUCLEX_COMPILER_TAG}/libjpeg.lib\"
+		IMPORTED_LOCATION \"\${CMAKE_CURRENT_LIST_DIR}/bin/\${NUCLEX_COMPILER_TAG}/jpeg.lib\"
 		COMPILE_DEFINITIONS OS_LINUX
 	)
 else()
