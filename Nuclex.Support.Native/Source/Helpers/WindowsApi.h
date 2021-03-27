@@ -48,6 +48,8 @@ License along with this library
 #undef GetTempPath
 #undef GetModuleFileName
 #undef GetFullPathName
+#undef GetWindowsDirectory
+#undef GetSystemDirectory
 
 #include <string> // for std::string
 
@@ -107,7 +109,7 @@ namespace Nuclex { namespace Support { namespace Helpers {
     /// <param name="errorCode">
     ///   Value that GetLastError() returned at the time of failure
     /// </param>
-    public: static void ThrowExceptionForSystemError(
+    public: [[noreturn]] static void ThrowExceptionForSystemError(
       const std::string &errorMessage, DWORD errorCode
     );
 
@@ -117,7 +119,7 @@ namespace Nuclex { namespace Support { namespace Helpers {
     ///   the OS error message
     /// </param>
     /// <param name="resultHandle">HRESULT that was returned by the failed function</param>
-    public: static void ThrowExceptionForHResult(
+    public: [[noreturn]] static void ThrowExceptionForHResult(
       const std::string &errorMessage, HRESULT resultHandle
     );
 

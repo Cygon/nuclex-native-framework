@@ -211,6 +211,7 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\RingQueue.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Errors\TimeoutError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Event.h" />
@@ -229,6 +230,7 @@
     <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Process.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h" />
     <ClInclude Include="Include\Nuclex\Support\Any.h" />
     <ClInclude Include="Include\Nuclex\Support\BitTricks.h" />
@@ -250,6 +252,7 @@
     <ClCompile Include="Source\Collections\RingQueue.cpp" />
     <ClCompile Include="Source\Collections\ShiftQueue.cpp" />
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp" />
+    <ClCompile Include="Source\Errors\TimeoutError.cpp" />
     <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp" />
     <ClCompile Include="Source\Events\Delegate.cpp" />
     <ClCompile Include="Source\Events\Event.cpp" />
@@ -299,6 +302,16 @@
     <ClCompile Include="Source\Text\StatusObserver.cpp" />
     <ClCompile Include="Source\Text\StringConverter.cpp" />
     <ClCompile Include="Source\Text\StringMatcher.cpp" />
+    <ClCompile Include="Source\Threading\Posix\PosixFileApi.cpp" />
+    <ClInclude Include="Source\Threading\Posix\PosixFileApi.h" />
+    <ClCompile Include="Source\Threading\Posix\PosixProcessApi.cpp" />
+    <ClInclude Include="Source\Threading\Posix\PosixProcessApi.h" />
+    <ClCompile Include="Source\Threading\Windows\WindowsFileApi.cpp" />
+    <ClInclude Include="Source\Threading\Windows\WindowsFileApi.h" />
+    <ClCompile Include="Source\Threading\Windows\WindowsProcessApi.cpp" />
+    <ClInclude Include="Source\Threading\Windows\WindowsProcessApi.h" />
+    <ClCompile Include="Source\Threading\Process.Linux.cpp" />
+    <ClCompile Include="Source\Threading\Process.Windows.cpp" />
     <ClCompile Include="Source\Threading\Thread.cpp" />
     <ClCompile Include="Source\Any.cpp" />
     <ClCompile Include="Source\BitTricks.cpp" />
@@ -307,16 +320,6 @@
     <ClCompile Include="Source\ScopeGuard.cpp" />
     <ClCompile Include="Source\Variant.cpp" />
     <ClCompile Include="Source\VariantType.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="Documents\Copyright.md" />
-    <None Include="Documents\Adam Morrison - Fast Concurrent queues for x86 Processors.pdf" />
-    <None Include="Documents\David Gay - Correctly Rounded Binary-Decimal and Decimal-Binary Conversions.pdf" />
-    <Text Include="Documents\EventBenchmark.md" />
-    <None Include="Documents\Florian Loitsch - Printing Floating-Point Numbers Quickly and Accurately with Integers.pdf" />
-    <None Include="Documents\Hakan Sundell - Fast and Lock-Free Concurrent Priority Queues.pdf" />
-    <None Include="Documents\Marc Andrysco - Printing Floating-Point Numbers, An Always Correct Method.pdf" />
-    <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Tests\Collections\BufferTest.cpp" />
@@ -340,12 +343,27 @@
     <ClCompile Include="Tests\Text\RollingLoggerTest.cpp" />
     <ClCompile Include="Tests\Text\StringConverterTest.cpp" />
     <ClCompile Include="Tests\Text\StringMatcherTest.cpp" />
+    <ClCompile Include="Tests\Threading\Posix\PosixFileApiTest.cpp" />
+    <ClCompile Include="Tests\Threading\Posix\PosixProcessApiTest.cpp" />
+    <ClCompile Include="Tests\Threading\Windows\WindowsFileApiTest.cpp" />
+    <ClCompile Include="Tests\Threading\Windows\WindowsProcessApiTest.cpp" />
+    <ClCompile Include="Tests\Threading\ProcessTest.cpp" />
     <ClCompile Include="Tests\Threading\ThreadTest.cpp" />
     <ClCompile Include="Tests\AnyTests.cpp" />
     <ClCompile Include="Tests\BitTricksTest.cpp" />
     <ClCompile Include="Tests\OptionalTests.cpp" />
     <ClCompile Include="Tests\ScopeGuardTest.cpp" />
     <ClCompile Include="Tests\VariantTests.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Documents\Copyright.md" />
+    <None Include="Documents\Adam Morrison - Fast Concurrent queues for x86 Processors.pdf" />
+    <None Include="Documents\David Gay - Correctly Rounded Binary-Decimal and Decimal-Binary Conversions.pdf" />
+    <Text Include="Documents\EventBenchmark.md" />
+    <None Include="Documents\Florian Loitsch - Printing Floating-Point Numbers Quickly and Accurately with Integers.pdf" />
+    <None Include="Documents\Hakan Sundell - Fast and Lock-Free Concurrent Priority Queues.pdf" />
+    <None Include="Documents\Marc Andrysco - Printing Floating-Point Numbers, An Always Correct Method.pdf" />
+    <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Nuclex.Support.Native.def" />

@@ -149,4 +149,14 @@ License along with this library
 
 // --------------------------------------------------------------------------------------------- //
 
+// Silences unused variable warning, but only in release builds
+// (NDEBUG is also what decides whether the assert() macro does anything)
+#if defined(NDEBUG)
+  #define NUCLEX_SUPPORT_NDEBUG_UNUSED(x) (void)x
+#else
+  #define NUCLEX_SUPPORT_NDEBUG_UNUSED(x) {}
+#endif
+
+// --------------------------------------------------------------------------------------------- //
+
 #endif // NUCLEX_SUPPORT_CONFIG_H

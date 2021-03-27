@@ -43,7 +43,7 @@ namespace Nuclex { namespace Support { namespace Helpers {
 
     /// <summary>Throws the appropriate exception for an error reported by the OS</summary>
     /// <param name="errorMessage">
-    ///   Error message that shoudl be included in the exception, will be prefixed to
+    ///   Error message that should be included in the exception, will be prefixed to
     ///   the OS error message
     /// </param>
     /// <param name="errorNumber">Value that 'errno' had at the time of failure</param>

@@ -72,6 +72,12 @@
     <Filter Include="Source\Threading">
       <UniqueIdentifier>{c3c71559-2291-4f45-8938-c3cf232c87c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Threading\Posix">
+      <UniqueIdentifier>{f5e9e180-aad4-42a8-b104-926aece4a71c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Threading\Windows">
+      <UniqueIdentifier>{acc68a38-05f6-4285-b03f-6b69ca1bc918}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h">
@@ -116,6 +122,9 @@
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
       <Filter>Include\Errors</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Errors\TimeoutError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h">
       <Filter>Include\Errors</Filter>
     </ClInclude>
@@ -158,6 +167,9 @@
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
@@ -166,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
       <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Process.h">
+      <Filter>Include\Threading</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h">
       <Filter>Include\Threading</Filter>
@@ -224,6 +239,9 @@
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\TimeoutError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
@@ -361,6 +379,9 @@
     <ClCompile Include="Source\Text\Logger.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Text\RollingLogger.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Text\StatusObserver.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
@@ -369,6 +390,36 @@
     </ClCompile>
     <ClCompile Include="Source\Text\StringMatcher.cpp">
       <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\Posix\PosixFileApi.cpp">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\Posix\PosixFileApi.h">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Threading\Posix\PosixProcessApi.cpp">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\Posix\PosixProcessApi.h">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Threading\Windows\WindowsFileApi.cpp">
+      <Filter>Source\Threading\Windows</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\Windows\WindowsFileApi.h">
+      <Filter>Source\Threading\Windows</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Threading\Windows\WindowsProcessApi.cpp">
+      <Filter>Source\Threading\Windows</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\Windows\WindowsProcessApi.h">
+      <Filter>Source\Threading\Windows</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Threading\Process.Linux.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\Process.Windows.cpp">
+      <Filter>Source\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Source\Threading\Thread.cpp">
       <Filter>Source\Threading</Filter>

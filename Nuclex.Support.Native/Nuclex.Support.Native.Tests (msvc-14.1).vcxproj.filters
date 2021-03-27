@@ -72,6 +72,12 @@
     <Filter Include="Source\Threading">
       <UniqueIdentifier>{c3c71559-2291-4f45-8938-c3cf232c87c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Threading\Posix">
+      <UniqueIdentifier>{f5e9e180-aad4-42a8-b104-926aece4a71c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Threading\Windows">
+      <UniqueIdentifier>{acc68a38-05f6-4285-b03f-6b69ca1bc918}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Tests">
       <UniqueIdentifier>{6bba9bc0-cf59-4753-8206-8b3ee0c353d1}</UniqueIdentifier>
     </Filter>
@@ -89,6 +95,12 @@
     </Filter>
     <Filter Include="Tests\Threading">
       <UniqueIdentifier>{2781deb4-4664-4b67-a3ae-7d695e2ed2fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Threading\Posix">
+      <UniqueIdentifier>{3fb52f4d-b40a-42d2-987e-587fef746165}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Threading\Windows">
+      <UniqueIdentifier>{6892e1f6-d6ad-4ee8-b79f-22b0fe04f30d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +144,9 @@
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Errors\TimeoutError.h">
       <Filter>Include\Errors</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h">
@@ -187,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
       <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Process.h">
+      <Filter>Include\Threading</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h">
       <Filter>Include\Threading</Filter>
@@ -244,10 +262,13 @@
     <ClCompile Include="Source\Collections\ShiftQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
+    <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
+    <ClCompile Include="Source\Errors\TimeoutError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Events\Delegate.cpp">
@@ -394,6 +415,36 @@
     <ClCompile Include="Source\Text\StringMatcher.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Threading\Posix\PosixFileApi.cpp">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\Posix\PosixFileApi.h">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Threading\Posix\PosixProcessApi.cpp">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\Posix\PosixProcessApi.h">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Threading\Windows\WindowsFileApi.cpp">
+      <Filter>Source\Threading\Windows</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\Windows\WindowsFileApi.h">
+      <Filter>Source\Threading\Windows</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Threading\Windows\WindowsProcessApi.cpp">
+      <Filter>Source\Threading\Windows</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\Windows\WindowsProcessApi.h">
+      <Filter>Source\Threading\Windows</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Threading\Process.Linux.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\Process.Windows.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Threading\Thread.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
@@ -482,6 +533,21 @@
     </ClCompile>
     <ClCompile Include="Tests\Text\StringMatcherTest.cpp">
       <Filter>Tests\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\Posix\PosixFileApiTest.cpp">
+      <Filter>Tests\Threading\Posix</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\Posix\PosixProcessApiTest.cpp">
+      <Filter>Tests\Threading\Posix</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\Windows\WindowsFileApiTest.cpp">
+      <Filter>Tests\Threading\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\Windows\WindowsProcessApiTest.cpp">
+      <Filter>Tests\Threading\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\ProcessTest.cpp">
+      <Filter>Tests\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Threading\ThreadTest.cpp">
       <Filter>Tests\Threading</Filter>
