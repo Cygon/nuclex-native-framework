@@ -24,6 +24,20 @@ include a bunch of third-party dependencies that need to be downloaded
 and built first - either SCons or CMake take care of that).
 
 
+Visual Studio 2019
+------------------
+
+Currently doesn't provide a convenient `.sln` or `.vcxproj` for you.
+
+You can build with CMake, but to use the IDE projects, you'd have to
+edit the library paths to use `windows-msvc14.2-amd64-*` instead of
+`windows-msvc14.1-amd64-*` to look for the library binaries.
+
+Also, Visual Studio 2019 has a compiler bug. Compiling with the VS2019
+compiler will disable the affected code and print a warning. Due to this,
+I recommend not using Visual Studio 2019 just yet.
+
+
 CMake (Linux)
 -------------
 
