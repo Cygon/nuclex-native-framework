@@ -24,7 +24,7 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 
 #if !defined(NUCLEX_SUPPORT_SOURCE)
-  #warning Nuclex::Support::Any  has been deprecated in favor of C++17 std::optional
+  #warning Nuclex::Support::Any has been deprecated in favor of C++17 std::optional
 #endif
 
 #include <typeinfo>
