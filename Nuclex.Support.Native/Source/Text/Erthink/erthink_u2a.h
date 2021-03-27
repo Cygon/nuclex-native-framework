@@ -1,4 +1,4 @@
-﻿/*
+/*
  *  Copyright (c) 1994-2019 Leonid Yuriev <leo@yuriev.ru>.
  *  https://github.com/leo-yuriev/erthink
  *
