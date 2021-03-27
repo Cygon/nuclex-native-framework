@@ -23,7 +23,7 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
-#include <string>
+#include <string> // for std::string
 
 namespace Nuclex { namespace Support { namespace Text {
 

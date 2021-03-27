@@ -23,8 +23,8 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
-#include <cstddef>
-#include <cstdint>
+#include <cstddef> // for std::size_t
+#include <cstdint> // for std::uint32_t and std::uint64_t
 
 // Microsoft compilers need a special header to know their intrinsics
 #if defined(_MSC_VER)
@@ -330,9 +330,9 @@ namespace Nuclex { namespace Support {
     /// </remarks>
     public: NUCLEX_SUPPORT_API static constexpr std::uint32_t XorShiftRandom(std::uint32_t seed) {
       seed ^= (seed << 13);
-	seed ^= (seed >> 17);
-	seed ^= (seed << 5);
-	return seed;
+      seed ^= (seed >> 17);
+      seed ^= (seed << 5);
+      return seed;
     }
 
     /// <summary>Very fast random number generation from a seed value</summary>
@@ -345,8 +345,8 @@ namespace Nuclex { namespace Support {
     /// </remarks>
     public: NUCLEX_SUPPORT_API static constexpr std::uint64_t XorShiftRandom(std::uint64_t seed) {
       seed ^= (seed << 13);
-	seed ^= (seed >> 7);
-	seed ^= (seed << 17);
+      seed ^= (seed >> 7);
+      seed ^= (seed << 17);
       return seed;
     }
 

@@ -25,8 +25,8 @@ License along with this library
 #include "Nuclex/Support/Any.h"
 #include "Nuclex/Support/VariantType.h"
 
-#include <cstdint>
-#include <string>
+#include <cstdint> // for std::int*_t and std::uint*_t
+#include <string> // for std::string
 
 namespace Nuclex { namespace Support {
 
