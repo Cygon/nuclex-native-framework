@@ -84,6 +84,7 @@ endif()
 
 set(
 	headerFiles
+	"build/config/IlmBaseConfig.h"
 	"build/Half/halfExport.h"
 	"build/Half/halfFunction.h"
 	"build/Half/half.h"
@@ -174,6 +175,11 @@ set_target_properties(IlmBase PROPERTIES OUTPUT_NAME "ilmbase")
 
 # -------------------------------------------------------------------------------------------------
 
+install(
+	DIRECTORY build/config
+	DESTINATION ${PROJECT_SOURCE_DIR}/Include
+	FILES_MATCHING PATTERN "*.h"
+)
 install(
 	DIRECTORY build/Half
 	DESTINATION ${PROJECT_SOURCE_DIR}/Include
