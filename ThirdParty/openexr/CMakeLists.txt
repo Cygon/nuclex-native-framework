@@ -305,6 +305,11 @@ set_target_properties(OpenEXR PROPERTIES OUTPUT_NAME "openexr")
 # -------------------------------------------------------------------------------------------------
 
 install(
+	DIRECTORY build/config
+	DESTINATION ${PROJECT_SOURCE_DIR}/Include
+	FILES_MATCHING PATTERN "*.h"
+)
+install(
 	DIRECTORY build/IlmImf
 	DESTINATION ${PROJECT_SOURCE_DIR}/Include
 	FILES_MATCHING PATTERN "*.h"

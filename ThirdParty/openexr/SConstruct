@@ -119,6 +119,8 @@ openexr_environment = environment.Clone()
 del openexr_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
 openexr_environment['HEADER_DIRECTORY'] = 'build/config' # Main include directory
 
+openexr_environment.add_preprocessor_constant('ZLIB_CONST')
+
 # Set up additional include directories for the openexr modules
 openexr_environment.add_include_directory('../zlib/Include')
 
