@@ -29,16 +29,10 @@ What makes this one different from other libraries?
 Components
 ==========
 
-Build System
-------------
-
-I build and test my libraries on multiple platforms, including Linux,
-Windows and Raspberry PIs. So I need a build system where I can simply
-say "this directory is a project set up with my standard layout. The library
-is called X. Go build it!"
-
-It's simple and deals with dependencies, both via source builds and from
-precompiled binaries.
+The framework is split into several independent libraries that each cover one
+particular topic. The only dependency amongst them is Nuclex::Support, a shared
+library of supporting classes (like unicode translation, signals/slots and
+converting between numbers and strings).
 
 
 Nuclex.Support.Native
@@ -48,11 +42,14 @@ This library contains general-purpose code that I use in most of my projects.
 
   * Delegates (like std::function + std::bind, but equality-comparable)
   * Events (super fast and lightweight signal/slot implementation)
-  * Dependency injector with automatic constructor signature detection
   * Lexical cast (robust number/string conversion without iostreams)
-  * UTF transcoding (turn Windowisms and silly TEXT() macros into UTF-8)
+  * UTF-8 wildcard matching, case-insensitive comparison and conversion
   * Observable collections (be notified when items are added/removed)
-  * Lock-free thread-safe collections (fast & thread-safe without mutexes)
+  * Dependency injector with automatic constructor signature detection
+  * Logger interfaces and high performance in-memory ring buffer logger
+  * Child process wrapper (run external programs and capture their output)
+  * (WIP) Lock-free thread-safe collections (fast & thread-safe without mutexes)
+  * (WIP) Command-line parsing and formatting
 
 
 Nuclex.Pixels.Native
@@ -68,6 +65,32 @@ a pleasure to use.
   * Fast, portable pixel format conversion
   * Extensible Bitmap serializer with automatic file format detection
   * Built-in serialization formats for PNG, JPG and EXR images
+  * Conversion between RGB, HSV, HSL and (WIP) YUV pixels
+  * High quality bitmap resizing
+
+
+Nuclex.Storage.Native
+---------------------
+
+Deals with everything storage-related. It features a complete file system
+abstraction layer with decent error handling, extensible compression and
+decompression with popular as well as exotic algorithms, XML serialization
+and compressed archive reading.
+
+  * Uses a platform's correct paths to store different kinds of data
+  * Streamed compression/decompression of different formats, including
+    * Deflate (via ZLib, known from `.zip`)
+    * LZMA (via LZip)
+    * LZMA (via LZMA-SDK, known from `.7z`)
+    * Brotli
+    * UnRar (known from `.rar`)
+    * CSC (high-compressing LZMA-like)
+    * ZPaq (ultra-high compressing bytecode-based system)
+  * Read and write XML -formatted data
+  * External type serializers, serialize 3rd party types directly and
+    don't drag serialization code around in your classes
+  * (WIP) Binary diffs
+  * (WIP) Stream data out of .zip, .rar, .7z archives
 
 
 Others

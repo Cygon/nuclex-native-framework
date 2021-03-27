@@ -175,6 +175,48 @@ int main() {
 }
 ```
 
+Process
+-------
+
+This class makes it easy to spawn child process and to capture the output they
+send to stdout and stderr.
+
+Creating child processes correctly is a rather complicated task that differs
+a lot between Windows and Linux. This wrapper provides a sane, portable way to
+launch, observe, wait on or kill child processes. It can be used for launchers,
+auto-updaters or if you want to run a command-line application such as `ffmpeg`
+or your C++ compiler:
+
+```cpp
+void handleFfmpegStdOut(const char *characters, std::size_t characterCount) {
+  // Parse progress, log or just print it
+}
+
+
+int main() {
+  using Nuclex::Support::Threading::Process;
+
+  // Finds ffmpeg in 1) same directory as executable or 2) PATH environment
+  Process encoder(u8"ffmpeg");
+  {
+    encoder.SetWorkingDirectory(u8"~/video-encodes");
+    encoder.StdOut.Subscribe<&handleFfmpegStdOut>();
+
+    encoder.Start(
+      { u8"-i myvideo.avi", u8"-vcodec v210", u8"-an", u8"-y", u8"myvideo-v210.avi" }
+    );
+    bool hasExited = encoder.Wait(std::chrono::milliseconds(60000));
+
+    // Use encoder.Write() to send something to the process' stdin
+    // Use encoder.Kill() to as for termination and/or murder the process
+  }
+  int exitCode = encoder.Join();
+
+  return exitCode;
+}
+```
+
+
 Variant
 -------
 
