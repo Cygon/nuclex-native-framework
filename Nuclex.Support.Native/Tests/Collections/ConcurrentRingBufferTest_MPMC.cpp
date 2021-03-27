@@ -21,6 +21,18 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1920)
+#define STRING2(x) #x
+#define STRING(x) STRING2(x)
+#pragma message ( \
+  __FILE__ "(" STRING(__LINE__) "): " \
+  "warning: disabled Nuclex MPMC Queue unit tests on VS2019 due to a compiler bug" \
+)
+#define NUCLEX_SUPPORT_BROKEN_COMPILER_USED 1
+#endif
+
+#if !defined(NUCLEX_SUPPORT_BROKEN_COMPILER_USED)
+
 #include "Nuclex/Support/Collections/ConcurrentRingBuffer.h"
 #include "BufferTest.h"
 #include "ConcurrentBufferTest.h"
@@ -207,3 +219,5 @@ namespace Nuclex { namespace Support { namespace Collections {
   // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Collections
+
+#endif // !defined(NUCLEX_SUPPORT_BROKEN_COMPILER_USED)
