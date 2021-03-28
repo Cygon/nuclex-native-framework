@@ -57,9 +57,13 @@ namespace Nuclex { namespace Support { namespace Threading {
   class Process {
 
     /// <summary>Event that is fired whenever the process writes to stdout</summary>
-    public: Nuclex::Support::Events::Event<void(const char *, std::size_t)> StdOut;
+    public: Nuclex::Support::Events::Event<
+      void(const char *, std::size_t)
+    > StdOut;
     /// <summary>Event that is fired whenever the process writes to stderr</summary>
-    public: Nuclex::Support::Events::Event<void(const char *, std::size_t)> StdErr;
+    public: Nuclex::Support::Events::Event<
+      void(const char *, std::size_t)
+    > StdErr;
 
     /// <summary>Initializes a new process without starting it</summary>
     /// <param name="executablePath">
@@ -79,9 +83,9 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///     The executable search will not take place if you specify an absolute path.
     ///   </para>
     /// </remarks>
-    public: Process(const std::string &executablePath);
+    public: NUCLEX_SUPPORT_API Process(const std::string &executablePath);
     /// <summary>Kills the external process and waits until it is gone</summary>
-    public: ~Process();
+    public: NUCLEX_SUPPORT_API ~Process();
 
     /// <summary>Sets the working directory the child process will start in</summary>
     /// <param name="workingDirectory">
@@ -93,7 +97,9 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///   what working directory to use. Usually that means the child process inherits it
     ///   from the parent process.
     /// </remarks>
-    public: void SetWorkingDirectory(const std::string &newWorkingDirectory) {
+    public: NUCLEX_SUPPORT_API void SetWorkingDirectory(
+      const std::string &newWorkingDirectory
+    ) {
       this->workingDirectory = newWorkingDirectory;
     }
 
@@ -105,14 +111,14 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///   The first argument passed is normally the name of the executable itself. Leaving this
     ///   set to 'true' will automatically prepend the executable name to the argument list.
     /// </param>
-    public: void Start(
+    public: NUCLEX_SUPPORT_API void Start(
       const std::vector<std::string> &arguments = std::vector<std::string>(),
       bool prependExecutableName = true
     );
 
     /// <summary>Checks whether the process is still running</summary>
     /// <returns>True if the process was still running, false otherwise</returns>
-    public: bool IsRunning() const;
+    public: NUCLEX_SUPPORT_API bool IsRunning() const;
 
     /// <summary>Waits for the process to exit normally</summary>
     /// <param name="patience">
@@ -121,7 +127,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     /// <returns>
     ///   True if the process exited within the allotted time, false if it is still running.
     /// </returns>
-    public: bool Wait(
+    public: NUCLEX_SUPPORT_API bool Wait(
       std::chrono::milliseconds patience = std::chrono::milliseconds(30000)
     ) const;
 
@@ -134,7 +140,9 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///   The exit code returned by the process (most programs adhere to returning 0 if
     ///   everything went well and 1 if there was a problem).
     /// </returns>
-    public: int Join(std::chrono::milliseconds patience = std::chrono::milliseconds(30000));
+    public: NUCLEX_SUPPORT_API int Join(
+      std::chrono::milliseconds patience = std::chrono::milliseconds(30000)
+    );
 
     /// <summary>Attempts to terminate the external process</summary>
     /// <param name="patience">
@@ -147,7 +155,9 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///   terminating within the a grace period, this method will attempt to terminate
     ///   the process forcefully via either SIGKILL or by aborting its process.
     /// </remarks>
-    public: void Kill(std::chrono::milliseconds patience = std::chrono::milliseconds(5000));
+    public: NUCLEX_SUPPORT_API void Kill(
+      std::chrono::milliseconds patience = std::chrono::milliseconds(5000)
+    );
 
     /// <summary>Sends input to the running process' stdin</summary>
     /// <param name="characters">Characters that will be sent to the process' stdin</param>
@@ -157,7 +167,9 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///   If you fill the buffer of the process' stdin pipe, it may not be possible to
     ///   write more data to stdin until the process has read from stdin.
     /// </remarks>
-    public: std::size_t Write(const char *characters, std::size_t characterCount);
+    public: NUCLEX_SUPPORT_API std::size_t Write(
+      const char *characters, std::size_t characterCount
+    );
 
     /// <summary>Fetches data from the stdout and stderr streams</summary>
     /// <remarks>
@@ -177,7 +189,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///     be sure to have some mechanism that calls PumpOutputStreams() regularly.
     ///   </para>
     /// </remarks>
-    public: void PumpOutputStreams() const;
+    public: NUCLEX_SUPPORT_API void PumpOutputStreams() const;
 
     // Useful? I'd like to keep this class tight and focus rather then turning into
     // a general-purpose grabbag for all you child process needs.
