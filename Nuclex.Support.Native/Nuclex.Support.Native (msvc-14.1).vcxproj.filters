@@ -17,6 +17,9 @@
     <Filter Include="Include\Collections">
       <UniqueIdentifier>{bb7bb4c9-39c3-4ac7-b033-c752c0cec4d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\Collections\MoodyCamel">
+      <UniqueIdentifier>{b3440a33-c01d-4515-be3d-2d530e22b226}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Include\Errors">
       <UniqueIdentifier>{0efb8298-425d-438c-ac9c-e1aba6120891}</UniqueIdentifier>
     </Filter>
@@ -80,10 +83,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\blockingconcurrentqueue.h">
+      <Filter>Include\Collections\MoodyCamel</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\concurrentqueue.h">
+      <Filter>Include\Collections\MoodyCamel</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\lightweightsemaphore.h">
+      <Filter>Include\Collections\MoodyCamel</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.h">
@@ -185,6 +200,9 @@
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h">
       <Filter>Include\Threading</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h">
+      <Filter>Include\Threading</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Any.h">
       <Filter>Include</Filter>
     </ClInclude>
@@ -212,6 +230,9 @@
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\ConcurrentQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp">
@@ -424,6 +445,24 @@
     <ClCompile Include="Source\Threading\Thread.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Threading\ThreadPool.Linux.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\ThreadPool.Windows.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\ThreadPoolConfig.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\ThreadPoolConfig.h">
+      <Filter>Source\Threading</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Threading\ThreadPoolTaskPool.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\ThreadPoolTaskPool.h">
+      <Filter>Source\Threading</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Any.cpp">
       <Filter>Source</Filter>
     </ClCompile>

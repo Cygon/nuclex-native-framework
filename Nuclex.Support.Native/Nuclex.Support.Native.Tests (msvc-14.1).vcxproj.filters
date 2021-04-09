@@ -17,6 +17,9 @@
     <Filter Include="Include\Collections">
       <UniqueIdentifier>{bb7bb4c9-39c3-4ac7-b033-c752c0cec4d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\Collections\MoodyCamel">
+      <UniqueIdentifier>{c5c67ac2-62c5-4276-b1d8-45cc243b372d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Include\Errors">
       <UniqueIdentifier>{0efb8298-425d-438c-ac9c-e1aba6120891}</UniqueIdentifier>
     </Filter>
@@ -104,10 +107,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\blockingconcurrentqueue.h">
+      <Filter>Include\Collections\MoodyCamel</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\concurrentqueue.h">
+      <Filter>Include\Collections\MoodyCamel</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\lightweightsemaphore.h">
+      <Filter>Include\Collections\MoodyCamel</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.h">
@@ -209,6 +224,9 @@
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h">
       <Filter>Include\Threading</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h">
+      <Filter>Include\Threading</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Any.h">
       <Filter>Include</Filter>
     </ClInclude>
@@ -238,6 +256,9 @@
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Collections\ConcurrentQueue.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
@@ -262,13 +283,13 @@
     <ClCompile Include="Source\Collections\ShiftQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
+    <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Errors\TimeoutError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
+    <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
     <ClCompile Include="Source\Events\Delegate.cpp">
@@ -448,6 +469,24 @@
     <ClCompile Include="Source\Threading\Thread.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Threading\ThreadPool.Linux.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\ThreadPool.Windows.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\ThreadPoolConfig.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\ThreadPoolConfig.h">
+      <Filter>Source\Threading</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Threading\ThreadPoolTaskPool.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\ThreadPoolTaskPool.h">
+      <Filter>Source\Threading</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Any.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -483,6 +522,9 @@
     <ClInclude Include="Tests\Collections\ConcurrentBufferTest.h">
       <Filter>Tests\Collections</Filter>
     </ClInclude>
+    <ClCompile Include="Tests\Collections\ConcurrentQueueTest.cpp">
+      <Filter>Tests\Collections</Filter>
+    </ClCompile>
     <ClCompile Include="Tests\Collections\ConcurrentRingBufferTest_MPMC.cpp">
       <Filter>Tests\Collections</Filter>
     </ClCompile>
@@ -547,6 +589,12 @@
       <Filter>Tests\Threading\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Threading\ProcessTest.cpp">
+      <Filter>Tests\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\ThreadPoolTaskPoolTest.cpp">
+      <Filter>Tests\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\ThreadPoolTest.cpp">
       <Filter>Tests\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Threading\ThreadTest.cpp">

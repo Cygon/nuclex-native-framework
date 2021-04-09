@@ -108,7 +108,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Include\</AdditionalIncludeDirectories>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -132,6 +132,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,7 +150,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -181,6 +182,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -191,8 +193,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\blockingconcurrentqueue.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\concurrentqueue.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\lightweightsemaphore.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPSC.inl" />
@@ -226,6 +232,7 @@
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\Process.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h" />
     <ClInclude Include="Include\Nuclex\Support\Any.h" />
     <ClInclude Include="Include\Nuclex\Support\BitTricks.h" />
     <ClInclude Include="Include\Nuclex\Support\Config.h" />
@@ -237,6 +244,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Collections\Collection.cpp" />
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp" />
+    <ClCompile Include="Source\Collections\ConcurrentQueue.cpp" />
     <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp" />
     <ClCompile Include="Source\Collections\DynamicArray.cpp" />
     <ClCompile Include="Source\Collections\IndexedCollection.cpp" />
@@ -307,6 +315,12 @@
     <ClCompile Include="Source\Threading\Process.Linux.cpp" />
     <ClCompile Include="Source\Threading\Process.Windows.cpp" />
     <ClCompile Include="Source\Threading\Thread.cpp" />
+    <ClCompile Include="Source\Threading\ThreadPool.Linux.cpp" />
+    <ClCompile Include="Source\Threading\ThreadPool.Windows.cpp" />
+    <ClCompile Include="Source\Threading\ThreadPoolConfig.cpp" />
+    <ClInclude Include="Source\Threading\ThreadPoolConfig.h" />
+    <ClCompile Include="Source\Threading\ThreadPoolTaskPool.cpp" />
+    <ClInclude Include="Source\Threading\ThreadPoolTaskPool.h" />
     <ClCompile Include="Source\Any.cpp" />
     <ClCompile Include="Source\BitTricks.cpp" />
     <ClCompile Include="Source\Config.cpp" />
