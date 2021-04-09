@@ -91,7 +91,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     {
       std::size_t cpuCount = std::thread::hardware_concurrency();
       for(std::size_t index = 0; index < cpuCount; ++index) {
-        allCpusAffinity |= (std::size_t(1) << index);
+        allCpusAffinity |= (std::uint64_t(1) << index);
       }
     }
 
@@ -118,7 +118,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     {
       std::size_t cpuCount = std::thread::hardware_concurrency();
       for(std::size_t index = 0; index < cpuCount; ++index) {
-        allCpusAffinity |= (std::size_t(1) << index);
+        allCpusAffinity |= (std::uint64_t(1) << index);
       }
     }
 

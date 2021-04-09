@@ -26,7 +26,7 @@ License along with this library
 #if defined(NUCLEX_SUPPORT_WIN32)
 #include "../Helpers/WindowsApi.h" // for ::Sleep(), ::GetCurrentThreadId() and more
 #elif defined(NUCLEX_SUPPORT_LINUX)
-#include "../Helpers/PosixApi.h" // to convert error numbers to messages
+#include "Posix/PosixProcessApi.h" // for PosixProcessApi
 #include <ctime> // for ::clock_gettime() and ::clock_nanosleep()
 #include <cstdlib> // for ldiv_t
 #include <algorithm> // for std::min()
@@ -76,7 +76,7 @@ namespace {
       // assumes that the thread is running on group 0.
       DWORD cpuCount = ::GetActiveProcessorCount(0);
       for(std::size_t index = 0; index < cpuCount; ++index) {
-        allCpusAffinity |= (std::size_t(1) << index);
+        allCpusAffinity |= (std::uint64_t(1) << index);
       }
     }
 
@@ -180,6 +180,7 @@ namespace {
         u8"Error changing CPU affinity via pthread_setaffinity_np()", errorNumber
       );
     }
+
   }
 #endif // !defined(NUCLEX_SUPPORT_WIN32)
   // ------------------------------------------------------------------------------------------- //
@@ -192,36 +193,45 @@ namespace Nuclex { namespace Support { namespace Threading {
 
   void Thread::Sleep(std::chrono::microseconds time) {
 #if defined(NUCLEX_SUPPORT_WIN32)
-    std::int64_t milliseconds = time.count();
-    if(milliseconds > 0) {
-      milliseconds += std::int64_t(500);
-      milliseconds /= std::int64_t(1000);
-      ::Sleep(static_cast<DWORD>(milliseconds));
+    std::int64_t microseconds = time.count();
+    if(microseconds > 0) {
+      microseconds += std::int64_t(500); // To round to nearest mllisecond
+      ::Sleep(static_cast<DWORD>(microseconds / std::int64_t(1000)));
     }
-#elif false && defined(NUCLEX_SUPPORT_LINUX) // Testing shows this to often not wait at all :-(
-    const static long int MicrosecondsPerSecond = 1000000L;
-    const static long int NanosecondsPerMicrosecond = 1000L;
-
-    // Is the delay under 1 second? Use a simple relative sleep
+#elif defined(NUCLEX_SUPPORT_LINUX)
+    // Calculate the point in time at which sleep should finish
     ::timespec endTime;
-
-    // Get current time
-    int result = ::clock_gettime(CLOCK_MONOTONIC, &endTime);
-    if(result != 0) {
-      //int errorNumber = errno;
-      Helpers::PosixApi::ThrowExceptionForSystemError(
-        u8"Error retrieving current time via clock_gettime()", result
-      );
-    }
-
-    // Calculate sleep end time
     {
-      ldiv_t result = ::ldiv(static_cast<long int>(time.count()), MicrosecondsPerSecond);
-      endTime.tv_sec += result.quot;
-      endTime.tv_nsec += result.rem * NanosecondsPerMicrosecond;
-      if(endTime.tv_nsec >= NanosecondsPerMicrosecond * MicrosecondsPerSecond) {
-        endTime.tv_nsec -= NanosecondsPerMicrosecond * MicrosecondsPerSecond;
-        endTime.tv_sec -= 1U;
+      int result = ::clock_gettime(CLOCK_MONOTONIC, &endTime);
+      if(result == -1) {
+        int errorNumber = errno;
+        Helpers::PosixApi::ThrowExceptionForSystemError(
+          u8"Error retrieving current time via clock_gettime()", errorNumber
+        );
+      }
+
+      // Calculate the future point in time by adding the requested number of microseconds
+      {
+        const std::size_t NanosecondsPerMicrosecond = 1000; // 1,000 ns = 1 μs
+        const std::size_t MicrosecondsPerSecond = 1000000; // 1,000,000 μs = 1 s
+        const std::size_t NanosecondsPerSecond = 1000000000; // 1,000,000,000 ns = 1 s
+
+        // timespec has seconds and nanoseconds, so divide the milliseconds into full seconds
+        // and remainder milliseconds to deal with this
+        ::ldiv_t divisionResults = ::ldiv(time.count(), MicrosecondsPerSecond);
+
+        // If the summed nanoseconds add up to more than one second, increment the timespec's
+        // seconds, otherwise just assign the summed nanoseconds.
+        std::size_t nanoseconds = (
+          divisionResults.rem * NanosecondsPerMicrosecond + endTime.tv_nsec
+        );
+        if(nanoseconds >= NanosecondsPerSecond) {
+          endTime.tv_sec += divisionResults.quot + 1;
+          endTime.tv_nsec = nanoseconds - NanosecondsPerSecond;
+        } else {
+          endTime.tv_sec += divisionResults.quot;
+          endTime.tv_nsec = nanoseconds;
+        }
       }
     }
 
@@ -231,9 +241,9 @@ namespace Nuclex { namespace Support { namespace Threading {
       if(result == 0) {
         return;
       } else if(result != EINTR) {
-        //int errorNumber = errno;
+        int errorNumber = errno;
         Helpers::PosixApi::ThrowExceptionForSystemError(
-          u8"Error pausing thread via ::clock_nanosleep()", result
+          u8"Error pausing thread via ::clock_nanosleep()", errorNumber
         );
       }
     }
@@ -297,7 +307,6 @@ namespace Nuclex { namespace Support { namespace Threading {
     std::uintptr_t result = 0;
     *reinterpret_cast<HANDLE *>(&result) = nativeHandle;
     return result;
-
 #else // LINUX and POSIX
     ::pthread_t threadIdentity = thread.native_handle();
     assert(
