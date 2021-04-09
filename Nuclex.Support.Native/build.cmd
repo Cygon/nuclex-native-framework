@@ -14,13 +14,13 @@ FOR %%m IN (Debug Release) DO (
 	IF EXIST obj\cmake-%%m rd /s /q obj\cmake-%%m
 
 	REM Let CMake build a Makefile (that's the default)
-        REM
-        REM Up until Visual Studio 2019, CMake used different generators to switch
-        REM between 32-bit and 64-bit (and defaults to 32-bits). Unless we want to
-        REM drop support for Visual Studio 2017, this variable is the only way
-        REM where CMake still picks up *any* installed Visual Studio version and does
-        REM a 64-bit build.
-        REM
+	REM
+	REM Up until Visual Studio 2019, CMake used different generators to switch
+	REM between 32-bit and 64-bit (and defaults to 32-bits). Unless we want to
+	REM drop support for Visual Studio 2017, this variable is the only way
+	REM where CMake still picks up *any* installed Visual Studio version and does
+	REM a 64-bit build.
+	REM
 	cmake -B obj\cmake-%%m -DCMAKE_BUILD_TYPE=%%m -DCMAKE_GENERATOR_PLATFORM=x64
 
 	REM Compile the binary

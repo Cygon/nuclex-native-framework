@@ -57,7 +57,7 @@ do anything, but an acknowledgement of the original author would be nice.
 
 
 Ryu String to Float Parser: Apache 2.0 License
----------------------------------------------
+---------------------------------------------=
 
 Code from the Ryu library is used to convert strings to floating point values
 independent of the system locale. It is written by Ulf Adams and licensed under
@@ -73,6 +73,17 @@ UTF-8, UTF-16, UTF-32 Converter: Boost Software License
 Conversion between UTF-8 and UTF-16 is provided through the UTF-8 for C++
 library. It is written by Nemanja Trifunovic and licensed under the
 Boost Software License (https://www.boost.org/users/license.html)
+
+If you distribute binaries compiled from this library, you do not have to
+do anything, but an acknowledgement of the original author would be nice.
+
+
+MoodyCamel Lock-Free Unbounded Concurrent Queue
+-----------------------------------------------
+
+The unbounded concurrent queue code directly forwards to an implementation
+by Cameron Desrochers, included in a subdirectory. It is license under
+the Boost Software License (https://www.boost.org/users/license.html)
 
 If you distribute binaries compiled from this library, you do not have to
 do anything, but an acknowledgement of the original author would be nice.
