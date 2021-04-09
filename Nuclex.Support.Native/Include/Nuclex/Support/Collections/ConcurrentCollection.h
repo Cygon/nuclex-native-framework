@@ -23,6 +23,8 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
+#include <cstddef> // for std::size_t
+
 // Known implementations besides this one for reference:
 //
 // Libraries of Lock-Free data structures:
@@ -90,17 +92,34 @@ namespace Nuclex { namespace Support { namespace Collections {
     /// <summary>Destroys the concurrent queue</summary>
     public: virtual ~ConcurrentCollection() = default;
 
-    /// <summary>Tries to appends an element to the collection in a thread-safe manner</summary>
+    /// <summary>Tries to append an element to the collection in a thread-safe manner</summary>
     /// <param name="element">Element that will be appended to the collection</param>
     /// <returns>True if the element was appended, false if there was no space left</returns>
     public: virtual bool TryAppend(const TElement &element) = 0;
+
+    /// <summary>
+    ///   Tries to move-append an element to the collection in a thread-safe manner
+    /// </summary>
+    /// <param name="element">Element that will be move-appended to the collection</param>
+    /// <returns>True if the element was appended, false if there was no space left</returns>
+    public: virtual bool TryAppend(TElement &&element) = 0;
 
     /// <summary>Tries to take an element from the queue</summary>
     /// <param name="element">Will receive the element taken from the queue</param>
     /// <returns>
     ///   True if an element was taken from the collection, false if the collection was empty
     /// </returns>
-    public: virtual bool TryPop(TElement &element) = 0;
+    public: virtual bool TryTake(TElement &element) = 0;
+
+    /// <summary>Counts the numebr of elements current in the collection</summary>
+    /// <returns>
+    ///   The approximate number of elements that have been in the collection during the call
+    /// </returns>
+    public: virtual std::size_t Count() const = 0;
+
+    /// <summary>Checks if the collection is empty</summary>
+    /// <returns>True if the collection was probably empty during the call</returns>
+    public: virtual bool IsEmpty() const = 0;
 
   };
 
