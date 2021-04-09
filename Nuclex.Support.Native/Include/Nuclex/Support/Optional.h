@@ -176,4 +176,4 @@ namespace Nuclex { namespace Support {
 
 }} // namespace Nuclex::Support
 
-#endif // NUCLEX_SUPPORT_ANY_H
+#endif // NUCLEX_SUPPORT_OPTIONAL_H

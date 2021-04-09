@@ -111,7 +111,7 @@ namespace Nuclex { namespace Support { namespace Events {
     public: template<typename TClass, TResult(TClass::*TMethod)(TArguments...)>
     static Delegate Create(TClass *instance) {
       return Delegate(
-        reinterpret_cast<void *>(instance) , &Delegate::callObjectMethod<TClass, TMethod>
+        reinterpret_cast<void *>(instance), &Delegate::callObjectMethod<TClass, TMethod>
       );
     }
 
@@ -137,14 +137,14 @@ namespace Nuclex { namespace Support { namespace Events {
 
     /// <summary>Constructs an empty delegate<summary>
     public: Delegate() :
-#if _DEBUG
+#if !defined(NDEBUG)
       instance(nullptr),
 #endif
       method(&Delegate::callEmptyDelegate) {}
 
     /// <summary>Initializes a new delegate by taking over an existing delegate</summary>
     /// <param name="other">Existing delegate that will be taken over</param>
-#if _DEBUG
+#if !defined(NDEBUG)
     public: Delegate(Delegate &&other) :
       instance(other.instance),
       method(other.method) {
@@ -156,7 +156,7 @@ namespace Nuclex { namespace Support { namespace Events {
 #endif
 
     /// <summary>Frees all resources owned by the delegate</summary>
-#if _DEBUG
+#if !defined(NDEBUG)
     public: ~Delegate() {
       this->instance = nullptr;
       this->method = &Delegate::errorDelegateDestroyed;
@@ -174,7 +174,7 @@ namespace Nuclex { namespace Support { namespace Events {
 
     /// <summary>Resets the delegate to an empty value</summary>
     public: void Reset() {
-#if _DEBUG
+#if !defined(NDEBUG)
       this->method = nullptr;
 #endif
       this->method = &Delegate::callEmptyDelegate;
@@ -219,7 +219,7 @@ namespace Nuclex { namespace Support { namespace Events {
     /// <summary>Lets this delegate take over another delegate</summary>
     /// <param name="other">Other delegate that will be taken over</param>
     /// <returns>This delegate</returns>
-#if _DEBUG
+#if !defined(NDEBUG)
     public: Delegate &operator =(Delegate &&other) {
       this->instance = other.instance;
       this->method = other.method;
@@ -329,7 +329,7 @@ namespace Nuclex { namespace Support { namespace Events {
       return (typedInstance->*TObjectMethod)(std::forward<TArguments>(arguments)...);
     }
 
-#if _DEBUG
+#if !defined(NDEBUG)
     /// <summary>Call wrapper that reports when the delegate is called after </summary>
     /// <typeparam name="TFreeFunction">Function that will be invoked</typeparam>
     /// <returns>The result of the called method or function</returns>

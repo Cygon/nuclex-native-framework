@@ -41,7 +41,7 @@ namespace Nuclex { namespace Support {
   ///   <para>
   ///     This ensures that the cleanup code always runs, even when the method is terminated
   ///     early by an exception. It is faster and better than try..catch..(re-)throw because
-  ///     it will not interupt the exception (this keeping the original site of the exception
+  ///     it will not interupt the exception (thus keeping the original site of the exception
   ///     for any debuggers or error reporting tools).
   ///   </para>
   ///   <para>
