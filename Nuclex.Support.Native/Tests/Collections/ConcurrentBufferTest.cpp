@@ -98,7 +98,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   /// <summary>Marks the benchmark starting time if this is the first call</summary>
   void HighContentionBufferTest::markStartTime() {
-    std::size_t zero = 0;
+    std::chrono::microseconds::rep zero = 0;
     this->startMicroseconds.compare_exchange_strong(
       zero,
       std::chrono::duration_cast<std::chrono::microseconds>(
@@ -110,7 +110,7 @@ namespace Nuclex { namespace Support { namespace Collections {
   // ------------------------------------------------------------------------------------------- //
 
   void HighContentionBufferTest::markEndTime() {
-    std::size_t zero = 0;
+    std::chrono::microseconds::rep zero = 0;
     this->endMicroseconds.compare_exchange_strong(
       zero,
       std::chrono::duration_cast<std::chrono::microseconds>(
