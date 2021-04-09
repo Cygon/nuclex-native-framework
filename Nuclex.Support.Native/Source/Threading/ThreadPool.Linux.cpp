@@ -487,7 +487,6 @@ namespace Nuclex { namespace Support { namespace Threading {
       this->implementation->AddThread();
     }
     destroyImplementationScope.Commit();
-
   }
 
   // ------------------------------------------------------------------------------------------- //

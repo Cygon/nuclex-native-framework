@@ -74,7 +74,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     ThreadPool testPool;
 
     // Schedule a task to run on a thread pool thread
-    std::future<int> future = testPool.AddTask(&testMethod, 12, 34);
+    std::future<int> future = testPool.Schedule(&testMethod, 12, 34);
 
     // The future should immediately be valid and usable to chain calls and wait upon
     EXPECT_TRUE(future.valid());
@@ -93,8 +93,8 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     // Add a slow task and our detector task. This thread pool only has
     // one thread, so the slow task will block the worker thread for 100 ms.
-    testPool->AddTask(&slowMethod);
-    std::future<int> canceledFuture = testPool->AddTask(&testMethod, 12, 34);
+    testPool->Schedule(&slowMethod);
+    std::future<int> canceledFuture = testPool->Schedule(&testMethod, 12, 34);
 
     EXPECT_TRUE(canceledFuture.valid());
 
@@ -119,7 +119,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     ThreadPool testPool;
 
     // Schedule a task to run on a thread pool thread
-    std::future<int> failedFuture = testPool.AddTask(&failingMethod);
+    std::future<int> failedFuture = testPool.Schedule(&failingMethod);
 
     EXPECT_THROW(
       {
@@ -145,16 +145,16 @@ namespace Nuclex { namespace Support { namespace Threading {
       // letting the thread pool recycle finished tasks for re-use.
       {
         for(std::size_t task = 0; task < 500; ++task) {
-          testPool->AddTask(&testMethod, 12, 34);
+          testPool->Schedule(&testMethod, 12, 34);
         }
         Nuclex::Support::Threading::Thread::Sleep(std::chrono::milliseconds(1));
         for(std::size_t task = 0; task < 500; ++task) {
-          testPool->AddTask(&testMethod, 34, 12);
+          testPool->Schedule(&testMethod, 34, 12);
         }
       }
 
       // Schedule one final task, then let the thread pool execute for a bit
-      std::future<int> finalTaskFuture = testPool->AddTask(&testMethod, 10, 10);
+      std::future<int> finalTaskFuture = testPool->Schedule(&testMethod, 10, 10);
       std::future_status status = finalTaskFuture.wait_for(std::chrono::milliseconds(1));
       (void)status; // This is up to the core count + performance, we don't check it
 

@@ -101,10 +101,57 @@ namespace Nuclex { namespace Support { namespace Threading {
     public: NUCLEX_SUPPORT_API ~ThreadPool();
 
     /// <summary>Schedules a task to be executed on a worker thread</summary>
-    /// <typeparam name="TMethod">Method that will be run on a worker thread</typeparam>
+    /// <typeparam name="TMethod">
+    ///   Type of the method that will be run on a worker thread
+    /// </typeparam>
+    /// <typeparam name="TArguments">
+    ///   Type of the arguments that will be passed to the method when it is called
+    /// </typeparam>
+    /// <param name="method">Method that will be called from a worker thread</param>
+    /// <param name="arguments">Argument values that will be passed to the method</param>
+    /// <returns>
+    ///   An std::future instance that will provide the result returned by the method
+    /// </returns>
+    /// <remarks>
+    ///   <para>
+    ///     This method is your main interface to schedule work on threads of the thread
+    ///     pool. Despite the slightly template-heavy signature, it is lean and convenient
+    ///     to use. Here's an example:
+    ///   </para>
+    ///   <example>
+    ///     <code>
+    ///       int test(int a, int b) {
+    ///         Thread::Sleep(milliseconds(10));
+    ///         return (a * b) - (a + b);
+    ///       }
+    ///
+    ///       int main() {
+    ///         ThreadPool myThreadPool;
+    ///
+    ///         std::future<int> futureResult = myThreadPool.AddTask<&test>(12, 34);
+    ///         int result = futureResult.get(); // waits until result is available
+    ///       }
+    ///     </code>
+    ///   </example>
+    ///   <para>
+    ///     The returned std::future behaves in every way like an std::future used with
+    ///     std::async(). You can ignore it (if your task has no return value), wait
+    ///     for a result with std::future::wait() or check its status.
+    ///   </para>
+    ///   <para>
+    ///     Don't be shy about ignoring the returned std::future, the task will still
+    ///     run and all std::future handling is inside this header, so the compiler has
+    ///     every opportunity to optimize it away.
+    ///   </para>
+    ///   <para>
+    ///     If the thread pool is destroyed before starting on a task, the task will be
+    ///     canceled. If you did take hold of the std::future instance, that means it
+    ///     will throw an std::future_error of type broken_promise in std::future::get().
+    ///   </para>
+    /// </remarks>
     public: template<typename TMethod, typename... TArguments>
     std::future<typename std::invoke_result<TMethod, TArguments...>::type>
-    AddTask(TMethod &&method, TArguments &&... arguments) {
+    Schedule(TMethod &&method, TArguments &&... arguments) {
       typedef typename std::invoke_result<TMethod, TArguments...>::type ResultType;
       typedef std::packaged_task<ResultType()> TaskType;
 
