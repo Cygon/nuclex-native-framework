@@ -149,6 +149,13 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
       std::string &target, const std::string &workingDirectory
     );
 
+    /// <summary>Searches for an executable using the PATH environment variable</summary>
+    /// <param name="target">String into which the absolute path will be written</param>
+    /// <param name="executable">Relative path to the executable that will be searched</param>
+    private: static void searchExecutableInPath(
+      std::string &target, const std::string &executable
+    );
+
   };
 
   // ------------------------------------------------------------------------------------------- //

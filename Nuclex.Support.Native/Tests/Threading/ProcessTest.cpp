@@ -154,8 +154,10 @@ namespace Nuclex { namespace Support { namespace Threading {
 #if defined(NUCLEX_SUPPORT_WIN32)
     // Sleep does not ship with all Windows 10 releases
     // Timeout immediately error-exits if stdin is redirected
+    // Ping with existing IP always waits 1 second between pings            <--- the only option
+    // Ping with non-existing IP waits until timeout, but returns exit code 1
     Process test(u8"ping");
-    test.Start({u8"-n 1", u8"-w 250", u8"-4 127.0.0.1"});
+    test.Start({u8"-n 2", u8"-4 127.0.0.1"});
 #else
     Process test(u8"sleep");
     test.Start({u8"0.25"});

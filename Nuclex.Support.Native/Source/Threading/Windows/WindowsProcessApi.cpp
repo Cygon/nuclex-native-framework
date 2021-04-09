@@ -360,7 +360,8 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
       // Finally, search the standard paths (PATH environment variable)
       {
-        searchExecutablePath(target, executable);
+        const bool throwOnError = false;
+        searchExecutablePath(target, executable, throwOnError);
         if(WindowsFileApi::DoesFileExist(target)) {
           return;
         }
@@ -420,7 +421,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
   // ------------------------------------------------------------------------------------------- //
 
   void WindowsProcessApi::searchExecutablePath(
-    std::wstring &target, const std::wstring &executable
+    std::wstring &target, const std::wstring &executable, bool throwOnError /* = true */
   ) {
     target.resize(MAX_PATH);
 
@@ -439,26 +440,31 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
       // The method returns the number of characters written into the absolute path buffer.
       // If it returns 0, the executable could not be found (or something else went wrong).
       if(characterCount == 0) {
-        DWORD lastErrorCode = ::GetLastError();
+        if(throwOnError) {
+          DWORD lastErrorCode = ::GetLastError();
 
-        std::string message;
-        {
-          static const std::string errorMessageBegin(u8"Could not locate executable '", 29);
-          static const std::string errorMessageEnd(u8"' in standard search paths", 26);
+          std::string message;
+          {
+            static const std::string errorMessageBegin(u8"Could not locate executable '", 29);
+            static const std::string errorMessageEnd(u8"' in standard search paths", 26);
 
-          std::string utf8Executable = Nuclex::Support::Text::StringConverter::Utf8FromWide(
-            executable
+            std::string utf8Executable = Nuclex::Support::Text::StringConverter::Utf8FromWide(
+              executable
+            );
+
+            message.reserve(29 + utf8Executable.length() + 26 + 1);
+            message.append(errorMessageBegin);
+            message.append(utf8Executable);
+            message.append(errorMessageEnd);
+          }
+
+          Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+            message, lastErrorCode
           );
-
-          message.reserve(29 + utf8Executable.length() + 26 + 1);
-          message.append(errorMessageBegin);
-          message.append(utf8Executable);
-          message.append(errorMessageEnd);
+        } else { // No exception wanted
+          target.assign(executable);
+          return;
         }
-
-        Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
-          message, lastErrorCode
-        );
       }
     }
 

@@ -143,7 +143,9 @@ namespace Nuclex { namespace Support { namespace Threading {
     constexpr bool implementationDataFitsInBuffer = (
       (sizeof(this->implementationDataBuffer) >= sizeof(PlatformDependentImplementationData))
     );
-    if constexpr(!implementationDataFitsInBuffer) {
+    if constexpr(implementationDataFitsInBuffer) {
+      this->implementationData->~PlatformDependentImplementationData();
+    } else {
       delete this->implementationData;
     }
   }

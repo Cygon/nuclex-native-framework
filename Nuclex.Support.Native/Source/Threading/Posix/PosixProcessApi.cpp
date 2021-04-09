@@ -29,10 +29,11 @@ License along with this library
 
 #include "Nuclex/Support/Text/LexicalAppend.h"
 
+#include <cstdlib> // for ::getenv(), ::ldiv(), ::ldiv_t
+
 #include <unistd.h> // for ::pipe(), ::readlink()
 #include <fcntl.h> // for ::fcntl()
 #include <signal.h> // for ::kill()
-#include <stdlib.h> // for ::ldiv(), ::ldiv_t
 #include <limits.h> // for PATH_MAX
 
 namespace {
@@ -196,7 +197,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
 
     // Calculate the future point in time by adding the requested number of milliseconds
     {
-      const std::size_t NanoSecondsPerMilliSecond = 1000000; // 1,000,000 ns = 1 ms
+      const std::size_t NanoSecondsPerMillisecond = 1000000; // 1,000,000 ns = 1 ms
       const std::size_t NanoSecondsPerSecond = 1000000000; // 1,000,000,000 ns = 1 s
 
       // timespec has seconds and nanoseconds, so divide the milliseconds into full seconds
@@ -206,7 +207,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
       // If the summed nanoseconds add up to more than one second, increment the timespec's
       // seconds, otherwise just assign the summed nanoseconds.
       std::size_t nanoseconds = (
-        divisionResults.rem * NanoSecondsPerMilliSecond + futureTime.tv_nsec
+        divisionResults.rem * NanoSecondsPerMillisecond + futureTime.tv_nsec
       );
       if(nanoseconds >= NanoSecondsPerSecond) {
         futureTime.tv_sec += divisionResults.quot + 1;
@@ -278,9 +279,11 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
       if(PosixFileApi::DoesFileExist(target)) {
         return;
       }
-    }
 
-    target.assign(executable);
+      searchExecutableInPath(target, executable);
+    } else {
+      target.assign(executable);
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -288,13 +291,48 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
   void PosixProcessApi::GetAbsoluteWorkingDirectory(
     std::string &target, const std::string &workingDirectory
   ) {
-
     if(PosixFileApi::IsPathRelative(workingDirectory)) {
       getExecutablePath(target);
       PosixFileApi::AppendPath(target, workingDirectory);
     } else {
       target.assign(workingDirectory);
     }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void PosixProcessApi::searchExecutableInPath(
+    std::string &target, const std::string &executable
+  ) {
+    const char *path = ::getenv(u8"PATH");
+    if(path != nullptr) {
+      const char *start = path;
+      while(*path != 0) {
+        if(*path == ':') {
+          if(path > start) {
+            target.assign(start, path);
+            PosixFileApi::AppendPath(target, executable);
+            if(PosixFileApi::DoesFileExist(target)) {
+              return;
+            }
+          }
+          start = path + 1;
+        }
+
+        ++path;
+      }
+
+      // Final path in list.
+      if(path > start) {
+        target.assign(start, path);
+        PosixFileApi::AppendPath(target, executable);
+        if(PosixFileApi::DoesFileExist(target)) {
+          return;
+        }
+      }
+    }
+
+    target.assign(executable);
   }
 
   // ------------------------------------------------------------------------------------------- //

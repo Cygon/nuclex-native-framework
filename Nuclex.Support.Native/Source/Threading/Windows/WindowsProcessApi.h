@@ -183,6 +183,9 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     /// </summary>
     /// <param name="target">Target string to store the executable path in</param>
     /// <param name="executable">Executable, with or without path</param>
+    /// <param name="throwOnError">
+    ///   Whether to throw an exception if the executable could not be found
+    /// </param>
     /// <remarks>
     ///   <para>
     ///     This simply wraps the SearchPath() method. A warning on MSDN states that this
@@ -196,7 +199,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     ///   </para>
     /// </remarks>
     private: static void searchExecutablePath(
-      std::wstring &target, const std::wstring &executable
+      std::wstring &target, const std::wstring &executable, bool throwOnError = true
     );
 
   };

@@ -93,9 +93,9 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///   to use the current working directory of the parent process
     /// </param>
     /// <remarks>
-    ///   The working directory starts out as empty, meaning it will be left to the platform
-    ///   what working directory to use. Usually that means the child process inherits it
-    ///   from the parent process.
+    ///   The working directory starts out as empty, meaning it will be left to
+    ///   the operating system what working directory to use. Usually that means
+    ///   whatever directory the parent process was in when the child process started.
     /// </remarks>
     public: NUCLEX_SUPPORT_API void SetWorkingDirectory(
       const std::string &newWorkingDirectory
@@ -108,9 +108,16 @@ namespace Nuclex { namespace Support { namespace Threading {
     /// </summary>
     /// <param name="arguments">Arguments that will be passed to the external process</param>
     /// <param name="prependExecutableName">
-    ///   The first argument passed is normally the name of the executable itself. Leaving this
-    ///   set to 'true' will automatically prepend the executable name to the argument list.
+    ///   By convention, the first argument passed is normally the name of the executable
+    ///   itself. Leaving this set to 'true' will automatically prepend the executable name
+    ///   to the argument list.
     /// </param>
+    /// <remarks>
+    ///   There's a major difference to how arguments are passed to a process between Linux
+    ///   and Windows. On Linux, arguments are an array of strings, allowing spaces to be
+    ///   passed along. On Windows, the arguments become a single string, meaning that there
+    ///   is no way to distinguish between an argument containing a space and two arguments.
+    /// </remarks>
     public: NUCLEX_SUPPORT_API void Start(
       const std::vector<std::string> &arguments = std::vector<std::string>(),
       bool prependExecutableName = true
@@ -230,7 +237,6 @@ namespace Nuclex { namespace Support { namespace Threading {
     };
 
   };
-
 
   // ------------------------------------------------------------------------------------------- //
 
