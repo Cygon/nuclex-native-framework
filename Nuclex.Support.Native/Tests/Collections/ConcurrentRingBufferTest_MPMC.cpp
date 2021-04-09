@@ -36,6 +36,7 @@ License along with this library
 #include "Nuclex/Support/Collections/ConcurrentRingBuffer.h"
 #include "BufferTest.h"
 #include "ConcurrentBufferTest.h"
+
 #include <gtest/gtest.h>
 
 namespace {
