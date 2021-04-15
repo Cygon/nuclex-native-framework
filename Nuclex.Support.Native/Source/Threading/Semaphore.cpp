@@ -332,6 +332,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   void Semaphore::WaitThenDecrement() {
     PlatformDependentImplementationData &impl = getImplementationData();
 
+    // Loop until we can snatch an available ticket
     std::size_t initialAdmitCounter = impl.AdmitCounter.load(std::memory_order_consume);
     for(;;) {
 
@@ -464,8 +465,8 @@ namespace Nuclex { namespace Support { namespace Threading {
   bool Semaphore::WaitForThenDecrement(const std::chrono::microseconds &patience)  {
     PlatformDependentImplementationData &impl = getImplementationData();
 
-    // Query the time, but don't do anything with it yet (the futex wait is
-    // relative, so unless we get EINTR, the time isn't even needed)
+    // Obtain the starting time, but don't do anything with it yet (the futex
+    // wait is relative, so unless we get EINTR, the time isn't even needed)
     struct ::timespec startTime;
     int result = ::clock_gettime(CLOCK_MONOTONIC, &startTime);
     if(result == -1) {
@@ -481,7 +482,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     for(;;) {
 
       // Load the ticket counter. If there are tickets available, try to snatch
-      // one ticket and let the callings thread run if it is obtained. Should no
+      // one ticket and, if obtained, return control to the caller. Should no
       // tickets be available (or they got used up while we were trying to snatch
       // one), we will attempt to sleep on the futex word.
       std::size_t safeAdmitCounter = initialAdmitCounter;
@@ -495,13 +496,14 @@ namespace Nuclex { namespace Support { namespace Threading {
       }
 
       // If we observed some other thread snatching the last ticket and need to go
-      // to sleep, switch the mutex into the contested state.
+      // to sleep, switch the futex word to the contested state.
       //
-      // At this point, we're in a race with the Post() method which may have seen
-      // the snatched ticket upon its increment and trying to pre-empt us in setting
-      // the futex word to 1 (meaning tickets are available).
+      // At this point, we're in a race with the Post() method which may just now
+      // have incremented the ticket counter and be trying to pre-empt us by
+      // setting the futex word to 1 (meaning tickets are available).
       //
       // Thus we need to do some double-checking here.
+      //
       if(initialAdmitCounter > 0) {
         __atomic_store_n(&impl.FutexWord, 0, __ATOMIC_RELEASE); // 0 -> threads waiting
         initialAdmitCounter = impl.AdmitCounter.load(std::memory_order_consume);
@@ -511,7 +513,13 @@ namespace Nuclex { namespace Support { namespace Threading {
         }
       }
 
-      // Note that the timeout is a relative one
+      // Now we're safe. The futex word has been set of 0 (threads are waiting) while
+      // the admit ticket counter was zero, so if any work is posted between here and
+      // our futex syscall, it's no problem since the syscall does atomically check
+      // that the futex word is still 0 or otherwise return EAGAIN.
+
+      // Calculate the remaining timeout until the wait should fail. Note that this is
+      // a relative timeout (in contrast to ::sem_t and most thingsPosix).
       //
       // From the docs:
       //   | Note: for FUTEX_WAIT, timeout is interpreted as a relative
@@ -524,11 +532,6 @@ namespace Nuclex { namespace Support { namespace Threading {
       struct ::timespec timeout = Posix::PosixTimeApi::GetRemainingTimeout(
         CLOCK_MONOTONIC, startTime, patience
       );
-
-      // Now we're safe. The futex word has been set of 0 (threads are waiting) while
-      // the admit ticket counter was zero, so if any work is posted between here and
-      // our futex syscall, it's no proble since the syscall does atomically check
-      // that the futex word is still 0 or otherwise return EAGAIN.
 
       // Futex Wait (Linux 2.6.0+)
       // https://man7.org/linux/man-pages/man2/futex.2.html
@@ -558,11 +561,12 @@ namespace Nuclex { namespace Support { namespace Threading {
 
       // At this point the thread has woken up because of either
       // - a signal (EINTR)
-      // - the futex word changing (EAGAIN)
-      // - an explicit wake by the Post() method (result == 0)
+      // - the futex word changed (EAGAIN)
+      // - an explicit wake from the Post() method (result == 0)
       //
       // In all cases, we recheck the ticket counter and try to either obtain
       // a ticket or go back to sleep using the same method as before.
+      initialAdmitCounter = impl.AdmitCounter.load(std::memory_order_consume);
 
     } // for(;;)
   }
