@@ -163,7 +163,6 @@ namespace Nuclex { namespace Support { namespace Threading {
 
   };
 
-
   // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Threading

@@ -25,6 +25,7 @@ License along with this library
 
 #if defined(NUCLEX_SUPPORT_LINUX)
 
+#include "Posix/PosixTimeApi.h" // for PosixTimeApi
 #include "Posix/PosixProcessApi.h" // for Pipe, PosixProcessApi
 #include "Posix/PosixFileApi.h" // for PosixFileApi
 
@@ -286,7 +287,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       (sizeof(this->implementationDataBuffer) >= sizeof(PlatformDependentImplementationData))
     );
     if constexpr(implementationDataFitsInBuffer) {
-      this->implementationData->~PlatformDependentImplementationData();
+      getImplementationData().~PlatformDependentImplementationData();
     } else {
       delete this->implementationData;
     }
@@ -438,9 +439,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     // Calculate the absolute time at which the timeout occurs (the clock is
     // monotonic, so even if the system clock is adjusted, this won't be affected)
-    struct ::timespec timeoutTime = PosixProcessApi::GetTimePlusMilliseconds(
-      CLOCK_MONOTONIC, patience
-    );
+    struct ::timespec timeoutTime = Posix::PosixTimeApi::GetTimePlus(CLOCK_MONOTONIC, patience);
     struct ::timespec waitTime;
     {
       waitTime.tv_sec = 0;
@@ -475,7 +474,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
         // Check if the caller-specified patience time has been exceeded.
         // If the provided timeout was 0, this will bail out after the first ::waitpid().
-        if(PosixProcessApi::HasTimedOut(CLOCK_MONOTONIC, timeoutTime)) {
+        if(Posix::PosixTimeApi::HasTimedOut(CLOCK_MONOTONIC, timeoutTime)) {
           return false;
         }
 

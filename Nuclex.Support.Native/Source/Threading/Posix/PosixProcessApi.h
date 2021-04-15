@@ -78,28 +78,6 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
   /// <summary>Wraps the Posix process and inter-process communication API</summary>
   class PosixProcessApi {
 
-    /// <summary>
-    ///   Returns a time point that lies the specified number if milliseconds in the future
-    /// </summary>
-    /// <param name="clock">Which clock to query (i.e. <code>CLOCK_MONOTONIC</code>)</param>
-    /// <param name="addedTime">Amount of milliseconds that will be added</param>
-    /// <returns>
-    ///   A time point that lies the specified number of milliseconds in the future from
-    ///   the moment the method is called.
-    /// </returns>
-    public: static struct ::timespec GetTimePlusMilliseconds(
-      ::clockid_t clock, std::chrono::milliseconds addedTime
-    );
-
-    /// <summary>Checks whether the specified end time has been reached yet</summary>
-    /// <param name="clock">Clock against which the end time will be checked</param>
-    /// <param name="endTime">Time after which this method will return true</param>
-    /// <returns>
-    ///   True if the current time is equal to or later than the specified end time,
-    ///   false if the current time is still earlier.
-    /// </returns>
-    public: static bool HasTimedOut(::clockid_t clock, const struct ::timespec &endTime);
-
     /// <summary>Sends the SIGTERM signal to the process, requesting it to exit</summary>
     /// <param name="processId">Id of the process that will be requested to quit</param>
     /// <remarks>

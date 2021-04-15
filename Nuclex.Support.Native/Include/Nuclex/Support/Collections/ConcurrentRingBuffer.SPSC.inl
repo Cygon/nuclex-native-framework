@@ -47,6 +47,10 @@ namespace Nuclex { namespace Support { namespace Collections {
   ///   <para>
   ///     <strong>Exception guarantee</strong>: strong (exception = buffer unchanged)
   ///   </para>
+  ///   <para>
+  ///     Footprint (stack): 32 bytes.
+  ///     Footprint (heap):  only the elements
+  ///   </para>
   /// </remarks>
   template<typename TElement>
   class ConcurrentRingBuffer<TElement, ConcurrentAccessBehavior::SingleProducerSingleConsumer> {

@@ -218,7 +218,13 @@
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Gate.h">
+      <Filter>Include\Threading</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Threading\Process.h">
+      <Filter>Include\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Semaphore.h">
       <Filter>Include\Threading</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h">
@@ -448,6 +454,12 @@
     <ClInclude Include="Source\Threading\Posix\PosixProcessApi.h">
       <Filter>Source\Threading\Posix</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Threading\Posix\PosixTimeApi.cpp">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\Posix\PosixTimeApi.h">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Threading\Windows\WindowsFileApi.cpp">
       <Filter>Source\Threading\Windows</Filter>
     </ClCompile>
@@ -460,10 +472,16 @@
     <ClInclude Include="Source\Threading\Windows\WindowsProcessApi.h">
       <Filter>Source\Threading\Windows</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Threading\Gate.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Threading\Process.Linux.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Source\Threading\Process.Windows.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\Semaphore.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Source\Threading\Thread.cpp">
@@ -582,13 +600,25 @@
     <ClCompile Include="Tests\Threading\Posix\PosixProcessApiTest.cpp">
       <Filter>Tests\Threading\Posix</Filter>
     </ClCompile>
+    <ClCompile Include="Tests\Threading\Posix\PosixTimeApiTest.cpp">
+      <Filter>Tests\Threading\Posix</Filter>
+    </ClCompile>
     <ClCompile Include="Tests\Threading\Windows\WindowsFileApiTest.cpp">
       <Filter>Tests\Threading\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Threading\Windows\WindowsProcessApiTest.cpp">
       <Filter>Tests\Threading\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="Tests\Threading\GateTest.cpp">
+      <Filter>Tests\Threading</Filter>
+    </ClCompile>
     <ClCompile Include="Tests\Threading\ProcessTest.cpp">
+      <Filter>Tests\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\SemaphoreBenchmark.cpp">
+      <Filter>Tests\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\SemaphoreTest.cpp">
       <Filter>Tests\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Threading\ThreadPoolTaskPoolTest.cpp">

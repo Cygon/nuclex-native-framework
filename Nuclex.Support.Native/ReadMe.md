@@ -2,7 +2,7 @@ Nuclex.Support.Native
 =====================
 
 This library contains general-purpose supporting code with a focus
-on small but well-organized pieces you can use throughout other projects
+on small but well-designed pieces you can use throughout other projects
 to make you life easier.
 
 There are unit tests for the whole library, so everything is verifiably
@@ -13,8 +13,14 @@ working on all platforms tested (Linux, Windows, Raspberry).
 * Case-insensitive UTF-8 string comparison
 * UTF-8 wildcard matching
 
+* A modern ScopeGuard plus a transactional variant
 * Fast and lightweight signal/slot implementation
 * Lean dependency injector with automatic constructor detection
+
+* Lock-free queues for usage from multiple threads
+* Thread pool for micro tasks with std::future
+* Semaphores and Gates
+* Run child processes with stdin/stdout/stderr intercept
 
 * Supports Windows, Linux and ARM Linux (Raspberry PI)
 * Compiles cleanly at maximum warning levels with MSVC, GCC and clang
@@ -78,16 +84,46 @@ bool areEqual = StringMatcher::AreEqual(u8"Hello", u8"hello");
 And UTF-8 wildcard matching as known from various shells:
 
 ```cpp
-bool returnsTrue = StringMatcher::FitsWilcard(
+bool returnsTrue = StringMatcher::FitsWildcard(
   u8"Cupboard-Albedo.png", u8"*-Albedo.png"
 );
-bool alsoReturnsTrue = StringMatcher::FitsWildcarD(
+bool alsoReturnsTrue = StringMatcher::FitsWildcard(
   u8"食器棚〜Albedo.png", u8"*〜Albedo.png"
 );
 ```
 
 Uses [UTF8-CPP](https://github.com/nemtrif/utfcpp) and some custom code.
 See Copyright.md in the Documents directory for more details.
+
+
+ScopeGuard
+----------
+
+This is a simple helper that lets you run cleanup code when leaving a scope such
+as a method, loop or an explicit scope. It is executed even when the scope exit
+is due to an exception.
+
+Using scope guards not only avoids error-prone manual cleanup before throwing
+an exception, but also avoids the try..catch..rethrow pattern that obscures
+the original origin of exceptions.
+
+```cpp
+void test(::image_t *image) {
+  {
+    ::pixel_counter_t *counter = ::awesomelib_create_pixel_counter();
+    assert((counter != nullptr));
+
+    ON_SCOPE_EXIT { ::awesomelib_destroy_pixel_counter(counter); };
+
+    int pixelCount = ::awesomelib_count_pixels(counter, image);
+    if(pixelCount < 0) {
+      throw std::runtime_error(u8"Oh no! Pixel counting failed!");
+    }
+
+    reticulatePixels(pixelCount);
+  }
+}
+```
 
 
 Events (Signal/Slot system)
@@ -175,16 +211,76 @@ int main() {
 }
 ```
 
+
+Thread Pool
+-----------
+
+Thread pools keep a bunch of threads ready to go. As soon as you schedule tasks
+to a thread pool, they get picked up by the next available worker thread.
+
+This avoids the overhead of creating and destroying threads, allowing you to run
+even small tasks in a thread.
+
+It also helps scalability. As long as you can break your tasks down into small
+individual steps, they can be distributed to any number of threads. Systems with
+more CPU cores automatically perform more work in parallel.
+
+```cpp
+int testMethod(int a, int b) { return a * b - (a + b); }
+
+int main() {
+  ThreadPool pool;
+
+  std::future<int> future = testPool.Schedule(&testMethod, 12, 34);
+  // Do something else here...
+  int result = future.get();
+}
+```
+
+
+Semaphores and Gates
+--------------------
+
+Gates can be either opened or closed. Any thread calling Wait() will block on
+the gate until it is opened by another thread. This is useful to black access to
+a system before it is ready to work or to stop a single thread on shutdown until
+all worker threads have vacated a system.
+
+Semaphores are a well-known threading primitive working like a counted mutex:
+one thread can pass for each call to Post() that was made in the past or while
+a thread was waiting.
+
+They're useful for work queues and advanced locking on resources that can only
+handle limited parallelism (i.e. due to memory or hardware constraints).
+
+C++20 is also getting a semaphore class, but until then, this one provides you
+with a portable implementation that also avoids limitations on Posix systems
+where the default semaphore uses timeouts based on wall clock time.
+
+```cpp
+int main() {
+  Semaphore sem(0);
+
+  // Let one current of future thread through
+  sem.Post();
+
+  // Wait until the semaphore is posed (incremented)
+  sem.WaitAndDecrement();
+}
+```
+
+
 Child Processes
 ---------------
 
 This class makes it easy to spawn child process and to capture the output they
 send to stdout and stderr.
 
-Creating child processes is a somewhat complicated task that differs a lot between
-Windows and Linux. This wrapper provides a sane, portable way to launch, observe,
-wait on or kill child processes. It can be used for launchers, auto-updaters or if
-you want to run a command-line application such as `ffmpeg` or your C++ compiler:
+Creating child processes correctly is a rather complicated task that differs
+a lot between Windows and Linux. This wrapper provides a sane, portable way to
+launch, observe, wait on or kill child processes. It can be used for launchers,
+auto-updaters or if you want to run a command-line application such as `ffmpeg`
+or your C++ compiler:
 
 ```cpp
 void handleFfmpegStdOut(const char *characters, std::size_t characterCount) {

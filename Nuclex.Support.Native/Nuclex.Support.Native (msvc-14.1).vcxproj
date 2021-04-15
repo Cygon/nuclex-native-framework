@@ -230,7 +230,9 @@
     <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Gate.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\Process.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Semaphore.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h" />
     <ClInclude Include="Include\Nuclex\Support\Any.h" />
@@ -308,12 +310,16 @@
     <ClInclude Include="Source\Threading\Posix\PosixFileApi.h" />
     <ClCompile Include="Source\Threading\Posix\PosixProcessApi.cpp" />
     <ClInclude Include="Source\Threading\Posix\PosixProcessApi.h" />
+    <ClCompile Include="Source\Threading\Posix\PosixTimeApi.cpp" />
+    <ClInclude Include="Source\Threading\Posix\PosixTimeApi.h" />
     <ClCompile Include="Source\Threading\Windows\WindowsFileApi.cpp" />
     <ClInclude Include="Source\Threading\Windows\WindowsFileApi.h" />
     <ClCompile Include="Source\Threading\Windows\WindowsProcessApi.cpp" />
     <ClInclude Include="Source\Threading\Windows\WindowsProcessApi.h" />
+    <ClCompile Include="Source\Threading\Gate.cpp" />
     <ClCompile Include="Source\Threading\Process.Linux.cpp" />
     <ClCompile Include="Source\Threading\Process.Windows.cpp" />
+    <ClCompile Include="Source\Threading\Semaphore.cpp" />
     <ClCompile Include="Source\Threading\Thread.cpp" />
     <ClCompile Include="Source\Threading\ThreadPool.Linux.cpp" />
     <ClCompile Include="Source\Threading\ThreadPool.Windows.cpp" />

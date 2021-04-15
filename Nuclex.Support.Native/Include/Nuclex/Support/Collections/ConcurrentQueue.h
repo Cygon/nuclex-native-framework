@@ -39,6 +39,26 @@ namespace Nuclex { namespace Support { namespace Collections {
   /// <typeparam name="accessBehavior">
   ///   How the queue will be accessed from different threads
   /// </typeparam>
+  /// <remarks>
+  ///   <para>
+  ///     Currently, this implementation is just an adapter around MoodyCamel's lock-free
+  ///     queue. Its performance is very good (if you build with NUCLEX_SUPPORT_BENCHMARKS,
+  ///     this adapter will be included in the benchmarks, too), but its memory footprint
+  ///     is probably an order of magnitude higher than you expect.
+  ///   </para>
+  ///   <para>
+  ///     <strong>Container type</strong>: unbounded segmented array queue
+  ///   </para>
+  ///   <para>
+  ///     <strong>Thread safety</strong>: any number of readers, any number of writers
+  ///   </para>
+  ///   <para>
+  ///     <strong>Exception guarantee</strong>: unknown, probably strong
+  ///   </para>
+  ///   <para>
+  ///     Footprint (stack): 348 bytes.
+  ///     Footprint (heap):  ?
+  ///   </para>
   template<
     typename TElement,
     ConcurrentAccessBehavior accessBehavior = (
@@ -58,7 +78,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     public: ~ConcurrentQueue() override = default;
 
     /// <summary>Tries to append an element to the collection in a thread-safe manner</summary>
-    /// <param name="element">Element that will be appended to the collection</param>
+    /// <param name="newItem">Element that will be appended to the collection</param>
     /// <returns>True if the element was appended, false if there was no space left</returns>
     public: bool TryAppend(const TElement &newItem) {
       this->wrappedQueue.enqueue(newItem);
@@ -66,7 +86,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     }
 
     /// <summary>Tries to append an element to the collection in a thread-safe manner</summary>
-    /// <param name="element">Element that will be appended to the collection</param>
+    /// <param name="newItem">Element that will be appended to the collection</param>
     /// <returns>True if the element was appended, false if there was no space left</returns>
     public: bool TryAppend(TElement &&newItem) {
       this->wrappedQueue.enqueue(std::move(newItem));
@@ -74,7 +94,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     }
 
     /// <summary>Tries to take an element from the queue</summary>
-    /// <param name="element">Will receive the element taken from the queue</param>
+    /// <param name="result">Will receive the element taken from the queue</param>
     /// <returns>
     ///   True if an element was taken from the collection, false if the collection was empty
     /// </returns>

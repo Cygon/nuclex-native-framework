@@ -224,6 +224,12 @@
     <ClInclude Include="Include\Nuclex\Support\VariantType.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Gate.h">
+      <Filter>Include\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Semaphore.h">
+      <Filter>Include\Threading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Collections\Collection.cpp">
@@ -424,6 +430,12 @@
     <ClInclude Include="Source\Threading\Posix\PosixProcessApi.h">
       <Filter>Source\Threading\Posix</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Threading\Posix\PosixTimeApi.cpp">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\Posix\PosixTimeApi.h">
+      <Filter>Source\Threading\Posix</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Threading\Windows\WindowsFileApi.cpp">
       <Filter>Source\Threading\Windows</Filter>
     </ClCompile>
@@ -483,6 +495,12 @@
     </ClCompile>
     <ClCompile Include="Source\VariantType.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\Gate.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\Semaphore.cpp">
+      <Filter>Source\Threading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

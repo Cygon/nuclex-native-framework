@@ -33,59 +33,6 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(PosixProcessApiTest, CanGetFutureTime) {
-    struct ::timespec futureTime;
-    futureTime = PosixProcessApi::GetTimePlusMilliseconds(
-      CLOCK_MONOTONIC, std::chrono::milliseconds(100)
-    );
-
-    // Obtain the current time *after* fetching the 'future' time.
-    // This way we can check if the tested method really returns a time in the future.
-    struct ::timespec currentTime;
-    int result = ::clock_gettime(CLOCK_MONOTONIC, &currentTime);
-    ASSERT_NE(result, -1);
-
-    bool isFutureTimeInFuture = (
-      (futureTime.tv_sec > currentTime.tv_sec) ||
-      (
-        (futureTime.tv_sec == currentTime.tv_sec) &&
-        (futureTime.tv_nsec > currentTime.tv_nsec)
-      )
-    );
-    ASSERT_TRUE(isFutureTimeInFuture);
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  TEST(PosixProcessApiTest, CanDetectTimeout) {
-    struct ::timespec pastTime;
-    int result = ::clock_gettime(CLOCK_MONOTONIC, &pastTime);
-    ASSERT_NE(result, -1);
-
-    // Wait until the clock's reported time has changed. Once that happens,
-    // the previously queried time is guaranteed to lie in the past.
-    for(std::size_t spin = 0; spin < 1000000; ++spin) {
-      struct ::timespec currentTime;
-      int result = ::clock_gettime(CLOCK_MONOTONIC, &currentTime);
-      ASSERT_NE(result, -1);
-      if((currentTime.tv_sec != pastTime.tv_sec) ||(currentTime.tv_nsec != pastTime.tv_nsec)) {
-        break;
-      }
-    }
-
-    // Also get a sample of a future point in time for a time point that
-    // is guaranteed to not have timed out yet
-    struct ::timespec futureTime;
-    futureTime = PosixProcessApi::GetTimePlusMilliseconds(
-      CLOCK_MONOTONIC, std::chrono::milliseconds(100)
-    );
-
-    ASSERT_TRUE(PosixProcessApi::HasTimedOut(CLOCK_MONOTONIC, pastTime));
-    ASSERT_FALSE(PosixProcessApi::HasTimedOut(CLOCK_MONOTONIC, futureTime));
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
   TEST(PosixProcessApiTest, ExecutableIsResolvedInUsrBinDirectory) {
     std::string path;
     PosixProcessApi::GetAbsoluteExecutablePath(path, u8"ls");

@@ -128,7 +128,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///       int main() {
     ///         ThreadPool myThreadPool;
     ///
-    ///         std::future<int> futureResult = myThreadPool.AddTask<&test>(12, 34);
+    ///         std::future<int> futureResult = myThreadPool.Schedule<&test>(12, 34);
     ///         int result = futureResult.get(); // waits until result is available
     ///       }
     ///     </code>
@@ -220,7 +220,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     /// <summary>Structure to hold platform dependent thread and sync objects</summary>
     private: struct PlatformDependentImplementation;
-    /// <summary>Platform dependent process and file handles used for the process</summary>
+    /// <summary>Platform dependent thread and sync objects used for the pool</summary>
     private: PlatformDependentImplementation *implementation;
 
   };

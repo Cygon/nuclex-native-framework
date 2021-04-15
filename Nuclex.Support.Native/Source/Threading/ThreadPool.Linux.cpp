@@ -29,7 +29,7 @@ License along with this library
 #include "Nuclex/Support/Collections/MoodyCamel/concurrentqueue.h"
 
 #include "ThreadPoolTaskPool.h" // thread pool settings + task pool
-#include "Posix/PosixProcessApi.h" // error handling helpers, time helpers
+#include "Posix/PosixTimeApi.h" // error handling helpers, time helpers
 
 #include <cassert> // for assert()
 #include <atomic> // for std::atomic
@@ -390,7 +390,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       // Wait for work to become available. This semaphore is incremented each time
       // a task is scheduled, meaning it will let one thread from the pool come through
       // to process each task. The wait timeout is our heart beat interval.
-      struct ::timespec heartBeatTimeout = Posix::PosixProcessApi::GetTimePlusMilliseconds(
+      struct ::timespec heartBeatTimeout = Posix::PosixTimeApi::GetTimePlus(
         CLOCK_REALTIME, std::chrono::milliseconds(ThreadPoolConfig::WorkerHeartBeatMilliseconds)
       );
       int result = ::sem_timedwait(&this->TaskSemaphore, &heartBeatTimeout);
@@ -509,7 +509,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // The threads have been signalled to shut down, given the wake-up signal and
     // now all that remains to do is hope our user didn't schedule some eternal task.
     for(;;) {
-      struct ::timespec waitEndTime = Posix::PosixProcessApi::GetTimePlusMilliseconds(
+      struct ::timespec waitEndTime = Posix::PosixTimeApi::GetTimePlus(
         CLOCK_REALTIME, std::chrono::milliseconds(5000)
       );
       int result = ::sem_clockwait(
