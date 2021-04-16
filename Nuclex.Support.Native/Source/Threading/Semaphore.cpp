@@ -576,7 +576,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   bool Semaphore::WaitForThenDecrement(const std::chrono::microseconds &patience)  {
     PlatformDependentImplementationData &impl = getImplementationData();
 
-    DWORD milliseconds = static_cast<DWORD>(patience.count() + 500 / 1000);
+    DWORD milliseconds = static_cast<DWORD>((patience.count() + 500) / 1000);
     DWORD result = ::WaitForSingleObject(impl.SemaphoreHandle, milliseconds);
     if(likely(result == WAIT_OBJECT_0)) {
       return true;

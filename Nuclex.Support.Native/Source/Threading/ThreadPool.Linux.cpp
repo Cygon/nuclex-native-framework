@@ -113,6 +113,8 @@ namespace Nuclex { namespace Support { namespace Threading {
     public: std::size_t MaximumThreadCount; 
     /// <summary>Number of threads currently running</summary>
     public: std::atomic<int> ThreadCount;
+    /// <summary>Number of threads that are currently processing a task</summary>
+    public: std::atomic<std::size_t> TaskCount;
     /// <summary>Whether the thread pool is in the process of shutting down</summary>
     public: std::atomic<bool> IsShuttingDown;
     /// <summary>Semaphore that allows one thread for each task to pass</summary>
@@ -233,6 +235,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     MinimumThreadCount(minimumThreadCount),
     MaximumThreadCount(maximumThreadCount),
     ThreadCount(0),
+    TaskCount(0),
     IsShuttingDown(false),
     TaskSemaphore(0),
     LightsOut(false),
@@ -368,12 +371,29 @@ namespace Nuclex { namespace Support { namespace Threading {
         }
       }
 
-      // Execute the task and return the submitted task container to the pool
+      // If we have more tasks than running threads, spawn another thread in
+      // case there's still room.
+      {
+        std::size_t safeThreadCount = this->ThreadCount.load(
+          std::memory_order::memory_order_consume
+        );
+        if(safeThreadCount < this->MaximumThreadCount) {
+          std::size_t safeTaskCount = this->TaskCount.load(
+            std::memory_order::memory_order_consume
+          );
+          if(safeTaskCount > safeThreadCount + 1) {
+            AddThread();
+          }
+        }
+      }
+
+      // Execute a task and return the submitted task container to the pool
       {
         SubmittedTask *submittedTask;
         bool wasDequeued = this->ScheduledTasks.try_dequeue(submittedTask);
         if(wasDequeued) {
           ON_SCOPE_EXIT {
+            this->TaskCount.fetch_sub(1, std::memory_order::memory_order_release);
             submittedTask->Task->~Task();
             this->SubmittedTaskPool.ReturnTask(submittedTask);
           };
@@ -489,14 +509,16 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     // Task is ready, schedule it for execution by a worker thread
     bool wasEnqueued = this->implementation->ScheduledTasks.enqueue(submittedTask);
-    if(unlikely(!wasEnqueued)) {
+    if(likely(wasEnqueued)) {
+      this->implementation->TaskCount.fetch_add(1, std::memory_order::memory_order_release);
+    } else {
       submittedTask->Task->~Task();
       this->implementation->SubmittedTaskPool.DeleteTask(submittedTask);
       throw std::runtime_error(u8"Could not schedule task for thread pool execution");
     }
     
-    // Wake up a worker thread (or prevent the next one to become available
-    // from going to sleep again)
+    // Wake up a worker thread (or prevent the next thread finishing
+    // its task from going to sleep again)
     this->implementation->TaskSemaphore.Post();
 
   }

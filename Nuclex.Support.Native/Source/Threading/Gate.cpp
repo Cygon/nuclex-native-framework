@@ -489,7 +489,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   bool Gate::WaitFor(const std::chrono::microseconds &patience) const {
     const PlatformDependentImplementationData &impl = getImplementationData();
 
-    DWORD milliseconds = static_cast<DWORD>(patience.count() + 500 / 1000);
+    DWORD milliseconds = static_cast<DWORD>((patience.count() + 500) / 1000);
     DWORD result = ::WaitForSingleObject(impl.EventHandle, milliseconds);
     if(likely(result == WAIT_OBJECT_0)) {
       return true;

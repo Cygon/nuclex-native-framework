@@ -98,12 +98,13 @@ namespace Nuclex { namespace Support { namespace Events {
   template<typename TResult, typename... TArguments>
   class Event<TResult(TArguments...)> {
 
-    /// <summary>Number of subscribers the event can subscribe withou allocating memory</summary>
+    /// <summary>Number of subscribers the event can handle without allocating memory</summary>
     /// <remarks>
     ///   To reduce complexity, this value is baked in and not a template argument. It is
     ///   the number of subscriber slots that are baked into the event, enabling it to handle
     ///   a small number of subscribers without allocating heap memory. Each slot takes the size
-    ///   of a delegate, 64 bits on a 32 bit system or 128 bits on a 64 bit system.
+    ///   of a delegate, 8 bytes on a 32 bit system or 16 bytes on a 64 bit system. If more
+    ///   subscribers enlist, the event is forced to allocate memory on the heap.
     /// </remarks>
     private: const static std::size_t BuiltInSubscriberCount = 2;
 
