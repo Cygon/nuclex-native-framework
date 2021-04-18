@@ -11,62 +11,65 @@ not the kind of framework you build your application into, it's a set of
 components that you can use individually and which make no assumptions
 about your architecture.
 
-
 What makes this one different from other libraries?
 
-  * It's clean, really clean. My components are designed to make the best
-    possible compromise between performance, memory use und simplicity.
+  * It's clean, really clean. I haven't cut corners anywhere and all parts
+    are designed to make the best possible compromise between performance,
+    memory use und simplicity.
+
+  * All public headers have the absolute minimal dependencies. What
+    dependencies exist are only to ISO/ANSI C++ headers. Zero global namespace
+    pollution and no worries about exploding build times.
 
   * Full unit test coverage. Everything you can do has a test case verifying
-    correct behavior and components are modular pieces that can be used and
+    correct behavior. All components are modular pieces that can be used and
     tested in isolation.
 
-  * Low-dependency philosophy. For changing logic, DRY is one of the highest
-    priorities. For unchanging logic in a library, going for least bloat
-    and minimal dependencies is most important.
+  * All the code is documented. No "filler comments" either, but proper
+    explanations of each method's purpose with multiple paragraphs of
+    usage instructions and example code where appropriate.
+  
+  * A single error handling philosophy, executed from beginning to end. This
+    library uses exceptions with specific exception classes for specific types
+    of errors. All returns from OS and library routines are checked, always.
 
 
-Components
-==========
+Libraries
+=========
 
-The framework is split into several independent libraries that each cover one
-particular topic. The only dependency amongst them is Nuclex::Support, a shared
-library of supporting classes (like unicode translation, signals/slots and
-converting between numbers and strings).
+The framework is split into several independent libraries that each contain
+classes covering one particular topic.
 
+Another ReadMe.md explaining the details can be found in each library's
+subfolder. Here's a short overview of the available functionality:
 
 Nuclex.Support.Native
 ---------------------
 
-This library contains general-purpose code that I use in most of my projects.
+Small, General-purpose supporting code that is useful for almost any project.
+This is also the only library that other Nuclex libraries depend on.
 
-  * Delegates (like std::function + std::bind, but equality-comparable)
-  * Events (super fast and lightweight signal/slot implementation)
-  * Lexical cast (robust number/string conversion without iostreams)
-  * UTF-8 wildcard matching, case-insensitive comparison and conversion
-  * Observable collections (be notified when items are added/removed)
-  * Dependency injector with automatic constructor signature detection
-  * Logger interfaces and high performance in-memory ring buffer logger
-  * Child process wrapper (run external programs and capture their output)
-  * (WIP) Lock-free thread-safe collections (fast & thread-safe without mutexes)
-  * (WIP) Command-line parsing and formatting
+  ⚫ Fast delegates   ⚫ Signal/Slot system  ⚫ Modern ScopeGuard
+  ⚫ IoC container + dependency injector  ⚫ UTF-8, UTF-16, UTF-32 conversion
+  ⚫ UTF-8 case insensitive comparison  ⚫ UTF-8 wildcard matching
+  ⚫ lexical casts (number <-> string conversion)  ⚫ Observable lists and maps
+  ⚫ Lock-free multi-threaded queues  ⚫ Portable thread pool for micro tasks
+  ⚫ Child process wrapper with stdin/stdout/stderr intercept  ⚫ Error logger
 
 
 Nuclex.Pixels.Native
 --------------------
 
-This library provides a very light yet convenient Bitmap class that can
-support borrowed memory (i.e. constructed using a 3D API's buffer) and is
-a pleasure to use.
+Covers most of the graphics plumbing work. The Bitmap class is straightforward,
+yet can run with borrowed memory (i.e. buffers from a 3D API). From there,
+you can use other classes to convert pixel formats, resize images and save/load
+most common image file formats.
 
-  * Convenient and efficient Bitmap class
-  * Bitmaps use copy-on-write for the memory they carry
-  * Views into Bitmaps (Bitmaps that are an area inside another Bitmap)
-  * Fast, portable pixel format conversion
-  * Extensible Bitmap serializer with automatic file format detection
-  * Built-in serialization formats for PNG, JPG and EXR images
-  * Conversion between RGB, HSV, HSL and (WIP) YUV pixels
-  * High quality bitmap resizing
+  ⚫ Easy, flexible Bitmap class  ⚫ Bitmaps can be views into other Bitmaps
+  ⚫ Copy-on-write  ⚫ All pixel formats supported  ⚫ Pixel format conversion
+  ⚫ Conversion between RGB, HSV and HSL  ⚫ Extensible serializer
+  ⚫ Toggleable support for  ⚫ .tga  ⚫.tif  ⚫ .png  ⚫ .jpg  ⚫ .exr
+  ⚫ High-quality bitmap resizing  ⚫ All file access via user-defined methods
 
 
 Nuclex.Storage.Native
@@ -77,20 +80,10 @@ abstraction layer with decent error handling, extensible compression and
 decompression with popular as well as exotic algorithms, XML serialization
 and compressed archive reading.
 
-  * Uses a platform's correct paths to store different kinds of data
-  * Streamed compression/decompression of different formats, including
-    * Deflate (via ZLib, known from `.zip`)
-    * LZMA (via LZip)
-    * LZMA (via LZMA-SDK, known from `.7z`)
-    * Brotli
-    * UnRar (known from `.rar`)
-    * CSC (high-compressing LZMA-like)
-    * ZPaq (ultra-high compressing bytecode-based system)
-  * Read and write XML -formatted data
-  * External type serializers, serialize 3rd party types directly and
-    don't drag serialization code around in your classes
-  * (WIP) Binary diffs
-  * (WIP) Stream data out of .zip, .rar, .7z archives
+  ⚫ Portable mapping of common paths  ⚫ Install directory  ⚫ Data directory
+  ⚫ Settings directory  ⚫ Documents directory  ⚫ Saved game directory
+  ⚫ Streaming compression in popular and exotic formats  ⚫ Deflate
+  ⚫ LZMA (LZip)  ⚫ LZMA (7-Zip)  ⚫ Brotli  ⚫ UnRAR  ⚫ CSC  ⚫ ZPaq
 
 
 Others
