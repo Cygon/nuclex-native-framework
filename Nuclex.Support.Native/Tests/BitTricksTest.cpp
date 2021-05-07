@@ -107,7 +107,7 @@ namespace Nuclex { namespace Support {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(BitTricksTest, CanCountLeadingZeroBitsIn32BitsValue) {
-    for(std::size_t index = 0; index < 31; ++index) {
+    for(std::size_t index = 0; index < 32; ++index) {
       EXPECT_EQ(
         31 - index,
         BitTricks::CountLeadingZeroBits(std::uint32_t(1U << index))
@@ -118,7 +118,7 @@ namespace Nuclex { namespace Support {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(BitTricksTest, CanCountLeadingZeroBitsIn64BitsValue) {
-    for(std::size_t index = 0; index < 63; ++index) {
+    for(std::size_t index = 0; index < 64; ++index) {
       EXPECT_EQ(
         63 - index,
         BitTricks::CountLeadingZeroBits(std::uint64_t(1ULL << index))
@@ -131,7 +131,7 @@ namespace Nuclex { namespace Support {
   TEST(BitTricksTest, CanFindPowerOfTwoFor32BitsValue) {
     std::mt19937 generator;
 
-    for(std::size_t index = 0; index < 31; ++index) {
+    for(std::size_t index = 0; index < 32; ++index) {
       EXPECT_EQ(
         (1U << index),
         BitTricks::GetUpperPowerOfTwo(std::uint32_t(1U << index))
@@ -158,7 +158,7 @@ namespace Nuclex { namespace Support {
   TEST(BitTricksTest, CanFindPowerOfTwoFor64BitsValue) {
     std::mt19937 generator;
 
-    for(std::size_t index = 0; index < 63; ++index) {
+    for(std::size_t index = 0; index < 64; ++index) {
       EXPECT_EQ(
         (1ULL << index),
         BitTricks::GetUpperPowerOfTwo(std::uint64_t(1ULL << index))
@@ -183,7 +183,7 @@ namespace Nuclex { namespace Support {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(BitTricksTest, CanGetLogBase2Of32BitsValue) {
-    for(std::size_t index = 0; index < 31; ++index) {
+    for(std::size_t index = 0; index < 32; ++index) {
       if(index >= 1) {
         EXPECT_EQ(
           index - 1U,
@@ -200,7 +200,7 @@ namespace Nuclex { namespace Support {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(BitTricksTest, CanGetLogBase2Of64BitsValue) {
-    for(std::size_t index = 0; index < 63; ++index) {
+    for(std::size_t index = 0; index < 64; ++index) {
       if(index >= 1) {
         EXPECT_EQ(
           index - 1U,
