@@ -21,11 +21,11 @@ set(BUILD_DOCS OFF CACHE BOOL "Whether to generate documentation via Doxygen")
 
 find_package(Threads REQUIRED)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
-
 if(BUILD_DOCS)
 	find_package(Doxygen)
 endif()
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
 
 # -------------------------------------------------------------------------------------------------
 
@@ -59,7 +59,11 @@ file(
 add_library(NuclexSupportNative SHARED)
 
 # Custom function in cplusplus.cmake that turns on all compiler warnings
-enable_target_compiler_warnings(NuclexSupportNative)
+if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexSupportNative")
+	enable_target_compiler_warnings(NuclexSupportNative)
+else()
+	disable_target_compiler_warnings(NuclexSupportNative)
+endif()
 
 target_include_directories(
 	NuclexSupportNative
@@ -81,12 +85,16 @@ endif()
 add_executable(NuclexSupportNativeTests)
 
 # Custom function in cplusplus.cmake that turns on all compiler warnings
-enable_target_compiler_warnings(NuclexSupportNativeTests)
+if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexSupportNative")
+	enable_target_compiler_warnings(NuclexSupportNativeTests)
+else()
+	disable_target_compiler_warnings(NuclexSupportNativeTests)
+endif()
 
 target_compile_definitions(
 	NuclexSupportNativeTests
 	PRIVATE NUCLEX_SUPPORT_EXECUTABLE
-	#PRIVATE NUCLEX_SUPPORT_ENABLE_BENCHMARKS
+	PRIVATE NUCLEX_SUPPORT_ENABLE_BENCHMARKS
 )
 
 target_include_directories(
