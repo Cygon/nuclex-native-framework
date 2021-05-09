@@ -23,13 +23,13 @@ License along with this library
 
 #include "Nuclex/Support/Threading/Thread.h"
 
-#if defined(NUCLEX_SUPPORT_WIN32)
-#include "../Helpers/WindowsApi.h" // for ::Sleep(), ::GetCurrentThreadId() and more
-#elif defined(NUCLEX_SUPPORT_LINUX)
+#if defined(NUCLEX_SUPPORT_LINUX)
 #include "Posix/PosixProcessApi.h" // for PosixProcessApi
 #include <ctime> // for ::clock_gettime() and ::clock_nanosleep()
 #include <cstdlib> // for ldiv_t
 #include <algorithm> // for std::min()
+#elif defined(NUCLEX_SUPPORT_WIN32)
+#include "../Helpers/WindowsApi.h" // for ::Sleep(), ::GetCurrentThreadId() and more
 #endif
 
 #include <thread> // for std::thread

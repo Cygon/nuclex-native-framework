@@ -23,14 +23,14 @@ License along with this library
 
 #include "Nuclex/Support/Threading/Gate.h"
 
-#if defined(NUCLEX_SUPPORT_WIN32) // Use standard win32 threading primitives
-#include "../Helpers/WindowsApi.h" // for ::CreateEventW(), ::CloseHandle() and more
-#elif defined(NUCLEX_SUPPORT_LINUX) // Directly use futex via kernel syscalls
+#if defined(NUCLEX_SUPPORT_LINUX) // Directly use futex via kernel syscalls
 #include "Posix/PosixTimeApi.h" // for PosixTimeApi::GetTimePlus()
 #include <linux/futex.h> // for futex constants
 #include <unistd.h> // for ::syscall()
 #include <limits.h> // for INT_MAX
 #include <sys/syscall.h> // for ::SYS_futex
+#elif defined(NUCLEX_SUPPORT_WIN32) // Use standard win32 threading primitives
+#include "../Helpers/WindowsApi.h" // for ::CreateEventW(), ::CloseHandle() and more
 #else // Posix: use a pthreads conditional variable to emulate a gate
 #include "Posix/PosixTimeApi.h" // for PosixTimeApi::GetTimePlus()
 #include <ctime> // for ::clock_gettime()
@@ -224,7 +224,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     PlatformDependentImplementationData &impl = getImplementationData();
 
     DWORD result = ::SetEvent(impl.EventHandle);
-    if(result == FALSE) {
+    if(unlikely(result == FALSE)) {
       DWORD lastErrorCode = ::GetLastError();
       Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not set synchronization event to signaled state", lastErrorCode
@@ -279,7 +279,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     PlatformDependentImplementationData &impl = getImplementationData();
 
     DWORD result = ::ResetEvent(impl.EventHandle);
-    if(result == FALSE) {
+    if(unlikely(result == FALSE)) {
       DWORD lastErrorCode = ::GetLastError();
       Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not set synchronization event to non-signaled state", lastErrorCode

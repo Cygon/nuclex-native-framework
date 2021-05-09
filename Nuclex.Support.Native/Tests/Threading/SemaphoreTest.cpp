@@ -44,7 +44,7 @@ namespace {
       thread(),
       semaphorePassed(false) {}
 
-    /// <summary>Waits for the thread to end an destroys it</summary>
+    /// <summary>Waits for the thread to end and destroys it</summary>
     public: ~TestThread() {
       this->semaphore.Post(64);
       if(this->thread.joinable()) {
@@ -72,7 +72,7 @@ namespace {
       return this->semaphorePassed.load(std::memory_order::memory_order_acquire);
     }
 
-    /// <summary>Method that runs in a thread to check the semaphroe function</summary>
+    /// <summary>Method that runs in a thread to check the semaphore function</summary>
     private: void threadMethod() {
       this->semaphore.WaitThenDecrement();
       this->semaphorePassed.store(true, std::memory_order::memory_order_release);

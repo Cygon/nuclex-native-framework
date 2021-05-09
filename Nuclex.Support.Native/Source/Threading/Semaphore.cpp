@@ -23,9 +23,7 @@ License along with this library
 
 #include "Nuclex/Support/Threading/Semaphore.h"
 
-#if defined(NUCLEX_SUPPORT_WIN32) // Use standard win32 threading primitives
-#include "../Helpers/WindowsApi.h" // for ::CreateEventW(), ::CloseHandle() and more
-#elif defined(NUCLEX_SUPPORT_LINUX) // Directly use futex via kernel syscalls
+#if defined(NUCLEX_SUPPORT_LINUX) // Directly use futex via kernel syscalls
 #include "Posix/PosixTimeApi.h" // for PosixTimeApi::GetRemainingTimeout()
 #include <linux/futex.h> // for futex constants
 #include <unistd.h> // for ::syscall()
@@ -33,6 +31,8 @@ License along with this library
 #include <sys/syscall.h> // for ::SYS_futex
 #include <ctime> // for ::clock_gettime()
 #include <atomic> // for std::atomic
+#elif defined(NUCLEX_SUPPORT_WIN32) // Use standard win32 threading primitives
+#include "../Helpers/WindowsApi.h" // for ::CreateEventW(), ::CloseHandle() and more
 #else // Posix: use a pthreads conditional variable to emulate a semaphore
 #include "Posix/PosixTimeApi.h" // for PosixTimeApi::GetTimePlus()
 #include <ctime> // for ::clock_gettime()
@@ -97,7 +97,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     public: std::atomic<std::size_t> AdmitCounter; 
 #elif defined(NUCLEX_SUPPORT_WIN32)
     /// <summary>Handle of the semaphore used to pass or block threads</summary>
-    public: HANDLE SemaphoreHandle;
+    public: ::HANDLE SemaphoreHandle;
 #else // Posix
     /// <summary>How many threads the semaphore will admit</summary>
     public: std::atomic<std::size_t> AdmitCounter; 
@@ -229,7 +229,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // Increment the semaphore admit counter so for each posted ticket,
     // a thread will be able to pass through the semaphore.
     std::size_t previousAdmitCounter = impl.AdmitCounter.fetch_add(
-      count, std::memory_order::memory_order_release
+      count, std::memory_order::memory_order_release // CHECK: Should this be consume?
     );
 
     // If there were no admits left at the time of this call, then there
@@ -241,7 +241,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       //   (and found it was 0, so plans to go to sleep)
       // - Now we increment the admit counter and try to wake threads
       //   (but none are waiting)
-      // - Finally, the earlier thread reaches the futex all and waits.
+      // - Finally, the earlier thread reaches the futex call and waits.
       //   (even though there's work available and the waking is already done)
       //
       // That's why our futex word is 1 if there's work available. Changing it
@@ -519,7 +519,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       // that the futex word is still 0 or otherwise return EAGAIN.
 
       // Calculate the remaining timeout until the wait should fail. Note that this is
-      // a relative timeout (in contrast to ::sem_t and most thingsPosix).
+      // a relative timeout (in contrast to ::sem_t and most things Posix).
       //
       // From the docs:
       //   | Note: for FUTEX_WAIT, timeout is interpreted as a relative
@@ -549,7 +549,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
       if(unlikely(result == -1)) {
         int errorNumber = errno;
-        if(errorNumber == ETIMEDOUT) {
+        if(unlikely(errorNumber == ETIMEDOUT)) {
           return false; // Timeout elapsed, so it's time to give the bad news to the caller
         }
         if(unlikely((errorNumber != EAGAIN) && (errorNumber != EINTR))) {
