@@ -24,7 +24,7 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 
 #include <cstddef> // for std::size_t
-#include <future> // for std::packaged_task
+#include <future> // for std::packaged_task, std::future
 #include <functional> // for std::bind
 
 namespace Nuclex { namespace Support { namespace Threading {
@@ -150,59 +150,8 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///   </para>
     /// </remarks>
     public: template<typename TMethod, typename... TArguments>
-    std::future<typename std::invoke_result<TMethod, TArguments...>::type>
-    Schedule(TMethod &&method, TArguments &&... arguments) {
-      typedef typename std::invoke_result<TMethod, TArguments...>::type ResultType;
-      typedef std::packaged_task<ResultType()> TaskType;
-
-      #pragma region struct PackagedTask
-
-      /// <summary>Custom packaged task that carries the method and parameters</summary>
-      struct PackagedTask : public Task {
-
-        /// <summary>Initializes the packaged task</summary>
-        /// <param name="method">Method that should be called back by the thread pool</param>
-        /// <param name="arguments">Arguments to save until the invocation</param>
-        public: PackagedTask(TMethod &&method, TArguments &&... arguments) :
-          Task(),
-          Callback(
-            std::bind(std::forward<TMethod>(method), std::forward<TArguments>(arguments)...)
-          ) {}
-
-        /// <summary>Terminates the task. If the task was not executed, cancels it</summary>
-        public: ~PackagedTask() override = default;
-
-        /// <summary>Executes the task. Is called on the thread pool thread</summary>
-        public: void operator()() override {
-          this->Callback();
-        }
-
-        /// <summary>Stored method pointer and arguments that will be called back</summary>
-        public: TaskType Callback;
-
-      };
-
-      #pragma endregion // struct PackagedTask
-
-      // Construct a new task with a callback to the caller-specified method and
-      // saved arguments that can subsequently be scheduled on the thread pool.
-      std::uint8_t *taskMemory = getOrCreateTaskMemory(sizeof(PackagedTask));
-      PackagedTask *packagedTask = new(taskMemory) PackagedTask(
-        std::forward<TMethod>(method), std::forward<TArguments>(arguments)...
-      );
-
-      // Grab the result before scheduling the task. If the stars are aligned and
-      // the thread pool is churning, it may otherwise happen that the task is
-      // completed and destroyed between submitTask() and the call to get_future()
-      std::future<ResultType> result = packagedTask->Callback.get_future();
-
-      // Schedule for execution. The task will either be executed (default) or
-      // destroyed if the thread pool shuts down, both outcomes will result in
-      // the future completing with either a result or in an error state.
-      submitTask(taskMemory, packagedTask);
-
-      return result;
-    }
+    inline std::future<typename std::invoke_result<TMethod, TArguments...>::type>
+    Schedule(TMethod &&method, TArguments &&... arguments);
 
     /// <summary>
     ///   Creates (or fetches from the pool) a task with the specified payload size
@@ -224,6 +173,63 @@ namespace Nuclex { namespace Support { namespace Threading {
     private: PlatformDependentImplementation *implementation;
 
   };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TMethod, typename... TArguments>
+  inline std::future<typename std::invoke_result<TMethod, TArguments...>::type>
+  ThreadPool::Schedule(TMethod &&method, TArguments &&... arguments) {
+    typedef typename std::invoke_result<TMethod, TArguments...>::type ResultType;
+    typedef std::packaged_task<ResultType()> TaskType;
+
+    #pragma region struct PackagedTask
+
+    /// <summary>Custom packaged task that carries the method and parameters</summary>
+    struct PackagedTask : public Task {
+
+      /// <summary>Initializes the packaged task</summary>
+      /// <param name="method">Method that should be called back by the thread pool</param>
+      /// <param name="arguments">Arguments to save until the invocation</param>
+      public: PackagedTask(TMethod &&method, TArguments &&... arguments) :
+        Task(),
+        Callback(
+          std::bind(std::forward<TMethod>(method), std::forward<TArguments>(arguments)...)
+        ) {}
+
+      /// <summary>Terminates the task. If the task was not executed, cancels it</summary>
+      public: ~PackagedTask() override = default;
+
+      /// <summary>Executes the task. Is called on the thread pool thread</summary>
+      public: void operator()() override {
+        this->Callback();
+      }
+
+      /// <summary>Stored method pointer and arguments that will be called back</summary>
+      public: TaskType Callback;
+
+    };
+
+    #pragma endregion // struct PackagedTask
+
+    // Construct a new task with a callback to the caller-specified method and
+    // saved arguments that can subsequently be scheduled on the thread pool.
+    std::uint8_t *taskMemory = getOrCreateTaskMemory(sizeof(PackagedTask));
+    PackagedTask *packagedTask = new(taskMemory) PackagedTask(
+      std::forward<TMethod>(method), std::forward<TArguments>(arguments)...
+    );
+
+    // Grab the result before scheduling the task. If the stars are aligned and
+    // the thread pool is churning, it may otherwise happen that the task is
+    // completed and destroyed between submitTask() and the call to get_future()
+    std::future<ResultType> result = packagedTask->Callback.get_future();
+
+    // Schedule for execution. The task will either be executed (default) or
+    // destroyed if the thread pool shuts down, both outcomes will result in
+    // the future completing with either a result or in an error state.
+    submitTask(taskMemory, packagedTask);
+
+    return result;
+  }
 
   // ------------------------------------------------------------------------------------------- //
 
