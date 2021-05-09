@@ -194,7 +194,16 @@
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Latch.h">
+      <Filter>Include\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Gate.h">
+      <Filter>Include\Threading</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Threading\Process.h">
+      <Filter>Include\Threading</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Semaphore.h">
       <Filter>Include\Threading</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h">
@@ -223,12 +232,6 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\VariantType.h">
       <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Threading\Gate.h">
-      <Filter>Include\Threading</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Threading\Semaphore.h">
-      <Filter>Include\Threading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -448,10 +451,19 @@
     <ClInclude Include="Source\Threading\Windows\WindowsProcessApi.h">
       <Filter>Source\Threading\Windows</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Threading\Latch.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\Gate.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Threading\Process.Linux.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Source\Threading\Process.Windows.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Threading\Semaphore.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Source\Threading\Thread.cpp">
@@ -495,12 +507,6 @@
     </ClCompile>
     <ClCompile Include="Source\VariantType.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Threading\Gate.cpp">
-      <Filter>Source\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Threading\Semaphore.cpp">
-      <Filter>Source\Threading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -218,6 +218,9 @@
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Threading\Latch.h">
+      <Filter>Include\Threading</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Threading\Gate.h">
       <Filter>Include\Threading</Filter>
     </ClInclude>
@@ -472,6 +475,9 @@
     <ClInclude Include="Source\Threading\Windows\WindowsProcessApi.h">
       <Filter>Source\Threading\Windows</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Threading\Latch.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Threading\Gate.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
@@ -608,6 +614,9 @@
     </ClCompile>
     <ClCompile Include="Tests\Threading\Windows\WindowsProcessApiTest.cpp">
       <Filter>Tests\Threading\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Threading\LatchTest.cpp">
+      <Filter>Tests\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Threading\GateTest.cpp">
       <Filter>Tests\Threading</Filter>

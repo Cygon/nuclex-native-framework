@@ -108,12 +108,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Include\</AdditionalIncludeDirectories>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,7 +132,6 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,13 +149,13 @@
       <AdditionalIncludeDirectories>$(ProjectDir)Include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -182,7 +181,6 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <FloatingPointModel>Fast</FloatingPointModel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -230,6 +228,7 @@
     <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Latch.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\Gate.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\Process.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\Semaphore.h" />
@@ -316,6 +315,7 @@
     <ClInclude Include="Source\Threading\Windows\WindowsFileApi.h" />
     <ClCompile Include="Source\Threading\Windows\WindowsProcessApi.cpp" />
     <ClInclude Include="Source\Threading\Windows\WindowsProcessApi.h" />
+    <ClCompile Include="Source\Threading\Latch.cpp" />
     <ClCompile Include="Source\Threading\Gate.cpp" />
     <ClCompile Include="Source\Threading\Process.Linux.cpp" />
     <ClCompile Include="Source\Threading\Process.Windows.cpp" />
