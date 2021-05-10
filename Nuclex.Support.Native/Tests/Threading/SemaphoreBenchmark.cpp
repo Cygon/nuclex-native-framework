@@ -95,10 +95,10 @@ namespace {
         // Check if the current cycle is complete. If so, kick off a new cycle
         {
           std::size_t safeLockCount = (
-            this->waitingLockCount.fetch_add(1, std::memory_order::memory_order_release) + 1
+            this->waitingLockCount.fetch_add(1, std::memory_order_release) + 1
           );
           if(safeLockCount >= this->fullLockCount * 2) {
-            this->waitingLockCount.store(0, std::memory_order::memory_order_release);
+            this->waitingLockCount.store(0, std::memory_order_release);
             KickOff();
           }
         }
@@ -115,7 +115,7 @@ namespace {
         // Increment the cycle count to stop the benchmark after a certain number of loops
         {
           std::size_t safeCycleCount = (
-            this->cycleCount.fetch_add(1, std::memory_order::memory_order_release) + 1
+            this->cycleCount.fetch_add(1, std::memory_order_release) + 1
           );
           if(safeCycleCount >= 1000000) {
             break;
@@ -169,10 +169,10 @@ namespace {
         // Check if the current cycle is complete. If so, kick off a new cycle
         {
           std::size_t safeLockCount = (
-            this->waitingLockCount.fetch_add(1, std::memory_order::memory_order_release) + 1
+            this->waitingLockCount.fetch_add(1, std::memory_order_release) + 1
           );
           if(safeLockCount >= this->fullLockCount * 2) {
-            this->waitingLockCount.store(0, std::memory_order::memory_order_release);
+            this->waitingLockCount.store(0, std::memory_order_release);
             KickOff();
           }
         }
@@ -183,7 +183,7 @@ namespace {
         // Increment the cycle count to stop the benchmark after a certain number of loops
         {
           std::size_t safeCycleCount = (
-            this->cycleCount.fetch_add(1, std::memory_order::memory_order_release) + 1
+            this->cycleCount.fetch_add(1, std::memory_order_release) + 1
           );
           if(safeCycleCount >= 1000000) {
             break;

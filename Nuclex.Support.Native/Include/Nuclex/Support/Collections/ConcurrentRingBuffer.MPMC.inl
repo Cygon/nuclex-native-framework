@@ -108,11 +108,11 @@ namespace Nuclex { namespace Support { namespace Collections {
     public: ~ConcurrentRingBuffer() {
       if constexpr(!std::is_trivially_destructible<TElement>::value) {
         std::size_t safeCount = this->occupiedCount.load(
-          std::memory_order::memory_order_consume // consume: if() below carries dependency
+          std::memory_order_consume // consume: if() below carries dependency
         );
         if(safeCount >= 1) {
           std::size_t safeReadIndex = this->readIndex.load(
-            std::memory_order::memory_order_consume // consume: while() below carries dependency
+            std::memory_order_consume // consume: while() below carries dependency
           );
           while(safeCount >= 1) {
             this->itemMemory[safeReadIndex].~TElement();
@@ -146,7 +146,9 @@ namespace Nuclex { namespace Support { namespace Collections {
       // If many producers add at the same time, the item count may for a moment jump above
       // 'capacity' (the producer that incremented it above capacity silently decrements it
       // again and reports to its caller that the queue was full).
-      return std::min(this->occupiedCount.load(std::memory_order_relaxed), this->capacity);
+      return std::min(
+        this->occupiedCount.load(std::memory_order_relaxed), this->capacity
+      );
 
     }
 

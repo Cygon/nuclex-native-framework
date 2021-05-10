@@ -229,7 +229,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // Increment the semaphore admit counter so for each posted ticket,
     // a thread will be able to pass through the semaphore.
     std::size_t previousAdmitCounter = impl.AdmitCounter.fetch_add(
-      count, std::memory_order::memory_order_release // CHECK: Should this be consume?
+      count, std::memory_order_release // CHECK: Should this be consume?
     );
 
     // If there were no admits left at the time of this call, then there
@@ -303,7 +303,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
     }
 
-    impl.AdmitCounter.fetch_add(count, std::memory_order::memory_order_release);
+    impl.AdmitCounter.fetch_add(count, std::memory_order_release);
 
     while(count > 0) {
       result = ::pthread_cond_signal(&impl.Condition);
@@ -436,7 +436,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
     }
 
-    while(impl.AdmitCounter.load(std::memory_order::memory_order_consume) == 0) {
+    while(impl.AdmitCounter.load(std::memory_order_consume) == 0) {
       result = ::pthread_cond_wait(&impl.Condition, &impl.Mutex);
       if(unlikely(result != 0)) {
         int unlockResult = ::pthread_mutex_unlock(&impl.Mutex);
@@ -450,7 +450,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       }
     }
 
-    impl.AdmitCounter.fetch_sub(1, std::memory_order::memory_order_release);
+    impl.AdmitCounter.fetch_sub(1, std::memory_order_release);
 
     result = ::pthread_mutex_unlock(&impl.Mutex);
     if(unlikely(result != 0)) {
@@ -605,7 +605,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
     }
 
-    while(impl.AdmitCounter.load(std::memory_order::memory_order_consume) == 0) {
+    while(impl.AdmitCounter.load(std::memory_order_consume) == 0) {
       result = ::pthread_cond_timedwait(&impl.Condition, &impl.Mutex, &endTime);
       if(unlikely(result != 0)) {
         if(result == ETIMEDOUT) {
@@ -630,7 +630,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       }
     }
 
-    impl.AdmitCounter.fetch_sub(1, std::memory_order::memory_order_release);
+    impl.AdmitCounter.fetch_sub(1, std::memory_order_release);
 
     result = ::pthread_mutex_unlock(&impl.Mutex);
     if(unlikely(result != 0)) {

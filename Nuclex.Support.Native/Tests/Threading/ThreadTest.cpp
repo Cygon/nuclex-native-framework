@@ -71,8 +71,8 @@ namespace Nuclex { namespace Support { namespace Threading {
       firstThreadId = Thread::GetStdThreadId(firstThread);
       secondThreadId = Thread::GetStdThreadId(secondThread);
 
-      firstSpinRelease.store(true, std::memory_order::memory_order_release);
-      secondSpinRelease.store(true, std::memory_order::memory_order_release);
+      firstSpinRelease.store(true, std::memory_order_release);
+      secondSpinRelease.store(true, std::memory_order_release);
       firstThread.join();
       secondThread.join();
     }
@@ -132,7 +132,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
       newThreadAffinity = Thread::GetCpuAffinityMask(Thread::GetStdThreadId(otherThread));
 
-      spinRelease.store(true, std::memory_order::memory_order_release);
+      spinRelease.store(true, std::memory_order_release);
       otherThread.join();
     }
 
@@ -184,7 +184,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       Thread::SetCpuAffinityMask(otherThreadId, testedAffinity);
       changedAffinity = Thread::GetCpuAffinityMask(otherThreadId);
 
-      spinRelease.store(true, std::memory_order::memory_order_release);
+      spinRelease.store(true, std::memory_order_release);
       otherThread.join();
     }
 

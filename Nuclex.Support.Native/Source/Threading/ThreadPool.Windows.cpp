@@ -218,6 +218,8 @@ namespace Nuclex { namespace Support { namespace Threading {
     SubmittedTask *submittedTask = reinterpret_cast<SubmittedTask *>(parameter);
     PlatformDependentImplementation &implementation = *submittedTask->Implementation;
 
+    ThreadPoolConfig::IsThreadPoolThread = true;
+
     // Make sure to always update the task counter and to signal the 'LightsOut' event
     // if the task counter reaches zero (used on shutdown to wait for tasks to flush).
     ON_SCOPE_EXIT {
@@ -227,7 +229,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // See if the thread pool is shutting down. If so, fast-forward through any scheduled
     // task, destroying it without executing it (this will cancel the owner's std::futures).
     bool isShuttingDown = submittedTask->Implementation->IsShuttingDown.load(
-      std::memory_order::memory_order_consume // if() below carries dependency
+      std::memory_order_consume // if() below carries dependency
     );
     if(unlikely(isShuttingDown)) {
       submittedTask->Task->~Task();
@@ -283,7 +285,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
   ThreadPool::~ThreadPool() {
     this->implementation->IsShuttingDown.store(
-      true, std::memory_order::memory_order_release
+      true, std::memory_order_release
     );
 
     // Wait until all tasks have been flushed from the queue. With the shutdown flag

@@ -69,13 +69,13 @@ namespace {
 
     /// <summary>Checks whether the test thread has passed through the semaphore</summary>
     public: bool HasPassed() const {
-      return this->semaphorePassed.load(std::memory_order::memory_order_acquire);
+      return this->semaphorePassed.load(std::memory_order_acquire);
     }
 
     /// <summary>Method that runs in a thread to check the semaphore function</summary>
     private: void threadMethod() {
       this->semaphore.WaitThenDecrement();
-      this->semaphorePassed.store(true, std::memory_order::memory_order_release);
+      this->semaphorePassed.store(true, std::memory_order_release);
     }
 
     /// <summary>Semaphore that the test thread will attempt to pass</summary>

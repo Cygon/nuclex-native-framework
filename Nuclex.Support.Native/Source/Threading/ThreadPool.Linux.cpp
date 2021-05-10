@@ -195,7 +195,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       --threadIndex;
 
       std::int8_t threadStatus = instance->ThreadStatus[threadIndex].load(
-        std::memory_order::memory_order_consume // if() below carries dependency
+        std::memory_order_consume // if() below carries dependency
       );
       if(unlikely(threadStatus > 0)) {
         assert((threadStatus < 1) && u8"Thread finished before its destruction");
@@ -251,7 +251,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // Safety check, if this assertion triggers you'll send all threads into segfaults.
 #if !defined(NDEBUG)
     std::size_t remainingThreadCount = this->ThreadCount.load(
-      std::memory_order::memory_order_relaxed
+      std::memory_order_relaxed
     );
     assert(
       (remainingThreadCount == 0) && u8"All threads have terminated before destruction"
@@ -269,7 +269,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // point, messing around in the thread array would lead to disaster.
     {
       bool isShuttingDown = this->IsShuttingDown.load(
-        std::memory_order::memory_order_relaxed
+        std::memory_order_relaxed
       );
       if(isShuttingDown) {
         return false;
@@ -280,14 +280,14 @@ namespace Nuclex { namespace Support { namespace Threading {
     // a C-A-S operation on the status list.
     for(std::size_t index = 0; index < this->MaximumThreadCount; ++index) {
       std::int8_t status = this->ThreadStatus[index].load(
-        std::memory_order::memory_order_consume // if() below carries dependency
+        std::memory_order_consume // if() below carries dependency
       );
       if(status < 1) { // Is this slot free?
         for(;;) { // compare_exchange_weak() can fail, so prepare to try again
           bool wasReplaced = this->ThreadStatus[index].compare_exchange_weak(
             status, 1,
-            std::memory_order::memory_order_release,
-            std::memory_order::memory_order_relaxed
+            std::memory_order_release,
+            std::memory_order_relaxed
           );
 
           // Success! We just reserved a spot for a new thread.
@@ -295,7 +295,7 @@ namespace Nuclex { namespace Support { namespace Threading {
           if(wasReplaced) {
             auto returnSlotScope = ON_SCOPE_EXIT_TRANSACTION {
               this->ThreadCount.fetch_sub(1, std::memory_order_release);
-              this->ThreadStatus[index].store(0, std::memory_order::memory_order_relaxed);
+              this->ThreadStatus[index].store(0, std::memory_order_relaxed);
             };
 
             if(status == -1) {
@@ -324,11 +324,12 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   void ThreadPool::PlatformDependentImplementation::runThreadWorkLoop(std::size_t threadIndex) {
+    ThreadPoolConfig::IsThreadPoolThread = true;
 
     // Mark the thread as running
-    this->ThreadStatus[threadIndex].store(2, std::memory_order::memory_order_release);
+    this->ThreadStatus[threadIndex].store(2, std::memory_order_release);
     ON_SCOPE_EXIT { 
-      this->ThreadStatus[threadIndex].store(-1, std::memory_order::memory_order_release);
+      this->ThreadStatus[threadIndex].store(-1, std::memory_order_release);
       std::size_t remainingThreadCount = this->ThreadCount.fetch_sub(
         1, std::memory_order_consume // if() below carries dependency
       );
@@ -342,7 +343,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     // Keep looking for work to do
     for(;;) {
-      bool isShuttingDown = this->IsShuttingDown.load(std::memory_order::memory_order_consume);
+      bool isShuttingDown = this->IsShuttingDown.load(std::memory_order_consume);
       if(unlikely(isShuttingDown)) {
         cancelAllTasks();
         break;
@@ -375,11 +376,11 @@ namespace Nuclex { namespace Support { namespace Threading {
       // case there's still room.
       {
         std::size_t safeThreadCount = this->ThreadCount.load(
-          std::memory_order::memory_order_consume
+          std::memory_order_consume
         );
         if(safeThreadCount < this->MaximumThreadCount) {
           std::size_t safeTaskCount = this->TaskCount.load(
-            std::memory_order::memory_order_consume
+            std::memory_order_consume
           );
           if(safeTaskCount > safeThreadCount + 1) {
             AddThread();
@@ -393,7 +394,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         bool wasDequeued = this->ScheduledTasks.try_dequeue(submittedTask);
         if(wasDequeued) {
           ON_SCOPE_EXIT {
-            this->TaskCount.fetch_sub(1, std::memory_order::memory_order_release);
+            this->TaskCount.fetch_sub(1, std::memory_order_release);
             submittedTask->Task->~Task();
             this->SubmittedTaskPool.ReturnTask(submittedTask);
           };
@@ -461,7 +462,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     
     // Set the shutdown flag (this causes the worker threads to shut down)
     this->implementation->IsShuttingDown.store(
-      true, std::memory_order::memory_order_release
+      true, std::memory_order_release
     );
 
     // Wake up all the worker threads by incrementing the semaphore enough times
@@ -510,7 +511,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // Task is ready, schedule it for execution by a worker thread
     bool wasEnqueued = this->implementation->ScheduledTasks.enqueue(submittedTask);
     if(likely(wasEnqueued)) {
-      this->implementation->TaskCount.fetch_add(1, std::memory_order::memory_order_release);
+      this->implementation->TaskCount.fetch_add(1, std::memory_order_release);
     } else {
       submittedTask->Task->~Task();
       this->implementation->SubmittedTaskPool.DeleteTask(submittedTask);

@@ -69,13 +69,13 @@ namespace {
 
     /// <summary>Checks whether the test thread has passed through the gate</summary>
     public: bool HasPassed() const {
-      return this->gatePassed.load(std::memory_order::memory_order_acquire);
+      return this->gatePassed.load(std::memory_order_acquire);
     }
 
     /// <summary>Method that runs in a thread to check the gate function</summary>
     private: void threadMethod() {
       this->gate.Wait();
-      this->gatePassed.store(true, std::memory_order::memory_order_release);
+      this->gatePassed.store(true, std::memory_order_release);
     }
 
     /// <summary>Gate that the test thread will attempt to pass</summary>

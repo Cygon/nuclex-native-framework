@@ -89,11 +89,11 @@ namespace Nuclex { namespace Support { namespace Collections {
     public: ~ConcurrentRingBuffer() {
       if constexpr(!std::is_trivially_destructible<TElement>::value) {
         std::size_t safeCount = this->count.load(
-          std::memory_order::memory_order_consume // consume: if() below carries dependency
+          std::memory_order_consume // consume: if() below carries dependency
         );
         if(safeCount >= 1) {
           std::size_t safeReadIndex = this->readIndex.load(
-            std::memory_order::memory_order_consume // consume: while() below carries dependency
+            std::memory_order_consume // consume: while() below carries dependency
           );
           while(safeCount >= 1) {
             this->itemMemory[safeReadIndex].~TElement();
@@ -265,7 +265,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     /// </remarks>
     public: bool TryTake(TElement &element) {
       std::size_t safeCount = this->count.load(
-        std::memory_order::memory_order_consume // consume: if() below carries dependency
+        std::memory_order_consume // consume: if() below carries dependency
       );
       if(safeCount < 1) {
         return false; // No more potential items in queue
@@ -274,11 +274,11 @@ namespace Nuclex { namespace Support { namespace Collections {
       // If we reach this point, there is at least one taken slot (which may contain
       // a valid item or represent a gap due to a constructor exception while adding the item)
       std::size_t safeReadIndex = this->readIndex.load(
-        std::memory_order::memory_order_consume // consume: access below carries dependency
+        std::memory_order_consume // consume: access below carries dependency
       );
       for(;;) { // Typical case: loop runs once. Case w/gaps: multiple runs, but deterministic
         std::uint8_t safeItemStatus = this->itemStatus[safeReadIndex].load(
-          std::memory_order::memory_order_consume // consume: if() below carries dependency
+          std::memory_order_consume // consume: if() below carries dependency
         );
         if(safeItemStatus < 2) { // 0: item is empty, 1: item is under construction
           return false; // If the item is missing, act as if the queue had no more items
@@ -322,7 +322,7 @@ namespace Nuclex { namespace Support { namespace Collections {
       // For a single reader, the ordering here is not that important, i.e. another
       // reader thread can't come by, see the free slot and read the un-updated read index
       this->readIndex.store(
-        (safeReadIndex + 1) % this->capacity, std::memory_order::memory_order_relaxed
+        (safeReadIndex + 1) % this->capacity, std::memory_order_relaxed
       );
       this->count.fetch_sub(1, std::memory_order_release);
 

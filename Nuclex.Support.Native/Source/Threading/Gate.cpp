@@ -244,7 +244,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
     }
 
-    impl.IsOpen.store(true, std::memory_order::memory_order_relaxed);
+    impl.IsOpen.store(true, std::memory_order_relaxed);
     result = ::pthread_cond_signal(&impl.Condition);
     if(unlikely(result != 0)) {
       int unlockResult = ::pthread_mutex_unlock(&impl.Mutex);
@@ -293,7 +293,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     PlatformDependentImplementationData &impl = getImplementationData();
 
     // We don't need memory_order_release, but the caller is likely to expect a fence
-    impl.IsOpen.store(false, std::memory_order::memory_order_release);
+    impl.IsOpen.store(false, std::memory_order_release);
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
@@ -378,7 +378,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
     }
 
-    while(!impl.IsOpen.load(std::memory_order::memory_order_consume)) {
+    while(!impl.IsOpen.load(std::memory_order_consume)) {
       result = ::pthread_cond_wait(&impl.Condition, &impl.Mutex);
       if(unlikely(result != 0)) {
         int unlockResult = ::pthread_mutex_unlock(&impl.Mutex);
@@ -517,7 +517,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
     }
 
-    while(!impl.IsOpen.load(std::memory_order::memory_order_consume)) {
+    while(!impl.IsOpen.load(std::memory_order_consume)) {
       result = ::pthread_cond_timedwait(&impl.Condition, &impl.Mutex, &waitEndTime);
       if(unlikely(result != 0)) {
         if(result == ETIMEDOUT) {

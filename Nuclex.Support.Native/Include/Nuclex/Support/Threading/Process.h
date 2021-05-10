@@ -186,7 +186,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///     until the pipe's buffer has been emptied.
     ///   </para>
     ///   <para>
-    ///     Because if that, it's very important to call this method regularly, especially if
+    ///     Because of that, it's very important to call this method regularly, especially if
     ///     the child process is generating a lot of output. Not doing so can cause the child
     ///     process to wait forever in a printf() or std::cout call.
     ///   </para>
@@ -198,19 +198,19 @@ namespace Nuclex { namespace Support { namespace Threading {
     /// </remarks>
     public: NUCLEX_SUPPORT_API void PumpOutputStreams() const;
 
-    // Useful? I'd like to keep this class tight and focus rather then turning into
-    // a general-purpose grabbag for all you child process needs.
+    // Useful? I'd like to keep this class tight and focused rather then turning
+    // it into a general-purpose grabbag for all your child process needs.
     //public: std::any GetNativeProcessId() const;
 
     // Useful? This would be easy to provide, but I'd rather expose such things
     // purely through the Nuclex.Storage.Native library.
     //public: static std::string GetExecutablePath();
 
-    /// <summary>Path to the executable as which this process is running</summary>
+    /// <summary>Path to the executable this process instance is launching</summary>
     private: std::string executablePath;
-    /// <summary>Working directory the child process will 
+    /// <summary>Working directory the child process will start in</summary>
     private: std::string workingDirectory;
-    /// <summary>Pipe buffer (user round-robin to flush stdout and stderr)</summary>
+    /// <summary>Pipe buffer (uses round-robin to flush stdout and stderr)</summary>
     private: mutable std::vector<char> buffer;
 
     /// <summary>Structure to hold platform dependent process and file handles</summary>
