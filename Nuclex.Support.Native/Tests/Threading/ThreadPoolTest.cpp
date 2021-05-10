@@ -21,8 +21,9 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "Nuclex/Support/Threading/ThreadPool.h"
-#include "Nuclex/Support/Threading/Thread.h"
+#include "Nuclex/Support/Threading/ThreadPool.h" // for ThreadPool
+#include "Nuclex/Support/Threading/Thread.h" // for Thread
+#include "Nuclex/Support/Threading/Gate.h" // for Gate
 
 #include <memory> // for std::unique_ptr
 
@@ -162,6 +163,41 @@ namespace Nuclex { namespace Support { namespace Threading {
       // all still ongoing tasks (the returned futures will throw std::future_error)
       testPool.reset();
     }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ThreadPoolTest, HelperCanIdentifyThreadPoolThreads) {
+    bool threadPoolThreadAnswer;
+
+    // Check whether a thread pool thread gets the right answer
+    {
+      Gate finishedGate;
+
+      ThreadPool testPool(1, 1);
+      testPool.Schedule(
+        [&threadPoolThreadAnswer, &finishedGate] {
+          threadPoolThreadAnswer = Thread::BelongsToThreadPool();
+          finishedGate.Open();
+        }
+      );
+
+      finishedGate.Wait();
+    }
+
+    // Check whether an explicit thread gets the right answer
+    bool explicitThreadAnswer;
+    {
+      std::thread explicitThread(
+        [&explicitThreadAnswer] {
+          explicitThreadAnswer = Thread::BelongsToThreadPool();
+        }
+      );
+      explicitThread.join();
+    }
+
+    EXPECT_TRUE(threadPoolThreadAnswer);
+    EXPECT_FALSE(explicitThreadAnswer);
   }
 
   // ------------------------------------------------------------------------------------------- //

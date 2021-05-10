@@ -32,6 +32,8 @@ License along with this library
 #include "../Helpers/WindowsApi.h" // for ::Sleep(), ::GetCurrentThreadId() and more
 #endif
 
+#include "ThreadPoolConfig.h" // for ThreadPoolConfig::IsThreadPoolThread
+
 #include <thread> // for std::thread
 #include <cstring> // for std::memcpy()
 #include <cassert> // for assert()
@@ -255,7 +257,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   bool Thread::BelongsToThreadPool() {
-    return false; // Since we haven't implemented a thread pool yet, this is easy ;-)
+    return ThreadPoolConfig::IsThreadPoolThread;
   }
 
   // ------------------------------------------------------------------------------------------- //

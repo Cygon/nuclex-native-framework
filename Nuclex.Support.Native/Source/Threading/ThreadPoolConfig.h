@@ -33,6 +33,9 @@ namespace Nuclex { namespace Support { namespace Threading {
   /// <summary>Configuration options for the thread pool</summary>
   class ThreadPoolConfig {
 
+    /// <summary>Whether the current thread is a thread pool thread</summary>
+    public: thread_local static bool IsThreadPoolThread;
+
     /// <summary>Maximum size of a submitted task to be re-used via the pool</summary>
     /// <remarks>
     ///   <para>

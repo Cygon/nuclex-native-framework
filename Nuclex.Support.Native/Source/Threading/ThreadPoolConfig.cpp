@@ -23,9 +23,12 @@ License along with this library
 
 #include "ThreadPoolConfig.h"
 
-// --------------------------------------------------------------------------------------------- //
+namespace Nuclex { namespace Support { namespace Threading {
 
-// This file is only here to guarantee that its associated header has no hidden
-// dependencies and can be included on its own
+  // ------------------------------------------------------------------------------------------- //
 
-// --------------------------------------------------------------------------------------------- //
+  thread_local bool ThreadPoolConfig::IsThreadPoolThread = false;
+
+  // ------------------------------------------------------------------------------------------- //
+
+}}} // namespace Nuclex::Support::Threading
