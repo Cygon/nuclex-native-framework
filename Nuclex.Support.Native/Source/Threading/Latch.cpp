@@ -205,7 +205,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     // Increment the latch counter. This locks the latch.
     std::size_t previousCountdown = impl.Countdown.fetch_add(
-      count, std::memory_order::memory_order_release
+      count, std::memory_order_release
     );
 
     // If the latch was open at the time of this call, we need to close it so threads
@@ -233,7 +233,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       // never a spurious closed latch (which blocks the thread and can't be dealt with). 
       //
       previousCountdown = impl.Countdown.load(
-        std::memory_order::memory_order_consume
+        std::memory_order_consume
       );
       if(likely(previousCountdown == 0)) {
         __atomic_store_n(&impl.FutexWord, 1, __ATOMIC_RELEASE); // 1 -> latch open
@@ -248,13 +248,13 @@ namespace Nuclex { namespace Support { namespace Threading {
     PlatformDependentImplementationData &impl = getImplementationData();
 
     std::size_t previousCountdown = impl.Countdown.fetch_add(
-      count, std::memory_order::memory_order_consume // if() below carries dependency
+      count, std::memory_order_consume // if() below carries dependency
     );
     if(unlikely(previousCountdown == 0)) {
       std::unique_lock mutexLock(impl.Mutex);
 
       previousCountdown = impl.Countdown.load(
-        std::memory_order::memory_order_relaxed // We're in a mutex now
+        std::memory_order_relaxed // We're in a mutex now
       );
       if(previousCountdown > 0) {
         DWORD result = ::ResetEvent(impl.EventHandle);
@@ -280,7 +280,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
     }
 
-    impl.Countdown.fetch_add(count, std::memory_order::memory_order_release);
+    impl.Countdown.fetch_add(count, std::memory_order_release);
 
     result = ::pthread_mutex_unlock(&impl.Mutex);
     if(unlikely(result != 0)) {
@@ -298,7 +298,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // Decrement the latch counter and fetch its previous value so we can both
     // detect when the counter goes negative and open the latch when it reaches zero
     std::size_t previousCountdown = impl.Countdown.fetch_sub(
-      count, std::memory_order::memory_order_release
+      count, std::memory_order_release
     );
     assert((previousCountdown >= count) && u8"Latch remains zero or positive");
 
@@ -348,7 +348,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     PlatformDependentImplementationData &impl = getImplementationData();
 
     std::size_t previousCountdown = impl.Countdown.fetch_sub(
-      std::memory_order::memory_order_consume // if() below carries dependency
+      count, std::memory_order_consume // if() below carries dependency
     );
     assert((previousCountdown >= count) && u8"Latch remains zero or positive");
 
@@ -356,7 +356,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       std::unique_lock mutexLock(impl.Mutex);
 
       previousCountdown = impl.Countdown.load(
-        std::memory_order::memory_order_relaxed // We're in a mutex now
+        std::memory_order_relaxed // We're in a mutex now
       );
       if(previousCountdown == 0) {
         DWORD result = ::SetEvent(impl.EventHandle);
@@ -384,7 +384,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     {
       std::size_t previousCountdown = impl.Countdown.fetch_sub(
-        count, std::memory_order::memory_order_release
+        count, std::memory_order_release
       );
       assert((previousCountdown >= count) && u8"Latch remains zero or positive");
 
@@ -470,7 +470,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     // Check if the countdown is currently zero
     std::size_t safeCountdown = impl.Countdown.load(
-      std::memory_order::memory_order_consume // if() below carries dependency
+      std::memory_order_consume // if() below carries dependency
     );
     if(safeCountdown > 0) {
       DWORD result = ::WaitForSingleObject(impl.EventHandle, INFINITE);
@@ -495,7 +495,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
     }
 
-    while(impl.Countdown.load(std::memory_order::memory_order_consume) > 0) {
+    while(impl.Countdown.load(std::memory_order_consume) > 0) {
       result = ::pthread_cond_wait(&impl.Condition, &impl.Mutex);
       if(unlikely(result != 0)) {
         int unlockResult = ::pthread_mutex_unlock(&impl.Mutex);
@@ -597,7 +597,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     // Check if the countdown is currently zero
     std::size_t safeCountdown = impl.Countdown.load(
-      std::memory_order::memory_order_consume // if() below carries dependency
+      std::memory_order_consume // if() below carries dependency
     );
     if(safeCountdown > 0) {
       DWORD milliseconds = static_cast<DWORD>((patience.count() + 500) / 1000);
@@ -632,7 +632,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
     }
 
-    while(impl.Countdown.load(std::memory_order::memory_order_consume) > 0) {
+    while(impl.Countdown.load(std::memory_order_consume) > 0) {
       result = ::pthread_cond_timedwait(&impl.Condition, &impl.Mutex, &endTime);
       if(unlikely(result != 0)) {
         if(result == ETIMEDOUT) {

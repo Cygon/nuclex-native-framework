@@ -68,13 +68,13 @@ namespace {
 
     /// <summary>Checks whether the test thread has passed through the latch</summary>
     public: bool HasPassed() const {
-      return this->latchPassed.load(std::memory_order::memory_order_acquire);
+      return this->latchPassed.load(std::memory_order_acquire);
     }
 
     /// <summary>Method that runs in a thread to check the latch function</summary>
     private: void threadMethod() {
       this->latch.Wait();
-      this->latchPassed.store(true, std::memory_order::memory_order_release);
+      this->latchPassed.store(true, std::memory_order_release);
     }
 
     /// <summary>Latch that the test thread will attempt to pass</summary>
