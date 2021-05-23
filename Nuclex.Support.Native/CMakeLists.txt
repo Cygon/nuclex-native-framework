@@ -1,5 +1,5 @@
 #!/usr/bin/cmake
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.15)
 
 # -------------------------------------------------------------------------------------------------
 
@@ -25,9 +25,10 @@ if(BUILD_DOCS)
 endif()
 
 # Add GoogleTest as a sub-project so we can link our unit test executable
-add_subdirectory(
-	${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest
-)
+# Already included by Nuclex.Support.Native, CMake doesn't like a second inclusion...
+if(NOT (TARGET GoogleTest))
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
+endif()
 
 # -------------------------------------------------------------------------------------------------
 
@@ -119,7 +120,7 @@ else()
 	disable_target_compiler_warnings(NuclexSupportNativeTests)
 endif()
 
-# Let the code know it's not being compile into a shared library
+# Let the code know it's not being compiled into a shared library
 # (this disables visibility/exports, thus allowing the compiler detect
 # additional unused code and warn about it)
 target_compile_definitions(

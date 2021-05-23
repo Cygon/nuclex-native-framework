@@ -21,7 +21,11 @@ FOR %%m IN (Debug Release) DO (
 	REM where CMake still picks up *any* installed Visual Studio version and does
 	REM a 64-bit build.
 	REM
-	cmake -B obj\cmake-%%m -DCMAKE_BUILD_TYPE=%%m -DCMAKE_GENERATOR_PLATFORM=x64
+	IF "%1"=="ninja" (
+		cmake -B obj\cmake-%%m -DCMAKE_BUILD_TYPE=%%m -GNinja
+	) ELSE (
+		cmake -B obj\cmake-%%m -DCMAKE_BUILD_TYPE=%%m -DCMAKE_GENERATOR_PLATFORM=x64
+	)
 
 	REM Compile the binary
 	cmake --build obj\cmake-%%m --config %%m --parallel %processorCount%

@@ -16,8 +16,12 @@ for buildMode in Debug Release; do
 		fi
 	fi
 
-	# Let CMake build a Makefile (that's the default)
-	cmake -B obj/cmake-$buildMode -DCMAKE_BUILD_TYPE=$buildMode
+	# Let CMake build a Makefile or a Ninja build script
+	if [ $# -ge 1 ] && [ $1 == "ninja" ]; then
+		cmake -B obj/cmake-$buildMode -DCMAKE_BUILD_TYPE=$buildMode -GNinja
+	else
+		cmake -B obj/cmake-$buildMode -DCMAKE_BUILD_TYPE=$buildMode
+	fi
 
 	# Compile the binary
 	cmake --build obj/cmake-$buildMode --config $buildMode --parallel $processorCount
