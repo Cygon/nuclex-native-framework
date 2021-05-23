@@ -53,7 +53,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     public: class Enumerator {
 
       /// <summary>Frees any memory used by the enumerator</summary>
-      public: virtual ~Enumerator();
+      public: virtual ~Enumerator() = default;
 
       /// <summary>Advances to the next item in the collection, if available</summary>
       /// <returns>True if there was a next item, false if the end was reached</returns>
