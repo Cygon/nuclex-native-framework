@@ -20,7 +20,6 @@ build/jdarith.c
 build/rdbmp.c
 build/jcinit.c
 build/jcomapi.c
-build/example.c
 build/rdppm.c
 build/jdmarker.c
 build/jmemmgr.c

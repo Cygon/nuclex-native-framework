@@ -39,6 +39,11 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/build)
 	)
 endif()
 
+file(
+	COPY "${PROJECT_SOURCE_DIR}/jconfig.h"
+	DESTINATION "${PROJECT_SOURCE_DIR}/build/"
+)
+
 # -------------------------------------------------------------------------------------------------
 
 set(
@@ -65,7 +70,6 @@ set(
 	"build/rdbmp.c"
 	"build/jcinit.c"
 	"build/jcomapi.c"
-	"build/example.c"
 	"build/rdppm.c"
 	"build/jdmarker.c"
 	"build/jmemmgr.c"
@@ -130,11 +134,6 @@ if(${CMAKE_PROJECT_NAME} STREQUAL "LibJPEG")
 else()
 	disable_target_compiler_warnings(LibJPEG)
 endif()
-
-add_custom_command(
-	TARGET LibJPEG PRE_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/build/jconfig.txt" "${PROJECT_SOURCE_DIR}/build/jconfig.h"
-)
 
 if(NOT WIN32)
 	target_compile_options(LibJPEG PRIVATE -fexceptions)

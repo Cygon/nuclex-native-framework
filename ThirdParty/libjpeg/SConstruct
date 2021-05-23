@@ -66,7 +66,7 @@ def extract_compressed_tarball(target, source, env):
     # SCons is too stupid to be told to copy the frigging file AFTER
     # extraction, so we'll work around the sucker:
     shutil.copyfile(
-        'build/jconfig.vc',
+        'jconfig.h',
         'build/jconfig.h'
     )
 
