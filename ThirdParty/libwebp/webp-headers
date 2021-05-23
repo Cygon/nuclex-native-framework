@@ -1,0 +1,7 @@
+build/src/webp/decode.h
+build/src/webp/demux.h
+build/src/webp/encode.h
+build/src/webp/format_constants.h
+build/src/webp/mux.h
+build/src/webp/mux_types.h
+build/src/webp/types.h
