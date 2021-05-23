@@ -71,7 +71,11 @@ set(
 	"build/pngwrite.c"
 	"build/pngwtran.c"
 	"build/pngwutil.c"
+	"build/arm/arm_init.c"
+	"build/arm/palette_neon_intrinsics.c"
+	"build/arm/filter_neon_intrinsics.c"
 )
+
 set(
 	headerFiles
 	"build/pnginfo.h"
@@ -96,6 +100,10 @@ else()
 endif()
 
 target_link_libraries(LibPNG PRIVATE ZLib::Static)
+
+if(NOT WIN32)
+	target_compile_options(LibPNG PRIVATE -fexceptions)
+endif()
 
 target_include_directories(
 	LibPNG

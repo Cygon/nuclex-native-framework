@@ -4,6 +4,7 @@ import sys
 import importlib
 import os
 import shutil
+import platform
 
 # Nuclex SCons libraries
 sys.path.append('../../BuildSystem/scons')
@@ -96,6 +97,9 @@ del libpng_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
 libpng_environment['HEADER_DIRECTORY'] = 'build/src'
 
 libpng_environment.add_preprocessor_constant('ZLIB_CONST')
+
+if not (platform.system() == 'Windows'):
+	libpng_environment.Append(CFLAGS='-fexceptions') # Enable exception handling in C
 
 #libpng_environment.add_include_directory('build/src/libpng')
 libpng_environment.add_source_directory(
