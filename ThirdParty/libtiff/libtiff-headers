@@ -1,0 +1,5 @@
+build/libtiff/tif_config.h
+build/libtiff/tif_dir.h
+build/libtiff/tiff.h
+build/libtiff/tiffio.h
+build/libtiff/tiffvers.h
