@@ -136,6 +136,10 @@ add_custom_command(
 	COMMAND ${CMAKE_COMMAND} -E copy "${PROJECT_SOURCE_DIR}/build/jconfig.txt" "${PROJECT_SOURCE_DIR}/build/jconfig.h"
 )
 
+if(NOT WIN32)
+	target_compile_options(LibJPEG PRIVATE -fexceptions)
+endif()
+
 target_include_directories(
 	LibJPEG
 	PUBLIC "build"

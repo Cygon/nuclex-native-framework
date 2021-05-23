@@ -4,6 +4,7 @@ import sys
 import importlib
 import os
 import shutil
+import platform
 
 # Nuclex SCons libraries
 sys.path.append('../../BuildSystem/scons')
@@ -86,6 +87,9 @@ libjpeg_environment = environment.Clone()
 
 del libjpeg_environment['SOURCE_DIRECTORY'] # We define the sources ourselves
 libjpeg_environment['HEADER_DIRECTORY'] = 'build'
+
+if not (platform.system() == 'Windows'):
+	libjpeg_environment.Append(CFLAGS='-fexceptions') # Enable exception handling in C
 
 #libjpeg_environment.add_include_directory('build')
 libjpeg_environment.add_source_directory(
