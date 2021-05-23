@@ -34,6 +34,11 @@ namespace Nuclex { namespace Support { namespace Threading {
   class ThreadPoolConfig {
 
     /// <summary>Whether the current thread is a thread pool thread</summary>
+    /// <remarks>
+    ///   This is a simple thread-local variable that will be set by any thread pool thread
+    ///   before executing its scheduled method. Thus, from the library user's side,
+    ///   it accurately reflects whether a thread is part of a thread pool.
+    /// </remarks>
     public: thread_local static bool IsThreadPoolThread;
 
     /// <summary>Maximum size of a submitted task to be re-used via the pool</summary>
@@ -109,9 +114,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///     crunching, a higher minimum thread count can be specified manually.
     ///   </para>
     /// </remarks>
-    public: static std::size_t GuessDefaultMinimumThreadCount(
-      std::size_t processorCount
-    ) {
+    public: static std::size_t GuessDefaultMinimumThreadCount(std::size_t processorCount) {
       std::size_t processorCountSquareRoot = static_cast<std::size_t>(
         std::sqrt(processorCount) + 0.5
       );
@@ -141,9 +144,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     ///     specify a different maximum thread count in the constructor.
     ///   </para>
     /// </remarks>
-    public: static std::size_t GuessDefaultMaximumThreadCount(
-      std::size_t processorCount
-    ) {
+    public: static std::size_t GuessDefaultMaximumThreadCount(std::size_t processorCount) {
       return processorCount + GuessDefaultMinimumThreadCount(processorCount);
       //return processorCount * 2; // another option...
     }
