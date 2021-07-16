@@ -27,7 +27,7 @@ License along with this library
 #if defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP)
   #error The Nuclex.Support.Native library does not support WinRT
 #elif defined(WIN32) || defined(_WIN32)
-  #define NUCLEX_SUPPORT_WIN32 1
+  #define NUCLEX_SUPPORT_WINDOWS 1
 #else
   #define NUCLEX_SUPPORT_LINUX 1
 #endif

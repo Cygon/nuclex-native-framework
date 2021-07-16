@@ -22,8 +22,7 @@ License along with this library
 #error This header must be included via LazyServiceInjector.h
 #endif
 
-#include <type_traits>
-#include <stdexcept>
+#include <memory> // for std::shared_ptr, std::make_shared()
 
 namespace Nuclex { namespace Support { namespace Services {
 

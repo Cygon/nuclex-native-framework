@@ -178,7 +178,7 @@ namespace {
     } while(wildcardCodepoint == '*');
 
     do {
-      if(matchWildcardUtf8(textAtStart, wildcardAfterStar)) {
+      if(matchWildcardUtf8CaseSensitive(textAtStart, wildcardAfterStar)) {
         return true;
       }
 
@@ -187,6 +187,256 @@ namespace {
 
     return false;
   }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>C-style function that checks if a string contains another string</summary>
+  /// <param name="haystack">Text that will be scanned for the other string</param>
+  /// <param name="needle">Substring that will be searched for</param>
+  /// <returns>
+  ///   The address in the haystack string where the first match was found or a null pointer
+  ///   if no matches were found
+  /// </returns>
+  const char *findSubstringUtf8(const char *haystack, const char *needle) {
+    using Nuclex::ToFoldedLowercase;
+
+    std::uint32_t firstNeedleCodepoint = utf8::unchecked::next(needle);
+    if(firstNeedleCodepoint == 0) {
+      return haystack;
+    }
+    firstNeedleCodepoint = ToFoldedLowercase(firstNeedleCodepoint);
+    const char *needleFromSecondCodepoint = needle;
+
+    const char *haystackAtStart = haystack;
+    for(;;) {
+      std::uint32_t haystackCodepoint = utf8::unchecked::next(haystack);
+
+      // Did the run out of hay without finding the needle? Then there is no match.
+      if(unlikely(haystackCodepoint == 0)) {
+        return nullptr;
+      }
+
+      // In the outer loop, scan only for the a match of the first needle codepoint.
+      // Keeping this loop tight allows the compiler to optimize it into a simple scan.
+      if(unlikely(ToFoldedLowercase(haystackCodepoint) == firstNeedleCodepoint)) {
+        std::uint32_t needleCodepoint = firstNeedleCodepoint;
+        const char *current = haystack;
+        do {
+          needleCodepoint = utf8::unchecked::next(needle);
+          if(needleCodepoint == 0) { // Match is complete when needle ends!
+            return haystackAtStart;
+          }
+
+          haystackCodepoint = utf8::unchecked::next(current);
+          if(haystackCodepoint == 0) {
+            break;
+          }
+        } while(ToFoldedLowercase(haystackCodepoint) == ToFoldedLowercase(needleCodepoint));
+
+        // No match found. Reset the needle for the next scan.
+        needle = needleFromSecondCodepoint;
+      }
+
+      // Since no match was found, update the start pointer so we still have
+      // a pointer to the starting position when the needle starts matching.
+      haystackAtStart = haystack;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>C-style function that checks if a string contains another string</summary>
+  /// <param name="haystack">Text that will be scanned for the other string</param>
+  /// <param name="needle">Substring that will be searched for</param>
+  /// <returns>
+  ///   The address in the haystack string where the first match was found or a null pointer
+  ///   if no matches were found
+  /// </returns>
+  const char *findSubstringUtf8CaseSensitive(const char *haystack, const char *needle) {
+    std::uint32_t firstNeedleCodepoint = utf8::unchecked::next(needle);
+    if(firstNeedleCodepoint == 0) {
+      return haystack;
+    }
+    const char *needleFromSecondCodepoint = needle;
+
+    const char *haystackAtStart = haystack;
+    for(;;) {
+      std::uint32_t haystackCodepoint = utf8::unchecked::next(haystack);
+
+      // Did the run out of hay without finding the needle? Then there is no match.
+      if(unlikely(haystackCodepoint == 0)) {
+        return nullptr;
+      }
+
+      // In the outer loop, scan only for the a match of the first needle codepoint.
+      // Keeping this loop tight allows the compiler to optimize it into a simple scan.
+      if(unlikely(haystackCodepoint == firstNeedleCodepoint)) {
+        std::uint32_t needleCodepoint = firstNeedleCodepoint;
+        const char *current = haystack;
+        do {
+          needleCodepoint = utf8::unchecked::next(needle);
+          if(needleCodepoint == 0) { // Match is complete when needle ends!
+            return haystackAtStart;
+          }
+
+          haystackCodepoint = utf8::unchecked::next(current);
+          if(haystackCodepoint == 0) {
+            break;
+          }
+        } while(haystackCodepoint == needleCodepoint);
+
+        // No match found. Reset the needle for the next scan.
+        needle = needleFromSecondCodepoint;
+      }
+
+      // Since no match was found, update the start pointer so we still have
+      // a pointer to the starting position when the needle starts matching.
+      haystackAtStart = haystack;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>C-style function that checks if a string starts with another string</summary>
+  /// <param name="haystack">Text whose beginning will be checked for the other string</param>
+  /// <param name="needle">Substring that will be searched for</param>
+  /// <returns>True if the 'haystack' string starts with the 'needle' string</returns>
+  bool checkStringStartsWithUtf8(const char *haystack, const char *needle) {
+    using Nuclex::ToFoldedLowercase;
+
+    for(;;) {
+      std::uint32_t needleCodepoint = utf8::unchecked::next(needle);
+      if(needleCodepoint == 0) {
+        return true;
+      }
+
+      std::uint32_t haystackCodepoint = utf8::unchecked::next(haystack);
+      if(haystackCodepoint == 0) {
+        return false;
+      }
+
+      if(ToFoldedLowercase(needleCodepoint) != ToFoldedLowercase(haystackCodepoint)) {
+        return false;
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>C-style function that checks if a string starts with another string</summary>
+  /// <param name="haystack">Text whose beginning will be checked for the other string</param>
+  /// <param name="needle">Substring that will be searched for</param>
+  /// <returns>True if the 'haystack' string starts with the 'needle' string</returns>
+  bool checkStringStartsWithUtf8CaseSensitive(const char *haystack, const char *needle) {
+    using Nuclex::ToFoldedLowercase;
+
+    for(;;) {
+      std::uint32_t needleCodepoint = utf8::unchecked::next(needle);
+      if(needleCodepoint == 0) {
+        return true;
+      }
+
+      std::uint32_t haystackCodepoint = utf8::unchecked::next(haystack);
+      if(haystackCodepoint == 0) {
+        return false;
+      }
+
+      if(needleCodepoint != haystackCodepoint) {
+        return false;
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Calculates the 32 bit murmur hash of a byte sequence</summary>
+  /// <param name="key">Data for which the murmur hash will be calculated</param>
+  /// <param name="length">Number of bytes to calculate the hash for</param>
+  /// <param name="seed">Seed value to base the hash on</param>
+  /// <returns>The murmur hash value of the specified byte sequence</returns>
+  std::uint32_t CalculateMurmur32(
+    const std::uint8_t *data, std::size_t length, std::uint32_t seed
+  ) {
+    const std::uint32_t mixFactor = 0x5bd1e995;
+    const int mixShift = 24;
+
+    std::uint32_t hash = seed ^ (length * mixFactor);
+
+    while(length >= 4) {
+      std::uint32_t data32 = *reinterpret_cast<const std::uint32_t *>(data);
+
+      data32 *= mixFactor;
+      data32 ^= data32 >> mixShift;
+      data32 *= mixFactor;
+      
+      hash *= mixFactor;
+      hash ^= data32;
+
+      data += 4;
+      length -= 4;
+    }
+
+    switch(length) {
+      case 3: { hash ^= std::uint32_t(data[2]) << 16; [[fallthrough]]; }
+      case 2: { hash ^= std::uint32_t(data[1]) << 8; [[fallthrough]]; }
+      case 1: { hash ^= std::uint32_t(data[0]); }
+    };
+
+    hash ^= hash >> 13;
+    hash *= mixFactor;
+    hash ^= hash >> 15;
+
+    return hash;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Calculates the 64 bit murmur hash of a byte sequence</summary>
+  /// <param name="key">Data for which the murmur hash will be calculated</param>
+  /// <param name="length">Number of bytes to calculate the hash for</param>
+  /// <param name="seed">Seed value to base the hash on</param>
+  /// <returns>The murmur hash value of the specified byte sequence</returns>
+  std::uint64_t CalculateMurmur64(
+    const std::uint8_t *data, std::size_t length, std::uint64_t seed
+  ) {
+    const std::uint64_t mixFactor = 0xc6a4a7935bd1e995ULL;
+    const int mixShift = 47;
+
+    std::uint64_t hash = seed ^ (length * mixFactor);
+
+    // Process the data in 64 bit chunks until we're down to the last few bytes
+    while(length >= 8) {
+      std::uint64_t data64 = *reinterpret_cast<const std::uint64_t *>(data);
+
+      data64 *= mixFactor;
+      data64 ^= data64 >> mixShift;
+      data64 *= mixFactor;
+      
+      hash ^= data64;
+      hash *= mixFactor;
+
+      data += 8;
+      length -= 8;
+    }
+
+    // Process the remaining 7 or less bytes
+    switch(length) {
+      case 7: { hash ^= std::uint64_t(data[6]) << 48; [[fallthrough]]; }
+      case 6: { hash ^= std::uint64_t(data[5]) << 40; [[fallthrough]]; }
+      case 5: { hash ^= std::uint64_t(data[4]) << 32; [[fallthrough]]; }
+      case 4: { hash ^= std::uint64_t(data[3]) << 24; [[fallthrough]]; }
+      case 3: { hash ^= std::uint64_t(data[2]) << 16; [[fallthrough]]; }
+      case 2: { hash ^= std::uint64_t(data[1]) << 8; [[fallthrough]]; }
+      case 1: { hash ^= std::uint64_t(data[0]); hash *= mixFactor; }
+    };
+  
+    // Also apply the bit mixing operation to the last few bytes
+    hash ^= hash >> mixShift;
+    hash *= mixFactor;
+    hash ^= hash >> mixShift;
+
+    return hash;
+  } 
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -208,6 +458,31 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
+  bool StringMatcher::Contains(
+    const std::string &haystack, const std::string &needle, bool caseSensitive /* = false */
+  ) {
+    if(caseSensitive) {
+      return findSubstringUtf8CaseSensitive(haystack.c_str(), needle.c_str()) != nullptr;
+    } else {
+      return findSubstringUtf8(haystack.c_str(), needle.c_str()) != nullptr;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  bool StringMatcher::StartsWith(
+    const std::string &haystack, const std::string &needle, bool caseSensitive /* = false */
+  ) {
+    if(caseSensitive) {
+      return checkStringStartsWithUtf8CaseSensitive(haystack.c_str(), needle.c_str());
+    } else {
+      //return (haystack.rfind(needle, 0) == 0);
+      return checkStringStartsWithUtf8(haystack.c_str(), needle.c_str());
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   bool StringMatcher::FitsWildcard(
     const std::string &text, const std::string &wildcard, bool caseSensitive /* = false */
   ) {
@@ -215,6 +490,83 @@ namespace Nuclex { namespace Support { namespace Text {
       return matchWildcardUtf8CaseSensitive(text.c_str(), wildcard.c_str());
     } else {
       return matchWildcardUtf8(text.c_str(), wildcard.c_str());
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::size_t CaseInsensitiveUtf8Hash::operator()(const std::string &text) const noexcept {
+    static const std::uint8_t aslrSeed = 0;
+    std::size_t hash = static_cast<std::size_t>(reinterpret_cast<std::uintptr_t>(&aslrSeed));
+
+    const char *characters = text.c_str();
+    for(;;) {
+      std::uint32_t codepoint = utf8::unchecked::next(characters);
+      if(codepoint == 0) {
+        return hash;
+      }
+
+      codepoint = ToFoldedLowercase(codepoint);
+
+      // We're abusing the Murmur hashing function a bit here. It's not intended for
+      // incremental generation and this will likely decrease hashing quality...
+      if constexpr(sizeof(std::size_t) >= 8) {
+        hash = CalculateMurmur64(
+          reinterpret_cast<const std::uint8_t *>(&codepoint), 4, hash
+        );
+      } else {
+        hash = CalculateMurmur32(
+          reinterpret_cast<const std::uint8_t *>(&codepoint), 4, hash
+        );
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  bool CaseInsensitiveUtf8EqualTo::operator()(
+    const std::string &left, const std::string &right
+  ) const noexcept {
+    const char *leftCharacters = left.c_str();
+    const char *rightCharacters = right.c_str();
+    for(;;) {
+      std::uint32_t leftCodepoint = utf8::unchecked::next(leftCharacters);
+      std::uint32_t rightCodepoint = utf8::unchecked::next(rightCharacters);
+      if(leftCodepoint == 0) {
+        return (rightCodepoint == 0);
+      } else if(rightCodepoint == 0) {
+        return false;
+      }
+
+      if(ToFoldedLowercase(leftCodepoint) != ToFoldedLowercase(rightCodepoint)) {
+        return false;
+      }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  bool CaseInsensitiveUtf8Less::operator()(
+    const std::string &left, const std::string &right
+  ) const noexcept {
+    const char *leftCharacters = left.c_str();
+    const char *rightCharacters = right.c_str();
+    for(;;) {
+      std::uint32_t leftCodepoint = utf8::unchecked::next(leftCharacters);
+      std::uint32_t rightCodepoint = utf8::unchecked::next(rightCharacters);
+      if(leftCodepoint == 0) {
+        return (rightCodepoint != 0); // true if left is shorter
+      } else if(rightCodepoint == 0) {
+        return false; // false because left is longer
+      }
+
+      leftCodepoint = ToFoldedLowercase(leftCodepoint);
+      rightCodepoint = ToFoldedLowercase(rightCodepoint);
+      if(leftCodepoint < rightCodepoint) {
+        return true;
+      } else if(leftCodepoint > rightCodepoint) {
+        return false;
+      }
     }
   }
 

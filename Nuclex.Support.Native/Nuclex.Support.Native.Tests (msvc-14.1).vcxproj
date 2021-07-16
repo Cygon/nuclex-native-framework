@@ -389,7 +389,7 @@
     <ClCompile Include="Tests\Events\DelegateTests.cpp" />
     <ClCompile Include="Tests\Events\EventTests.cpp" />
     <ClCompile Include="Tests\Platform\PosixApiTest.cpp" />
-    <ClCompile Include="Tests\Platform\PosixFileApiTest.cpp" />
+    <ClCompile Include="Tests\Platform\PosixPathApiTest.cpp" />
     <ClCompile Include="Tests\Platform\PosixProcessApiTest.cpp" />
     <ClCompile Include="Tests\Platform\PosixTimeApiTest.cpp" />
     <ClCompile Include="Tests\Platform\WindowsApiTest.cpp" />

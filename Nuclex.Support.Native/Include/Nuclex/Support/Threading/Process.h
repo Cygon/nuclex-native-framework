@@ -22,6 +22,13 @@ License along with this library
 #define NUCLEX_SUPPORT_THREADING_PROCESS_H
 
 #include "Nuclex/Support/Config.h"
+
+// Currently, the process wrapper only has implementations for Linux and Windows
+//
+// The Linux version may be fully or nearly Posix-compatible, so feel free to
+// remove this check and give it a try.
+#if defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)
+
 #include "Nuclex/Support/Events/Event.h" // TODO: need concurrent event
 
 #include <chrono> // for std::chrono::milliseconds
@@ -229,7 +236,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       ///   Small performance / memory fragmentation improvement.
       ///   This avoids a micro-allocation for the implenmentation data structure in most cases.
       /// </remarks>
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
       unsigned char implementationDataBuffer[32];
 #else // Posix and Linux
       unsigned char implementationDataBuffer[24];
@@ -241,5 +248,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Threading
+
+#endif // defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)
 
 #endif // NUCLEX_SUPPORT_THREADING_THREAD_H

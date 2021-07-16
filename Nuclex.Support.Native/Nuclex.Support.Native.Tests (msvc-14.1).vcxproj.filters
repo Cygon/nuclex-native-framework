@@ -672,7 +672,7 @@
     <ClCompile Include="Tests\Platform\PosixApiTest.cpp">
       <Filter>Tests\Platform</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Platform\PosixFileApiTest.cpp">
+    <ClCompile Include="Tests\Platform\PosixPathApiTest.cpp">
       <Filter>Tests\Platform</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Platform\PosixProcessApiTest.cpp">

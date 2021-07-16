@@ -23,13 +23,15 @@ License along with this library
 
 #include "Nuclex/Support/Threading/Process.h"
 
+#if defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)
+
 #include <gtest/gtest.h>
 
 #include <stdexcept> // for std::logic_error
 
 // An executable that is in the default search path, has an exit code of 0,
 // does not need super user privileges and does nothing bad when run.
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
   #define NUCLEX_SUPPORT_HARMLESS_EXECUTABLE u8"hostname.exe"
 #else
   #define NUCLEX_SUPPORT_HARMLESS_EXECUTABLE u8"ls"
@@ -151,7 +153,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(ProcessTest, CanTellIfProcessIsStillRunning) {
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
     // Sleep does not ship with all Windows 10 releases
     // Timeout immediately error-exits if stdin is redirected
     // Ping with existing IP always waits 1 second between pings            <--- the only option
@@ -184,7 +186,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   TEST(ProcessTest, CanCaptureStdout) {
     Observer observer;
 
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
     Process test(u8"cmd.exe");
     test.StdOut.Subscribe<Observer, &Observer::AcceptStdOut>(&observer);
     test.Start({ u8"/c", "dir", "/b" });
@@ -251,3 +253,5 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Threading
+
+#endif // defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)

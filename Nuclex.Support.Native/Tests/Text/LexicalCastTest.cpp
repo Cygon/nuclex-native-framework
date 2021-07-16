@@ -408,7 +408,7 @@ namespace Nuclex { namespace Support { namespace Text {
     // certain values exactly (specifically binary fractions, i.e. 1/1024 or 5/4096 but not
     // the numbers between them).
     //
-    // This is the number of decimals that unambiguously selects the correct float (especially)
+    // This is the number of decimals that unambiguously selects the correct float (especially
     // for round-trip parsing) and where adding more decimals would not actually change
     // the resulting double-precision floating point value when it is parsed back in.
     EXPECT_EQ(text, "3.141592653589793");

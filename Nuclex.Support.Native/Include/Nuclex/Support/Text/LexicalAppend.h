@@ -22,7 +22,7 @@ License along with this library
 #define NUCLEX_SUPPORT_TEXT_LEXICALAPPEND_H
 
 #include "Nuclex/Support/Config.h"
-#include "Nuclex/Support/Text/StringConverter.h"
+#include "Nuclex/Support/Text/StringConverter.h" // UTF-8 and wide char conversion
 
 #include <string> // for std::string
 

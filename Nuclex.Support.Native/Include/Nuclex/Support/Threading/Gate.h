@@ -104,7 +104,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       /// </remarks>
 #if defined(NUCLEX_SUPPORT_LINUX)
       unsigned char implementationDataBuffer[4];
-#elif defined(NUCLEX_SUPPORT_WIN32)
+#elif defined(NUCLEX_SUPPORT_WINDOWS)
       unsigned char implementationDataBuffer[sizeof(std::size_t)]; // matches HANDLE size
 #else // Posix
       unsigned char implementationDataBuffer[96];

@@ -24,7 +24,7 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 #include "Nuclex/Support/Services/ServiceContainer.h"
 
-#include <map>
+#include <map> // for std::map (storing services by std::type_info)
 
 namespace Nuclex { namespace Support { namespace Services {
 

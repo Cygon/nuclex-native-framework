@@ -22,6 +22,9 @@ License along with this library
 #define NUCLEX_SUPPORT_SOURCE 1
 
 #include "Nuclex/Support/Threading/ThreadPool.h" // for ThreadPool
+
+#if defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)
+
 #include "Nuclex/Support/Threading/Thread.h" // for Thread
 #include "Nuclex/Support/Threading/Gate.h" // for Gate
 
@@ -203,3 +206,5 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Threading
+
+#endif // defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)

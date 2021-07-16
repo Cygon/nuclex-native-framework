@@ -22,8 +22,8 @@ License along with this library
 #error This header must be included via LazyServiceInjector.h
 #endif
 
-#include <cstddef>
-#include <type_traits>
+#include <cstddef> // for std::size_t
+#include <type_traits> // for std::enable_if, std::is_constructible
 
 namespace Nuclex { namespace Support { namespace Services {
 

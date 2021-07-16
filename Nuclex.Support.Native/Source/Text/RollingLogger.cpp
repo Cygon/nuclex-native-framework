@@ -23,7 +23,7 @@ License along with this library
 
 #include "Nuclex/Support/Text/RollingLogger.h"
 
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
 #define NO_MINMAX
@@ -266,7 +266,7 @@ namespace Nuclex { namespace Support { namespace Text {
   void RollingLogger::updateTimeInLine(std::string &line) {
     assert((line.length() >= 12) && u8"Line is long enough to hold the current time");
 
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
 
     // Interestingly, Microsoft's GetSystemTime() has no error return.
     ::SYSTEMTIME splitUtcTime;

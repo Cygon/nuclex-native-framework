@@ -24,7 +24,7 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 #include "Nuclex/Support/Errors/EmptyDelegateCallError.h"
 
-#include <cassert>
+#include <cassert> // for assert()
 
 namespace Nuclex { namespace Support { namespace Events {
 

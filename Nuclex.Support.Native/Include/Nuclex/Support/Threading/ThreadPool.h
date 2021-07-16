@@ -23,6 +23,12 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
+// Currently, the thread pool only has implementations for Linux and Windows
+//
+// The Linux version may be fully or nearly Posix-compatible, so feel free to
+// remove this check and give it a try.
+#if defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)
+
 #include <cstddef> // for std::size_t
 #include <future> // for std::packaged_task, std::future
 #include <functional> // for std::bind
@@ -234,5 +240,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Threading
+
+#endif // defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)
 
 #endif // NUCLEX_SUPPORT_THREADING_THREADPOOL_H

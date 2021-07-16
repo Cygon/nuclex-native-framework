@@ -174,7 +174,10 @@ namespace Nuclex { namespace Support { namespace Threading {
       EXPECT_EQ(TestTask::ConstructorCallCount, previousConstructorCallCount + 2);
       //EXPECT_EQ(TestTask::DestructorCallCount, previousDestructorCallCount);
 
-      EXPECT_NE(anotherTask, originalTask);
+      // CHECK: This test failed spuriously once
+      // There isn't even any threading or tricky stuff involved here,
+      // except that the dequeue is done from the highly complex moodycamel queue...
+      EXPECT_NE(anotherTask, originalTask); 
 
       taskPool.DeleteTask(anotherTask);
     }

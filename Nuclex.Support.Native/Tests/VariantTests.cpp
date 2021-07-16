@@ -290,7 +290,7 @@ namespace Nuclex { namespace Support {
     EXPECT_EQ(std::int32_t(-1246989881), uint64Variant.ToInt32());
     EXPECT_EQ(std::uint64_t(11111111111111111111ULL), uint64Variant.ToUint64());
     EXPECT_EQ(std::int64_t(-7335632962598440505LL), uint64Variant.ToInt64());
-#if defined(NUCLEX_SUPPORT_WIN32) && defined(_M_X64) && defined(_MSC_VER) && (_MSC_VER < 1920) // VS2017 bug-thing
+#if defined(NUCLEX_SUPPORT_WINDOWS) && defined(_M_X64) && defined(_MSC_VER) && (_MSC_VER < 1920) // VS2017 bug-thing
     EXPECT_EQ(float(1.11111104e+19f), uint64Variant.ToFloat());
 #else
     EXPECT_EQ(float(1.11111115e+19f), uint64Variant.ToFloat());

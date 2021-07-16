@@ -24,7 +24,8 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 #include "Nuclex/Support/Any.h"
 
-#include <memory>
+#include <memory> // for std::shared_ptr
+#include <type_traits> // for std::decay, std::type_info
 
 namespace Nuclex { namespace Support { namespace Services {
 

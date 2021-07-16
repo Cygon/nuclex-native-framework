@@ -80,7 +80,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     /// <summary>Tries to append an element to the collection in a thread-safe manner</summary>
     /// <param name="newItem">Element that will be appended to the collection</param>
     /// <returns>True if the element was appended, false if there was no space left</returns>
-    public: bool TryAppend(const TElement &newItem) {
+    public: bool TryAppend(const TElement &newItem) override {
       this->wrappedQueue.enqueue(newItem);
       return true;
     }
@@ -88,7 +88,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     /// <summary>Tries to append an element to the collection in a thread-safe manner</summary>
     /// <param name="newItem">Element that will be appended to the collection</param>
     /// <returns>True if the element was appended, false if there was no space left</returns>
-    public: bool TryAppend(TElement &&newItem) {
+    public: bool TryAppend(TElement &&newItem) override {
       this->wrappedQueue.enqueue(std::move(newItem));
       return true;
     }

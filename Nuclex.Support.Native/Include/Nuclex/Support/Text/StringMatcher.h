@@ -24,6 +24,7 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 
 #include <string> // for std::string
+#include <functional> //for std::hash, std::equal_to, std::less
 
 namespace Nuclex { namespace Support { namespace Text {
 
@@ -46,8 +47,34 @@ namespace Nuclex { namespace Support { namespace Text {
       const std::string &left, const std::string &right, bool caseSensitive = false
     );
 
+    /// <summary>Checks whether one UTF-8 string contains another UTF-8 string</summary>
+    /// <param name="haystack">
+    ///   String that will be scanned for instances of another string
+    /// </param>
+    /// <param name="needle">String which might appear inside the other string</param>
+    /// <param name="caseSensitive">Whether the comparison will be case sensitive</param>
+    /// <returns>
+    ///   True if the 'needle' string appears at least once in the 'haystack' string
+    /// </returns>
+    public: NUCLEX_SUPPORT_API static bool Contains(
+      const std::string &haystack, const std::string &needle, bool caseSensitive = false
+    );
+
+    /// <summary>Checks whether one UTF-8 string starts with another UTF-8 string</summary>
+    /// <param name="haystack">
+    ///   String whose beginning will be compared with the searched-for string
+    /// </param>
+    /// <param name="needle">String with which the checked string must begin</param>
+    /// <param name="caseSensitive">Whether the comparison will be case sensitive</param>
+    /// <returns>
+    ///   True if the 'haystack' string starts with the 'needle' string
+    /// </returns>
+    public: NUCLEX_SUPPORT_API static bool StartsWith(
+      const std::string &haystack, const std::string &needle, bool caseSensitive = false
+    );
+
     /// <summary>Checks whether a UTF-8 string matches a wildcard</summary>
-    /// <param name="text">Text that will be matches against the wildcard</param>
+    /// <param name="text">Text that will be matched against the wildcard</param>
     /// <param name="wildcard">Wildcard against which the text will be matched</param>
     /// <param name="caseSensitive">Whether the comparison will be case sensitive</param>
     /// <returns>True if the specified text matches the wildcard</returns>
@@ -61,6 +88,53 @@ namespace Nuclex { namespace Support { namespace Text {
       const std::string &text, const std::string &wildcard, bool caseSensitive = false
     );
 
+  };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Case-insensitive UTF-8 version of std::hash&lt;std::string&gt;</summary>
+  /// <remarks>
+  ///   You can use this to construct a case-insensitive <code>std::unordered_map</code>.
+  /// </remarks>
+  struct CaseInsensitiveUtf8Hash {
+    /// <summary>Calculates a case-insensitive hash of an UTF-8 string</summary>
+    /// <param name="text">UTF-8 string of which a hash value will be calculated</param>
+    /// <returns>The case-insensitive hash value of the provided string</returns>
+    public: NUCLEX_SUPPORT_API std::size_t operator()(
+      const std::string &text
+    ) const noexcept;
+  };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Case-insensitive UTF-8 version of std::equal_to&lt;std::string&gt;</summary>
+  /// <remarks>
+  ///   You can use this to construct a case-insensitive <code>std::unordered_map</code>.
+  /// </remarks>
+  struct CaseInsensitiveUtf8EqualTo {
+    /// <summary>Checks if two UTF-8 strings are equal, ignoring case</summary>
+    /// <param name="left">First UTF-8 string to compare</param>
+    /// <param name="right">Other UTF-8 string to compare</param>
+    /// <returns>True if both UTF-8 strings have equal contents</returns>
+    public: NUCLEX_SUPPORT_API bool operator()(
+      const std::string &left, const std::string &right
+    ) const noexcept;
+  };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Case-insensitive UTF-8 version of std::less&lt;std::string&gt;</summary>
+  /// <remarks>
+  ///   You can use this to construct a case-insensitive <code>std::map</code>.
+  /// </remarks>
+  struct CaseInsensitiveUtf8Less {
+    /// <summary>Checks if the first UTF-8 string is 'less' than the second</summary>
+    /// <param name="left">First UTF-8 string to compare</param>
+    /// <param name="right">Other UTF-8 string to compare</param>
+    /// <returns>True if the first UTF-8 string is 'less', ignoring case</returns>
+    public: NUCLEX_SUPPORT_API bool operator()(
+      const std::string &left, const std::string &right
+    ) const noexcept;
   };
 
   // ------------------------------------------------------------------------------------------- //

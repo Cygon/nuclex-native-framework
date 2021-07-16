@@ -25,7 +25,7 @@ License along with this library
 #include "ObservableCollection.h"
 #include "ObservableIndexedCollection.h"
 
-#include <vector>
+#include <vector> // for std::vector
 
 namespace Nuclex { namespace Support { namespace Collections {
 

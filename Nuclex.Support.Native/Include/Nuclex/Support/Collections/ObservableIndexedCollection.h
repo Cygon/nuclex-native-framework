@@ -24,7 +24,7 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 #include "Nuclex/Support/Events/Event.h"
 
-#include <cstdlib>
+#include <cstddef> // for std::size_t
 
 namespace Nuclex { namespace Support { namespace Collections {
 

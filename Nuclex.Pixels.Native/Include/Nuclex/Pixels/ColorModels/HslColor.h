@@ -1,4 +1,4 @@
-﻿#pragma region CPL License
+#pragma region CPL License
 /*
 Nuclex Native Framework
 Copyright (C) 2002-2021 Nuclex Development Labs
