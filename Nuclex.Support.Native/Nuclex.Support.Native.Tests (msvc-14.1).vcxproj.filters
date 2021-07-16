@@ -48,9 +48,6 @@
     <Filter Include="Source\Events">
       <UniqueIdentifier>{e3f61b78-199d-4daf-9335-3bfce32621d4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Helpers">
-      <UniqueIdentifier>{41337d1c-187d-4d7b-8eea-9eb521d00b08}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Services">
       <UniqueIdentifier>{8776ca34-6ac1-43ca-9e2f-723d4bc5843b}</UniqueIdentifier>
     </Filter>
@@ -74,12 +71,6 @@
     </Filter>
     <Filter Include="Source\Threading">
       <UniqueIdentifier>{c3c71559-2291-4f45-8938-c3cf232c87c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Threading\Posix">
-      <UniqueIdentifier>{f5e9e180-aad4-42a8-b104-926aece4a71c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Threading\Windows">
-      <UniqueIdentifier>{acc68a38-05f6-4285-b03f-6b69ca1bc918}</UniqueIdentifier>
     </Filter>
     <Filter Include="Tests">
       <UniqueIdentifier>{6bba9bc0-cf59-4753-8206-8b3ee0c353d1}</UniqueIdentifier>
@@ -105,6 +96,12 @@
     <Filter Include="Tests\Threading\Windows">
       <UniqueIdentifier>{6892e1f6-d6ad-4ee8-b79f-22b0fe04f30d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Tests\Platform">
+      <UniqueIdentifier>{58263473-d1ad-4d79-8851-ed0abea806d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Platform">
+      <UniqueIdentifier>{41337d1c-187d-4d7b-8eea-9eb521d00b08}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\blockingconcurrentqueue.h">
@@ -122,6 +119,9 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentMap.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
@@ -135,6 +135,9 @@
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentSet.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
@@ -158,6 +161,15 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\StackArray.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\Variegator.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Errors\CanceledError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
       <Filter>Include\Errors</Filter>
     </ClInclude>
@@ -166,6 +178,9 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h">
       <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Events\ConcurrentEvent.h">
+      <Filter>Include\Events</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
       <Filter>Include\Events</Filter>
@@ -197,6 +212,12 @@
     <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl">
       <Filter>Include\Services</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\CommandLine.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\CommandLineArgument.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
@@ -204,6 +225,9 @@
       <Filter>Include\Text</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\ParserHelper.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h">
@@ -251,6 +275,12 @@
     <ClInclude Include="Include\Nuclex\Support\ScopeGuard.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\TemporaryDirectoryScope.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\TemporaryFileScope.h">
+      <Filter>Include</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Variant.h">
       <Filter>Include</Filter>
     </ClInclude>
@@ -265,10 +295,16 @@
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Collections\ConcurrentMap.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\ConcurrentSet.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\DynamicArray.cpp">
@@ -292,6 +328,15 @@
     <ClCompile Include="Source\Collections\ShiftQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Collections\StackArray.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\Variegator.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\CanceledError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
@@ -301,24 +346,81 @@
     <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Events\ConcurrentEvent.cpp">
+      <Filter>Source\Events</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Events\Delegate.cpp">
       <Filter>Source\Events</Filter>
     </ClCompile>
     <ClCompile Include="Source\Events\Event.cpp">
       <Filter>Source\Events</Filter>
     </ClCompile>
-    <ClInclude Include="Source\Helpers\PosixApi.h">
-      <Filter>Source\Helpers</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Helpers\PosixApi.cpp">
-      <Filter>Source\Helpers</Filter>
+    <ClCompile Include="Source\Platform\LinuxFileApi.cpp">
+      <Filter>Source\Platform</Filter>
     </ClCompile>
-    <ClInclude Include="Source\Helpers\WindowsApi.h">
-      <Filter>Source\Helpers</Filter>
+    <ClInclude Include="Source\Platform\LinuxFileApi.h">
+      <Filter>Source\Platform</Filter>
     </ClInclude>
-    <ClCompile Include="Source\Helpers\WindowsApi.cpp">
-      <Filter>Source\Helpers</Filter>
+    <ClCompile Include="Source\Platform\PosixApi.cpp">
+      <Filter>Source\Platform</Filter>
     </ClCompile>
+    <ClInclude Include="Source\Platform\PosixApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\PosixFileApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\PosixFileApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\PosixPathApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\PosixPathApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\PosixProcessApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\PosixProcessApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\PosixTimeApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\PosixTimeApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsFileApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsFileApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsPathApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsPathApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsProcessApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsProcessApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsRegistryApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsRegistryApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Services\LazyServiceInjector.cpp">
       <Filter>Source\Services</Filter>
     </ClCompile>
@@ -424,6 +526,12 @@
     <ClInclude Include="Source\Text\Utf8Fold\Utf8Fold.h">
       <Filter>Source\Text\Utf8Fold</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Text\CommandLine.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\CommandLineArgument.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Text\LexicalAppend.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
@@ -431,6 +539,9 @@
       <Filter>Source\Text</Filter>
     </ClCompile>
     <ClCompile Include="Source\Text\Logger.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\ParserHelper.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
     <ClCompile Include="Source\Text\RollingLogger.cpp">
@@ -445,36 +556,6 @@
     <ClCompile Include="Source\Text\StringMatcher.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Threading\Posix\PosixFileApi.cpp">
-      <Filter>Source\Threading\Posix</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Threading\Posix\PosixFileApi.h">
-      <Filter>Source\Threading\Posix</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Threading\Posix\PosixProcessApi.cpp">
-      <Filter>Source\Threading\Posix</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Threading\Posix\PosixProcessApi.h">
-      <Filter>Source\Threading\Posix</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Threading\Posix\PosixTimeApi.cpp">
-      <Filter>Source\Threading\Posix</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Threading\Posix\PosixTimeApi.h">
-      <Filter>Source\Threading\Posix</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Threading\Windows\WindowsFileApi.cpp">
-      <Filter>Source\Threading\Windows</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Threading\Windows\WindowsFileApi.h">
-      <Filter>Source\Threading\Windows</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Threading\Windows\WindowsProcessApi.cpp">
-      <Filter>Source\Threading\Windows</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Threading\Windows\WindowsProcessApi.h">
-      <Filter>Source\Threading\Windows</Filter>
-    </ClInclude>
     <ClCompile Include="Source\Threading\Latch.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
@@ -526,6 +607,12 @@
     <ClCompile Include="Source\ScopeGuard.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\TemporaryDirectoryScope.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TemporaryFileScope.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Variant.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -573,11 +660,38 @@
     <ClCompile Include="Tests\Collections\ShiftQueueDeathTest.cpp">
       <Filter>Tests\Collections</Filter>
     </ClCompile>
+    <ClCompile Include="Tests\Events\ConcurrentEventTests.cpp">
+      <Filter>Tests\Events</Filter>
+    </ClCompile>
     <ClCompile Include="Tests\Events\DelegateTests.cpp">
       <Filter>Tests\Events</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Events\EventTests.cpp">
       <Filter>Tests\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\PosixApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\PosixFileApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\PosixProcessApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\PosixTimeApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\WindowsApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\WindowsPathApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\WindowsProcessApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\WindowsRegistryApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Services\LazyServiceInjectorTest.cpp">
       <Filter>Tests\Services</Filter>
@@ -591,6 +705,9 @@
     <ClCompile Include="Tests\Text\LexicalAppendTest.cpp">
       <Filter>Tests\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Tests\Text\ParserHelperTest.cpp">
+      <Filter>Tests\Text</Filter>
+    </ClCompile>
     <ClCompile Include="Tests\Text\RollingLoggerTest.cpp">
       <Filter>Tests\Text</Filter>
     </ClCompile>
@@ -599,21 +716,6 @@
     </ClCompile>
     <ClCompile Include="Tests\Text\StringMatcherTest.cpp">
       <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\Posix\PosixFileApiTest.cpp">
-      <Filter>Tests\Threading\Posix</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\Posix\PosixProcessApiTest.cpp">
-      <Filter>Tests\Threading\Posix</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\Posix\PosixTimeApiTest.cpp">
-      <Filter>Tests\Threading\Posix</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\Windows\WindowsFileApiTest.cpp">
-      <Filter>Tests\Threading\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\Windows\WindowsProcessApiTest.cpp">
-      <Filter>Tests\Threading\Windows</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Threading\LatchTest.cpp">
       <Filter>Tests\Threading</Filter>
@@ -649,6 +751,12 @@
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="Tests\ScopeGuardTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\TemporaryDirectoryScopeTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\TemporaryFileScopeTest.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="Tests\VariantTests.cpp">
