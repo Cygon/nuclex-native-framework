@@ -21,15 +21,15 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "../Source/Threading/Posix/PosixProcessApi.h"
+#include "../Source/Platform/PosixProcessApi.h"
 
-#if !defined(NUCLEX_SUPPORT_WIN32)
+#if !defined(NUCLEX_SUPPORT_WINDOWS)
 
-#include "../Source/Threading/Posix/PosixFileApi.h"
+#include "../Source/Platform/PosixPathApi.h"
 
 #include <gtest/gtest.h>
 
-namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -38,7 +38,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
     PosixProcessApi::GetAbsoluteExecutablePath(path, u8"ls");
 
     EXPECT_GT(path.length(), 5U); // shortest possible valid path
-    EXPECT_TRUE(PosixFileApi::DoesFileExist(path));
+    EXPECT_TRUE(PosixPathApi::DoesFileExist(path));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -48,7 +48,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
     PosixProcessApi::GetAbsoluteExecutablePath(path, u8"NuclexSupportNativeTests");
 
     EXPECT_GT(path.length(), 26U); // shortest possible valid path
-    EXPECT_TRUE(PosixFileApi::DoesFileExist(path));
+    EXPECT_TRUE(PosixPathApi::DoesFileExist(path));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -79,6 +79,6 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}}} // namespace Nuclex::Support::Threading::Posix
+}}} // namespace Nuclex::Support::Platform
 
-#endif // !defined(NUCLEX_SUPPORT_WIN32)
+#endif // !defined(NUCLEX_SUPPORT_WINDOWS)

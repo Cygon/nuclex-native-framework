@@ -21,15 +21,15 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "../Source/Threading/Windows/WindowsProcessApi.h"
+#include "../Source/Platform/WindowsProcessApi.h"
 
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
 
-#include "../Source/Threading/Windows/WindowsFileApi.h"
+#include "../Source/Platform/WindowsPathApi.h"
 
 #include <gtest/gtest.h>
 
-namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -41,7 +41,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
       WindowsProcessApi::GetAbsoluteExecutablePath(path, L"notepad.exe");
 
       EXPECT_GT(path.length(), 16); // shortest possible valid path
-      EXPECT_TRUE(WindowsFileApi::DoesFileExist(path));
+      EXPECT_TRUE(WindowsPathApi::DoesFileExist(path));
     }
 
     // Executable name with .exe omitted
@@ -51,7 +51,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
       WindowsProcessApi::GetAbsoluteExecutablePath(path, L"notepad");
 
       EXPECT_GT(path.length(), 16); // shortest possible valid path
-      EXPECT_TRUE(WindowsFileApi::DoesFileExist(path));
+      EXPECT_TRUE(WindowsPathApi::DoesFileExist(path));
     }
 
   }
@@ -66,7 +66,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
       WindowsProcessApi::GetAbsoluteExecutablePath(path, L"notepad.exe");
 
       EXPECT_GT(path.length(), 16); // shortest possible valid path
-      EXPECT_TRUE(WindowsFileApi::DoesFileExist(path));
+      EXPECT_TRUE(WindowsPathApi::DoesFileExist(path));
     }
 
     // Executable name with .exe omitted
@@ -90,7 +90,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
       WindowsProcessApi::GetAbsoluteExecutablePath(path, L"ping.exe");
 
       EXPECT_GT(path.length(), 13); // shortest possible valid path
-      EXPECT_TRUE(WindowsFileApi::DoesFileExist(path));
+      EXPECT_TRUE(WindowsPathApi::DoesFileExist(path));
     }
 
     // Executable name with .exe omitted
@@ -100,7 +100,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
       WindowsProcessApi::GetAbsoluteExecutablePath(path, L"ping");
 
       EXPECT_GT(path.length(), 13); // shortest possible valid path
-      EXPECT_TRUE(WindowsFileApi::DoesFileExist(path));
+      EXPECT_TRUE(WindowsPathApi::DoesFileExist(path));
     }
 
   }
@@ -112,7 +112,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     WindowsProcessApi::GetAbsoluteExecutablePath(path, L"Nuclex.Support.Native.Tests.exe");
 
     EXPECT_GT(path.length(), 35); // shortest possible valid path
-    EXPECT_TRUE(WindowsFileApi::DoesFileExist(path));
+    EXPECT_TRUE(WindowsPathApi::DoesFileExist(path));
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -143,6 +143,6 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}}} // namespace Nuclex::Support::Threading::Windows
+}}} // namespace Nuclex::Support::Platform
 
-#endif // defined(NUCLEX_SUPPORT_WIN32)
+#endif // defined(NUCLEX_SUPPORT_WINDOWS)

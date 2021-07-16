@@ -23,12 +23,12 @@ License along with this library
 
 #include "WindowsProcessApi.h"
 
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
 
 #include "WindowsPathApi.h"
 
 #include "Nuclex/Support/Text/StringConverter.h"
-#include "../../Text/Utf8/checked.h"
+#include "../Text/Utf8/checked.h"
 #include "Nuclex/Support/ScopeGuard.h"
 
 #include <algorithm> // for std::max()
@@ -79,7 +79,7 @@ namespace Nuclex { namespace Support { namespace Platform {
     );
     if(result == FALSE) {
       DWORD lastErrorCode = ::GetLastError();
-      Platform::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not create temporary pipe", lastErrorCode
       );
     }
@@ -206,7 +206,7 @@ namespace Nuclex { namespace Support { namespace Platform {
           if(result == FALSE) {
             DWORD lastErrorCode = ::GetLastError();
             // ERROR_INVALID_THREAD_ID happens if the thread never called PeekMessage()
-            // That's not an error, it simply means threads is not the message pump thread.
+            // That's not an error, it simply means it's not the message pump thread.
             if(lastErrorCode != ERROR_INVALID_THREAD_ID) {
               Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
                 u8"Could not post quit message to child process thread", lastErrorCode
@@ -478,4 +478,4 @@ namespace Nuclex { namespace Support { namespace Platform {
 
 }}} // namespace Nuclex::Support::Platform
 
-#endif // defined(NUCLEX_SUPPORT_WIN32)
+#endif // defined(NUCLEX_SUPPORT_WINDOWS)

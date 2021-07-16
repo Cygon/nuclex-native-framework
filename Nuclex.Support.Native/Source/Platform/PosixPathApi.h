@@ -23,7 +23,7 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
-#if !defined(NUCLEX_SUPPORT_WIN32)
+#if !defined(NUCLEX_SUPPORT_WINDOWS)
 
 #include "PosixApi.h"
 
@@ -31,7 +31,7 @@ namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Wraps the Posix file API</summary>
+  /// <summary>Wraps or reimplements the Posix path API</summary>
   class PosixPathApi {
 
     /// <summary>Checks if the specified path is a relative path</summary>
@@ -53,12 +53,18 @@ namespace Nuclex { namespace Support { namespace Platform {
     /// <returns>True if the path exists and is a file, false otherwise</returns>
     public: static bool DoesFileExist(const std::string &path);
 
+    /// <summary>Determines the path of the user's temporary directory</summary>
+    /// <param name="target">
+    ///   String in which the full path of the temporary directory will be placed
+    /// </param>
+    public: static void GetTemporaryDirectory(std::string &path);
+
   };
 
   // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Platform
 
-#endif // !defined(NUCLEX_SUPPORT_WIN32)
+#endif // !defined(NUCLEX_SUPPORT_WINDOWS)
 
 #endif // NUCLEX_SUPPORT_PLATFORM_POSIXPATHAPI_H

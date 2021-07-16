@@ -23,7 +23,7 @@ License along with this library
 
 #include "PosixPathApi.h"
 
-#if !defined(NUCLEX_SUPPORT_WIN32)
+#if !defined(NUCLEX_SUPPORT_WINDOWS)
 
 #include "Nuclex/Support/Text/LexicalAppend.h"
 
@@ -105,6 +105,27 @@ namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
+  void PosixPathApi::GetTemporaryDirectory(std::string &path) {
+    const char *tempDirectory = ::getenv(u8"TMPDIR");
+    if(tempDirectory == nullptr) {
+      tempDirectory = ::getenv(u8"TMP");
+      if(tempDirectory == nullptr) {
+        tempDirectory = ::getenv(u8"TEMP");
+        if(tempDirectory == nullptr) {
+          // This is safe (part of the file system standard and Linux standard base),
+          // but we wanted to honor any possible user preferences first.
+          tempDirectory = u8"/tmp";
+        }
+      }
+    }
+
+    path.append(tempDirectory);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  // ------------------------------------------------------------------------------------------- //
+
 }}} // namespace Nuclex::Support::Platform
 
-#endif // !defined(NUCLEX_SUPPORT_WIN32)
+#endif // !defined(NUCLEX_SUPPORT_WINDOWS)

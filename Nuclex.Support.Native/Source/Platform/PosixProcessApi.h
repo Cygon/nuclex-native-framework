@@ -23,7 +23,7 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
-#if !defined(NUCLEX_SUPPORT_WIN32)
+#if !defined(NUCLEX_SUPPORT_WINDOWS)
 
 #include "PosixApi.h"
 
@@ -140,6 +140,6 @@ namespace Nuclex { namespace Support { namespace Platform {
 
 }}} // namespace Nuclex::Support::Platform
 
-#endif // !defined(NUCLEX_SUPPORT_WIN32)
+#endif // !defined(NUCLEX_SUPPORT_WINDOWS)
 
 #endif // NUCLEX_SUPPORT_PLATFORM_POSIXPROCESSAPI_H

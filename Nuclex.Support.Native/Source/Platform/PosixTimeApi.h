@@ -23,12 +23,12 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 
-#if !defined(NUCLEX_SUPPORT_WIN32)
+#if !defined(NUCLEX_SUPPORT_WINDOWS)
 
 #include "PosixApi.h"
 
 #include <cassert> // for assert()
-#include <chrono> // for std::chrono::milliseconds
+#include <chrono> // for std::chrono::microseconds, std::chrono::milliseconds
 
 namespace Nuclex { namespace Support { namespace Platform {
 
@@ -101,6 +101,6 @@ namespace Nuclex { namespace Support { namespace Platform {
 
 }}} // namespace Nuclex::Support::Platform
 
-#endif // !defined(NUCLEX_SUPPORT_WIN32)
+#endif // !defined(NUCLEX_SUPPORT_WINDOWS)
 
-#endif // NUCLEX_SUPPORT_THREADING_PLATFORM_H
+#endif // NUCLEX_SUPPORT_PLATFORM_POSIXTIMEAPI_H

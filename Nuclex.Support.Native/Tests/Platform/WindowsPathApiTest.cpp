@@ -21,86 +21,86 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "../Source/Threading/Windows/WindowsFileApi.h"
+#include "../Source/Platform/WindowsPathApi.h"
 
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
 
 #include <gtest/gtest.h>
 
-namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(WindowsFileApiTest, DetectsIfPathIsRelative) {
-    EXPECT_TRUE(WindowsFileApi::IsPathRelative(L"Relative\\Path.txt"));
-    EXPECT_TRUE(WindowsFileApi::IsPathRelative(L"R:elative\\Path.txt"));
-    EXPECT_FALSE(WindowsFileApi::IsPathRelative(L"\\Absolute\\Path"));
-    EXPECT_FALSE(WindowsFileApi::IsPathRelative(L"A:\\bsolute\\Path"));
-    EXPECT_FALSE(WindowsFileApi::IsPathRelative(L"\\\\UNC\\Path"));
+  TEST(WindowsPathApiTest, DetectsIfPathIsRelative) {
+    EXPECT_TRUE(WindowsPathApi::IsPathRelative(L"Relative\\Path.txt"));
+    EXPECT_TRUE(WindowsPathApi::IsPathRelative(L"R:elative\\Path.txt"));
+    EXPECT_FALSE(WindowsPathApi::IsPathRelative(L"\\Absolute\\Path"));
+    EXPECT_FALSE(WindowsPathApi::IsPathRelative(L"A:\\bsolute\\Path"));
+    EXPECT_FALSE(WindowsPathApi::IsPathRelative(L"\\\\UNC\\Path"));
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(WindowsFileApiTest, CanAppendPath) {
+  TEST(WindowsPathApiTest, CanAppendPath) {
     std::wstring testPath = L"C:\\Users";
 
-    WindowsFileApi::AppendPath(testPath, L"Guest");
+    WindowsPathApi::AppendPath(testPath, L"Guest");
     EXPECT_EQ(testPath, L"C:\\Users\\Guest");
 
     testPath.push_back(L'\\');
-    WindowsFileApi::AppendPath(testPath, L"Documents");
+    WindowsPathApi::AppendPath(testPath, L"Documents");
     EXPECT_EQ(testPath, L"C:\\Users\\Guest\\Documents");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(WindowsFileApiTest, CanRemoveFilenameFromPath) {
+  TEST(WindowsPathApiTest, CanRemoveFilenameFromPath) {
     std::wstring testPath = L"C:\\ProgramData\\RandomFile.txt";
-    WindowsFileApi::RemoveFileFromPath(testPath);
+    WindowsPathApi::RemoveFileFromPath(testPath);
     EXPECT_EQ(testPath, L"C:\\ProgramData\\");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(WindowsFileApiTest, CanDetectFilenameExtensionPresence) {
-    EXPECT_TRUE(WindowsFileApi::HasExtension(L"C:\\TestFile.txt"));
-    EXPECT_FALSE(WindowsFileApi::HasExtension(L"C:\\TestFile"));
-    EXPECT_TRUE(WindowsFileApi::HasExtension(L"C:\\Directory.dir\\TestFile.txt"));
-    EXPECT_FALSE(WindowsFileApi::HasExtension(L"C:\\Directory.dir\\TestFile"));
+  TEST(WindowsPathApiTest, CanDetectFilenameExtensionPresence) {
+    EXPECT_TRUE(WindowsPathApi::HasExtension(L"C:\\TestFile.txt"));
+    EXPECT_FALSE(WindowsPathApi::HasExtension(L"C:\\TestFile"));
+    EXPECT_TRUE(WindowsPathApi::HasExtension(L"C:\\Directory.dir\\TestFile.txt"));
+    EXPECT_FALSE(WindowsPathApi::HasExtension(L"C:\\Directory.dir\\TestFile"));
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(WindowsFileApiTest, CanCheckIfFileExists) {
+  TEST(WindowsPathApiTest, CanCheckIfFileExists) {
     std::wstring explorerPath;
-    WindowsFileApi::GetWindowsDirectory(explorerPath);
-    WindowsFileApi::AppendPath(explorerPath, L"explorer.exe");
-    EXPECT_TRUE(WindowsFileApi::DoesFileExist(explorerPath));
+    WindowsPathApi::GetWindowsDirectory(explorerPath);
+    WindowsPathApi::AppendPath(explorerPath, L"explorer.exe");
+    EXPECT_TRUE(WindowsPathApi::DoesFileExist(explorerPath));
 
-    EXPECT_FALSE(WindowsFileApi::DoesFileExist(L"C:\\This\\Does\\Not\\Exist"));
-    EXPECT_FALSE(WindowsFileApi::DoesFileExist(L"C:\\ThisDoesNotExist.txt"));
+    EXPECT_FALSE(WindowsPathApi::DoesFileExist(L"C:\\This\\Does\\Not\\Exist"));
+    EXPECT_FALSE(WindowsPathApi::DoesFileExist(L"C:\\ThisDoesNotExist.txt"));
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(WindowsFileApiTest, CanLocateWindowsDirectory) {
+  TEST(WindowsPathApiTest, CanLocateWindowsDirectory) {
     std::wstring testPath;
-    WindowsFileApi::GetWindowsDirectory(testPath);
+    WindowsPathApi::GetWindowsDirectory(testPath);
 
     EXPECT_GE(testPath.length(), 4); // Shortest possible
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(WindowsFileApiTest, CanLocateSystemDirectory) {
+  TEST(WindowsPathApiTest, CanLocateSystemDirectory) {
     std::wstring testPath;
-    WindowsFileApi::GetSystemDirectory(testPath);
+    WindowsPathApi::GetSystemDirectory(testPath);
 
     EXPECT_GE(testPath.length(), 6); // Shortest possible
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-}}}} // namespace Nuclex::Support::Threading::Windows
+}}} // namespace Nuclex::Support::Platform
 
-#endif // defined(NUCLEX_SUPPORT_WIN32)
+#endif // defined(NUCLEX_SUPPORT_WINDOWS)

@@ -23,7 +23,7 @@ License along with this library
 
 #include "PosixApi.h"
 
-#if !defined(NUCLEX_SUPPORT_WIN32)
+#if !defined(NUCLEX_SUPPORT_WINDOWS)
 
 #include "../Text/Utf8/checked.h"
 #include "Nuclex/Support/Text/LexicalAppend.h"
@@ -147,4 +147,4 @@ namespace Nuclex { namespace Support { namespace Platform {
 
 }}} // namespace Nuclex::Support::Platform
 
-#endif // !defined(NUCLEX_SUPPORT_WIN32)
+#endif // !defined(NUCLEX_SUPPORT_WINDOWS)
