@@ -119,9 +119,6 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentMap.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
@@ -135,9 +132,6 @@
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentSet.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
@@ -161,15 +155,6 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\StackArray.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\Variegator.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Errors\CanceledError.h">
-      <Filter>Include\Errors</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
       <Filter>Include\Errors</Filter>
     </ClInclude>
@@ -178,9 +163,6 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h">
       <Filter>Include\Errors</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Events\ConcurrentEvent.h">
-      <Filter>Include\Events</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
       <Filter>Include\Events</Filter>
@@ -212,12 +194,6 @@
     <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl">
       <Filter>Include\Services</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\CommandLine.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\CommandLineArgument.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
@@ -225,9 +201,6 @@
       <Filter>Include\Text</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\ParserHelper.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h">
@@ -295,16 +268,10 @@
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\ConcurrentMap.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Collections\ConcurrentSet.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\DynamicArray.cpp">
@@ -328,15 +295,6 @@
     <ClCompile Include="Source\Collections\ShiftQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\StackArray.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Collections\Variegator.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Errors\CanceledError.cpp">
-      <Filter>Source\Errors</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
@@ -345,9 +303,6 @@
     </ClCompile>
     <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
       <Filter>Source\Errors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Events\ConcurrentEvent.cpp">
-      <Filter>Source\Events</Filter>
     </ClCompile>
     <ClCompile Include="Source\Events\Delegate.cpp">
       <Filter>Source\Events</Filter>
@@ -526,12 +481,6 @@
     <ClInclude Include="Source\Text\Utf8Fold\Utf8Fold.h">
       <Filter>Source\Text\Utf8Fold</Filter>
     </ClInclude>
-    <ClCompile Include="Source\Text\CommandLine.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\CommandLineArgument.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Text\LexicalAppend.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
@@ -539,9 +488,6 @@
       <Filter>Source\Text</Filter>
     </ClCompile>
     <ClCompile Include="Source\Text\Logger.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\ParserHelper.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
     <ClCompile Include="Source\Text\RollingLogger.cpp">
@@ -660,9 +606,6 @@
     <ClCompile Include="Tests\Collections\ShiftQueueDeathTest.cpp">
       <Filter>Tests\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Events\ConcurrentEventTests.cpp">
-      <Filter>Tests\Events</Filter>
-    </ClCompile>
     <ClCompile Include="Tests\Events\DelegateTests.cpp">
       <Filter>Tests\Events</Filter>
     </ClCompile>
@@ -703,9 +646,6 @@
       <Filter>Tests\Text</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Text\LexicalAppendTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\ParserHelperTest.cpp">
       <Filter>Tests\Text</Filter>
     </ClCompile>
     <ClCompile Include="Tests\Text\RollingLoggerTest.cpp">
