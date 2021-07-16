@@ -18,21 +18,21 @@ License along with this library
 */
 #pragma endregion // CPL License
 
-#ifndef NUCLEX_SUPPORT_THREADING_POSIX_POSIXPROCESSAPI_H
-#define NUCLEX_SUPPORT_THREADING_POSIX_POSIXPROCESSAPI_H
+#ifndef NUCLEX_SUPPORT_PLATFORM_POSIXPROCESSAPI_H
+#define NUCLEX_SUPPORT_PLATFORM_POSIXPROCESSAPI_H
 
 #include "Nuclex/Support/Config.h"
 
 #if !defined(NUCLEX_SUPPORT_WIN32)
 
-#include "../../Helpers/PosixApi.h"
+#include "PosixApi.h"
 
 #include <cassert> // for assert()
 #include <chrono> // for std::chrono::milliseconds
 
 #include <sys/types.h> // for ::pid_t
 
-namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -138,8 +138,8 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}}} // namespace Nuclex::Support::Threading::Posix
+}}} // namespace Nuclex::Support::Platform
 
 #endif // !defined(NUCLEX_SUPPORT_WIN32)
 
-#endif // NUCLEX_SUPPORT_THREADING_POSIX_POSIXPROCESSAPI_H
+#endif // NUCLEX_SUPPORT_PLATFORM_POSIXPROCESSAPI_H

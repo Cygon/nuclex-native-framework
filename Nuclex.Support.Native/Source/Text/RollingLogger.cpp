@@ -31,7 +31,7 @@ License along with this library
 #else
 #include <ctime> // for ::timespec, ::clock_gettime() and ::gmtime_r()
 #include <cerrno> // for ::errno
-#include "../Helpers/PosixApi.h" // for strerror() wrapper
+#include "../Platform/PosixApi.h" // for strerror() wrapper
 #endif
 
 #include <cassert> // for assert()
@@ -296,7 +296,7 @@ namespace Nuclex { namespace Support { namespace Text {
       int result = ::clock_gettime(CLOCK_REALTIME, &time);
       if(result != 0) {
         int errorNumber = errno;
-        Helpers::PosixApi::ThrowExceptionForSystemError(
+        Platform::PosixApi::ThrowExceptionForSystemError(
           u8"Could not obtain the current wall clock via ::clock_gettime(CLOCK_REALTIME...)",
           errorNumber
         );

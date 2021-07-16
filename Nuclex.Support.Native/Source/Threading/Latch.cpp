@@ -24,24 +24,24 @@ License along with this library
 #include "Nuclex/Support/Threading/Latch.h"
 
 #if defined(NUCLEX_SUPPORT_LINUX) // Directly use futex via kernel syscalls
-#include "Posix/PosixTimeApi.h" // for PosixTimeApi::GetRemainingTimeout()
+#include "../Platform/PosixTimeApi.h" // for PosixTimeApi::GetRemainingTimeout()
 #include <linux/futex.h> // for futex constants
 #include <unistd.h> // for ::syscall()
 #include <limits.h> // for INT_MAX
 #include <sys/syscall.h> // for ::SYS_futex
 #include <ctime> // for ::clock_gettime()
-#elif defined(NUCLEX_SUPPORT_WIN32) // Use standard win32 threading primitives
-#include "../Helpers/WindowsApi.h" // for ::CreateEventW(), ::CloseHandle() and more
+#elif defined(NUCLEX_SUPPORT_WINDOWS) // Use standard win32 threading primitives
+#include "../Platform/WindowsApi.h" // for ::CreateEventW(), ::CloseHandle() and more
 #include <mutex> // for std::mutex
 #else // Posix: use a pthreads conditional variable to emulate a semaphore
-#include "Posix/PosixTimeApi.h" // for PosixTimeApi::GetTimePlus()
+#include "../Platform/PosixTimeApi.h" // for PosixTimeApi::GetTimePlus()
 #include <ctime> // for ::clock_gettime()
 #endif
 
 #include <atomic> // for std::atomic
 #include <cassert> // for assert()
 
-#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WIN32)
+#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS)
   // Just some safety checks to make sure pthread_condattr_setclock() is available.
   // https://www.gnu.org/software/libc/manual/html_node/Feature-Test-Macros.html
   //
@@ -75,7 +75,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     public: mutable volatile std::uint32_t FutexWord;
     /// <summary>Counter, unlocks the latch when it reaches zero</summary>
     public: std::atomic<std::size_t> Countdown; 
-#elif defined(NUCLEX_SUPPORT_WIN32)
+#elif defined(NUCLEX_SUPPORT_WINDOWS)
     /// <summary>Countdown until the latch will open</summary>
     public: std::atomic<std::size_t> Countdown;
     /// <summary>Gate that lets threads through if the countdown is zero</summary>
@@ -102,7 +102,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     Countdown(initialCount) {}
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
   Latch::PlatformDependentImplementationData::PlatformDependentImplementationData(
     std::size_t initialCount
   ) :
@@ -119,14 +119,14 @@ namespace Nuclex { namespace Support { namespace Threading {
     );
     if(unlikely(eventCreationFailed)) {
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not create thread synchronication event for countdown latch", lastErrorCode
       );
     }
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WIN32) // -> Posix
+#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS) // -> Posix
   Latch::PlatformDependentImplementationData::PlatformDependentImplementationData(
     std::size_t initialCount
   ) :
@@ -136,20 +136,20 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     // Attribute necessary to use CLOCK_MONOTONIC for condition variable timeouts
     ::pthread_condattr_t *monotonicClockAttribute = (
-      Posix::PosixTimeApi::GetMonotonicClockAttribute()
+      Platform::PosixTimeApi::GetMonotonicClockAttribute()
     );
     
     // Create a new pthread conditional variable
     int result = ::pthread_cond_init(&this->Condition, monotonicClockAttribute);
     if(unlikely(result != 0)) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not initialize pthread conditional variable", result
       );
     }
 
     result = ::pthread_mutex_init(&this->Mutex, nullptr);
     if(unlikely(result != 0)) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not initialize pthread mutex", result
       );
     }
@@ -162,11 +162,11 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
   Latch::PlatformDependentImplementationData::~PlatformDependentImplementationData() {}
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WIN32) // -> Posix
+#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS) // -> Posix
   Latch::PlatformDependentImplementationData::~PlatformDependentImplementationData() {
     int result = ::pthread_mutex_destroy(&this->Mutex);
     NUCLEX_SUPPORT_NDEBUG_UNUSED(result);
@@ -243,7 +243,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
   void Latch::Post(std::size_t count /* = 1 */) {
     PlatformDependentImplementationData &impl = getImplementationData();
 
@@ -260,7 +260,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         DWORD result = ::ResetEvent(impl.EventHandle);
         if(unlikely(result == FALSE)) {
           DWORD lastErrorCode = ::GetLastError();
-          Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
             u8"Could not reset synchronization event to closed state", lastErrorCode
           );
         }
@@ -269,13 +269,13 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WIN32) // -> Posix
+#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS) // -> Posix
   void Latch::Post(std::size_t count /* = 1 */) {
     PlatformDependentImplementationData &impl = getImplementationData();
 
     int result = ::pthread_mutex_lock(&impl.Mutex);
     if(unlikely(result != 0)) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not lock pthread mutex", result
       );
     }
@@ -284,7 +284,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     result = ::pthread_mutex_unlock(&impl.Mutex);
     if(unlikely(result != 0)) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not unlock pthread mutex", result
       );
     }
@@ -334,7 +334,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       );
       if(unlikely(result == -1)) {
         int errorNumber = errno;
-        Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
           u8"Could not wake up threads waiting on futex", errorNumber
         );
       }
@@ -343,7 +343,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
   void Latch::CountDown(std::size_t count /* = 1 */) {
     PlatformDependentImplementationData &impl = getImplementationData();
 
@@ -362,7 +362,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         DWORD result = ::SetEvent(impl.EventHandle);
         if(unlikely(result == FALSE)) {
           DWORD lastErrorCode = ::GetLastError();
-          Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
             u8"Could not set synchronization event to signalled state", lastErrorCode
           );
         }
@@ -371,13 +371,13 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WIN32) // -> Posix
+#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS) // -> Posix
   void Latch::CountDown(std::size_t count /* = 1 */) {
     PlatformDependentImplementationData &impl = getImplementationData();
 
     int result = ::pthread_mutex_lock(&impl.Mutex);
     if(unlikely(result != 0)) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not lock pthread mutex", result
       );
     }
@@ -394,7 +394,7 @@ namespace Nuclex { namespace Support { namespace Threading {
           int unlockResult = ::pthread_mutex_unlock(&impl.Mutex);
           NUCLEX_SUPPORT_NDEBUG_UNUSED(unlockResult);
           assert((unlockResult == 0) && u8"pthread mutex is successfully unlocked in error handler");
-          Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
             u8"Could not signal pthread conditional variable", result
           );
         }
@@ -403,7 +403,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     result = ::pthread_mutex_unlock(&impl.Mutex);
     if(unlikely(result != 0)) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not unlock pthread mutex", result
       );
     }
@@ -439,7 +439,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       if(unlikely(result == -1)) {
         int errorNumber = errno;
         if(unlikely((errorNumber != EAGAIN) && (errorNumber != EINTR))) {
-          Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
             u8"Could not sleep on latch via futex wait", errorNumber
           );
         }
@@ -464,7 +464,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
   void Latch::Wait() const {
     const PlatformDependentImplementationData &impl = getImplementationData();
 
@@ -476,7 +476,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       DWORD result = ::WaitForSingleObject(impl.EventHandle, INFINITE);
       if(likely(result != WAIT_OBJECT_0)) {
         DWORD lastErrorCode = ::GetLastError();
-        Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
           u8"Error waiting for semaphore via WaitForSingleObject()", lastErrorCode
         );
       }
@@ -484,13 +484,13 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WIN32) // -> Posix
+#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS) // -> Posix
   void Latch::Wait() const {
     const PlatformDependentImplementationData &impl = getImplementationData();
 
     int result = ::pthread_mutex_lock(&impl.Mutex);
     if(unlikely(result != 0)) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not lock pthread mutex", result
       );
     }
@@ -503,7 +503,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         assert(
           (unlockResult == 0) && u8"pthread mutex is successfully unlocked in error handler"
         );
-        Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
           u8"Could not wait on pthread conditional variable", result
         );
       }
@@ -511,7 +511,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     result = ::pthread_mutex_unlock(&impl.Mutex);
     if(unlikely(result != 0)) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not unlock pthread mutex", result
       );
     }
@@ -528,7 +528,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     int result = ::clock_gettime(CLOCK_MONOTONIC, &startTime);
     if(result == -1) {
       int errorNumber = errno;
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not get monotonic time for gate", errorNumber
       );
     }
@@ -542,7 +542,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
       // Calculate the remaining timeout until the wait should fail. Note that this is
       // a relative timeout (in contrast to ::sem_t and most things Posix).
-      struct ::timespec timeout = Posix::PosixTimeApi::GetRemainingTimeout(
+      struct ::timespec timeout = Platform::PosixTimeApi::GetRemainingTimeout(
         CLOCK_MONOTONIC, startTime, patience
       );
 
@@ -566,7 +566,7 @@ namespace Nuclex { namespace Support { namespace Threading {
           return false; // Timeout elapsed, so it's time to give the bad news to the caller
         }
         if(unlikely((errorNumber != EAGAIN) && (errorNumber != EINTR))) {
-          Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
             u8"Could not sleep on latch via futex wait", errorNumber
           );
         }
@@ -591,7 +591,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
   bool Latch::WaitFor(const std::chrono::microseconds &patience) const {
     const PlatformDependentImplementationData &impl = getImplementationData();
 
@@ -609,7 +609,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       }
 
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Error waiting for latch via WaitForSingleObject()", lastErrorCode
       );
     }
@@ -618,16 +618,16 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WIN32) // -> Posix
+#if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS) // -> Posix
   bool Latch::WaitFor(const std::chrono::microseconds &patience) const {
     const PlatformDependentImplementationData &impl = getImplementationData();
 
     // Forced to use CLOCK_REALTIME, which means the semaphore is broken :-(
-    struct ::timespec endTime = Posix::PosixTimeApi::GetTimePlus(CLOCK_MONOTONIC, patience);
+    struct ::timespec endTime = Platform::PosixTimeApi::GetTimePlus(CLOCK_MONOTONIC, patience);
 
     int result = ::pthread_mutex_lock(&impl.Mutex);
     if(unlikely(result != 0)) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not lock pthread mutex", result
       );
     }
@@ -638,7 +638,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         if(result == ETIMEDOUT) {
           result = ::pthread_mutex_unlock(&impl.Mutex);
           if(unlikely(result != 0)) {
-            Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+            Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
               u8"Could not unlock pthread mutex", result
             );
           }
@@ -651,7 +651,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         assert(
           (unlockResult == 0) && u8"pthread mutex is successfully unlocked in error handler"
         );
-        Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
           u8"Could not wait on pthread conditional variable", result
         );
       }
@@ -659,7 +659,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     result = ::pthread_mutex_unlock(&impl.Mutex);
     if(unlikely(result != 0)) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not unlock pthread mutex", result
       );
     }

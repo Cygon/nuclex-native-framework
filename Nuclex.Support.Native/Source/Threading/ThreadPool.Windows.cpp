@@ -23,14 +23,14 @@ License along with this library
 
 #include "Nuclex/Support/Threading/ThreadPool.h"
 
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
 
 #include "Nuclex/Support/ScopeGuard.h" // for ScopeGuard
 #include "Nuclex/Support/Threading/Latch.h" // for Latch
 #include "Nuclex/Support/Collections/MoodyCamel/concurrentqueue.h"
 
 #include "ThreadPoolTaskPool.h" // thread pool settings + task pool
-#include "../Helpers/WindowsApi.h" // error handling helpers
+#include "../Platform/WindowsApi.h" // error handling helpers
 
 #include <cassert> // for assert()
 #include <atomic> // for std;:atomic
@@ -158,7 +158,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       this->NewThreadPool = ::CreateThreadpool(nullptr);
       if(unlikely(this->NewThreadPool == nullptr)) {
         DWORD lastErrorCode = ::GetLastError();
-        Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
           u8"Could not create thread pool (using Vista and later API)", lastErrorCode
         );
       }
@@ -179,7 +179,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         );
         if(unlikely(result == FALSE)) {
           DWORD lastErrorCode = ::GetLastError();
-          Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
             u8"Could not set minimum number of thread pool threads", lastErrorCode
           );
         }
@@ -320,7 +320,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         if(unlikely(submittedTask->Work == nullptr)) {
           DWORD lastErrorCode = ::GetLastError();
           this->implementation->SubmittedTaskPool.DeleteTask(submittedTask);
-          Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
             u8"Could not create thread pool work item", lastErrorCode
           );
         }
@@ -374,4 +374,4 @@ namespace Nuclex { namespace Support { namespace Threading {
 
 }}} // namespace Nuclex::Support::Threading
 
-#endif // defined(NUCLEX_SUPPORT_WIN32)
+#endif // defined(NUCLEX_SUPPORT_WINDOWS)

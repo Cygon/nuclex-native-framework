@@ -18,8 +18,8 @@ License along with this library
 */
 #pragma endregion // CPL License
 
-#ifndef NUCLEX_SUPPORT_HELPERS_WINDOWSAPI_H
-#define NUCLEX_SUPPORT_HELPERS_WINDOWSAPI_H
+#ifndef NUCLEX_SUPPORT_PLATFORM_WINDOWSAPI_H
+#define NUCLEX_SUPPORT_PLATFORM_WINDOWSAPI_H
 
 #include "Nuclex/Support/Config.h"
 
@@ -53,7 +53,7 @@ License along with this library
 
 #include <string> // for std::string
 
-namespace Nuclex { namespace Support { namespace Helpers {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -127,8 +127,8 @@ namespace Nuclex { namespace Support { namespace Helpers {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}} // namespace Nuclex::Support::Helpers
+}}} // namespace Nuclex::Support::Platform
 
 #endif // defined(NUCLEX_SUPPORT_WIN32)
 
-#endif // NUCLEX_SUPPORT_HELPERS_WINDOWSAPI_H
+#endif // NUCLEX_SUPPORT_PLATFORM_WINDOWSAPI_H

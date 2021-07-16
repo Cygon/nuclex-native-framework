@@ -24,12 +24,14 @@ License along with this library
 #include "Nuclex/Support/Threading/Thread.h"
 
 #if defined(NUCLEX_SUPPORT_LINUX)
-#include "Posix/PosixProcessApi.h" // for PosixProcessApi
+#include "../Platform/PosixProcessApi.h" // for PosixProcessApi
 #include <ctime> // for ::clock_gettime() and ::clock_nanosleep()
 #include <cstdlib> // for ldiv_t
 #include <algorithm> // for std::min()
-#elif defined(NUCLEX_SUPPORT_WIN32)
-#include "../Helpers/WindowsApi.h" // for ::Sleep(), ::GetCurrentThreadId() and more
+#elif defined(NUCLEX_SUPPORT_WINDOWS)
+#include "../Platform/WindowsApi.h" // for ::Sleep(), ::GetCurrentThreadId() and more
+#else
+#include "../Platform/PosixProcessApi.h" // for PosixProcessApi
 #endif
 
 #include "ThreadPoolConfig.h" // for ThreadPoolConfig::IsThreadPoolThread
@@ -60,7 +62,7 @@ License along with this library
 namespace {
 
   // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
   /// <summary>Figures out the thread affinity mask for the specified thread</summary>
   /// <param name="windowsThreadHandle">
   ///   Handle of the thread or current thread pseudo handle for the thread to check
@@ -89,7 +91,7 @@ namespace {
     );
     if(previousAffinityMask == 0) {
       DWORD errorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not change thread affinity via ::SetThreadAffinityMask()", errorCode
       );
     }
@@ -101,7 +103,7 @@ namespace {
     );
     if(temporaryAffinityMask == 0) {
       DWORD errorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not revert thread affinity via ::SetThreadAffinityMask()", errorCode
       );
     }
@@ -114,9 +116,9 @@ namespace {
       *reinterpret_cast<std::uintptr_t *>(&previousAffinityMask)
     );
   }
-#endif // defined(NUCLEX_SUPPORT_WIN32)
+#endif // defined(NUCLEX_SUPPORT_WINDOWS)
   // ------------------------------------------------------------------------------------------- //
-#if !defined(NUCLEX_SUPPORT_WIN32)
+#if !defined(NUCLEX_SUPPORT_WINDOWS)
   /// <summary>Queries the CPU affinity mask of the specified thread</summary>
   /// <param name="thread">Thread for which the affinity mask will be queried</param>
   /// <returns>
@@ -129,7 +131,7 @@ namespace {
     //CPU_ZERO(&cpuSet);
     int errorNumber = ::pthread_getaffinity_np(thread, sizeof(cpuSet), &cpuSet);
     if(errorNumber != 0) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Error querying CPU affinity via pthread_getaffinity_np()", errorNumber
       );
     }
@@ -148,9 +150,9 @@ namespace {
     return result;
 
   }
-#endif // !defined(NUCLEX_SUPPORT_WIN32)
+#endif // !defined(NUCLEX_SUPPORT_WINDOWS)
   // ------------------------------------------------------------------------------------------- //
-#if !defined(NUCLEX_SUPPORT_WIN32)
+#if !defined(NUCLEX_SUPPORT_WINDOWS)
   /// <summary>
   ///   Updates the affinity mask of the specified thread, changin which CPUs is may be
   ///   scheduled on
@@ -178,13 +180,13 @@ namespace {
     // Apply the affinity setting
     int errorNumber = ::pthread_setaffinity_np(thread, sizeof(cpuSet), &cpuSet);
     if(errorNumber != 0) {
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Error changing CPU affinity via pthread_setaffinity_np()", errorNumber
       );
     }
 
   }
-#endif // !defined(NUCLEX_SUPPORT_WIN32)
+#endif // !defined(NUCLEX_SUPPORT_WINDOWS)
   // ------------------------------------------------------------------------------------------- //
 
 } // anonymous namespace
@@ -194,7 +196,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   void Thread::Sleep(std::chrono::microseconds time) {
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
     std::int64_t microseconds = time.count();
     if(microseconds > 0) {
       microseconds += std::int64_t(500); // To round to nearest mllisecond
@@ -207,7 +209,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       int result = ::clock_gettime(CLOCK_MONOTONIC, &endTime);
       if(result == -1) {
         int errorNumber = errno;
-        Helpers::PosixApi::ThrowExceptionForSystemError(
+        Platform::PosixApi::ThrowExceptionForSystemError(
           u8"Error retrieving current time via clock_gettime()", errorNumber
         );
       }
@@ -244,7 +246,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         return;
       } else if(result != EINTR) {
         int errorNumber = errno;
-        Helpers::PosixApi::ThrowExceptionForSystemError(
+        Platform::PosixApi::ThrowExceptionForSystemError(
           u8"Error pausing thread via ::clock_nanosleep()", errorNumber
         );
       }
@@ -263,7 +265,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 #if defined(MICROSOFTS_API_ISNT_DESIGNED_SO_POORLY)
   std::uintptr_t Thread::GetCurrentThreadId() {
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
     throw std::logic_error(u8"This method cannot be implementation on Windows");
 
     thread_local static HANDLE duplicatedThreadHandle = INVALID_HANDLE_VALUE;
@@ -298,7 +300,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   std::uintptr_t Thread::GetStdThreadId(std::thread &thread) {
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
     assert(
       (sizeof(std::uintptr_t) >= sizeof(HANDLE)) &&
       u8"Windows thread handle (HANDLE) can be stored inside an std::uintptr_t"
@@ -326,7 +328,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   std::uint64_t Thread::GetCpuAffinityMask(std::uintptr_t threadId) {
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
     assert(
       (sizeof(std::uintptr_t) >= sizeof(HANDLE)) &&
       u8"Windows thread id (DWORD) can be stored inside an std::uintptr_t"
@@ -350,7 +352,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   std::uint64_t Thread::GetCpuAffinityMask() {
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
     HANDLE currentThreadPseudoHandle = ::GetCurrentThread();
     return getWindowsThreadAffinityMask(currentThreadPseudoHandle);
 #else // LINUX and POSIX
@@ -362,7 +364,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   void Thread::SetCpuAffinityMask(std::uintptr_t threadId, std::uint64_t affinityMask) {
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
     assert(
       (sizeof(std::uintptr_t) >= sizeof(HANDLE)) &&
       u8"Windows thread id (DWORD) can be stored inside an std::uintptr_t"
@@ -377,7 +379,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     );
     if(previousAffinityMask == 0) {
       DWORD errorCode = ::GetLastError();
-      Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not change thread affinity via ::SetThreadAffinityMask()", errorCode
       );
     }
@@ -397,7 +399,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   void Thread::SetCpuAffinityMask(std::uint64_t affinityMask) {
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
     HANDLE currentThreadPseudoHandle = ::GetCurrentThread();
 
     // Assign a temporary, unwanted thread affinity. That's the only way to query
@@ -407,7 +409,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     );
     if(previousAffinityMask == 0) {
       DWORD errorCode = ::GetLastError();
-      Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not change thread affinity via ::SetThreadAffinityMask()", errorCode
       );
     }

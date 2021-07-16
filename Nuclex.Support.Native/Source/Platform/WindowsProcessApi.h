@@ -18,24 +18,24 @@ License along with this library
 */
 #pragma endregion // CPL License
 
-#ifndef NUCLEX_SUPPORT_THREADING_WINDOWS_WINDOWSPROCESSAPI_H
-#define NUCLEX_SUPPORT_THREADING_WINDOWS_WINDOWSPROCESSAPI_H
+#ifndef NUCLEX_SUPPORT_PLATFORM_WINDOWSPROCESSAPI_H
+#define NUCLEX_SUPPORT_PLATFORM_WINDOWSPROCESSAPI_H
 
 #include "Nuclex/Support/Config.h"
 
 #if defined(NUCLEX_SUPPORT_WIN32)
 
-#include "../../Helpers/WindowsApi.h"
+#include "WindowsApi.h"
 
 #include <cassert> // for assert()
 
-namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Directional pipe that can be used for inter-process communication</summary>
   class Pipe {
-  
+
     /// <summary>Opens a new directional pipe</summary>
     /// <param name="securityAttributes">
     ///   Security attributes controlling whether the pipe is inherited to child processes
@@ -206,8 +206,8 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}}} // namespace Nuclex::Support::Threading::Windows
+}}} // namespace Nuclex::Support::Platform
 
 #endif // defined(NUCLEX_SUPPORT_WIN32)
 
-#endif // NUCLEX_SUPPORT_THREADING_WINDOWS_WINDOWSPROCESSAPI_H
+#endif // NUCLEX_SUPPORT_PLATFORM_WINDOWSPROCESSAPI_H

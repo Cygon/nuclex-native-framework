@@ -23,12 +23,11 @@ License along with this library
 
 #include "Nuclex/Support/Threading/Process.h"
 
-#if defined(NUCLEX_SUPPORT_WIN32)
+#if defined(NUCLEX_SUPPORT_WINDOWS)
 
 #include "Nuclex/Support/Errors/TimeoutError.h"
 #include "Nuclex/Support/Text/StringConverter.h"
-#include "../Helpers/WindowsApi.h"
-#include "Windows/WindowsProcessApi.h"
+#include "../Platform/WindowsProcessApi.h"
 
 #include <exception> // for std::terminate()
 #include <cassert> // for assert()
@@ -156,7 +155,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     const std::vector<std::string> &arguments /* = std::vector<std::string>() */,
     bool prependExecutableName /* = true */
   ) {
-    using Nuclex::Support::Threading::Windows::WindowsProcessApi;
+    using Nuclex::Support::Platform::WindowsProcessApi;
     using Nuclex::Support::Text::StringConverter;
 
     PlatformDependentImplementationData &impl = getImplementationData();
@@ -172,12 +171,12 @@ namespace Nuclex { namespace Support { namespace Threading {
     pipeSecurityAttributes.lpSecurityDescriptor = nullptr;
 
     // Create 3 pipes and set the ends that belong to our side as non-inheritable
-    Nuclex::Support::Threading::Windows::Pipe stdinPipe(pipeSecurityAttributes);
+    Nuclex::Support::Platform::Pipe stdinPipe(pipeSecurityAttributes);
     stdinPipe.SetEndNonInheritable(1);
     stdinPipe.SetEndNonBlocking(1);
-    Nuclex::Support::Threading::Windows::Pipe stdoutPipe(pipeSecurityAttributes);
+    Nuclex::Support::Platform::Pipe stdoutPipe(pipeSecurityAttributes);
     stdoutPipe.SetEndNonInheritable(0);
-    Nuclex::Support::Threading::Windows::Pipe stderrPipe(pipeSecurityAttributes);
+    Nuclex::Support::Platform::Pipe stderrPipe(pipeSecurityAttributes);
     stderrPipe.SetEndNonInheritable(0);
 
     ::PROCESS_INFORMATION childProcessInfo = {0};
@@ -239,7 +238,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         );
         if(result == FALSE) {
           DWORD lastErrorCode = ::GetLastError();
-          Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
             u8"Could not spawn new process", lastErrorCode
           );
         }
@@ -265,7 +264,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         result = ::CloseHandle(childProcessInfo.hProcess);
         assert((result != FALSE) && u8"Child process handle closed successfully");
 
-        Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
           u8"Could not close handle for child process main thread", lastErrorCode
         );
       }
@@ -289,7 +288,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     // Try to get the process' exit code. If the process hasn't exited yet,
     // this method will return the special exit code STILL_ACTIVE.
-    DWORD exitCode = Nuclex::Support::Threading::Windows::WindowsProcessApi::GetProcessExitCode(
+    DWORD exitCode = Nuclex::Support::Platform::WindowsProcessApi::GetProcessExitCode(
       impl.ChildProcessHandle
     );
 
@@ -304,7 +303,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       }
 
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Error waiting for external process to exit", lastErrorCode
       );
     } else { // Process exited with an unambiguous exit code
@@ -335,7 +334,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         return true;
       } else if(result != WAIT_TIMEOUT) {
         DWORD lastErrorCode = ::GetLastError();
-        Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
           u8"Error waiting for external process to exit", lastErrorCode
         );
       }
@@ -354,7 +353,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   int Process::Join(std::chrono::milliseconds patience /* = std::chrono::milliseconds(30000) */) {
-    using Nuclex::Support::Threading::Windows::WindowsProcessApi;
+    using Nuclex::Support::Platform::WindowsProcessApi;
 
     PlatformDependentImplementationData &impl = getImplementationData();
     if(impl.ChildProcessHandle == INVALID_HANDLE_VALUE) {
@@ -376,7 +375,7 @@ namespace Nuclex { namespace Support { namespace Threading {
           break; // Yep, someone returned STILL_ACTIVE as the process' exit code
         } else if(result != WAIT_TIMEOUT) {
           DWORD lastErrorCode = ::GetLastError();
-          Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
             u8"Error waiting for external process to exit", lastErrorCode
           );
         }
@@ -403,7 +402,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       BOOL result = ::CloseHandle(impl.ChildProcessHandle);
       if(result == FALSE) {
         DWORD lastErrorCode = ::GetLastError();
-        Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
           u8"Could not close handle of terminated child process", lastErrorCode
         );
       }
@@ -416,7 +415,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       BOOL result = ::CloseHandle(impl.StderrHandle);
       if(result == FALSE) {
         DWORD lastErrorCode = ::GetLastError();
-        Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
           u8"Could not close stderr pipe to child process", lastErrorCode
         );
       }
@@ -425,7 +424,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       BOOL result = ::CloseHandle(impl.StdoutHandle);
       if(result == FALSE) {
         DWORD lastErrorCode = ::GetLastError();
-        Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
           u8"Could not close stdout pipe to child process", lastErrorCode
         );
       }
@@ -434,7 +433,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       BOOL result = ::CloseHandle(impl.StdinHandle);
       if(result == FALSE) {
         DWORD lastErrorCode = ::GetLastError();
-        Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
           u8"Could not close stdin pipe to child process", lastErrorCode
         );
       }
@@ -466,11 +465,11 @@ namespace Nuclex { namespace Support { namespace Threading {
           if(lastErrorCode == ERROR_BROKEN_PIPE) {
             continue; // Process has terminated its end of the pipe, this is okay.
           } else if(pipeIndex == 0) {            
-            Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+            Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
               u8"Failed to check pipe buffer for stdout", lastErrorCode
             );
           } else {
-            Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+            Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
               u8"Failed to check pipe buffer for stderr", lastErrorCode
             );
           }
@@ -497,11 +496,11 @@ namespace Nuclex { namespace Support { namespace Threading {
             if(lastErrorCode == ERROR_BROKEN_PIPE) {
               break; // Process has terminated its end of the pipe, this is okay.
             } else if(pipeIndex == 0) {
-              Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+              Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
                 u8"Failed to read pipe buffer for stdout", lastErrorCode
               );
             } else {
-              Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+              Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
                 u8"Failed to read pipe buffer for stderr", lastErrorCode
               );
             }
@@ -527,7 +526,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   void Process::Kill(std::chrono::milliseconds patience /* = std::chrono::milliseconds(5000) */) {
-    using Nuclex::Support::Threading::Windows::WindowsProcessApi;
+    using Nuclex::Support::Platform::WindowsProcessApi;
 
     PlatformDependentImplementationData &impl = getImplementationData();
     if(impl.ChildProcessHandle == INVALID_HANDLE_VALUE) {
@@ -558,7 +557,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     );
     if(result == FALSE) {
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Error writing data to stdin pipe of child process", lastErrorCode
       );
     }
@@ -601,4 +600,4 @@ namespace Nuclex { namespace Support { namespace Threading {
 
 }}} // namespace Nuclex::Support::Threading
 
-#endif // defined(NUCLEX_SUPPORT_WIN32)
+#endif // defined(NUCLEX_SUPPORT_WINDOWS)

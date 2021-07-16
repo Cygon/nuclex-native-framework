@@ -70,7 +70,7 @@ namespace {
 #pragma GCC diagnostic pop
 #endif
 
-namespace Nuclex { namespace Support { namespace Helpers {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -132,7 +132,7 @@ namespace Nuclex { namespace Support { namespace Helpers {
   // ------------------------------------------------------------------------------------------- //
 
   void PosixApi::ThrowExceptionForSystemError(const std::string &errorMessage, int errorNumber) {
-    using Nuclex::Support::Helpers::PosixApi;
+    using Nuclex::Support::Platform::PosixApi;
 
     std::string combinedErrorMessage(errorMessage);
     combinedErrorMessage.append(u8" - ");
@@ -145,6 +145,6 @@ namespace Nuclex { namespace Support { namespace Helpers {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}} // namespace Nuclex::Support::Helpers
+}}} // namespace Nuclex::Support::Platform
 
 #endif // !defined(NUCLEX_SUPPORT_WIN32)

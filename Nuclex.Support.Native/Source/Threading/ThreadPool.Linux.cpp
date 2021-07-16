@@ -31,7 +31,7 @@ License along with this library
 #include "Nuclex/Support/Collections/MoodyCamel/concurrentqueue.h" // for ConcurrentQueue
 
 #include "ThreadPoolTaskPool.h" // thread pool settings + task pool
-#include "Posix/PosixTimeApi.h" // error handling helpers, time helpers
+#include "../Platform/PosixTimeApi.h" // error handling helpers, time helpers
 
 #include <cassert> // for assert()
 #include <atomic> // for std::atomic

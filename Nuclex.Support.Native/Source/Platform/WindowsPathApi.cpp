@@ -21,18 +21,18 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "WindowsFileApi.h"
+#include "WindowsPathApi.h"
 
 #if defined(NUCLEX_SUPPORT_WIN32)
 
 #include "Nuclex/Support/Text/StringConverter.h"
 //#include <Shlwapi.h> // for ::PahtRemoveFileSpecW(), ::PathIsRelativeW(), PathAppendW()
 
-namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
-  bool WindowsFileApi::IsPathRelative(const std::wstring &path) {
+  bool WindowsPathApi::IsPathRelative(const std::wstring &path) {
     std::wstring::size_type length = path.length();
     if(length == 0) {
       return true;
@@ -48,8 +48,8 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
   }
 
   // ------------------------------------------------------------------------------------------- //
-  
-  void WindowsFileApi::AppendPath(std::wstring &path, const std::wstring &extra) {
+
+  void WindowsPathApi::AppendPath(std::wstring &path, const std::wstring &extra) {
     std::wstring::size_type length = path.length();
     if(length == 0) {
       path.assign(extra);
@@ -63,7 +63,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void WindowsFileApi::RemoveFileFromPath(std::wstring &path) {
+  void WindowsPathApi::RemoveFileFromPath(std::wstring &path) {
     std::wstring::size_type lastBackslashIndex = path.find_last_of(L'\\');
     if(lastBackslashIndex != std::wstring::npos) {
       path.resize(lastBackslashIndex + 1); // Keep the slash on
@@ -72,7 +72,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
   // ------------------------------------------------------------------------------------------- //
 
-  bool WindowsFileApi::HasExtension(const std::wstring &path) {
+  bool WindowsPathApi::HasExtension(const std::wstring &path) {
     std::wstring::size_type lastBackslashIndex = std::wstring::npos;
     std::wstring::size_type lastDotIndex = std::wstring::npos;
     {
@@ -104,7 +104,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
   // ------------------------------------------------------------------------------------------- //
 
-  bool WindowsFileApi::DoesFileExist(const std::wstring &path) {
+  bool WindowsPathApi::DoesFileExist(const std::wstring &path) {
     DWORD attributes = ::GetFileAttributesW(path.c_str());
     if(attributes == INVALID_FILE_ATTRIBUTES) {
       DWORD lastErrorCode = ::GetLastError();
@@ -128,7 +128,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void WindowsFileApi::GetSystemDirectory(std::wstring &target) {
+  void WindowsPathApi::GetSystemDirectory(std::wstring &target) {
     target.resize(MAX_PATH);
 
     UINT result = ::GetSystemDirectoryW(target.data(), MAX_PATH);
@@ -144,7 +144,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void WindowsFileApi::GetWindowsDirectory(std::wstring &target) {
+  void WindowsPathApi::GetWindowsDirectory(std::wstring &target) {
     target.resize(MAX_PATH);
 
     UINT result = ::GetWindowsDirectoryW(target.data(), MAX_PATH);
@@ -160,7 +160,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
   // ------------------------------------------------------------------------------------------- //
 #if defined(NUCLEX_SUPPORT_EMULATE_SHLWAPI)
-  BOOL WindowsFileApi::PathRemoveFileSpecW(LPWSTR pszPath) {
+  BOOL WindowsPathApi::PathRemoveFileSpecW(LPWSTR pszPath) {
     if(pszPath == nullptr) {
       //::SetLastError(ERROR_INVALID_PARAMETER);
       return FALSE;
@@ -217,7 +217,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 #endif // defined(NUCLEX_SUPPORT_EMULATE_SHLWAPI)
   // ------------------------------------------------------------------------------------------- //
 #if defined(NUCLEX_SUPPORT_EMULATE_SHLWAPI)
-  BOOL WindowsFileApi::PathIsRelativeW(LPCWSTR pszPath) {
+  BOOL WindowsPathApi::PathIsRelativeW(LPCWSTR pszPath) {
     if(pszPath == nullptr) {
       //::SetLastError(ERROR_INVALID_PARAMETER);
       return TRUE;
@@ -244,7 +244,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 #endif // defined(NUCLEX_SUPPORT_EMULATE_SHLWAPI)
   // ------------------------------------------------------------------------------------------- //
 #if defined(NUCLEX_SUPPORT_EMULATE_SHLWAPI)
-  BOOL WindowsFileApi::PathAppendW(LPWSTR pszPath, LPCWSTR pszMore) {
+  BOOL WindowsPathApi::PathAppendW(LPWSTR pszPath, LPCWSTR pszMore) {
     if((pszPath == nullptr) || (pszMore == nullptr)) {
       ::SetLastError(ERROR_INVALID_PARAMETER);
       return FALSE;
@@ -311,14 +311,14 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     }
 
     // Failure, buffer end reached and pszMore still had more characters to append.
-    *pszPath = 0; 
+    *pszPath = 0;
     ::SetLastError(ERROR_BUFFER_OVERFLOW);
     return FALSE;
   }
 #endif // defined(NUCLEX_SUPPORT_EMULATE_SHLWAPI)
   // ------------------------------------------------------------------------------------------- //
 
-}}}} // namespace Nuclex::Support::Threading::Windows
+}}} // namespace Nuclex::Support::Platform
 
 #endif // defined(NUCLEX_SUPPORT_WIN32)
 
@@ -330,7 +330,7 @@ std::wstring WindowsProcessApi::combinePaths(std::wstring &path, const std::wstr
   LPWSTR combined = ::PathCombineW(result.data(), path.c_str(), extra.c_str());
   if(combined == nullptr) {
     DWORD errorCode = ::GetLastError();
-    Helpers::WindowsApi::ThrowExceptionForSystemError(u8"Could not combine paths", errorCode);
+    Platform::WindowsApi::ThrowExceptionForSystemError(u8"Could not combine paths", errorCode);
   }
 
   int pathLength = ::lstrlenW(result.c_str());

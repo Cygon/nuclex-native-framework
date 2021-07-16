@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "PosixFileApi.h"
+#include "PosixPathApi.h"
 
 #if !defined(NUCLEX_SUPPORT_WIN32)
 
@@ -37,11 +37,11 @@ namespace {
 
 } // anonymous namespace
 
-namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
-  bool PosixFileApi::IsPathRelative(const std::string &path) {
+  bool PosixPathApi::IsPathRelative(const std::string &path) {
     std::string::size_type length = path.length();
     if(length == 0) {
       return true;
@@ -58,7 +58,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void PosixFileApi::AppendPath(std::string &path, const std::string &extra) {
+  void PosixPathApi::AppendPath(std::string &path, const std::string &extra) {
     std::string::size_type length = path.length();
     if(length == 0) {
       path.assign(extra);
@@ -72,7 +72,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void PosixFileApi::RemoveFileFromPath(std::string &path) {
+  void PosixPathApi::RemoveFileFromPath(std::string &path) {
     std::string::size_type lastBackslashIndex = path.find_last_of('/');
     if(lastBackslashIndex != std::string::npos) {
       path.resize(lastBackslashIndex + 1); // Keep the slash on
@@ -81,7 +81,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
 
   // ------------------------------------------------------------------------------------------- //
 
-  bool PosixFileApi::DoesFileExist(const std::string &path) {
+  bool PosixPathApi::DoesFileExist(const std::string &path) {
     struct ::stat fileStatus;
 
     int result = ::stat(path.c_str(), &fileStatus);
@@ -97,7 +97,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
       errorMessage.append(path);
       errorMessage.append(u8"'");
 
-      Helpers::PosixApi::ThrowExceptionForSystemError(errorMessage, errorNumber);
+      Platform::PosixApi::ThrowExceptionForSystemError(errorMessage, errorNumber);
     }
 
     return true;
@@ -105,6 +105,6 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}}} // namespace Nuclex::Support::Threading::Posix
+}}} // namespace Nuclex::Support::Platform
 
 #endif // !defined(NUCLEX_SUPPORT_WIN32)

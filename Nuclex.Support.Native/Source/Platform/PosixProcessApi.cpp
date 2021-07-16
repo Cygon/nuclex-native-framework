@@ -25,7 +25,7 @@ License along with this library
 
 #if !defined(NUCLEX_SUPPORT_WIN32)
 
-#include "PosixFileApi.h"
+#include "PosixPathApi.h"
 
 #include "Nuclex/Support/Text/LexicalAppend.h"
 
@@ -56,7 +56,7 @@ namespace {
     if(characterCount == -1) {
       int errorNumber = errno;
       if((errorNumber != EACCES) && (errorNumber != ENOTDIR) && (errorNumber != ENOENT)) {
-        Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
           u8"Could not follow '/proc/self/exe' to own path", errorNumber
         );
       }
@@ -79,12 +79,12 @@ namespace {
         //message.append(u8"Could not follow '", 18);
         //message.append(ownProcessLink);
         //message.append(u8"' to own path", 13);
-        //Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(message, errorNumber);
+        //Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(message, errorNumber);
 
         // Let's stay with the original error message, /proc/self/exe gives
         // the user a much better idea at what the application wanted to do than
         // a random PID that doesn't exist anymore after the error is printed.
-        Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
           u8"Could not follow '/proc/self/exe' to own path", errorNumber
         );
       }
@@ -92,14 +92,14 @@ namespace {
 
     target.resize(characterCount);
 
-    Nuclex::Support::Threading::Posix::PosixFileApi::RemoveFileFromPath(target);
+    Nuclex::Support::Platform::PosixPathApi::RemoveFileFromPath(target);
   }
 
   // ------------------------------------------------------------------------------------------- //
 
 } // anonymous namespace
 
-namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -109,7 +109,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
     int result = ::pipe(this->ends);
     if(unlikely(result != 0)) {
       int errorNumber = errno;
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not set up a pipe", errorNumber
       );
     }
@@ -138,7 +138,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
     int result = ::close(this->ends[whichEnd]);
     if(unlikely(result != 0)) {
       int errorNumber = errno;
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not close one end of a pipe", errorNumber
       );
     }
@@ -164,7 +164,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
     int result = ::fcntl(this->ends[whichEnd], F_GETFD);
     if(result == -1) {
       int errorNumber = errno;
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not query file descriptor flags of a pipe end", errorNumber
       );
     }
@@ -173,7 +173,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
     result = ::fcntl(this->ends[whichEnd], F_SETFD, newFlags);
     if(result == -1) {
       int errorNumber = errno;
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not add O_NONBLOCK to the file descriptor flags of a pipe end", errorNumber
       );
     }
@@ -185,7 +185,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
     int result = ::kill(processId, SIGTERM);
     if(result == -1) {
       int errorNumber = errno;
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not send SIGTERM to a process", errorNumber
       );
     }
@@ -197,7 +197,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
     int result = ::kill(processId, SIGKILL);
     if(result == -1) {
       int errorNumber = errno;
-      Nuclex::Support::Helpers::PosixApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
         u8"Could not send SIGTERM to a process", errorNumber
       );
     }
@@ -208,10 +208,10 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
   void PosixProcessApi::GetAbsoluteExecutablePath(
     std::string &target, const std::string &executable
   ) {
-    if(PosixFileApi::IsPathRelative(executable)) {
+    if(PosixPathApi::IsPathRelative(executable)) {
       getExecutablePath(target);
-      PosixFileApi::AppendPath(target, executable);
-      if(PosixFileApi::DoesFileExist(target)) {
+      PosixPathApi::AppendPath(target, executable);
+      if(PosixPathApi::DoesFileExist(target)) {
         return;
       }
 
@@ -226,9 +226,9 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
   void PosixProcessApi::GetAbsoluteWorkingDirectory(
     std::string &target, const std::string &workingDirectory
   ) {
-    if(PosixFileApi::IsPathRelative(workingDirectory)) {
+    if(PosixPathApi::IsPathRelative(workingDirectory)) {
       getExecutablePath(target);
-      PosixFileApi::AppendPath(target, workingDirectory);
+      PosixPathApi::AppendPath(target, workingDirectory);
     } else {
       target.assign(workingDirectory);
     }
@@ -246,8 +246,8 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
         if(*path == ':') {
           if(path > start) {
             target.assign(start, path);
-            PosixFileApi::AppendPath(target, executable);
-            if(PosixFileApi::DoesFileExist(target)) {
+            PosixPathApi::AppendPath(target, executable);
+            if(PosixPathApi::DoesFileExist(target)) {
               return;
             }
           }
@@ -260,8 +260,8 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
       // Final path in list.
       if(path > start) {
         target.assign(start, path);
-        PosixFileApi::AppendPath(target, executable);
-        if(PosixFileApi::DoesFileExist(target)) {
+        PosixPathApi::AppendPath(target, executable);
+        if(PosixPathApi::DoesFileExist(target)) {
           return;
         }
       }
@@ -272,6 +272,6 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Posix {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}}} // namespace Nuclex::Support::Threading::Posix
+}}} // namespace Nuclex::Support::Platform
 
 #endif // !defined(NUCLEX_SUPPORT_WIN32)

@@ -56,7 +56,7 @@ namespace {
 
 // --------------------------------------------------------------------------------------------- //
 
-namespace Nuclex { namespace Support { namespace Helpers {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -217,7 +217,7 @@ namespace Nuclex { namespace Support { namespace Helpers {
   void WindowsApi::ThrowExceptionForHResult(
     const std::string &errorMessage, HRESULT resultHandle
   ) {
-    using Nuclex::Support::Helpers::WindowsApi;
+    using Nuclex::Support::Platform::WindowsApi;
 
     std::string combinedErrorMessage(errorMessage);
     combinedErrorMessage.append(u8" - ");
@@ -230,6 +230,6 @@ namespace Nuclex { namespace Support { namespace Helpers {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}} // namespace Nuclex::Support::Helpers
+}}} // namespace Nuclex::Support::Platform
 
 #endif // defined(NUCLEX_SUPPORT_WIN32)

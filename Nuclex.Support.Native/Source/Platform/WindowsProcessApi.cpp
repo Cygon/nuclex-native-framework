@@ -25,7 +25,7 @@ License along with this library
 
 #if defined(NUCLEX_SUPPORT_WIN32)
 
-#include "WindowsFileApi.h"
+#include "WindowsPathApi.h"
 
 #include "Nuclex/Support/Text/StringConverter.h"
 #include "../../Text/Utf8/checked.h"
@@ -63,7 +63,7 @@ namespace {
 
 } // anonymous namespace
 
-namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
+namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -79,7 +79,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     );
     if(result == FALSE) {
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not create temporary pipe", lastErrorCode
       );
     }
@@ -108,7 +108,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     BOOL result = ::SetHandleInformation(this->ends[whichEnd], HANDLE_FLAG_INHERIT, 0);
     if(result == FALSE) {
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not disable inheritability for pipe side", lastErrorCode
       );
     }
@@ -123,7 +123,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     BOOL result = ::SetNamedPipeHandleState(this->ends[whichEnd], &newMode, nullptr, nullptr);
     if(result == FALSE) {
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not configure pipe for non-blocking IO", lastErrorCode
       );
     }
@@ -137,7 +137,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     BOOL result = ::CloseHandle(this->ends[whichEnd]);
     if(result == FALSE) {
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not close one end of a pipe", lastErrorCode
       );
     }
@@ -162,7 +162,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     DWORD processId = ::GetProcessId(processHandle);
     if(processId == 0) {
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not obtain process id from process handle", lastErrorCode
       );
     }
@@ -173,7 +173,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     HANDLE snapshotHandle = ::CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, processId);
     if(snapshotHandle == INVALID_HANDLE_VALUE) {
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not create toolhelp snapshot of running threads", lastErrorCode
       );
     }
@@ -193,7 +193,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
       if(result == FALSE) {
         DWORD lastErrorCode = ::GetLastError();
         if(lastErrorCode != ERROR_NO_MORE_FILES) {
-          Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
             u8"Could not query first thread from toolhelp snapshot", lastErrorCode
           );
         }
@@ -208,7 +208,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
             // ERROR_INVALID_THREAD_ID happens if the thread never called PeekMessage()
             // That's not an error, it simply means threads is not the message pump thread.
             if(lastErrorCode != ERROR_INVALID_THREAD_ID) {
-              Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+              Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
                 u8"Could not post quit message to child process thread", lastErrorCode
               );
             }
@@ -220,7 +220,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
         if(result == FALSE) {
           DWORD lastErrorCode = ::GetLastError();
           if(lastErrorCode != ERROR_NO_MORE_FILES) {
-            Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+            Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
               u8"Could not advance enumerated thread in toolhelp snapshot", lastErrorCode
             );
           }
@@ -241,7 +241,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
       );
       if(result == FALSE) {
         DWORD lastErrorCode = ::GetLastError();
-        Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+        Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
           u8"Could not enumerate top-level windows", lastErrorCode
         );
       }
@@ -260,7 +260,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
         BOOL result = ::PostMessageW(topLevelWindowHandles[index], WM_CLOSE, 0, 0);
         if(result == FALSE) {
           DWORD lastErrorCode = ::GetLastError();
-          Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
             u8"Could not post WM_CLOSE to a window", lastErrorCode
           );
         }
@@ -275,7 +275,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     BOOL result = ::TerminateProcess(processHandle, 255);
     if(result == FALSE) {
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not terminate child process", lastErrorCode
       );
     }
@@ -289,7 +289,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     BOOL result = ::GetExitCodeProcess(processHandle, &exitCode);
     if(result == FALSE) {
       DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
         u8"Could not check process exit code", lastErrorCode
       );
     }
@@ -304,19 +304,19 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
   ) {
     static const std::wstring exeExtension(L".exe", 4);
 
-    if(WindowsFileApi::IsPathRelative(executable)) {
+    if(WindowsPathApi::IsPathRelative(executable)) {
 
       // Try the executable's own path
       {
         getModuleFileName(target);
-        WindowsFileApi::RemoveFileFromPath(target);
-        WindowsFileApi::AppendPath(target, executable);
-        if(WindowsFileApi::DoesFileExist(target)) {
+        WindowsPathApi::RemoveFileFromPath(target);
+        WindowsPathApi::AppendPath(target, executable);
+        if(WindowsPathApi::DoesFileExist(target)) {
           return;
         }
-        if(!WindowsFileApi::HasExtension(executable)) {
+        if(!WindowsPathApi::HasExtension(executable)) {
           target.append(exeExtension);
-          if(WindowsFileApi::DoesFileExist(target)) {
+          if(WindowsPathApi::DoesFileExist(target)) {
             return;
           }
         }
@@ -324,14 +324,14 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
       // Try the Windows system directory
       {
-        WindowsFileApi::GetSystemDirectory(target);
-        WindowsFileApi::AppendPath(target, executable);
-        if(WindowsFileApi::DoesFileExist(target)) {
+        WindowsPathApi::GetSystemDirectory(target);
+        WindowsPathApi::AppendPath(target, executable);
+        if(WindowsPathApi::DoesFileExist(target)) {
           return;
         }
-        if(!WindowsFileApi::HasExtension(executable)) {
+        if(!WindowsPathApi::HasExtension(executable)) {
           target.append(exeExtension);
-          if(WindowsFileApi::DoesFileExist(target)) {
+          if(WindowsPathApi::DoesFileExist(target)) {
             return;
           }
         }
@@ -339,14 +339,14 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
       // Try the Windows directory
       {
-        WindowsFileApi::GetWindowsDirectory(target);
-        WindowsFileApi::AppendPath(target, executable);
-        if(WindowsFileApi::DoesFileExist(target)) {
+        WindowsPathApi::GetWindowsDirectory(target);
+        WindowsPathApi::AppendPath(target, executable);
+        if(WindowsPathApi::DoesFileExist(target)) {
           return;
         }
-        if(!WindowsFileApi::HasExtension(executable)) {
+        if(!WindowsPathApi::HasExtension(executable)) {
           target.append(exeExtension);
-          if(WindowsFileApi::DoesFileExist(target)) {
+          if(WindowsPathApi::DoesFileExist(target)) {
             return;
           }
         }
@@ -362,7 +362,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
       {
         const bool throwOnError = false;
         searchExecutablePath(target, executable, throwOnError);
-        if(WindowsFileApi::DoesFileExist(target)) {
+        if(WindowsPathApi::DoesFileExist(target)) {
           return;
         }
       }
@@ -378,10 +378,10 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
   void WindowsProcessApi::GetAbsoluteWorkingDirectory(
     std::wstring &target, const std::wstring &workingDirectory
   ) {
-    if(WindowsFileApi::IsPathRelative(workingDirectory)) {
+    if(WindowsPathApi::IsPathRelative(workingDirectory)) {
       getModuleFileName(target);
-      WindowsFileApi::RemoveFileFromPath(target);
-      WindowsFileApi::AppendPath(target, workingDirectory);
+      WindowsPathApi::RemoveFileFromPath(target);
+      WindowsPathApi::AppendPath(target, workingDirectory);
     } else {
       target.assign(workingDirectory);
     }
@@ -412,7 +412,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
     if(unlikely(result == 0)) {
       DWORD errorCode = ::GetLastError();
       std::string errorMessage(u8"Could not determine executable module path");
-      Helpers::WindowsApi::ThrowExceptionForSystemError(errorMessage, errorCode);
+      Platform::WindowsApi::ThrowExceptionForSystemError(errorMessage, errorCode);
     }
 
     target.resize(result);
@@ -458,7 +458,7 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
             message.append(errorMessageEnd);
           }
 
-          Nuclex::Support::Helpers::WindowsApi::ThrowExceptionForSystemError(
+          Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
             message, lastErrorCode
           );
         } else { // No exception wanted
@@ -476,6 +476,6 @@ namespace Nuclex { namespace Support { namespace Threading { namespace Windows {
 
   // ------------------------------------------------------------------------------------------- //
 
-}}}} // namespace Nuclex::Support::Threading::Windows
+}}} // namespace Nuclex::Support::Platform
 
 #endif // defined(NUCLEX_SUPPORT_WIN32)
