@@ -26,7 +26,7 @@ License along with this library
 
 #if defined(NUCLEX_SUPPORT_WINDOWS)
 #include "../Source/Platform/WindowsApi.h"
-#include "Nuclex/Support/Text//StringConverter.h"
+#include "Nuclex/Support/Text/StringConverter.h"
 #else
 #include <unistd.h> // for ::access()
 #include <sys/stat.h> // for ::stat()

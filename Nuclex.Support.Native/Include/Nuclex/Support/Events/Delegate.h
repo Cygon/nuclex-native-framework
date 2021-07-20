@@ -75,14 +75,14 @@ namespace Nuclex { namespace Support { namespace Events {
   ///         FooBarDelegate test = FooBarDelegate::Create&lt;Dummy&gt;();
   ///
   ///         // Call the function the delegate is set to
-  ///         test(123, "Hello");
+  ///         test(123, u8"Hello");
   ///
   ///         // Point the delegate to an object method (could use Reset() here, too)
   ///         Mock myMock;
   ///         test = FooBarDelegate::Create&lt;Mock, &Mock::Dummy&gt;(&amp;myMock);
   ///
   ///         // Call the object method the delegate is set to
-  ///         test(123, &quot;Hello&quot;);
+  ///         test(123, u8"Hello");
   ///       }
   ///     </code>
   ///   </para>

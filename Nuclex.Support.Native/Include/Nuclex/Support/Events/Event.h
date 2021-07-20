@@ -87,10 +87,10 @@ namespace Nuclex { namespace Support { namespace Events {
   ///         test.Subscribe&lt;Mock, &Mock::Dummy&gt;(&amp;myMock);
   ///
   ///         // Fire the event
-  ///         std::vector&lt;int&gt; returnedValues = test(123, &quot;Hello&quot;);
+  ///         std::vector&lt;int&gt; returnedValues = test(123, u8"Hello");
   ///
   ///         // Fire the event again but don't collect returned values
-  ///         test.Emit(123, &quot;Hello&quot;);
+  ///         test.Emit(123, u8"Hello");
   ///       }
   ///     </code>
   ///   </para>
