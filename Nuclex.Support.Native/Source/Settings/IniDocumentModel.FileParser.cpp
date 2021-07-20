@@ -432,7 +432,6 @@ namespace Nuclex { namespace Support { namespace Settings {
       newLine = allocateLineChunked<Line>(
         this->lineStart, this->parsePosition - this->lineStart
       );
-      newLine = new Line();
     } else if(this->equalsSignFound) {
       newLine = generatePropertyLine();
     } else if(this->sectionFound) {
