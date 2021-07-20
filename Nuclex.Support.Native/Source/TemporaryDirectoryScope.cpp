@@ -189,9 +189,7 @@ namespace Nuclex { namespace Support {
 
   TemporaryDirectoryScope::TemporaryDirectoryScope(
     const std::string &namePrefix /* = u8"tmp" */
-  ) :
-    path(),
-    privateImplementationData {0} {
+  ) : path() {
 #if defined(NUCLEX_SUPPORT_WINDOWS)
 
     // Ask Windows to create a unique temporary file for us
@@ -275,6 +273,29 @@ namespace Nuclex { namespace Support {
       Platform::PosixApi::ThrowExceptionForSystemError(errorMessage, errorNumber);
     }
 #endif
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::string TemporaryDirectoryScope::GetPath(const std::string &filename) const {
+    std::string fullPath = this->path;
+    {
+      if(fullPath.length() > 0) {
+#if defined(NUCLEX_SUPPORT_WINDOWS)
+        char lastCharacter = fullPath[fullPath.length() - 1];
+        if((lastCharacter != '\\') && (lastCharacter != '/')) {
+          fullPath.push_back('\\');
+        }
+#else
+        if(fullPath[fullPath.length() - 1] != '/') {
+          fullPath.push_back('/');
+        }
+#endif
+      }
+      fullPath.append(filename);
+    }
+
+    return fullPath;
   }
 
   // ------------------------------------------------------------------------------------------- //

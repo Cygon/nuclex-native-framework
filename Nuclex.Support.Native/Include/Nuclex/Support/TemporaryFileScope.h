@@ -33,9 +33,30 @@ namespace Nuclex { namespace Support {
 
   /// <summary>Creates a temporary file that is deleted when the scope is destroyed</summary>
   /// <remarks>
-  ///   This is very useful for unit tests or if you're dealing with a poorly designed
-  ///   library that can only read resources from the file system rather than providing
-  ///   an abstract IO interface.
+  ///   <para>
+  ///     This is very useful for unit tests or if you're dealing with a poorly designed
+  ///     library that can only read resources from the file system rather than providing
+  ///     an abstract IO interface.
+  ///   </para>
+  ///   <para>
+  ///     Usage is straight-forward:
+  ///   <para>
+  ///   <example>
+  ///     <code>
+  ///       void test() {
+  ///         TemporaryFileScope tempFile(u8"xyz"); // file with custom prefix
+  ///
+  ///         // Write something into the file. Overloads are provided for a buffer + length
+  ///         // pair as well as for std::vector<std::uint8_t>.
+  ///         tempFile.SetFileContents(u8"Hello World!");
+  ///
+  ///         // ...do something that requires an actual file....
+  ///         ::poorly_designed_library_load_message(tempFile.GetPath());
+  ///
+  ///         // The file is deleted again upon destruction of the temporary file scope
+  ///       }
+  ///     </code>
+  ///   </example>
   /// </remarks>
   class TemporaryFileScope {
 
