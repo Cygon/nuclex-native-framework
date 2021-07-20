@@ -67,8 +67,8 @@ namespace Nuclex { namespace Support {
         break;
       }
       case VariantType::Any: {
-        new(this->anyValueBytes) Any(
-          *reinterpret_cast<const Any *>(other.anyValueBytes)
+        new(this->anyValueBytes) std::any(
+          *reinterpret_cast<const std::any *>(other.anyValueBytes)
         );
         break;
       }
@@ -111,8 +111,8 @@ namespace Nuclex { namespace Support {
         break;
       }
       case VariantType::Any: {
-        Any &&otherAny = std::move(*reinterpret_cast<Any *>(other.anyValueBytes));
-        new(this->anyValueBytes) Any(std::move(otherAny));
+        std::any &&otherAny = std::move(*reinterpret_cast<std::any *>(other.anyValueBytes));
+        new(this->anyValueBytes) std::any(std::move(otherAny));
         break;
       }
       default: { throw std::runtime_error(InvalidVariantTypeExceptionMessage); }
@@ -603,28 +603,28 @@ namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //
 
-  Any Variant::ToAny() const {
+  std::any Variant::ToAny() const {
     switch(this->type) {
-      case VariantType::Empty: { return Any(nullptr); }
-      case VariantType::Boolean: { return Any(this->booleanValue); }
-      case VariantType::Uint8: { return Any(this->uint8Value); }
-      case VariantType::Int8: { return Any(this->int8Value); }
-      case VariantType::Uint16: { return Any(this->uint16Value); }
-      case VariantType::Int16: { return Any(this->int16Value); }
-      case VariantType::Uint32: { return Any(this->uint32Value); }
-      case VariantType::Int32: { return Any(this->int32Value); }
-      case VariantType::Uint64: { return Any(this->uint64Value); }
-      case VariantType::Int64: { return Any(this->int64Value); }
-      case VariantType::Float: { return Any(this->floatValue); }
-      case VariantType::Double: { return Any(this->doubleValue); }
+      case VariantType::Empty: { return std::any(nullptr); }
+      case VariantType::Boolean: { return std::any(this->booleanValue); }
+      case VariantType::Uint8: { return std::any(this->uint8Value); }
+      case VariantType::Int8: { return std::any(this->int8Value); }
+      case VariantType::Uint16: { return std::any(this->uint16Value); }
+      case VariantType::Int16: { return std::any(this->int16Value); }
+      case VariantType::Uint32: { return std::any(this->uint32Value); }
+      case VariantType::Int32: { return std::any(this->int32Value); }
+      case VariantType::Uint64: { return std::any(this->uint64Value); }
+      case VariantType::Int64: { return std::any(this->int64Value); }
+      case VariantType::Float: { return std::any(this->floatValue); }
+      case VariantType::Double: { return std::any(this->doubleValue); }
       case VariantType::String: {
-        return Any(*reinterpret_cast<const std::string *>(this->stringValueBytes));
+        return std::any(*reinterpret_cast<const std::string *>(this->stringValueBytes));
       }
       case VariantType::WString: {
-        return Any(*reinterpret_cast<const std::wstring *>(this->wstringValueBytes));
+        return std::any(*reinterpret_cast<const std::wstring *>(this->wstringValueBytes));
       }
       case VariantType::Any: {
-        return *reinterpret_cast<const Any *>(this->anyValueBytes);
+        return *reinterpret_cast<const std::any *>(this->anyValueBytes);
       }
       default: { throw std::runtime_error(InvalidVariantTypeExceptionMessage); }
     }
@@ -724,8 +724,8 @@ namespace Nuclex { namespace Support {
         break;
       }
       case VariantType::Any: {
-        new(this->anyValueBytes) Any(
-          *reinterpret_cast<const Any *>(other.anyValueBytes)
+        new(this->anyValueBytes) std::any(
+          *reinterpret_cast<const std::any *>(other.anyValueBytes)
         );
         break;
       }
@@ -780,9 +780,9 @@ namespace Nuclex { namespace Support {
         break;
       }
       case VariantType::Any: {
-        Any &&otherAny = std::move(*reinterpret_cast<Any *>(other.anyValueBytes));
-        new(this->anyValueBytes) Any(std::move(otherAny));
-        otherAny.~Any();
+        std::any &&otherAny = std::move(*reinterpret_cast<std::any *>(other.anyValueBytes));
+        new(this->anyValueBytes) std::any(std::move(otherAny));
+        otherAny.~any();
         break;
       }
       case VariantType::VoidPointer: { this->pointerValue = other.pointerValue; break; }

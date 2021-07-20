@@ -22,11 +22,11 @@ License along with this library
 #define NUCLEX_SUPPORT_VARIANT_H
 
 #include "Nuclex/Support/Config.h"
-#include "Nuclex/Support/Any.h"
 #include "Nuclex/Support/VariantType.h"
 
 #include <cstdint> // for std::int*_t and std::uint*_t
 #include <string> // for std::string
+#include <any> // for std::any
 
 namespace Nuclex { namespace Support {
 
@@ -38,7 +38,7 @@ namespace Nuclex { namespace Support {
   ///   it really makes sense. C++ is not a dynamically typed language and a template-based
   ///   design is always a better choice. If you need to design interfaces that pass
   ///   changing types to internal implementations, consider
-  ///   the <see cref="Any" /> class instead.
+  ///   the <see cref="std::any" /> class instead.
   /// </remarks>
   class Variant {
 
@@ -116,12 +116,15 @@ namespace Nuclex { namespace Support {
       new(this->wstringValueBytes) std::wstring(wstringValue);
     }
 
+    // Disabled due to compiler issue.
+#if defined(NUCLEX_SUPPORT_VARIANT_WITH_STDANY_CONSTRUCTOR)
     /// <summary>Initializes a variant to hold an opaquely typed value</summary>
     /// <param name="anyValue">Opaquely typed value the variant will hold</param>
-    public: NUCLEX_SUPPORT_API Variant(const Any &anyValue) :
+    public: NUCLEX_SUPPORT_API Variant(const std::any &anyValue) :
       type(VariantType::Any) {
-      new(this->anyValueBytes) Any(anyValue);
+      new(this->anyValueBytes) std::any(anyValue);
     }
+#endif
 
     /// <summary>Initializes a variant to hold a void pointer</summary>
     /// <param name="pointerValue">Pointer that the variant will hold</param>
@@ -208,7 +211,7 @@ namespace Nuclex { namespace Support {
 
     /// <summary>Returns the value held by the variant as an opaquely typed value</summary>
     /// <returns>The variasnt's value as an opaquely typed value</returns>
-    public: NUCLEX_SUPPORT_API Any ToAny() const;
+    public: NUCLEX_SUPPORT_API std::any ToAny() const;
 
     /// <summary>Returns the value held by the variant as a void pointer</summary>
     /// <returns>The variasnt's value as a void pointer</returns>
@@ -387,9 +390,9 @@ namespace Nuclex { namespace Support {
     /// <summary>Assigns an opaquely typed value to the variant</summary>
     /// <param name="newValue">Opaquely types value that will be assigned</param>
     /// <returns>The variant itself</returns>
-    public: NUCLEX_SUPPORT_API Variant &operator =(const Any &newValue) {
+    public: NUCLEX_SUPPORT_API Variant &operator =(const std::any &newValue) {
       free();
-      new(this->anyValueBytes) Any(newValue);
+      new(this->anyValueBytes) std::any(newValue);
       this->type = VariantType::Any;
       return *this;
     }
@@ -426,7 +429,7 @@ namespace Nuclex { namespace Support {
           break;
         }
         case VariantType::Any: {
-          reinterpret_cast<Any *>(this->anyValueBytes)->~Any();
+          reinterpret_cast<std::any *>(this->anyValueBytes)->~any();
           break;
         }
         default: {} // Avoids compiler warnings about unhandled enum members
@@ -466,7 +469,7 @@ namespace Nuclex { namespace Support {
       /// <summary>Wide string value, if the variant is holding that type</summary>
       std::uint8_t wstringValueBytes[sizeof(std::wstring)];
       /// <summary>Opaque value of an arbitrary type, if the variant is holding that</summary>
-      std::uint8_t anyValueBytes[sizeof(Any)];
+      std::uint8_t anyValueBytes[sizeof(std::any)];
       /// <summary>Void pointer value, if the variant is holding that type</summary>
       void *pointerValue;
     };
