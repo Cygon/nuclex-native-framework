@@ -33,6 +33,7 @@ License along with this library
 #include "../Platform/WindowsRegistryApi.h"
 
 #include <cassert> // for assert()
+#include <stdexcept> // for std::logic_error
 
 // TODO: This file has become too long.
 //       Split the registry read/write methods into an API wrapper
