@@ -6,10 +6,10 @@ Copyright (C) 2002-2021 Nuclex Development Labs
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
 published by the IBM Corporation; either version 1.0 of the
-License, or (at your option) any later version.
+License, or (at your option) std::any later version.
 
 This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
+but WITHOUT std::any WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 IBM Common Public License for more details.
 
@@ -78,7 +78,7 @@ namespace Nuclex { namespace Support { namespace Services {
     /// <typeparam name="TService">Interface under which the service will be added</typeparam>
     /// <param name="service">Service that will be responsible for the interface</param>
     public: template<typename TService> void Add(const std::shared_ptr<TService> &service) {
-      Add(typeid(TService), Any(service));
+      Add(typeid(TService), std::any(service));
     }
 
     /// <summary>Removes a service from the container</summary>
@@ -91,18 +91,18 @@ namespace Nuclex { namespace Support { namespace Services {
     /// <summary>Looks up the specified service</summary>
     /// <param name="serviceType">Type of service that will be looked up</param>
     /// <returns>
-    ///   The specified service as a shared_ptr wrapped in an <see cref="Any" />
+    ///   The specified service as a shared_ptr wrapped in an <see cref="std::any" />
     /// </returns>
-    protected: NUCLEX_SUPPORT_API const Any &Get(
+    protected: NUCLEX_SUPPORT_API const std::any &Get(
       const std::type_info &serviceType
     ) const;
 
     /// <summary>Tries to look up the specified service</summary>
     /// <param name="serviceType">Type of service that will be looked up</param>
-    /// <returns>An Any containing the service, if found, or an empty Any</returns>
+    /// <returns>An std::any containing the service, if found, or an empty std::any</returns>
     /// <remarks>
     ///   <para>
-    ///     An empty <see cref="Any" /> will be returned if the specified service has not
+    ///     An empty <see cref="std::any" /> will be returned if the specified service has not
     ///     been activated yet (for a mere container, that means it's not in the container,
     ///     for a factory, it means it has not been constructed yet or its lifetime requires
     ///     that the service instance is not stored).
@@ -111,7 +111,7 @@ namespace Nuclex { namespace Support { namespace Services {
     ///     If there is another problem, this method will still throw an exception.
     ///   </para>
     /// </remarks>
-    protected: NUCLEX_SUPPORT_API const Any &TryGet(const std::type_info &serviceType) const;
+    protected: NUCLEX_SUPPORT_API const std::any &TryGet(const std::type_info &serviceType) const;
 
     /// <summary>Adds a service to the container</summary>
     /// <param name="serviceType">
@@ -119,7 +119,7 @@ namespace Nuclex { namespace Support { namespace Services {
     /// </param>
     /// <param name="service">Object that provides the service</param>
     protected: NUCLEX_SUPPORT_API void Add(
-      const std::type_info &serviceType, const Any &service
+      const std::type_info &serviceType, const std::any &service
     );
 
     /// <summary>Removes a service from the container</summary>
@@ -130,7 +130,7 @@ namespace Nuclex { namespace Support { namespace Services {
     protected: NUCLEX_SUPPORT_API bool Remove(const std::type_info &serviceType);
 
     /// <summary>Map through which services can be looked up</summary>
-    private: typedef std::map<const std::type_info *, Any, TypeInfoComparer> ServiceMap;
+    private: typedef std::map<const std::type_info *, std::any, TypeInfoComparer> ServiceMap;
 
     /// <summary>Services the container is currently holding</summary>
     private: ServiceMap services;

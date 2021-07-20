@@ -6,10 +6,10 @@ Copyright (C) 2002-2021 Nuclex Development Labs
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
 published by the IBM Corporation; either version 1.0 of the
-License, or (at your option) any later version.
+License, or (at your option) std::any later version.
 
 This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
+but WITHOUT std::any WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 IBM Common Public License for more details.
 
@@ -118,7 +118,7 @@ namespace Nuclex { namespace Support { namespace Services {
             &serviceTypeInfo,
             [](const ServiceProvider &serviceProvider) {
               typedef Private::ServiceFactory<TImplementation, ConstructorSignature> Factory;
-              return Any(
+              return std::any(
                 std::static_pointer_cast<TService>(Factory::CreateInstance(serviceProvider))
               );
             }
@@ -147,7 +147,7 @@ namespace Nuclex { namespace Support { namespace Services {
           ServiceFactoryMap::value_type(
             &serviceTypeInfo,
             [](const ServiceProvider &serviceProvider) {
-              return Any(std::static_pointer_cast<TService>(TMethod(serviceProvider)));
+              return std::any(std::static_pointer_cast<TService>(TMethod(serviceProvider)));
             }
           )
         );
@@ -167,7 +167,7 @@ namespace Nuclex { namespace Support { namespace Services {
           ServiceFactoryMap::value_type(
             &serviceTypeInfo,
             [](const ServiceProvider &serviceProvider) {
-              return Any(TMethod(serviceProvider));
+              return std::any(TMethod(serviceProvider));
             }
           )
         );
@@ -179,7 +179,7 @@ namespace Nuclex { namespace Support { namespace Services {
       public: void ToInstance(const std::shared_ptr<TService> &instance) {
         const std::type_info &serviceTypeInfo = typeid(TService);
         this->serviceInjector.instances.insert(
-          ServiceInstanceMap::value_type(&serviceTypeInfo, Any(instance))
+          ServiceInstanceMap::value_type(&serviceTypeInfo, std::any(instance))
         );
       }
 
@@ -210,7 +210,7 @@ namespace Nuclex { namespace Support { namespace Services {
             &serviceTypeInfo,
             [](const ServiceProvider &serviceProvider) {
               typedef Private::ServiceFactory<TService, ConstructorSignature> Factory;
-              return Any(Factory::CreateInstance(serviceProvider));
+              return std::any(Factory::CreateInstance(serviceProvider));
             }
           )
         );
@@ -250,7 +250,7 @@ namespace Nuclex { namespace Support { namespace Services {
     std::shared_ptr<TService> Create() const {
       const std::type_info &serviceTypeInfo = typeid(TService);
       std::shared_ptr<TService> newServiceInstance(
-        Create(serviceTypeInfo).Get<std::shared_ptr<TService>>()
+        std::any_cast<std::shared_ptr<TService>>(Create(serviceTypeInfo))
       );
       return newServiceInstance;
     }
@@ -258,30 +258,30 @@ namespace Nuclex { namespace Support { namespace Services {
     /// <summary>Looks up the specified service</summary>
     /// <param name="serviceType">Type of service that will be looked up</param>
     /// <returns>
-    ///   The specified service as a shared_ptr wrapped in an <see cref="Any" />
+    ///   The specified service as a shared_ptr wrapped in an <see cref="std::any" />
     /// </returns>
-    protected: NUCLEX_SUPPORT_API const Any &Get(
+    protected: NUCLEX_SUPPORT_API const std::any &Get(
       const std::type_info &serviceType
     ) const override;
 
     /// <summary>Tries to look up the specified service</summary>
     /// <param name="serviceType">Type of service that will be looked up</param>
-    /// <returns>An Any containing the service, if found, or an empty Any</returns>
-    protected: NUCLEX_SUPPORT_API const Any &TryGet(
+    /// <returns>An std::any containing the service, if found, or an empty std::any</returns>
+    protected: NUCLEX_SUPPORT_API const std::any &TryGet(
       const std::type_info &serviceType
     ) const override;
 
     /// <summary>Creates the specified service</summary>
     /// <param name="serviceType">Type of service that will be created</param>
     /// <returns>
-    ///   The specified service as a shared_ptr wrapped in an <see cref="Any" />
+    ///   The specified service as a shared_ptr wrapped in an <see cref="std::any" />
     /// </returns>
-    protected: NUCLEX_SUPPORT_API Any Create(
+    protected: NUCLEX_SUPPORT_API std::any Create(
       const std::type_info &serviceType
     ) const;
 
     /// <summary>Delegate for a factory method that creates a service</summary>
-    private: typedef Any(*CreateServiceFunction)(const ServiceProvider &);
+    private: typedef std::any(*CreateServiceFunction)(const ServiceProvider &);
 
     /// <summary>Map of factories to create different services</summary>
     private: typedef std::map<
@@ -289,7 +289,7 @@ namespace Nuclex { namespace Support { namespace Services {
     > ServiceFactoryMap;
 
     /// <summary>Map of services permanently stored in the container</summary>
-    private: typedef std::map<const std::type_info *, Any> ServiceInstanceMap;
+    private: typedef std::map<const std::type_info *, std::any> ServiceInstanceMap;
 
     // These are both mutable. Reasoning: the service injector acts as if all services
     // already existed, so while services may get constructed as a result of requesting

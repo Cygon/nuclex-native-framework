@@ -22,10 +22,10 @@ License along with this library
 #define NUCLEX_SUPPORT_SERVICES_SERVICEPROVIDER_H
 
 #include "Nuclex/Support/Config.h"
-#include "Nuclex/Support/Any.h"
 
 #include <memory> // for std::shared_ptr
 #include <type_traits> // for std::decay, std::type_info
+#include <any> // for std::any
 
 namespace Nuclex { namespace Support { namespace Services {
 
@@ -45,11 +45,13 @@ namespace Nuclex { namespace Support { namespace Services {
     /// <summary>Looks up the specified service</summary>
     /// <typeparam name="TService">Type of service that will be looked up</typeparam>
     /// <returns>
-    ///   The specified service as a shared_ptr wrapped in an <see cref="Any" />
+    ///   The specified service as a shared_ptr wrapped in an <see cref="std::any" />
     /// </returns>
     public: template<typename TService> const std::shared_ptr<TService> &Get() const {
-      typedef std::shared_ptr<TService> ServicePointer;
-      return Get(typeid(typename std::decay<TService>::type)).Get<ServicePointer>();
+      typedef std::shared_ptr<TService> SharedServicePointer;
+      return std::any_cast<const SharedServicePointer &>(
+        Get(typeid(typename std::decay<TService>::type))
+      );
     }
 
     /// <summary>Tries to look up the specified service</summary>
@@ -60,9 +62,9 @@ namespace Nuclex { namespace Support { namespace Services {
       typedef typename std::decay<TService>::type VanillaServiceType;
       typedef std::shared_ptr<VanillaServiceType> SharedServicePointer;
 
-      Any serviceAsAny = TryGet(typeid(VanillaServiceType));
-      if(serviceAsAny.HasValue()) {
-        service = serviceAsAny.Get<SharedServicePointer>();
+      std::any serviceAsAny = TryGet(typeid(VanillaServiceType));
+      if(serviceAsAny.has_value()) {
+        service = std::any_cast<SharedServicePointer>(serviceAsAny);
         return true;
       } else {
         service.reset();
@@ -75,7 +77,7 @@ namespace Nuclex { namespace Support { namespace Services {
     /// <returns>
     ///   The specified service as a shared_ptr wrapped in an <see cref="Any" />
     /// </returns>
-    protected: NUCLEX_SUPPORT_API virtual const Any &Get(
+    protected: NUCLEX_SUPPORT_API virtual const std::any &Get(
       const std::type_info &serviceType
     ) const = 0;
 
@@ -93,7 +95,7 @@ namespace Nuclex { namespace Support { namespace Services {
     ///     If there is another problem, this method will still throw an exception.
     ///   </para>
     /// </remarks>
-    protected: NUCLEX_SUPPORT_API virtual const Any &TryGet(
+    protected: NUCLEX_SUPPORT_API virtual const std::any &TryGet(
       const std::type_info &serviceType
     ) const = 0;
 

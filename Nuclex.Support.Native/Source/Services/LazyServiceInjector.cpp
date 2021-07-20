@@ -28,11 +28,22 @@ License along with this library
 
 // TODO: Create a ServiceConstructionChain or something to detect cyclic dependencies
 
+namespace {
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>An any instance that does not carry any value</summary>
+  static const std::any EmptyAny;
+
+  // ------------------------------------------------------------------------------------------- //
+
+} // anonymous namespace
+
 namespace Nuclex { namespace Support { namespace Services {
 
   // ------------------------------------------------------------------------------------------- //
 
-  const Any &LazyServiceInjector::Get(const std::type_info &serviceType) const {
+  const std::any &LazyServiceInjector::Get(const std::type_info &serviceType) const {
 
     // Check if the service has already been constructed
     ServiceInstanceMap::iterator instanceIt = this->instances.find(&serviceType);
@@ -67,7 +78,7 @@ namespace Nuclex { namespace Support { namespace Services {
 
   // ------------------------------------------------------------------------------------------- //
 
-  const Any &LazyServiceInjector::TryGet(const std::type_info &serviceType) const {
+  const std::any &LazyServiceInjector::TryGet(const std::type_info &serviceType) const {
 
     // Check if the service has already been constructed
     ServiceInstanceMap::iterator instanceIt = this->instances.find(&serviceType);
@@ -90,13 +101,13 @@ namespace Nuclex { namespace Support { namespace Services {
     }
 
     // Could not resolve, so return nothing
-    return Any::Empty;
+    return EmptyAny;
 
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  Any LazyServiceInjector::Create(const std::type_info &serviceType) const {
+  std::any LazyServiceInjector::Create(const std::type_info &serviceType) const {
 
     // Check if a factory for the service has been registered
     ServiceFactoryMap::const_iterator factoryIt = this->factories.find(&serviceType);

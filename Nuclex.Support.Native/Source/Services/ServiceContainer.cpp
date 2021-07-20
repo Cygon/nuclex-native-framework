@@ -25,11 +25,22 @@ License along with this library
 
 #include <stdexcept> // for std::logic_error
 
+namespace {
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>An any instance that does not carry any value</summary>
+  static const std::any EmptyAny;
+
+  // ------------------------------------------------------------------------------------------- //
+
+} // anonymous namespace
+
 namespace Nuclex { namespace Support { namespace Services {
 
   // ------------------------------------------------------------------------------------------- //
 
-  const Any &ServiceContainer::Get(const std::type_info &serviceType) const {
+  const std::any &ServiceContainer::Get(const std::type_info &serviceType) const {
     ServiceMap::const_iterator iterator = this->services.find(&serviceType);
     if(iterator == this->services.end()) {
       std::string message(u8"Service of type '");
@@ -43,10 +54,10 @@ namespace Nuclex { namespace Support { namespace Services {
 
   // ------------------------------------------------------------------------------------------- //
 
-  const Any &ServiceContainer::TryGet(const std::type_info &serviceType) const {
+  const std::any &ServiceContainer::TryGet(const std::type_info &serviceType) const {
     ServiceMap::const_iterator iterator = this->services.find(&serviceType);
     if(iterator == this->services.end()) {
-      return Any::Empty;
+      return EmptyAny;
     } else {
       return iterator->second;
     }
@@ -54,7 +65,7 @@ namespace Nuclex { namespace Support { namespace Services {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void ServiceContainer::Add(const std::type_info &serviceType, const Any &service) {
+  void ServiceContainer::Add(const std::type_info &serviceType, const std::any &service) {
     ServiceMap::const_iterator iterator = this->services.find(&serviceType);
     if(iterator != this->services.end()) {
       std::string message(u8"Service type '");
