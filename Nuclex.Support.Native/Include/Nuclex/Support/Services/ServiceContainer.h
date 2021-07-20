@@ -129,7 +129,7 @@ namespace Nuclex { namespace Support { namespace Services {
     /// <returns>True if the service was found and removed</returns>
     protected: NUCLEX_SUPPORT_API bool Remove(const std::type_info &serviceType);
 
-    /// <summary>Map through which services can be looked up</summary> 
+    /// <summary>Map through which services can be looked up</summary>
     private: typedef std::map<const std::type_info *, Any, TypeInfoComparer> ServiceMap;
 
     /// <summary>Services the container is currently holding</summary>

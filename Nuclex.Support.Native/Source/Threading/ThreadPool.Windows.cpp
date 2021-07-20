@@ -261,7 +261,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     return ThreadPoolConfig::GuessDefaultMinimumThreadCount(
       countLogicalProcessors()
     );
-  }        
+  }
 
   // ------------------------------------------------------------------------------------------- //
 

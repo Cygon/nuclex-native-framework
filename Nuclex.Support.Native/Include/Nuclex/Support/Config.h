@@ -111,7 +111,7 @@ License along with this library
     #if defined(NUCLEX_SUPPORT_SOURCE)
       #define NUCLEX_SUPPORT_API __attribute__ ((visibility ("default")))
     #else
-      // If you use -fvisibility=hidden in GCC, exception handling and RTTI would break 
+      // If you use -fvisibility=hidden in GCC, exception handling and RTTI would break
       // if visibility wasn't set during export _and_ import because GCC would immediately
       // forget all type infos encountered. See http://gcc.gnu.org/wiki/Visibility
       #define NUCLEX_SUPPORT_API __attribute__ ((visibility ("default")))

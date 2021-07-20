@@ -47,7 +47,7 @@ namespace {
 
     // According to Microsoft, this is how you lift the 260 char MAX_PATH limit.
     // Also skips the internal call to GetFullPathName() every API method does internally,
-    // so paths have to be normalized and 
+    // so paths have to be normalized and
     const wchar_t prefix[] = L"\\\\?\\";
     utf16Path.push_back(prefix[0]);
     utf16Path.push_back(prefix[1]);

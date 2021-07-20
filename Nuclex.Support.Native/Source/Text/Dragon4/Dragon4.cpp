@@ -93,9 +93,9 @@ struct tBigInt {
   tU32 m_blocks[c_BigInt_MaxBlocks];
 };
 
-//******************************************************************************        
+//******************************************************************************
 // Returns 0 if (lhs = rhs), negative if (lhs < rhs), positive if (lhs > rhs)
-//******************************************************************************        
+//******************************************************************************
 static tS32 BigInt_Compare(const tBigInt & lhs, const tBigInt & rhs) {
   // A bigger length implies a bigger number.
   tS32 lengthDiff = lhs.m_length - rhs.m_length;
@@ -467,9 +467,9 @@ static void BigInt_MultiplyPow10(tBigInt * pResult, const tBigInt & in, tU32 exp
   *pResult = *pCurTemp;
 }
 
-//******************************************************************************    
+//******************************************************************************
 // result = 2^exponent
-//******************************************************************************        
+//******************************************************************************
 static inline void BigInt_Pow2(tBigInt * pResult, tU32 exponent) {
   tU32 blockIdx = exponent / 32;
   RJ_ASSERT(blockIdx < c_BigInt_MaxBlocks);
@@ -695,7 +695,7 @@ tU32 Dragon4(
     return 1;
   }
 
-  // compute the initial state in integral form such that 
+  // compute the initial state in integral form such that
   //  value     = scaledValue / scale
   //  marginLow = scaledMarginLow / scale
   tBigInt scale;              // positive scale applied to value and margin such that they can be
@@ -811,7 +811,7 @@ tU32 Dragon4(
     digitExponent = -(tS32)cutoffNumber + 1;
   }
 
-  // Divide value by 10^digitExponent. 
+  // Divide value by 10^digitExponent.
   if(digitExponent > 0) {
     // The exponent is positive creating a division so we multiply up the scale.
     tBigInt temp;
@@ -882,7 +882,7 @@ tU32 Dragon4(
   // Output the exponent of the first digit we will print
   *pOutExponent = digitExponent - 1;
 
-  // In preparation for calling BigInt_DivideWithRemainder_MaxQuotient9(), 
+  // In preparation for calling BigInt_DivideWithRemainder_MaxQuotient9(),
   // we need to scale up our values such that the highest block of the denominator
   // is greater than or equal to 8. We also need to guarantee that the numerator
   // can never have a length greater than the denominator after each loop iteration.
@@ -897,7 +897,7 @@ tU32 Dragon4(
     // in BigInt_DivideWithRemainder_MaxQuotient9() with higher denominator values so
     // we shift the denominator to place the highest bit at index 27 of the highest block.
     // This is safe because (2^28 - 1) = 268435455 which is less than 429496729. This means
-    // that all values with a highest bit at index 27 are within range.         
+    // that all values with a highest bit at index 27 are within range.
     tU32 hiBlockLog2 = LogBase2(hiBlock);
     RJ_ASSERT(hiBlockLog2 < 3 || hiBlockLog2 > 27);
     tU32 shift = (32 + 27 - hiBlockLog2) % 32;

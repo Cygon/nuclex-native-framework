@@ -70,7 +70,7 @@ namespace Nuclex { namespace Support { namespace Platform {
 
     /// <summary>File numbers for each end of the pipe</summary>
     private: int ends[2];
-   
+
   };
 
   // ------------------------------------------------------------------------------------------- //

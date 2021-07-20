@@ -35,7 +35,7 @@ namespace Nuclex { namespace Support { namespace Platform {
 
   /// <summary>Directional pipe that can be used for inter-process communication</summary>
   class Pipe {
-  
+
     /// <summary>Opens a new directional pipe</summary>
     /// <param name="securityAttributes">
     ///   Security attributes controlling whether the pipe is inherited to child processes
@@ -77,7 +77,7 @@ namespace Nuclex { namespace Support { namespace Platform {
     ///   Index 0 is the readable end of the pipe, 1 is the writable end
     /// </remarks>
     private: HANDLE ends[2];
-  
+
   };
 
   // ------------------------------------------------------------------------------------------- //

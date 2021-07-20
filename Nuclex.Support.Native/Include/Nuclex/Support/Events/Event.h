@@ -162,7 +162,7 @@ namespace Nuclex { namespace Support { namespace Events {
     /// <summary>Calls all subscribers of the event</summary>
     /// <param name="arguments">Arguments that will be passed to the event</param>
     /// <remarks>
-    ///   This overload is enabled if the event signature has the return type 'void' 
+    ///   This overload is enabled if the event signature has the return type 'void'
     /// </remarks>
     public: template<typename T = TResult>
     typename std::enable_if<
@@ -479,7 +479,7 @@ namespace Nuclex { namespace Support { namespace Events {
     /// <summary>Information about subscribers if the list is moved to the heap</summary>
     private: struct HeapAllocatedSubscribers {
 
-      /// <summary>Number of subscribers for which space has been reserved on the heap</summary>      
+      /// <summary>Number of subscribers for which space has been reserved on the heap</summary>
       public: std::size_t ReservedSubscriberCount;
       /// <summary>Dynamically allocated memory the subscribers are stored in</summary>
       public: std::uint8_t *Buffer;

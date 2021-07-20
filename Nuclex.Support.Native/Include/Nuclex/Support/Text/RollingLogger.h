@@ -39,7 +39,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///     hard drive accesses and even avoids memory allocations if you avoid external string
   ///     formatting (i.e. you rely on Append() instead of std::format() or lexical_cast)
   ///     and keep you log lines below 100 characters.
-  ///   </para>     
+  ///   </para>
   ///   <para>
   ///     When an error happens, you can use the GetLines() method of the rolling logger to
   ///     obtain the last 1024 lines from the log's history and display this as technical

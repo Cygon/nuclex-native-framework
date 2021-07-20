@@ -537,7 +537,7 @@ namespace Nuclex { namespace Support { namespace Collections {
           throw;
         }
       }
-      
+
       return targetItems;
     }
 
@@ -580,7 +580,7 @@ namespace Nuclex { namespace Support { namespace Collections {
       // Apply the changes. Note that we do not update startIndex and endIndex here.
       this->itemMemory.swap(newItemMemory);
       this->capacity = newCapacity;
-      
+
       return targetItems;
     }
 
@@ -670,7 +670,7 @@ namespace Nuclex { namespace Support { namespace Collections {
       // Apply the changes. Note that we do not update startIndex and endIndex here.
       this->itemMemory.swap(newItemMemory);
       this->capacity = newCapacity;
-      
+
       return targetItems;
     }
 

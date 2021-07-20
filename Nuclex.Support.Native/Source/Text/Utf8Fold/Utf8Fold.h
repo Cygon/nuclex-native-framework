@@ -527,7 +527,7 @@ namespace Nuclex {
   ///   Folded lowercase is a special variant of lowercase that will result in a string of
   ///   equal or shorter length (codepoint-wise). It is not guaranteed to always give the
   ///   correct result for a human reading the string (though in the vast majority of cases
-  ///   it does) -- it's purpose is to enable case-insensitive comparison of strings. 
+  ///   it does) -- it's purpose is to enable case-insensitive comparison of strings.
   /// </remarks>
   inline std::string ToFoldedLowercase(const std::string &text) {
     std::string::const_iterator current = text.begin();

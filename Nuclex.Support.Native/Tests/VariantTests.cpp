@@ -98,7 +98,7 @@ namespace Nuclex { namespace Support {
 
   TEST(VariantTest, BooleanVariantCanBeConvertedToDifferentTypes) {
     Variant trueVariant(true), falseVariant(false);
-    
+
     EXPECT_EQ(false, falseVariant.ToBoolean());
     EXPECT_EQ(true, trueVariant.ToBoolean());
     EXPECT_EQ(std::uint8_t(0), falseVariant.ToUint8());

@@ -103,7 +103,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
       std::atomic_thread_fence(std::memory_order_release);
     }
-    
+
     /// <summary>Frees all memory owned by the concurrent queue and the items therein</summary>
     public: ~ConcurrentRingBuffer() {
       if constexpr(!std::is_trivially_destructible<TElement>::value) {

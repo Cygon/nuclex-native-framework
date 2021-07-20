@@ -50,7 +50,7 @@ License along with this library
   // in your build system or remove the Semaphore implementation from your library.
   #if defined(_POSIX_C_SOURCE)
     #if (_POSIX_C_SOURCE < 200112L)
-      #error Your C runtime library needs to at least implement Posix 2001-12 
+      #error Your C runtime library needs to at least implement Posix 2001-12
     #endif
     //#if !defined(__USE_XOPEN2K)
   #endif
@@ -94,13 +94,13 @@ namespace Nuclex { namespace Support { namespace Threading {
     /// <summary>Switches between 0 (no waiters) and 1 (has waiters)</summary>
     public: volatile std::uint32_t FutexWord;
     /// <summary>Available tickets, negative for each thread waiting for a ticket</summary>
-    public: std::atomic<std::size_t> AdmitCounter; 
+    public: std::atomic<std::size_t> AdmitCounter;
 #elif defined(NUCLEX_SUPPORT_WINDOWS)
     /// <summary>Handle of the semaphore used to pass or block threads</summary>
     public: ::HANDLE SemaphoreHandle;
 #else // Posix
     /// <summary>How many threads the semaphore will admit</summary>
-    public: std::atomic<std::size_t> AdmitCounter; 
+    public: std::atomic<std::size_t> AdmitCounter;
     /// <summary>Conditional variable used to signal waiting threads</summary>
     public: mutable ::pthread_cond_t Condition;
     /// <summary>Mutex required to ensure threads never miss the signal</summary>
@@ -157,7 +157,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     ::pthread_condattr_t *monotonicClockAttribute = (
       Platform::PosixTimeApi::GetMonotonicClockAttribute()
     );
-    
+
     // Create a new pthread conditional variable
     int result = ::pthread_cond_init(&this->Condition, monotonicClockAttribute);
     if(unlikely(result != 0)) {
@@ -172,7 +172,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         u8"Could not initialize pthread mutex", result
       );
     }
-  } 
+  }
 #endif
   // ------------------------------------------------------------------------------------------- //
 #if defined(NUCLEX_SUPPORT_LINUX)

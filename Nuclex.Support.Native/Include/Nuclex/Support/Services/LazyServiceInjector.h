@@ -132,7 +132,7 @@ namespace Nuclex { namespace Support { namespace Services {
       public: template<
         typename TResult, std::shared_ptr<TResult>(*TMethod)(const ServiceProvider &)
       >
-      void ToFactoryMethod() { 
+      void ToFactoryMethod() {
 
         // Verify that whatever the factory method returns implements the service
         static_assert(
@@ -159,7 +159,7 @@ namespace Nuclex { namespace Support { namespace Services {
       public: template<
         std::shared_ptr<TService>(*TMethod)(const ServiceProvider &)
       >
-      void ToFactoryMethod() { 
+      void ToFactoryMethod() {
 
         // Method does provide the service, add it to the map
         const std::type_info &serviceTypeInfo = typeid(TService);
@@ -283,7 +283,7 @@ namespace Nuclex { namespace Support { namespace Services {
     /// <summary>Delegate for a factory method that creates a service</summary>
     private: typedef Any(*CreateServiceFunction)(const ServiceProvider &);
 
-    /// <summary>Map of factories to create different services</summary> 
+    /// <summary>Map of factories to create different services</summary>
     private: typedef std::map<
       const std::type_info *, CreateServiceFunction, TypeInfoComparer
     > ServiceFactoryMap;

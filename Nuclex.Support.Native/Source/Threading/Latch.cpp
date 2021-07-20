@@ -50,7 +50,7 @@ License along with this library
   // in your build system or remove the Latch implementation from your library.
   #if defined(_POSIX_C_SOURCE)
     #if (_POSIX_C_SOURCE < 200112L)
-      #error Your C runtime library needs to at least implement Posix 2001-12 
+      #error Your C runtime library needs to at least implement Posix 2001-12
     #endif
     //#if !defined(__USE_XOPEN2K)
   #endif
@@ -74,7 +74,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     /// <summary>Switches between 0 (no waiters) and 1 (has waiters)</summary>
     public: mutable volatile std::uint32_t FutexWord;
     /// <summary>Counter, unlocks the latch when it reaches zero</summary>
-    public: std::atomic<std::size_t> Countdown; 
+    public: std::atomic<std::size_t> Countdown;
 #elif defined(NUCLEX_SUPPORT_WINDOWS)
     /// <summary>Countdown until the latch will open</summary>
     public: std::atomic<std::size_t> Countdown;
@@ -84,7 +84,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     public: std::mutex Mutex;
 #else // Posix
     /// <summary>How many tasks the latch is waiting on</summary>
-    public: std::atomic<std::size_t> Countdown; 
+    public: std::atomic<std::size_t> Countdown;
     /// <summary>Conditional variable used to signal waiting threads</summary>
     public: mutable ::pthread_cond_t Condition;
     /// <summary>Mutex required to ensure threads never miss the signal</summary>
@@ -109,7 +109,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     Countdown(initialCount),
     EventHandle(INVALID_HANDLE_VALUE),
     Mutex() {
-  
+
     // Create the Win32 event we'll use for this
     this->EventHandle = ::CreateEventW(
       nullptr, TRUE, (initialCount > 0) ? FALSE : TRUE, nullptr
@@ -138,7 +138,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     ::pthread_condattr_t *monotonicClockAttribute = (
       Platform::PosixTimeApi::GetMonotonicClockAttribute()
     );
-    
+
     // Create a new pthread conditional variable
     int result = ::pthread_cond_init(&this->Condition, monotonicClockAttribute);
     if(unlikely(result != 0)) {
@@ -153,7 +153,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         u8"Could not initialize pthread mutex", result
       );
     }
-  } 
+  }
 #endif
   // ------------------------------------------------------------------------------------------- //
 #if defined(NUCLEX_SUPPORT_LINUX)
@@ -230,7 +230,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       // that both methods exit by checking whether the latch should be open.
       //
       // This means we can have a spurious open latch (which is easy to deal with), but
-      // never a spurious closed latch (which blocks the thread and can't be dealt with). 
+      // never a spurious closed latch (which blocks the thread and can't be dealt with).
       //
       previousCountdown = impl.Countdown.load(
         std::memory_order_consume
@@ -407,7 +407,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         u8"Could not unlock pthread mutex", result
       );
     }
-    
+
   }
 #endif
   // ------------------------------------------------------------------------------------------- //

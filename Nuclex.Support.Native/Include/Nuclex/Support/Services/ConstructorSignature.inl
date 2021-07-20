@@ -94,7 +94,7 @@ namespace Nuclex { namespace Support { namespace Services {
 
     /// <summary>Used if the constructor signature cannot be determined</summary>
     class InvalidConstructorSignature {
-    
+
       /// <summary>The type of this constructor signature itself</summary>
       public: typedef InvalidConstructorSignature Type;
 

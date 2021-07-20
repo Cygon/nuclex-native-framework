@@ -51,7 +51,7 @@ License along with this library
 //   - RingBuffer
 //   - ShiftBuffer
 //   - ConcurrentRingQueue
-//   - 
+//   -
 
 namespace Nuclex { namespace Support { namespace Collections {
 

@@ -62,7 +62,7 @@ namespace {
   // ------------------------------------------------------------------------------------------- //
 
   std::size_t TestTask::ConstructorCallCount = 0;
-  
+
   // ------------------------------------------------------------------------------------------- //
 
   std::size_t TestTask::DestructorCallCount = 0;
@@ -177,7 +177,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       // CHECK: This test failed spuriously once
       // There isn't even any threading or tricky stuff involved here,
       // except that the dequeue is done from the highly complex moodycamel queue...
-      EXPECT_NE(anotherTask, originalTask); 
+      EXPECT_NE(anotherTask, originalTask);
 
       taskPool.DeleteTask(anotherTask);
     }
@@ -238,7 +238,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       taskPool.DeleteTask(anotherTask);
     }
   }
-    
+
   // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Threading

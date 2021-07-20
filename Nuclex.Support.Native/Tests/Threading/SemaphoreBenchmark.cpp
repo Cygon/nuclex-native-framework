@@ -84,7 +84,7 @@ namespace {
         }
       }
     }
-    
+
     /// <summary>Executed by each thread simultaneously</summary>
     /// <param name="threadIndex">Unique index of the thread</param>
     protected: void Thread(std::size_t threadIndex) override {
@@ -158,7 +158,7 @@ namespace {
     public: void KickOff() {
       this->semaphore.Post(this->fullLockCount * 2);
     }
-    
+
     /// <summary>Executed by each thread simultaneously</summary>
     /// <param name="threadIndex">Unique index of the thread</param>
     protected: void Thread(std::size_t threadIndex) override {

@@ -176,7 +176,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   TEST(ConcurrentRingBufferTest_SPSC, BufferCanBeEmpty) {
     TestedBuffer<int> test(5);
-    
+
     int value;
     EXPECT_FALSE(test.TryTake(value)); // Starts out empty
     EXPECT_TRUE(test.TryAppend(100));

@@ -238,7 +238,7 @@ enum Status s2d_n(const char * buffer, const int len, double * result) {
   printf("ieee_e2 = %d\n", ieee_e2);
   printf("shift = %d\n", shift);
 #endif
-  
+
   // We need to round up if the exact value is more than 0.5 above the value we computed. That's
   // equivalent to checking if the last removed bit was 1 and either the value was not just
   // trailing zeros or the result would otherwise be odd.

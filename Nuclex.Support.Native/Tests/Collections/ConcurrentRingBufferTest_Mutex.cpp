@@ -47,7 +47,7 @@ namespace {
       firstItemIndex(0),
       itemCount(0),
       bufferMutex() {}
-    
+
     /// <summary>Tries to append the specified element to the ring buffer</summary>
     /// <param name="element">Element that will be appended to the ring buffer</param>
     /// <returns>True if the element was appended, false if there was no space left</returns>
@@ -220,7 +220,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
   TEST(ConcurrentRingBufferTest_Mutex, BufferCanBeEmpty) {
     MutexRingBuffer<int> test(5);
-    
+
     int value;
     EXPECT_FALSE(test.TryTake(value)); // Starts out empty
     EXPECT_TRUE(test.TryAppend(100));

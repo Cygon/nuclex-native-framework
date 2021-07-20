@@ -209,7 +209,7 @@ namespace Nuclex { namespace Support {
     static const std::wstring suffix(L".dir", 4);
     directoryPath.append(suffix);
 
-    // Create the temporary directory    
+    // Create the temporary directory
     BOOL result = ::CreateDirectoryW(directoryPath.c_str(), nullptr);
     if(unlikely(result == FALSE)) {
       DWORD errorCode = ::GetLastError();

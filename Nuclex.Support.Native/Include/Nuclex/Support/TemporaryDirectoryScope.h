@@ -95,7 +95,7 @@ namespace Nuclex { namespace Support {
       ReadFile(name, contents);
       return contents;
     }
-    
+
     /// <summary>Reads the whole contents of a file in the temporary directory</summary>
     /// <param name="name">Name of the file that will be read</param>
     /// <param name="contents">A vector to which the file's contents will be appended</param>

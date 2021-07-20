@@ -175,7 +175,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     /// <summary>Sends input to the running process' stdin</summary>
     /// <param name="characters">Characters that will be sent to the process' stdin</param>
-    /// <param name="characterCount">Number of characters 
+    /// <param name="characterCount">Number of characters
     /// <returns>The number of bytes that have been written to the process' stdin</returns>
     /// <remarks>
     ///   If you fill the buffer of the process' stdin pipe, it may not be possible to

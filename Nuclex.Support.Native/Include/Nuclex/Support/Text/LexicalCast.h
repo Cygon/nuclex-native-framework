@@ -38,7 +38,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///   <para>
   ///     This cast offers a portable way to convert between numeric and string types without
   ///     resorting to cumbersome sprintf() constructs or relying on deprecated functions
-  ///     such as gcvt() or itoa(). 
+  ///     such as gcvt() or itoa().
   ///   </para>
   ///   <para>
   ///     <list type="bullet">
@@ -62,7 +62,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///   <para>
   ///     This cast offers a portable way to convert between numeric and string types without
   ///     resorting to cumbersome sprintf() constructs or relying on deprecated and functions
-  ///     such as gcvt() or itoa(). 
+  ///     such as gcvt() or itoa().
   ///   </para>
   ///   <para>
   ///     Lexical casts are guaranteed to completely ignore system locale and any other
@@ -83,7 +83,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///   <para>
   ///     This cast offers a portable way to convert between numeric and string types without
   ///     resorting to cumbersome sprintf() constructs or relying on deprecated functions such
-  ///     as gcvt() or itoa(). 
+  ///     as gcvt() or itoa().
   ///   </para>
   ///   <para>
   ///     Lexical casts are guaranteed to completely ignore system locale and any other
@@ -124,7 +124,7 @@ namespace Nuclex { namespace Support { namespace Text {
       /// <returns>The resulting value</returns>
       inline static TTarget _(const std::wstring &from) {
         return lexical_cast<TTarget>(StringConverter::Utf8FromWide(from));
-      }      
+      }
     };
 
     /// <summary>
@@ -138,7 +138,7 @@ namespace Nuclex { namespace Support { namespace Text {
       /// <returns>Resulting UTF-16 or UTF-32 string</returns>
       inline static std::wstring _(const TSource &from) {
         return StringConverter::WideFromUtf8(lexical_cast<std::string>(from));
-      }      
+      }
     };
 
   } // namespace Private
@@ -152,7 +152,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///   <para>
   ///     This cast offers a portable way to convert between numeric and string types without
   ///     resorting to cumbersome sprintf() constructs or relying on deprecated functions such
-  ///     as gcvt() or itoa(). 
+  ///     as gcvt() or itoa().
   ///   </para>
   ///   <para>
   ///     Lexical casts are guaranteed to completely ignore system locale and any other

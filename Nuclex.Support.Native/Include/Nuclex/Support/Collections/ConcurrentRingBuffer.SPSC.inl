@@ -68,7 +68,7 @@ namespace Nuclex { namespace Support { namespace Collections {
       writeIndex(0) {
       std::atomic_thread_fence(std::memory_order_release);
     }
-    
+
     /// <summary>Frees all memory owned by the concurrent queue and the items therein</summary>
     /// <remarks>
     ///   The destructor may be called from any thread, so long as the producer and the consumer

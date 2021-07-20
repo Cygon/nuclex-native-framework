@@ -131,7 +131,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     EXPECT_EQ(222, test.GetAt(2));
     EXPECT_EQ(333, test.GetAt(3));
   }
-    
+
   // ------------------------------------------------------------------------------------------- //
 
   TEST(DynamicArrayTest, ItemCanBeRemovedByIndex) {

@@ -61,7 +61,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   ///   </para>
   ///   <para>
   ///     Ideally, your tasks would be split into packages that can be done in a millisecond
-  ///     or less, allowing even 
+  ///     or less, allowing even
   ///   </para>
   /// </remarks>
   class ThreadPool {

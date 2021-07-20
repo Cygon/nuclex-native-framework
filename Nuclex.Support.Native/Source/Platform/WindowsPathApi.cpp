@@ -48,7 +48,7 @@ namespace Nuclex { namespace Support { namespace Platform {
   }
 
   // ------------------------------------------------------------------------------------------- //
-  
+
   void WindowsPathApi::AppendPath(std::wstring &path, const std::wstring &extra) {
     std::wstring::size_type length = path.length();
     if(length == 0) {
@@ -84,7 +84,7 @@ namespace Nuclex { namespace Support { namespace Platform {
         if(path[index] == L'\\') {
           lastBackslashIndex = index;
         }
-      } 
+      }
     }
 
     // No dots at all -> there is no filename extension anywhere
@@ -388,7 +388,7 @@ namespace Nuclex { namespace Support { namespace Platform {
     }
 
     // Failure, buffer end reached and pszMore still had more characters to append.
-    *pszPath = 0; 
+    *pszPath = 0;
     ::SetLastError(ERROR_BUFFER_OVERFLOW);
     return FALSE;
   }

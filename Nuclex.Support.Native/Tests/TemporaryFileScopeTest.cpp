@@ -65,7 +65,7 @@ namespace Nuclex { namespace Support {
       TemporaryFileScope scope(u8"tst");
       path = scope.GetPath();
     }
-    
+
 #if defined(NUCLEX_SUPPORT_WINDOWS)
     std::wstring utf16Path = Text::StringConverter::WideFromUtf8(path);
     DWORD attributes = ::GetFileAttributesW(utf16Path.c_str());

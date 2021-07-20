@@ -108,9 +108,9 @@ namespace Nuclex { namespace Support { namespace Threading {
     private: void cancelAllTasks();
 
     /// <summary>Minimum number of threads to always keep running</summary>
-    public: std::size_t MinimumThreadCount; 
+    public: std::size_t MinimumThreadCount;
     /// <summary>Maximum number of threads to create under high load</summary>
-    public: std::size_t MaximumThreadCount; 
+    public: std::size_t MaximumThreadCount;
     /// <summary>Number of threads currently running</summary>
     public: std::atomic<int> ThreadCount;
     /// <summary>Number of threads that are currently processing a task</summary>
@@ -328,7 +328,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     // Mark the thread as running
     this->ThreadStatus[threadIndex].store(2, std::memory_order_release);
-    ON_SCOPE_EXIT { 
+    ON_SCOPE_EXIT {
       this->ThreadStatus[threadIndex].store(-1, std::memory_order_release);
       std::size_t remainingThreadCount = this->ThreadCount.fetch_sub(
         1, std::memory_order_consume // if() below carries dependency
@@ -427,7 +427,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     return ThreadPoolConfig::GuessDefaultMinimumThreadCount(
       static_cast<std::size_t>(::get_nprocs())
     );
-  }        
+  }
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -459,7 +459,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   ThreadPool::~ThreadPool() {
-    
+
     // Set the shutdown flag (this causes the worker threads to shut down)
     this->implementation->IsShuttingDown.store(
       true, std::memory_order_release
@@ -517,7 +517,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       this->implementation->SubmittedTaskPool.DeleteTask(submittedTask);
       throw std::runtime_error(u8"Could not schedule task for thread pool execution");
     }
-    
+
     // Wake up a worker thread (or prevent the next thread finishing
     // its task from going to sleep again)
     this->implementation->TaskSemaphore.Post();

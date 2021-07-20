@@ -247,7 +247,7 @@ namespace Nuclex { namespace Support { namespace Services {
     LazyServiceInjector serviceInjector;
 
     serviceInjector.Bind<CalculatorService>().To<BrokenCalculator>();
-    
+
     std::shared_ptr<CalculatorService> service = serviceInjector.Get<CalculatorService>();
     ASSERT_TRUE(!!service);
 

@@ -368,7 +368,7 @@ namespace {
       data32 *= mixFactor;
       data32 ^= data32 >> mixShift;
       data32 *= mixFactor;
-      
+
       hash *= mixFactor;
       hash ^= data32;
 
@@ -411,7 +411,7 @@ namespace {
       data64 *= mixFactor;
       data64 ^= data64 >> mixShift;
       data64 *= mixFactor;
-      
+
       hash ^= data64;
       hash *= mixFactor;
 
@@ -429,14 +429,14 @@ namespace {
       case 2: { hash ^= std::uint64_t(data[1]) << 8; [[fallthrough]]; }
       case 1: { hash ^= std::uint64_t(data[0]); hash *= mixFactor; }
     };
-  
+
     // Also apply the bit mixing operation to the last few bytes
     hash ^= hash >> mixShift;
     hash *= mixFactor;
     hash ^= hash >> mixShift;
 
     return hash;
-  } 
+  }
 
   // ------------------------------------------------------------------------------------------- //
 

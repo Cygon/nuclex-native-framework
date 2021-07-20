@@ -46,7 +46,7 @@ License along with this library
   // in your build system or remove the Gate implementation from your library.
   #if defined(_POSIX_C_SOURCE)
     #if (_POSIX_C_SOURCE < 200112L)
-      #error Your C runtime library needs to at least implement Posix 2001-12 
+      #error Your C runtime library needs to at least implement Posix 2001-12
     #endif
     //#if !defined(__USE_XOPEN2K)
   #endif
@@ -76,7 +76,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     public: HANDLE EventHandle;
 #else // Posix
     /// <summary>Whether the gate is currently open</summary>
-    public: std::atomic<bool> IsOpen; 
+    public: std::atomic<bool> IsOpen;
     /// <summary>Conditional variable used to signal waiting threads</summary>
     public: mutable ::pthread_cond_t Condition;
     /// <summary>Mutex required to ensure threads never miss the signal</summary>
@@ -124,7 +124,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     ::pthread_condattr_t *monotonicClockAttribute = (
       Platform::PosixTimeApi::GetMonotonicClockAttribute()
     );
-    
+
     // Create a new pthread conditional variable
     int result = ::pthread_cond_init(&this->Condition, monotonicClockAttribute);
     if(unlikely(result != 0)) {
@@ -139,7 +139,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         u8"Could not initialize pthread mutex", result
       );
     }
-  } 
+  }
 #endif
   // ------------------------------------------------------------------------------------------- //
 #if defined(NUCLEX_SUPPORT_LINUX)

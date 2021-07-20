@@ -173,7 +173,7 @@ namespace Nuclex { namespace Support { namespace Platform {
     ASSERT_TRUE(PosixTimeApi::HasTimedOut(CLOCK_MONOTONIC, pastTime));
     ASSERT_FALSE(PosixTimeApi::HasTimedOut(CLOCK_MONOTONIC, futureTime));
   }
-  
+
   // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Platform

@@ -81,7 +81,7 @@ namespace Nuclex { namespace Support {
         new(this->valueMemory) TValue(
           std::move(*reinterpret_cast<TValue *>(other.valueMemory))
         );
-        
+
         reinterpret_cast<TValue *>(other.valueMemory)->~TValue();
         other.carriesValue = false;
       }

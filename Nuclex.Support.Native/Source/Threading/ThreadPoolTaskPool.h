@@ -84,7 +84,7 @@ namespace Nuclex { namespace Support { namespace Threading {
 
     /// <summary>Creates a new task with the specified payload size</summary>
     /// <param name="payloadSize">Size of the payload the new task must carry</param>
-    /// <returns>A new blob containing the 
+    /// <returns>A new blob containing the
     public: TSubmittedTask *GetNewTask(std::size_t payloadSize) {
       std::size_t totalRequiredMemory = (PayloadOffset + payloadSize);
 
@@ -102,7 +102,7 @@ namespace Nuclex { namespace Support { namespace Threading {
           } else {
             break; // No more submitted tasks in queue
           }
-        } 
+        }
       }
 
       // We found no task that we could re-use, so create a new one

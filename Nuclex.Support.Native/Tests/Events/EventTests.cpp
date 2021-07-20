@@ -127,7 +127,7 @@ namespace Nuclex { namespace Support { namespace Events {
   TEST(EventTest, FreeFunctionsCanBeUnsubscribed) {
     Event<void(int something)> test;
     test.Subscribe<freeFunction>();
-    
+
     bool wasUnsubscribed = test.Unsubscribe<freeFunction>();
     EXPECT_TRUE(wasUnsubscribed);
     wasUnsubscribed = test.Unsubscribe<freeFunction>();

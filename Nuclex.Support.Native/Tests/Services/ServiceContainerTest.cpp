@@ -121,7 +121,7 @@ namespace Nuclex { namespace Support { namespace Services {
     EXPECT_EQ(test.CountServices(), 0U);
     test.Add(std::make_shared<BrokenCalculator>());
     EXPECT_EQ(test.CountServices(), 1U);
-    
+
     std::shared_ptr<CalculatorService> service;
     EXPECT_FALSE(test.TryGet<CalculatorService>(service));
   }
