@@ -224,6 +224,7 @@
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalCast.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\ParserHelper.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
@@ -321,6 +322,7 @@
     <ClCompile Include="Source\Text\LexicalAppend.cpp" />
     <ClCompile Include="Source\Text\LexicalCast.cpp" />
     <ClCompile Include="Source\Text\Logger.cpp" />
+    <ClCompile Include="Source\Text\ParserHelper.cpp" />
     <ClCompile Include="Source\Text\RollingLogger.cpp" />
     <ClCompile Include="Source\Text\StatusObserver.cpp" />
     <ClCompile Include="Source\Text\StringConverter.cpp" />
