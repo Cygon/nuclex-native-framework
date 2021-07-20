@@ -60,11 +60,6 @@ namespace Nuclex { namespace Support { namespace Platform {
     /// <returns>The descriptor (numeric handle) of the opened file</returns>
     public: static int OpenFileForWriting(const std::string &path);
 
-    /// <summary>Creates a unique temporary file for shared reading and writing</summary>
-    /// <param name="prefix">Prefix that will be </param>
-    /// <returns>The descriptor (numeric handle) of the opened file</returns>
-    public: static int CreateTemporaryFile(const std::string &prefix);
-
     /// <summary>Changes the position of the file cursor</summary>
     /// <param name="fileDescriptor">File handle whose file cursor will be moved</param>
     /// <param name="offset">Relative position, in bytes, to move the file cursor to</param>

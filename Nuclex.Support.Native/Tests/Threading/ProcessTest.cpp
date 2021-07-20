@@ -27,6 +27,14 @@ License along with this library
 
 #include <gtest/gtest.h>
 
+#if defined(NUCLEX_SUPPORT_WINDOWS)
+#include "../Source/Platform/WindowsApi.h"
+#include "Nuclex/Support/Text/StringConverter.h"
+#else
+#include <unistd.h> // for ::access()
+#include <sys/stat.h> // for ::stat()
+#endif
+
 #include <stdexcept> // for std::logic_error
 
 // An executable that is in the default search path, has an exit code of 0,
@@ -202,6 +210,34 @@ namespace Nuclex { namespace Support { namespace Threading {
     // Check for some directories that should have been listed by ls / dir
     EXPECT_GE(observer.output.length(), 21U);
     //EXPECT_NE(observer.output.find(u8".."), std::string::npos);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ProcessTest, ProvidesPathOfRunningExecutable) {
+    std::string executableDirectory = Process::GetExecutableDirectory();
+
+#if defined(NUCLEX_SUPPORT_WINDOWS)
+    std::wstring executablePathUtf16 = Text::StringConverter::WideFromUtf8(
+      executableDirectory + std::string(u8"Nuclex.Support.Native.Tests.exe")
+    );
+
+    ::WIN32_FILE_ATTRIBUTE_DATA fileInformation;
+    BOOL result = GetFileAttributesExW(
+      executablePathUtf16.c_str(), GetFileExInfoStandard, &fileInformation
+    );
+    ASSERT_NE(result, FALSE);
+    EXPECT_GE(fileInformation.nFileSizeLow, 10000U); // We should be more than 10000 bytes long
+#else
+    std::string executablePath = (
+      executableDirectory + std::string(u8"NuclexSupportNativeTests")
+    );
+
+    struct ::stat fileStatus;
+    int result = ::stat(executablePath.c_str(), &fileStatus);
+    ASSERT_EQ(result, 0);
+    EXPECT_GE(fileStatus.st_size, 10000); // We should be more than 10000 bytes long
+#endif
   }
 
   // ------------------------------------------------------------------------------------------- //

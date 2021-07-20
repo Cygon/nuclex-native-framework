@@ -224,8 +224,9 @@ namespace Nuclex { namespace Support { namespace Platform {
 
     // Collect a list of all subkeys below the root settings key
     std::vector<std::string> results;
-    results.reserve(subKeyCount);
-    {
+    if(subKeyCount > 0) {
+      results.reserve(subKeyCount);
+
       std::vector<WCHAR> keyName(longestSubKeyLength, 0);
       DWORD keyNameLength = longestSubKeyLength;
 
@@ -301,8 +302,9 @@ namespace Nuclex { namespace Support { namespace Platform {
 
     // Collect a list of all subkeys below the root settings key
     std::vector<std::string> results;
-    results.reserve(valueCount);
-    {
+    if(valueCount > 0) {
+      results.reserve(valueCount);
+
       std::vector<WCHAR> valueName(longestValueNameLength, 0);
       DWORD valueNameLength = longestValueNameLength;
 
@@ -354,6 +356,82 @@ namespace Nuclex { namespace Support { namespace Platform {
     }
 
     return results;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  ::HKEY WindowsRegistryApi::OpenExistingSubKey(
+    ::HKEY parentKeyHandle, const std::string &subKeyName, bool writable /* = true */
+  ) {
+    ::HKEY subKeyHandle;
+    {
+      // Flags to tell the "security accounts manager" the access level we need
+      ::REGSAM desiredAccessLevel = KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS;
+      if(writable) {
+        desiredAccessLevel |= (KEY_SET_VALUE | KEY_CREATE_SUB_KEY);
+      }
+
+      // Attempt to open the key. This does not create a key if it doesn't exist
+      ::LSTATUS result;
+      if(subKeyName.empty()) {
+        result = ::RegOpenKeyExW(
+          parentKeyHandle,
+          nullptr, // subkey name
+          0, // options
+          desiredAccessLevel,
+          &subKeyHandle
+        );
+      } else {
+        std::wstring subKeyNameUtf16 = Text::StringConverter::WideFromUtf8(subKeyName);
+        result = ::RegOpenKeyExW(
+          parentKeyHandle,
+          subKeyNameUtf16.c_str(),
+          0, // options
+          desiredAccessLevel,
+          &subKeyHandle
+        );
+      }
+      if(unlikely(result != ERROR_SUCCESS)) {
+        if(result == ERROR_FILE_NOT_FOUND) {
+          return ::HKEY(nullptr);
+        } else {
+          Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
+            u8"Could not open registry subkey", result
+          );
+        }
+      }
+    }
+
+    return subKeyHandle;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  ::HKEY WindowsRegistryApi::OpenOrCreateSubKey(
+    ::HKEY parentKeyHandle, const std::string &subKeyName
+  ) {
+    ::HKEY openedSubKey;
+    {
+      std::wstring subKeyNameUtf16 = Text::StringConverter::WideFromUtf8(subKeyName);
+      ::LSTATUS result = ::RegCreateKeyExW(
+        parentKeyHandle,
+        subKeyNameUtf16.c_str(),
+        0, // reserved
+        nullptr, // class ("user-defined type of this key" - no clue)
+        REG_OPTION_NON_VOLATILE,
+        KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS | KEY_SET_VALUE | KEY_CREATE_SUB_KEY,
+        nullptr, // security attributes
+        &openedSubKey,
+        nullptr // disposition - tells whether new key was created - we don't care
+      );
+      if(result != ERROR_SUCCESS) {
+        Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
+          u8"Could not open or create registry subkey for read/write access", result
+        );
+      }
+    }
+
+    return openedSubKey;
   }
 
   // ------------------------------------------------------------------------------------------- //

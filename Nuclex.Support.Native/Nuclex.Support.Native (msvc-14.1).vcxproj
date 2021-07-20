@@ -221,6 +221,10 @@
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceContainer.h" />
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceFactory.inl" />
     <ClInclude Include="Include\Nuclex\Support\Services\ServiceProvider.h" />
+    <ClInclude Include="Include\Nuclex\Support\Settings\IniSettingsStore.h" />
+    <ClInclude Include="Include\Nuclex\Support\Settings\MemorySettingsStore.h" />
+    <ClInclude Include="Include\Nuclex\Support\Settings\RegistrySettingsStore.h" />
+    <ClInclude Include="Include\Nuclex\Support\Settings\SettingsStore.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalCast.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h" />
@@ -285,6 +289,14 @@
     <ClCompile Include="Source\Services\LazyServiceInjector.cpp" />
     <ClCompile Include="Source\Services\ServiceContainer.cpp" />
     <ClCompile Include="Source\Services\ServiceProvider.cpp" />
+    <ClCompile Include="Source\Settings\IniDocumentModel.FileParser.cpp" />
+    <ClInclude Include="Source\Settings\IniDocumentModel.FileParser.h" />
+    <ClCompile Include="Source\Settings\IniDocumentModel.cpp" />
+    <ClInclude Include="Source\Settings\IniDocumentModel.h" />
+    <ClCompile Include="Source\Settings\IniSettingsStore.cpp" />
+    <ClCompile Include="Source\Settings\MemorySettingsStore.cpp" />
+    <ClCompile Include="Source\Settings\RegistrySettingsStore.cpp" />
+    <ClCompile Include="Source\Settings\SettingsStore.cpp" />
     <ClCompile Include="Source\Text\Dragon4\Dragon4.cpp" />
     <ClInclude Include="Source\Text\Dragon4\Dragon4.h" />
     <ClInclude Include="Source\Text\Dragon4\Math.h" />

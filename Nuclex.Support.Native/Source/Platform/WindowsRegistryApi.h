@@ -68,12 +68,24 @@ namespace Nuclex { namespace Support { namespace Platform {
       ::HKEY keyHandle
     );
 
-/*
-    public: static ::HKEY OpenKeyReadOnly(const std::string &registryPath);
+    /// <summary>Opens a subkey below the specified parent registry key</summary>
+    /// <param name="parentKeyHandle">Handle of the parent registry key</param>
+    /// <param name="subKeyName">Name of the subkey that will be opened</param>
+    /// <param name="writable">Whether the key will be opened with write permissions</param>
+    /// <returns>
+    ///   The handle of the opened registry subkey or a null pointer if the key doesn't exist
+    /// </returns>
+    public: static ::HKEY OpenExistingSubKey(
+      ::HKEY parentKeyHandle, const std::string &subKeyName, bool writable = true
+    );
 
-    public: static ::HKEY OpenKeyWritable(const std::string &registryPath);
-*/
-
+    /// <summary>Opens or creates a subkey below the specified parent registry key</summary>
+    /// <param name="parentKeyHandle">Handle of the parent registry key</param>
+    /// <param name="subKeyName">Name of the subkey that will be opened or created</param>
+    /// <returns>The handle of the opened or created registry subkey</returns>
+    public: static ::HKEY OpenOrCreateSubKey(
+      ::HKEY parentKeyHandle, const std::string &subKeyName
+    );
 
   };
 

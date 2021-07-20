@@ -47,7 +47,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///       int currentScore = 31241;
   ///       std::string scoreText(14 + 11 + 1, '\0'); // optional: reserve exact length
   ///
-  ///       scoreText.append(u8&quot;The score is: &quot;);
+  ///       scoreText.append(u8"The score is: ");
   ///       lexical_append(scoreText, currentScore);
   ///     </code>
   ///   </para>
@@ -97,7 +97,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///       std::vector&lt;char&gt; scoreCharacters(14 + 11 = 1);
   ///
   ///       {
-  ///         static const std::string message(u8&quot;The score is: &quot;);
+  ///         static const std::string message(u8"The score is: ");
   ///
   ///         std::copy_n(message.c_str(), 14, scoreCharacters.data());
   ///         std::size_t characterCount = lexical_append(
