@@ -360,7 +360,7 @@ namespace {
     const std::uint32_t mixFactor = 0x5bd1e995;
     const int mixShift = 24;
 
-    std::uint32_t hash = seed ^ (length * mixFactor);
+    std::uint32_t hash = seed ^ static_cast<std::uint32_t>(length * mixFactor);
 
     while(length >= 4) {
       std::uint32_t data32 = *reinterpret_cast<const std::uint32_t *>(data);
@@ -402,7 +402,7 @@ namespace {
     const std::uint64_t mixFactor = 0xc6a4a7935bd1e995ULL;
     const int mixShift = 47;
 
-    std::uint64_t hash = seed ^ (length * mixFactor);
+    std::uint64_t hash = seed ^ static_cast<std::uint64_t>(length * mixFactor);
 
     // Process the data in 64 bit chunks until we're down to the last few bytes
     while(length >= 8) {
@@ -512,11 +512,13 @@ namespace Nuclex { namespace Support { namespace Text {
       // incremental generation and this will likely decrease hashing quality...
       if constexpr(sizeof(std::size_t) >= 8) {
         hash = CalculateMurmur64(
-          reinterpret_cast<const std::uint8_t *>(&codepoint), 4, hash
+          reinterpret_cast<const std::uint8_t *>(&codepoint), 4,
+          static_cast<std::uint64_t>(hash)
         );
       } else {
         hash = CalculateMurmur32(
-          reinterpret_cast<const std::uint8_t *>(&codepoint), 4, hash
+          reinterpret_cast<const std::uint8_t *>(&codepoint), 4,
+          static_cast<std::uint32_t>(hash)
         );
       }
     }

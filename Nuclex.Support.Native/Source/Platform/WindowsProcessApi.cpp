@@ -299,8 +299,8 @@ namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void WindowsProcessApi::GetOwnExecutablePath(std::string &target) {
-    getModuleFilename(target);
+  void WindowsProcessApi::GetOwnExecutablePath(std::wstring &target) {
+    getModuleFileName(target);
     WindowsPathApi::RemoveFileFromPath(target);
   }
 

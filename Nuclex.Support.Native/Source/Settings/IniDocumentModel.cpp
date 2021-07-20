@@ -370,11 +370,11 @@ namespace Nuclex { namespace Support { namespace Settings {
     std::unordered_set<Line *> sectionLines;
     {
       for(
-        SectionMap::iterator sectionIterator = this->sections.begin();
-        sectionIterator != this->sections.end();
-        ++sectionIterator
+        SectionMap::const_iterator iterator = this->sections.cbegin();
+        iterator != this->sections.cend();
+        ++iterator
       ) {
-        sectionLines.insert(sectionIterator->second->DeclarationLine);
+        sectionLines.insert(iterator->second->DeclarationLine);
       }
     }
 
@@ -428,9 +428,8 @@ namespace Nuclex { namespace Support { namespace Settings {
         sectionIterator->second->DeclarationLine = nullptr;
         sectionIterator->second->LastLine = nullptr;
       } else { // No, this is an explicit section
-        this->sections.erase(sectionIterator);
-
         std::uint8_t *sectionMemory = reinterpret_cast<std::uint8_t *>(sectionIterator->second);
+        this->sections.erase(sectionIterator);
         std::size_t removedElementCount = this->createdLinesMemory.erase(sectionMemory);
         if(removedElementCount > 0) {
           delete[] sectionMemory;

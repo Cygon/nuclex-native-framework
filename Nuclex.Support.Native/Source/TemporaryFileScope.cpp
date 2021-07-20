@@ -24,6 +24,7 @@ License along with this library
 #include "Nuclex/Support/TemporaryFileScope.h"
 
 #if defined(NUCLEX_SUPPORT_WINDOWS)
+#include "Nuclex/Support/ScopeGuard.h" // Closing opened files even if exceptions happen
 #include "Nuclex/Support/Text/StringConverter.h" // Conversion between UTF-8 and wide char
 #include "Platform/WindowsApi.h" // Minimalist Windows.h and error handling helpers
 #include "Platform/WindowsPathApi.h" // Basic path manipulation required to join directories
@@ -118,7 +119,10 @@ namespace Nuclex { namespace Support {
       Platform::WindowsApi::ThrowExceptionForSystemError(errorMessage, errorCode);
     }
 
-    *reinterpret_cast<HANDLE *>(this->privateImplementationData) = fileHandle;
+    // If we don't close the file, it cannot be accessed unless other code opens
+    // it with FILE_SHARE_READ | FILE_SHARE_WRITE (the latter is the problem)
+    ::CloseHandle(fileHandle);
+
     this->path = Text::StringConverter::Utf8FromWide(fullPath);
 #else
     static_assert(
@@ -153,14 +157,6 @@ namespace Nuclex { namespace Support {
 
   TemporaryFileScope::~TemporaryFileScope() {
 #if defined(NUCLEX_SUPPORT_WINDOWS)
-    HANDLE fileHandle = *reinterpret_cast<HANDLE *>(this->privateImplementationData);
-
-    if(likely(fileHandle != INVALID_HANDLE_VALUE)) {
-      BOOL result = ::CloseHandle(fileHandle);
-      NUCLEX_SUPPORT_NDEBUG_UNUSED(result);
-      assert((result != FALSE) && u8"Handle of temporary file is closed successfully");
-    }
-
     if(likely(!this->path.empty())) {
       std::wstring utf16Path = Text::StringConverter::WideFromUtf8(this->path);
       BOOL result = ::DeleteFileW(utf16Path.c_str());
@@ -194,8 +190,14 @@ namespace Nuclex { namespace Support {
     const std::uint8_t *contents, std::size_t byteCount
   ) {
 #if defined(NUCLEX_SUPPORT_WINDOWS)
-    HANDLE fileHandle = *reinterpret_cast<HANDLE *>(this->privateImplementationData);
-    assert((fileHandle != INVALID_HANDLE_VALUE) && u8"File is opened and accessible");
+    ::HANDLE fileHandle = Platform::WindowsFileApi::OpenFileForWriting(this->path);
+    ON_SCOPE_EXIT {
+      BOOL result = ::CloseHandle(fileHandle);
+      NUCLEX_SUPPORT_NDEBUG_UNUSED(result);
+      assert((result != FALSE) && u8"File handle is closed successfully");
+    };
+    //HANDLE fileHandle = *reinterpret_cast<HANDLE *>(this->privateImplementationData);
+    //assert((fileHandle != INVALID_HANDLE_VALUE) && u8"File is opened and accessible");
 
     Platform::WindowsFileApi::Seek(fileHandle, 0, FILE_BEGIN);
     Platform::WindowsFileApi::Write(fileHandle, contents, byteCount);

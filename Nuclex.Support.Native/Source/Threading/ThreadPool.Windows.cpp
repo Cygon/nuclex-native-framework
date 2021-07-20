@@ -33,8 +33,7 @@ License along with this library
 #include "../Platform/WindowsApi.h" // error handling helpers
 
 #include <cassert> // for assert()
-#include <atomic> // for std;:atomic
-#include <mutex> // for std;:mutex
+#include <atomic> // for std::atomic
 
 #include <VersionHelpers.h> // for ::IsWindowsVistaOrGreater()
 

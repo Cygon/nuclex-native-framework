@@ -98,9 +98,9 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   std::string Process::GetExecutableDirectory() {
-    std::string result;
+    std::wstring result;
     Platform::WindowsProcessApi::GetOwnExecutablePath(result);
-    return result;
+    return Text::StringConverter::Utf8FromWide(result);
   }
 
   // ------------------------------------------------------------------------------------------- //
