@@ -135,6 +135,10 @@ namespace Nuclex { namespace Support { namespace Platform {
     /// </returns>
     public: static DWORD GetProcessExitCode(HANDLE processHandle);
 
+    /// <summary>Determines the path of the running executable</summary>
+    /// <param name="target">Target string to store the executable path in</param>
+    public: static void GetOwnExecutablePath(std::string &target);
+
     /// <summary>Locates an executable by emulating the search of ::LoadLibrary()</summary>
     /// <param name="target">Target string to store the executable path in</param>
     /// <param name="executable">Executable, with or without path</param>

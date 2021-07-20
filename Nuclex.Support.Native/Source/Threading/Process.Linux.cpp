@@ -241,6 +241,14 @@ namespace Nuclex { namespace Support { namespace Threading {
 
   // ------------------------------------------------------------------------------------------- //
 
+  std::string Process::GetExecutableDirectory() {
+    std::string result;
+    Platform::PosixProcessApi::GetOwnExecutablePath(result);
+    return result;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   Process::Process(const std::string &executablePath) :
     executablePath(executablePath),
     implementationData(nullptr) {

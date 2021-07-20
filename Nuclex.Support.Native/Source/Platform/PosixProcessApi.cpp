@@ -205,6 +205,12 @@ namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
+  void PosixProcessApi::GetOwnExecutablePath(std::string &target) {
+    getExecutablePath(target);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   void PosixProcessApi::GetAbsoluteExecutablePath(
     std::string &target, const std::string &executable
   ) {

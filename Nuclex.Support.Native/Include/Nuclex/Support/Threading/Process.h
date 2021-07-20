@@ -63,6 +63,25 @@ namespace Nuclex { namespace Support { namespace Threading {
   /// </remarks>
   class Process {
 
+    /// <summary>Returns the directory in which the running executable resides</summary>
+    /// <returns>The directory holding the currently running executable</returns>
+    /// <remarks>
+    ///   <para>
+    ///     The returned path is the application's executable directory, guaranteed to
+    ///     end with the platform's native directory separator character. If you directly
+    ///     append a filename to the returned string, you get a valid, absolute path to
+    ///     any file stored in the same directory as your application's executable.
+    ///   </para>
+    ///   <para>
+    ///     Do note that on Unix-like platforms it is usually not appropriate to store
+    ///     data and configuration files in the application directory, unless your
+    ///     application is installed in the '/opt' directory (but hardcoding such
+    ///     a requirement would get in the way of a package manager installing your
+    ///     application in '/usr/bin' and its data files in '/usr/share').
+    ///   </para>
+    /// </remarks>
+    public: NUCLEX_SUPPORT_API static std::string GetExecutableDirectory();
+
     /// <summary>Event that is fired whenever the process writes to stdout</summary>
     public: Nuclex::Support::Events::Event<
       void(const char *, std::size_t)
