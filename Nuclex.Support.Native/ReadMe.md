@@ -8,23 +8,31 @@ to make you life easier.
 There are unit tests for the whole library, so everything is verifiably
 working on all platforms tested (Linux, Windows, Raspberry).
 
+**Text**
 * Locale-independent string/number conversion
 * Conversion between std::string and std::wstring
 * Case-insensitive UTF-8 string comparison
 * UTF-8 wildcard matching
 
+**Settings**
+* Retrieve and store application settings in the registry (Windows-only)
+* Retrieve and store application settings in .ini files
+
+**Threading**
+* Thread pool for micro tasks with std::future
+* Portable, fast Semaphores, Latches and Gates
+* Run child processes and intercept stdin/stdout/stderr
+
+**Helpers**
 * A modern ScopeGuard plus a transactional variant
 * Fast and lightweight signal/slot implementation
 * Lean dependency injector with automatic constructor detection
+* Scoped temporary file and directory classes
 
-* Lock-free queues for usage from multiple threads
-* Thread pool for micro tasks with std::future
-* Semaphores and Gates
-* Run child processes with stdin/stdout/stderr intercept
-
+**Everything:**
 * Supports Windows, Linux and ARM Linux (Raspberry PI)
 * Compiles cleanly at maximum warning levels with MSVC, GCC and clang
-* Everything is unit-tested
+* If it's there, it's unit-tested
 
 
 lexical_cast & lexical_append
@@ -79,7 +87,7 @@ the case folding table released by the unicode consortium):
 ```cpp
 // Comparison uses current case folding table and should be as safe as ICU.
 bool areEqual = StringMatcher::AreEqual(u8"Hello", u8"hello");
-````
+```
 
 And UTF-8 wildcard matching as known from various shells:
 
@@ -92,8 +100,63 @@ bool alsoReturnsTrue = StringMatcher::FitsWildcard(
 );
 ```
 
+For containers like `std::map` and `std::unordered_map`, custom functors
+compatible to `std::less`, `std::equal_to` and `std::hash` are provided,
+allowing you to build associative containers that ignore case:
+
+```cpp
+typedef std::unordered_map<
+  std::string, int,
+  CaseInsensitiveUtf8Hash, CaseInsensitiveUtf8EqualTo
+> StringIntegerMap;
+
+StringIntegerMap ingredients;
+ingredients[u8"Rødløg"] = 2;
+int onionCount = ingredients.at(u8"RØDLØG"); // Different case, still a match
+```
+
 Uses [UTF8-CPP](https://github.com/nemtrif/utfcpp) and some custom code.
 See Copyright.md in the Documents directory for more details.
+
+
+Application Settings Storage
+----------------------------
+
+Most non-trivial applications need to store their settings somewhere.
+With the `SettingsStore` interface, you can transparently access settings
+that are either stored in memory (`MemorySettingsStore`), in an .ini file
+(`IniSettingsStore`) or in the registry (`RegistrySettingsStore`) on
+Windows systems.
+
+Using the `IniSettingsStore` is the most portable solution and care has been
+taken to implement an .ini parser that not only preserves formatting and
+comments in the .ini file, but also adheres to the existing file's style when
+new properties are added to it.
+
+```cpp
+IniSettingsStore settings(u8"awesome-game.ini");
+// on Windows, try this: RegistrySettingsStore settings(u8"HKCU/My/Game");
+// or as mock for unit tests: MemorySettingsStore settings;
+
+// Properties return an std::optional, so you can detect with .has_value()
+// if the property is missing and gracefully fall back to a default value.
+std::optional<std::uint32_t> resolutionX = (
+  settings.Retrieve<std::uint32_t>(u8"Video", u8"ResolutionX")
+);
+
+// ...or provide a default value right away via .value_or():
+std::uint32_t resolutionY = (
+  settings.Retrieve<std::uint32_t>(u8"Video", u8"ResolutionX").value_or(1080)
+);
+
+// There's a shared base class for all implementations that you pass to
+// any methods dealing with settings:
+SettingsStore &abstractSettings = settings;
+
+// Storing properties is just as simple and everything, including
+// templated methods, is available through the shared base class:
+abstractSettings.Store<bool>(std::string(), u8"FirstLaunch", false);
+```
 
 
 ScopeGuard
@@ -181,8 +244,12 @@ class CalculatorService {
 };
 
 class BrokenCalculator : public virtual CalculatorService {
-  public: int Add(int first, int second) override { return first + second + 1; }
-  public: int Multiply(int first, int second) override { return first + first * second; };
+  public: int Add(int first, int second) override {
+    return first + second + 1;
+  }
+  public: int Multiply(int first, int second) override {
+    return first + first * second;
+  };
 };
 
 class CalculatorUser {
@@ -238,13 +305,13 @@ int main() {
 ```
 
 
-Semaphores and Gates
---------------------
+Gates, Semaphores and Latches
+-----------------------------
 
 Gates can be either opened or closed. Any thread calling Wait() will block on
-the gate until it is opened by another thread. This is useful to black access to
-a system before it is ready to work or to stop a single thread on shutdown until
-all worker threads have vacated a system.
+the gate until it is opened by another thread. This is useful to black access
+to a system before it is ready to work or to stop a single thread on shutdown
+until all worker threads have vacated a system.
 
 Semaphores are a well-known threading primitive working like a counted mutex:
 one thread can pass for each call to Post() that was made in the past or while
@@ -253,9 +320,14 @@ a thread was waiting.
 They're useful for work queues and advanced locking on resources that can only
 handle limited parallelism (i.e. due to memory or hardware constraints).
 
-C++20 is also getting a semaphore class, but until then, this one provides you
-with a portable implementation that also avoids limitations on Posix systems
-where the default semaphore uses timeouts based on wall clock time.
+Finally, Latches are like inverted Semaphores. Threads can pass through when
+the latches' count reaches zero. This is useful if you want to delay some
+shutdown or disconnect code until the last thread stops using a resource.
+
+Note that C++20 is also getting a semaphore class, but until then, this one
+provides you with a portable implementation that also avoids limitations on
+Posix systems where the default semaphore uses timeouts based on wall
+clock time.
 
 ```cpp
 int main() {
@@ -297,7 +369,7 @@ int main() {
     encoder.StdOut.Subscribe<&handleFfmpegStdOut>();
 
     encoder.Start(
-      { u8"-i myvideo.avi", u8"-vcodec v210", u8"-an", u8"-y", u8"myvideo-v210.avi" }
+      { u8"-i input.avi", u8"-vcodec v210", u8"-an", u8"-y", u8"output.avi" }
     );
     bool hasExited = encoder.Wait(std::chrono::milliseconds(60000));
 
@@ -319,8 +391,8 @@ what variables in dynamically typed languages are made of.
 
 This implementation differs from `std::variant` of C++ 17 (which lets you
 choose which types it can store). The `Nuclex::Support::Variant` can store
-all primitive C++ types, strings and objects (within `Nuclex::Support::Any`)
-and provides reasonable conversion between all of these.
+all primitive C++ types, strings and objects (within `std::any`) and provides
+reasonable conversions between all of these.
 
 
 Containers
