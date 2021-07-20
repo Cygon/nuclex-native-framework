@@ -241,10 +241,8 @@
     <ClInclude Include="Include\Nuclex\Support\Threading\Semaphore.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h" />
-    <ClInclude Include="Include\Nuclex\Support\Any.h" />
     <ClInclude Include="Include\Nuclex\Support\BitTricks.h" />
     <ClInclude Include="Include\Nuclex\Support\Config.h" />
-    <ClInclude Include="Include\Nuclex\Support\Optional.h" />
     <ClInclude Include="Include\Nuclex\Support\ScopeGuard.h" />
     <ClInclude Include="Include\Nuclex\Support\TemporaryDirectoryScope.h" />
     <ClInclude Include="Include\Nuclex\Support\TemporaryFileScope.h" />
@@ -345,10 +343,8 @@
     <ClInclude Include="Source\Threading\ThreadPoolConfig.h" />
     <ClCompile Include="Source\Threading\ThreadPoolTaskPool.cpp" />
     <ClInclude Include="Source\Threading\ThreadPoolTaskPool.h" />
-    <ClCompile Include="Source\Any.cpp" />
     <ClCompile Include="Source\BitTricks.cpp" />
     <ClCompile Include="Source\Config.cpp" />
-    <ClCompile Include="Source\Optional.cpp" />
     <ClCompile Include="Source\ScopeGuard.cpp" />
     <ClCompile Include="Source\TemporaryDirectoryScope.cpp" />
     <ClCompile Include="Source\TemporaryFileScope.cpp" />
@@ -395,9 +391,7 @@
     <ClCompile Include="Tests\Threading\ThreadPoolTaskPoolTest.cpp" />
     <ClCompile Include="Tests\Threading\ThreadPoolTest.cpp" />
     <ClCompile Include="Tests\Threading\ThreadTest.cpp" />
-    <ClCompile Include="Tests\AnyTests.cpp" />
     <ClCompile Include="Tests\BitTricksTest.cpp" />
-    <ClCompile Include="Tests\OptionalTests.cpp" />
     <ClCompile Include="Tests\ScopeGuardTest.cpp" />
     <ClCompile Include="Tests\TemporaryDirectoryScopeTest.cpp" />
     <ClCompile Include="Tests\TemporaryFileScopeTest.cpp" />

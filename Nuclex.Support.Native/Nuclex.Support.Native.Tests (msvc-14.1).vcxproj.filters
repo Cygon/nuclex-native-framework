@@ -236,16 +236,10 @@
     <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h">
       <Filter>Include\Threading</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Any.h">
-      <Filter>Include</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\BitTricks.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Config.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Optional.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\ScopeGuard.h">
@@ -544,16 +538,10 @@
     <ClInclude Include="Source\Threading\ThreadPoolTaskPool.h">
       <Filter>Source\Threading</Filter>
     </ClInclude>
-    <ClCompile Include="Source\Any.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\BitTricks.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Config.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Optional.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\ScopeGuard.cpp">
@@ -690,13 +678,7 @@
     <ClCompile Include="Tests\Threading\ThreadTest.cpp">
       <Filter>Tests\Threading</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\AnyTests.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
     <ClCompile Include="Tests\BitTricksTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\OptionalTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="Tests\ScopeGuardTest.cpp">
