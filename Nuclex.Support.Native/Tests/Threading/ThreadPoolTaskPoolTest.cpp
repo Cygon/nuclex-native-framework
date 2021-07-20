@@ -174,10 +174,14 @@ namespace Nuclex { namespace Support { namespace Threading {
       EXPECT_EQ(TestTask::ConstructorCallCount, previousConstructorCallCount + 2);
       //EXPECT_EQ(TestTask::DestructorCallCount, previousDestructorCallCount);
 
-      // CHECK: This test failed spuriously once
-      // There isn't even any threading or tricky stuff involved here,
-      // except that the dequeue is done from the highly complex moodycamel queue...
-      EXPECT_NE(anotherTask, originalTask);
+      // Originally, I tested like this:
+      // EXPECT_NE(anotherTask, originalTask);
+      //
+      // but GetNewTask() calls free upon encountering the 16 byte payload task,
+      // and the C++ memory allocator then can allocate the 32 byte payload task
+      // at the exact same memory address. This caused spurious failures.
+      //
+      EXPECT_EQ(anotherTask->PayloadSize, 32U);
 
       taskPool.DeleteTask(anotherTask);
     }
@@ -233,7 +237,10 @@ namespace Nuclex { namespace Support { namespace Threading {
       EXPECT_EQ(TestTask::ConstructorCallCount, previousConstructorCallCount + 2);
       EXPECT_EQ(TestTask::DestructorCallCount, previousDestructorCallCount + 1);
 
-      EXPECT_NE(anotherTask, originalTask);
+      // Cannot do this, C++ allocator might (and does, in practice) hand out
+      // the new 16 byte task at the same address as the freed 1024 byte task.
+      //EXPECT_NE(anotherTask, originalTask);
+      EXPECT_GE(anotherTask->PayloadSize, 16U);
 
       taskPool.DeleteTask(anotherTask);
     }
