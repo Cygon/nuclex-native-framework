@@ -119,11 +119,11 @@ namespace Nuclex { namespace Support { namespace Text {
     // that's fine. Just, maybe, don't save this file!
     // (it's a fly, a snake, an alligator and a fish symbol from egyptian hieroglyphs)
     std::string fourByteSymbols = u8"𓆦𓆓𓆌𓆟";
-    EXPECT_EQ(StringConverter::CountUtf8Characters(fourByteSymbols), 4U);
+    EXPECT_EQ(StringConverter::CountUtf8Letters(fourByteSymbols), 4U);
 
     // Also try with some less exotic UTF-8 characters using 2 or 3 bytes.
     std::string otherSymbols = u8"𝖠Β𝒞𝘋𝙴𝓕ĢȞỈ𝕵ꓗʟ𝙼ℕ০𝚸𝗤ՀꓢṰǓⅤ𝔚Ⲭ𝑌𝙕𝘢𝕤";
-    EXPECT_EQ(StringConverter::CountUtf8Characters(otherSymbols), 28U);
+    EXPECT_EQ(StringConverter::CountUtf8Letters(otherSymbols), 28U);
 
   }
 
