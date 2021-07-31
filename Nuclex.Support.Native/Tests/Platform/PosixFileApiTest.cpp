@@ -21,40 +21,21 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "../Source/Platform/WindowsApi.h"
+#include "../Source/Platform/PosixFileApi.h"
+
+#if !defined(NUCLEX_SUPPORT_WINDOWS)
 
 #include <gtest/gtest.h>
-
-#if defined(NUCLEX_SUPPORT_WINDOWS)
 
 namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(WindowsApiTest, CanGetPosixErrorMessage) {
-    int errorNumber = EACCES;
-    std::string errorMessage = WindowsApi::GetErrorMessage(errorNumber);
-    EXPECT_GT(errorMessage.length(), 10); // We can expect 10 letters at least, eh?
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  TEST(WindowsApiTest, CanGetWindowsErrorMessage) {
-    DWORD errorCode = ERROR_OUTOFMEMORY;
-    std::string errorMessage = WindowsApi::GetErrorMessage(errorCode);
-    EXPECT_GT(errorMessage.length(), 10);
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  TEST(WindowsApiTest, CanGetComErrorMessage) {
-    HRESULT resultHandle = E_NOINTERFACE;
-    std::string errorMessage = WindowsApi::GetErrorMessage(resultHandle);
-    EXPECT_GT(errorMessage.length(), 10);
+  TEST(PosixFileApiTest, DetectsIfPathIsRelative) {
   }
 
   // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Platform
 
-#endif // defined(NUCLEX_SUPPORT_WINDOWS)
+#endif // !defined(NUCLEX_SUPPORT_WINDOWS)

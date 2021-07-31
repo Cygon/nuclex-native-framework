@@ -196,8 +196,6 @@ namespace Nuclex { namespace Support {
       NUCLEX_SUPPORT_NDEBUG_UNUSED(result);
       assert((result != FALSE) && u8"File handle is closed successfully");
     };
-    //HANDLE fileHandle = *reinterpret_cast<HANDLE *>(this->privateImplementationData);
-    //assert((fileHandle != INVALID_HANDLE_VALUE) && u8"File is opened and accessible");
 
     Platform::WindowsFileApi::Seek(fileHandle, 0, FILE_BEGIN);
     Platform::WindowsFileApi::Write(fileHandle, contents, byteCount);

@@ -86,7 +86,7 @@ namespace Nuclex { namespace Support { namespace Settings {
   ///     &quot;HKEY_CURRENT_USER&quot; aka &quot;HKCU&quot; is the intended place.
   ///   </para>
   /// </remarks>
-  class RegistrySettingsStore : public SettingsStore {
+  class NUCLEX_SUPPORT_TYPE RegistrySettingsStore : public SettingsStore {
 
     /// <summary>Deletes the specified registry key and all its subkeys</summary>
     /// <param name="registryPath">Path of the key that will be deleted</param>

@@ -102,20 +102,22 @@ License along with this library
       #define NUCLEX_SUPPORT_API __declspec(dllimport)
     #endif
   #endif
+  // MSVC doesn't have to import/export the whole type, it includes the vtable
+  // and RTTI stuff automatically when at least one member is exported. Exporting
+  // the whole type would only cause useless things to be exported as well.
+  #define NUCLEX_SUPPORT_TYPE
 
 #elif defined(__GNUC__) || defined(__clang__)
 
   #if defined(NUCLEX_SUPPORT_STATICLIB) || defined(NUCLEX_SUPPORT_EXECUTABLE)
     #define NUCLEX_SUPPORT_API
+    #define NUCLEX_SUPPORT_TYPE
   #else
-    #if defined(NUCLEX_SUPPORT_SOURCE)
-      #define NUCLEX_SUPPORT_API __attribute__ ((visibility ("default")))
-    #else
-      // If you use -fvisibility=hidden in GCC, exception handling and RTTI would break
-      // if visibility wasn't set during export _and_ import because GCC would immediately
-      // forget all type infos encountered. See http://gcc.gnu.org/wiki/Visibility
-      #define NUCLEX_SUPPORT_API __attribute__ ((visibility ("default")))
-    #endif
+    // If you use -fvisibility=hidden in GCC, exception handling and RTTI would break
+    // if visibility wasn't set during export _and_ import because GCC would immediately
+    // forget all type infos encountered. See http://gcc.gnu.org/wiki/Visibility
+    #define NUCLEX_SUPPORT_API __attribute__ ((visibility ("default")))
+    #define NUCLEX_SUPPORT_TYPE __attribute__ ((visibility ("default")))
   #endif
 
 #else

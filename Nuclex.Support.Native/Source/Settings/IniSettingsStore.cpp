@@ -82,15 +82,16 @@ namespace Nuclex { namespace Support { namespace Settings {
       ON_SCOPE_EXIT { Platform::LinuxFileApi::Close(fileDescriptor); };
 
       contents.resize(4096);
-      for(std::size_t offset = 0;; offset += 4096) {
+      for(std::size_t offset = 0;;) {
         std::size_t readByteCount = Platform::LinuxFileApi::Read(
           fileDescriptor, contents.data() + offset, 4096
         );
-        if(readByteCount < 4096) {
-          contents.resize(contents.size() - 4096 + readByteCount);
+        offset += readByteCount;
+        if(readByteCount == 0) { // 0 bytes are only returned at the end of the file
+          contents.resize(offset); // drop the 4k we added for appending
           break;
-        } else {
-          contents.resize(contents.size() + readByteCount);
+        } else { // 1 or more bytes returned, increase buffer for another round
+          contents.resize(offset + 4096); // extend so that 4k bytes are vailable again
         }
       }
     }
@@ -100,15 +101,16 @@ namespace Nuclex { namespace Support { namespace Settings {
       ON_SCOPE_EXIT { Platform::WindowsFileApi::CloseFile(fileHandle); };
 
       contents.resize(4096);
-      for(std::size_t offset = 0;; offset += 4096) {
+      for(std::size_t offset = 0;;) {
         std::size_t readByteCount = Platform::WindowsFileApi::Read(
           fileHandle, contents.data() + offset, 4096
         );
-        if(readByteCount < 4096) {
-          contents.resize(contents.size() - 4096 + readByteCount);
+        offset += readByteCount;
+        if(readByteCount == 0) { // 0 bytes are only returned at the end of the file
+          contents.resize(offset);
           break;
-        } else {
-          contents.resize(contents.size() + readByteCount);
+        } else { // 1 or more bytes returned, increase buffer for another round
+          contents.resize(offset + 4096); // extend so that 4k bytes are vailable again
         }
       }
     }
@@ -118,15 +120,16 @@ namespace Nuclex { namespace Support { namespace Settings {
       ON_SCOPE_EXIT { Platform::PosixFileApi::Close(file); };
 
       contents.resize(4096);
-      for(std::size_t offset = 0;; offset += 4096) {
+      for(std::size_t offset = 0;;) {
         std::size_t readByteCount = Platform::PosixFileApi::Read(
           file, contents.data() + offset, 4096
         );
-        if(readByteCount < 4096) {
-          contents.resize(contents.size() - 4096 + readByteCount);
+        offset += readByteCount;
+        if(readByteCount == 0) { // 0 bytes are only returned at the end of the file
+          contents.resize(offset);
           break;
-        } else {
-          contents.resize(contents.size() + readByteCount);
+        } else { // 1 or more bytes returned, increase buffer for another round
+          contents.resize(offset + 4096); // extend so that 4k bytes are vailable again
         }
       }
     }

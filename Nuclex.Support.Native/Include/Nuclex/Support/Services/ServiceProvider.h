@@ -37,7 +37,7 @@ namespace Nuclex { namespace Support { namespace Services {
   ///   manually (but beware of the service locator anti-pattern!) or as part of
   ///   a dependency injection framework.
   /// </remarks>
-  class ServiceProvider {
+  class NUCLEX_SUPPORT_TYPE ServiceProvider {
 
     /// <summary>Destroys the service provider and frees all resources</summary>
     public: NUCLEX_SUPPORT_API virtual ~ServiceProvider() = default;

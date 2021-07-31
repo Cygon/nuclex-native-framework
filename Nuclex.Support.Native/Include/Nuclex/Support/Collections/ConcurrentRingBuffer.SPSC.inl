@@ -57,7 +57,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     /// <summary>Initializes a new concurrent ring buffer</summary>
     /// <param name="capacity">Maximum number of items the ring buffer can hold</param>
-    public: ConcurrentRingBuffer(std::size_t capacity) :
+    public: explicit ConcurrentRingBuffer(std::size_t capacity) :
       capacity(capacity + 1), // One item is wasted in return for simpler full/empty math
       itemMemory(
         reinterpret_cast<TElement *>(

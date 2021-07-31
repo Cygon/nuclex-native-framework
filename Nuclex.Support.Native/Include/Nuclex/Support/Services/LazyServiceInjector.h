@@ -56,7 +56,7 @@ namespace Nuclex { namespace Support { namespace Services {
   ///   This is a very simplified dependency injector that only supports global services
   ///   stored in shared_ptrs.
   /// </remarks>
-  class LazyServiceInjector : public ServiceProvider {
+  class NUCLEX_SUPPORT_TYPE LazyServiceInjector : public ServiceProvider {
 
     #pragma region class TypeInfoComparer
 

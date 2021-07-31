@@ -33,7 +33,7 @@ License along with this library
 #include "../Platform/WindowsApi.h" // error handling helpers
 
 #include <cassert> // for assert()
-#include <atomic> // for std::atomic
+#include <atomic> // for std;:atomic
 
 #include <VersionHelpers.h> // for ::IsWindowsVistaOrGreater()
 
@@ -217,13 +217,13 @@ namespace Nuclex { namespace Support { namespace Threading {
     SubmittedTask *submittedTask = reinterpret_cast<SubmittedTask *>(parameter);
     PlatformDependentImplementation &implementation = *submittedTask->Implementation;
 
-    ThreadPoolConfig::IsThreadPoolThread = true;
-
     // Make sure to always update the task counter and to signal the 'LightsOut' event
     // if the task counter reaches zero (used on shutdown to wait for tasks to flush).
     ON_SCOPE_EXIT {
       implementation.LightsOutLatch.CountDown();
     };
+
+    ThreadPoolConfig::IsThreadPoolThread = true;
 
     // See if the thread pool is shutting down. If so, fast-forward through any scheduled
     // task, destroying it without executing it (this will cancel the owner's std::futures).

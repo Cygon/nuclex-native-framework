@@ -256,9 +256,15 @@ namespace Nuclex { namespace Support { namespace Text {
       this->oldestLineIndex = (this->oldestLineIndex + 1) % historyLineCount;
     }
 
+    const std::string &previousLine = *this->currentLine;
+
     this->currentLine = &this->lines[this->nextLineIndex];
     this->currentLine->resize(TimeStampLength + SeverityLength);
     this->currentLine->append(this->indentationCount, ' ');
+
+    // Call this last, if the override messes up and throws,
+    // at least our internal state will be intact...
+    OnLineAdded(previousLine);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -282,7 +288,16 @@ namespace Nuclex { namespace Support { namespace Text {
       currentCharacter[6] = TimestampDigits[splitUtcTime.wSecond][0];
       currentCharacter[7] = TimestampDigits[splitUtcTime.wSecond][1];
       currentCharacter[8] = '.';
-      lexical_append(currentCharacter + 9, 3, splitUtcTime.wMilliseconds);
+      std::size_t count = lexical_append(currentCharacter + 9, 3, splitUtcTime.wMilliseconds);
+      if(count == 1) {
+        currentCharacter[11] = currentCharacter[9];
+        currentCharacter[9] = '0';
+        currentCharacter[10] = '0';
+      } else if(count == 2) {
+        currentCharacter[11] = currentCharacter[10];
+        currentCharacter[10] = currentCharacter[9];
+        currentCharacter[9] = '0';
+      }
       currentCharacter[12] = ' ';
     }
 
@@ -328,11 +343,21 @@ namespace Nuclex { namespace Support { namespace Text {
       currentCharacter[8] = '.';
 
       std::size_t timeMilliseconds = time.tv_nsec / nanosecondsPerMillisecond;
-      lexical_append(currentCharacter + 9, 3, timeMilliseconds);
+      std::size_t count = lexical_append(currentCharacter + 9, 3, timeMilliseconds);
+      if(count == 1) {
+        currentCharacter[11] = currentCharacter[9];
+        currentCharacter[9] = '0';
+        currentCharacter[10] = '0';
+      } else if(count == 2) {
+        currentCharacter[11] = currentCharacter[10];
+        currentCharacter[10] = currentCharacter[9];
+        currentCharacter[9] = '0';
+      }
       currentCharacter[12] = ' ';
     }
 
 #endif
+
   }
 
   // ------------------------------------------------------------------------------------------- //

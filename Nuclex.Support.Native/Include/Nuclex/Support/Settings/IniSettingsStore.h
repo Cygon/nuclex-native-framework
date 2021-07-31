@@ -81,7 +81,7 @@ namespace Nuclex { namespace Support { namespace Settings {
   ///     not a good idea for cross-platform development.
   ///   </para>
   /// </remarks>
-  class IniSettingsStore : public SettingsStore {
+  class NUCLEX_SUPPORT_TYPE IniSettingsStore : public SettingsStore {
 
     /// <summary>Initializes a new .ini settings store with no backing file</summary>
     /// <remarks>

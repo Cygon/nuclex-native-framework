@@ -62,7 +62,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///     </code>
   ///   </example>
   /// </remarks>
-  class Logger {
+  class NUCLEX_SUPPORT_TYPE Logger {
 
     /// <summary>A logger that doesn't log anything</summary>
     public: NUCLEX_SUPPORT_API static Logger &Null;

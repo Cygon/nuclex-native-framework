@@ -57,7 +57,7 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     /// <summary>Initializes a new ring buffer</summary>
     /// <param name="capacity">Storage space in the ring buffer at the beginning</param>
-    public: RingQueue(std::size_t capacity = 256) :
+    public: explicit RingQueue(std::size_t capacity = 256) :
       itemMemory(
         new std::uint8_t[sizeof(TItem[2]) * BitTricks::GetUpperPowerOfTwo(capacity) / 2]
       ),

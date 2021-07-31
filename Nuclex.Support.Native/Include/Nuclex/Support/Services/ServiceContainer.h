@@ -37,7 +37,7 @@ namespace Nuclex { namespace Support { namespace Services {
   ///   their services. It is also possible to use it directly and store and retrieve
   ///   services manually if the application has special requirements.
   /// </remarks>
-  class ServiceContainer : public ServiceProvider {
+  class NUCLEX_SUPPORT_TYPE ServiceContainer : public ServiceProvider {
 
     #pragma region class TypeInfoComparer
 

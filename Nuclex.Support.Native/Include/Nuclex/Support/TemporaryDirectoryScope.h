@@ -64,7 +64,7 @@ namespace Nuclex { namespace Support {
   ///     </code>
   ///   </example>
   /// </remarks>
-  class TemporaryDirectoryScope {
+  class NUCLEX_SUPPORT_TYPE TemporaryDirectoryScope {
 
     /// <summary>Reserves and creates a unique temporary directory</summary>
     /// <param name="namePrefix">Prefix for the temporary directory name</param>

@@ -32,16 +32,16 @@ namespace Nuclex { namespace Support { namespace Errors {
   /// <summary>
   ///   Indicates that a time-limited action was not completed within the alloted time
   /// </summary>
-  class TimeoutError : public std::runtime_error {
+  class NUCLEX_SUPPORT_TYPE TimeoutError : public std::runtime_error {
 
     /// <summary>Initializes a new wait timeout error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: explicit TimeoutError(const std::string &message) :
+    public: NUCLEX_SUPPORT_API explicit TimeoutError(const std::string &message) :
       std::runtime_error(message) {}
 
     /// <summary>Initializes a new wait timeout error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: explicit TimeoutError(const char *message) :
+    public: NUCLEX_SUPPORT_API explicit TimeoutError(const char *message) :
       std::runtime_error(message) {}
 
   };

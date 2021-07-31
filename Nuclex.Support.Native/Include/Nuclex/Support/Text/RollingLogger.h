@@ -63,7 +63,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///     </code>
   ///   </example>
   /// </remarks>
-  class RollingLogger : public Logger {
+  class NUCLEX_SUPPORT_TYPE RollingLogger : public Logger {
 
     /// <summary>Initializes a new rolling logger</summary>
     /// <param name="historyLineCount">Number of lines the logger will keep</param>
@@ -187,6 +187,16 @@ namespace Nuclex { namespace Support { namespace Text {
     ///   </para>
     /// </remarks>
     public: NUCLEX_SUPPORT_API std::vector<std::string> GetLines() const;
+
+    /// <summary>Called each time a new line is added to the rolling log</summary>
+    /// <param name="line">The full contents of the line</paran>
+    /// <remarks>
+    ///   You can override this method if you wish to live-print log lines to console
+    ///   window or terminal of some kind.
+    /// </remarks>
+    protected: NUCLEX_SUPPORT_API virtual void OnLineAdded(const std::string &line) {
+      (void)line;
+    }
 
     /// <summary>Advances to the next line</summary>
     private: void advanceLine();

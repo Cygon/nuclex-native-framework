@@ -37,7 +37,7 @@ namespace Nuclex { namespace Support { namespace Settings {
   ///   memory. Useful to provide temporary settings or if the settings from another
   ///   property store need to be modified in a transient manner.
   /// </remarks>
-  class MemorySettingsStore : public SettingsStore {
+  class NUCLEX_SUPPORT_TYPE MemorySettingsStore : public SettingsStore {
 
     /// <summary>Frees all resources owned by the memory settings store</summary>
     public: NUCLEX_SUPPORT_API ~MemorySettingsStore() override;

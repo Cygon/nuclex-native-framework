@@ -72,9 +72,9 @@ namespace Nuclex { namespace Support { namespace Collections {
   template<typename TItem>
   class ShiftQueue {
 
-    /// <summary>Initializes a new shift buffer</summary>
-    /// <param name="capacity">Storage space in the shift  buffer at the beginning</param>
-    public: ShiftQueue(std::size_t capacity = 256) :
+    /// <summary>Initializes a new shift queue</summary>
+    /// <param name="capacity">Storage space in the shift queue at the beginning</param>
+    public: explicit ShiftQueue(std::size_t capacity = 256) :
       itemMemory(
         new std::uint8_t[sizeof(TItem[2]) * BitTricks::GetUpperPowerOfTwo(capacity) / 2]
       ),
@@ -82,8 +82,8 @@ namespace Nuclex { namespace Support { namespace Collections {
       startIndex(0),
       endIndex(0) {}
 
-    /// <summary>Initializes a shift buffer as a copy of another shift buffer</summary>
-    /// <param name="other">Other shift buffer that will be copied</param>
+    /// <summary>Initializes a shift queue as a copy of another shift queue</summary>
+    /// <param name="other">Other shift queue that will be copied</param>
     public: ShiftQueue(const ShiftQueue &other) :
       itemMemory(new std::uint8_t[sizeof(TItem[2]) * other.capacity / 2]),
       capacity(other.capacity),
@@ -95,8 +95,8 @@ namespace Nuclex { namespace Support { namespace Collections {
       emplaceItems(sourceItems, other.endIndex - other.startIndex);
     }
 
-    /// <summary>Initializes a shift buffer taking over another shift buffer</summary>
-    /// <param name="other">Other shift buffer that will be taken over</param>
+    /// <summary>Initializes a shift queue taking over another shift queue</summary>
+    /// <param name="other">Other shift queue that will be taken over</param>
     public: ShiftQueue(ShiftQueue &&other) :
       itemMemory(std::move(other.itemMemory)),
       capacity(other.capacity),
@@ -105,7 +105,7 @@ namespace Nuclex { namespace Support { namespace Collections {
       other.startIndex = other.endIndex = 0; // Ensure other doesn't try to destroy items
     }
 
-    /// <summary>Destroys the shift buffer and all items in it</summary>
+    /// <summary>Destroys the shift queue and all items in it</summary>
     public: ~ShiftQueue() {
       if(this->startIndex != this->endIndex) {
         TItem *items = reinterpret_cast<TItem *>(this->itemMemory.get()) + this->startIndex;
@@ -116,17 +116,17 @@ namespace Nuclex { namespace Support { namespace Collections {
       }
     }
 
-    /// <summary>Returns the number of items the shift buffer has allocated memory for</summary>
-    /// <returns>The number of items the shift buffer has reserved space for</returns>
+    /// <summary>Returns the number of items the shift queue has allocated memory for</summary>
+    /// <returns>The number of items the shift queue has reserved space for</returns>
     /// <remarks>
     ///   Just like std::vector::capacity(), this is not a limit. If the capacity is
-    ///   exceeded, the shift buffer will allocate a larger memory block and use that one.
+    ///   exceeded, the shift queue will allocate a larger memory block and use that one.
     /// </remarks>
     public: std::size_t GetCapacity() const {
       return this->capacity;
     }
 
-    /// <summary>Counts the number of items currently stored in the shift buffer</summary>
+    /// <summary>Counts the number of items currently stored in the shift queue</summary>
     public: std::size_t Count() const {
       return this->endIndex - this->startIndex;
     }
@@ -161,16 +161,16 @@ namespace Nuclex { namespace Support { namespace Collections {
       extractItems(items, count);
     }
 
-    /// <summary>Copies the specified number of items into the shift buffer</summary>
-    /// <param name="items">Items that will be copied into the shift buffer</param>
+    /// <summary>Copies the specified number of items into the shift queue</summary>
+    /// <param name="items">Items that will be copied into the shift queue</param>
     /// <param name="count">Number of items that will be copied</param>
     public: void Write(const TItem *items, std::size_t count) {
       makeSpace(count);
       emplaceItems(items, count);
     }
 
-    /// <summary>Moves the specified number of items into the shift buffer</summary>
-    /// <param name="items">Items that will be moves into the shift buffer</param>
+    /// <summary>Moves the specified number of items into the shift queue</summary>
+    /// <param name="items">Items that will be moves into the shift queue</param>
     /// <param name="count">Number of items that will be moves</param>
     public: void Shove(TItem *items, std::size_t count) {
       makeSpace(count);
@@ -180,10 +180,10 @@ namespace Nuclex { namespace Support { namespace Collections {
 #if 1 // Cool, efficient and an invitation to shoot yourself in the foot
 
     /// <summary>
-    ///   Promises the shift buffer to write the specified number of items before
+    ///   Promises the shift queue to write the specified number of items before
     ///   the next call to any non-const method
     /// </summary>
-    /// <param name="itemCount">Number of items to promise the shift buffer</param>
+    /// <param name="itemCount">Number of items to promise the shift queue</param>
     /// <returns>The address at which the items must be written</returns>
     /// <remarks>
     ///   <para>
@@ -193,7 +193,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     ///     in which case, std::memcpy() away)
     ///   </para>
     ///   <para>
-    ///     Additional Warning! After calling this method, the shift buffer will attempt
+    ///     Additional Warning! After calling this method, the shift queue will attempt
     ///     to destroy the promised items if it is itself destroyed or needs to shuffle
     ///     items around. If you do not fill the promised items (or are interrupted by
     ///     an item constructor throwing an exception), you have to take care to call
@@ -514,11 +514,11 @@ namespace Nuclex { namespace Support { namespace Collections {
       this->endIndex = itemCount;
     }
 
-    /// <summary>Holds the items stored in the shift buffer</summary>
+    /// <summary>Holds the items stored in the shift queue</summary>
     private: std::unique_ptr<std::uint8_t[]> itemMemory;
-    /// <summary>Number of items the shift buffer can currently hold</summary>
+    /// <summary>Number of items the shift queue can currently hold</summary>
     private: std::size_t capacity;
-    /// <summary>Index of the first item in the shift buffer</summary>
+    /// <summary>Index of the first item in the shift queue</summary>
     private: std::size_t startIndex;
     /// <summary>Index one past the last item</summary>
     private: std::size_t endIndex;

@@ -72,7 +72,8 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     /// <summary>Initializes a new lock-free queue</summary>
     /// <param name="initialCapacity">Capacity in items to reserve up-front</param>
-    public: ConcurrentQueue(std::size_t initialCapacity) : wrappedQueue(initialCapacity) {}
+    public: explicit ConcurrentQueue(std::size_t initialCapacity) :
+      wrappedQueue(initialCapacity) {}
 
     /// <summary>Destroys the lock-free queue and all items still in it</summary>
     public: ~ConcurrentQueue() override = default;

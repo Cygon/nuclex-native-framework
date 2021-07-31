@@ -60,7 +60,7 @@ namespace Nuclex { namespace Support {
   ///   or by using crazy tricks to calculate a result quickly where normally you'd need
   ///   a screenful of if() statements.
   /// </remarks>
-  class BitTricks {
+  class NUCLEX_SUPPORT_TYPE BitTricks {
 
     /// <summary>Counts the number of bits set in a 32 bit integer</summary>
     /// <param name="value">Value whose bits will be counted</param>

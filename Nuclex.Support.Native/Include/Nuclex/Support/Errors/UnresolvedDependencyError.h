@@ -30,16 +30,16 @@ namespace Nuclex { namespace Support { namespace Errors {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Indicates that a service injector was unable to resolve a dependency</summary>
-  class UnresolvedDependencyError : public std::logic_error {
+  class NUCLEX_SUPPORT_TYPE UnresolvedDependencyError : public std::logic_error {
 
     /// <summary>Initializes a new cyclic dependency error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: explicit UnresolvedDependencyError(const std::string &message) :
+    public: NUCLEX_SUPPORT_API explicit UnresolvedDependencyError(const std::string &message) :
       std::logic_error(message) {}
 
     /// <summary>Initializes a new cyclic dependency error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: explicit UnresolvedDependencyError(const char *message) :
+    public: NUCLEX_SUPPORT_API explicit UnresolvedDependencyError(const char *message) :
       std::logic_error(message) {}
 
   };

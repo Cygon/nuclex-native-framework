@@ -47,7 +47,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   ///     It's at least as fast as your platform's native semaphore, likely much faster.
   ///   </para>
   /// </remarks>
-  class Semaphore {
+  class NUCLEX_SUPPORT_TYPE Semaphore {
 
     /// <summary>Initializes a new semaphore with the specified initial count</summary>
     /// <param name="initialCount">

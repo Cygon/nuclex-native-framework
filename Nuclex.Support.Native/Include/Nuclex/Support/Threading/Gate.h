@@ -46,7 +46,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   ///     To Windows and .NET developers, it is known as a &quot;ManualResetEvent&quot;
   ///   </para>
   /// </remarks>
-  class Gate {
+  class NUCLEX_SUPPORT_TYPE Gate {
 
     /// <summary>Initializes a new gate in an open or closed state</summary>
     /// <param name="initiallyOpen">Whether the gate is initially open</param>

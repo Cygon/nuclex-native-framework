@@ -47,8 +47,8 @@ namespace {
   /// <summary>Overload for the Posix version of strerror_r()</summary>
   /// <param name="buffer">Buffer into which the error message has been written</param>
   /// <returns>A pointer to the start of the error message string</returns>
-  const char *getStringFromStrErrorR(int, std::vector<char> &buffer) {
-    return &buffer[0];
+  const char *getStringFromStrErrorR(int, std::string &buffer) {
+    return buffer.c_str();
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -56,7 +56,7 @@ namespace {
   /// <summary>Overload for the GNU/Linux version of strerror_r()</summary>
   /// <param name="strErrorReturn">Result returned from the strerror_r() function</param>
   /// <returns>A pointer to the start of the error message string</returns>
-  const char *getStringFromStrErrorR(const char *strErrorReturn, std::vector<char> &) {
+  const char *getStringFromStrErrorR(const char *strErrorReturn, std::string &) {
     return strErrorReturn;
   }
 
@@ -91,8 +91,7 @@ namespace Nuclex { namespace Support { namespace Platform {
   }
 #else // if we can't be sure strerror() is thread-local, let's do defensive programming
   std::string PosixApi::GetErrorMessage(int errorNumber) {
-    std::vector<char> buffer;
-    buffer.resize(256);
+    std::string buffer(256, '\0');
     for(;;) {
 
       // Try to obtain the error number. The return value of strerror_r() is different
@@ -100,7 +99,7 @@ namespace Nuclex { namespace Support { namespace Platform {
       // the current thread and check it again after calling strerror_r()
       errno = 0;
       const char *posixErrorMessage = getStringFromStrErrorR(
-        ::strerror_r(errorNumber, &buffer[0], buffer.size()), buffer
+        ::strerror_r(errorNumber, buffer.data(), buffer.length()), buffer
       );
 
       int errorNumberFromStrError = errno;
@@ -132,8 +131,6 @@ namespace Nuclex { namespace Support { namespace Platform {
   // ------------------------------------------------------------------------------------------- //
 
   void PosixApi::ThrowExceptionForSystemError(const std::string &errorMessage, int errorNumber) {
-    using Nuclex::Support::Platform::PosixApi;
-
     std::string combinedErrorMessage(errorMessage);
     combinedErrorMessage.append(u8" - ");
     combinedErrorMessage.append(PosixApi::GetErrorMessage(errorNumber));

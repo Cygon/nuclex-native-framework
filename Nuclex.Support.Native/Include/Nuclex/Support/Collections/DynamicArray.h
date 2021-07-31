@@ -45,7 +45,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     public: using IndexedCollection<TValue>::InvalidIndex;
 
     /// <summary>Initializes a new dynamic array</summary>
-    public: DynamicArray() = default;
+    public: explicit DynamicArray() = default;
 
     /// <summary>Frees all memory used by the collection</summary>
     public: virtual ~DynamicArray() = default;

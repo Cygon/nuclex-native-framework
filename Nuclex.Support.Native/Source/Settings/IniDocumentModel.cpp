@@ -374,7 +374,7 @@ namespace Nuclex { namespace Support { namespace Settings {
         iterator != this->sections.cend();
         ++iterator
       ) {
-        sectionLines.insert(iterator->second->DeclarationLine);
+        sectionLines.insert(sectionIterator->second->DeclarationLine);
       }
     }
 

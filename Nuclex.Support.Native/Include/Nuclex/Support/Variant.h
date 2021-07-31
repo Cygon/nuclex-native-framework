@@ -40,7 +40,7 @@ namespace Nuclex { namespace Support {
   ///   changing types to internal implementations, consider
   ///   the <see cref="std::any" /> class instead.
   /// </remarks>
-  class Variant {
+  class NUCLEX_SUPPORT_TYPE Variant {
 
     /// <summary>Initializes a new, empty variant</summary>
     public: NUCLEX_SUPPORT_API Variant() : type(VariantType::Empty) {}

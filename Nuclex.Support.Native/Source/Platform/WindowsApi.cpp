@@ -34,9 +34,9 @@ License along with this library
 #include <vector> // for std::vector
 #include <system_error> // for std::system_error
 
-// --------------------------------------------------------------------------------------------- //
-
 namespace {
+
+  // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Releases memory that has been allocated by LocalAlloc()</summary>
   class LocalAllocScope {
@@ -55,36 +55,45 @@ namespace {
 
   };
 
-} // anonymous namespace
+  // ------------------------------------------------------------------------------------------- //
 
-// --------------------------------------------------------------------------------------------- //
+  /// <summary>Searches a string for a zero terminator and truncates everything after</summary>
+  /// <param name="stringToTrim">String that will be trimmed</param>
+  void trimStringToZeroTerminator(std::wstring &stringToTrim) {
+    std::wstring::size_type terminatorIndex = stringToTrim.find(L'\0');
+    if(terminatorIndex != std::wstring::npos) {
+      stringToTrim.resize(terminatorIndex);
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+} // anonymous namespace
 
 namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //
 
   std::string WindowsApi::GetErrorMessage(int errorNumber) {
-    std::vector<wchar_t> buffer;
-    buffer.resize(256);
+    std::wstring buffer(256, L'\0');
     for(;;) {
 
       // Try to obtain the error number. The return value of strerror_r() is different
       // between GNU and Posix. There's no reliable error return, so we reset errno for
       // the current thread and check it again after calling strerror_r()
       errno = 0;
-      int lookupErrorNumber = ::_wcserror_s(&buffer[0], buffer.size(), errorNumber);
+      int lookupErrorNumber = ::_wcserror_s(buffer.data(), buffer.length(), errorNumber);
       if(lookupErrorNumber == 0) {
         int errorNumberFromStrError = errno;
         if(errorNumberFromStrError == 0) {
-          return Nuclex::Support::Text::StringConverter::Utf8FromWide(
-            std::wstring(&buffer[0])
-          );
+          trimStringToZeroTerminator(buffer);
+          return Nuclex::Support::Text::StringConverter::Utf8FromWide(buffer);
         }
 
         // If the buffer was too small, try again with 1024 bytes, 4096 bytes and
         // 16384 bytes, then blow up.
         if(errorNumberFromStrError == ERANGE) {
-          std::size_t bufferSize = buffer.size();
+          std::size_t bufferSize = buffer.length();
           if(bufferSize < 16384) {
             buffer.resize(bufferSize * 4);
             continue;
@@ -145,7 +154,7 @@ namespace Nuclex { namespace Support { namespace Platform {
     }
 
     // We don't want UTF-16 anywhere - at all. So convert this mess to UTF-8.
-    std::vector<char> utf8ErrorMessage;
+    std::string utf8ErrorMessage;
     {
       LocalAllocScope errorMessageScope(errorMessageBuffer);
 
@@ -158,21 +167,22 @@ namespace Nuclex { namespace Support { namespace Platform {
 
     // Microsoft likes to end their error messages with various spaces and newlines,
     // cut these off so we have a single-line error message
-    std::size_t size = utf8ErrorMessage.size();
-    while(size > 0) {
-      if(!Text::ParserHelper::IsWhitespace(std::uint8_t(utf8ErrorMessage[size - 1]))) {
+    std::string::size_type length = utf8ErrorMessage.length();
+    while(length > 0) {
+      if(!Text::ParserHelper::IsWhitespace(std::uint8_t(utf8ErrorMessage[length - 1]))) {
         break;
       }
-      --size;
+      --length;
     }
 
     // If the error message is empty, return a generic one
-    if(size == 0) {
+    if(length == 0) {
       std::string message(u8"Windows API error ");
       Text::lexical_append(message, static_cast<std::uint32_t>(errorCode));
       return message;
     } else { // Error message had content, return it
-      return std::string(&utf8ErrorMessage[0], size);
+      utf8ErrorMessage.resize(length);
+      return utf8ErrorMessage;
     }
 
   }
@@ -214,8 +224,6 @@ namespace Nuclex { namespace Support { namespace Platform {
   void WindowsApi::ThrowExceptionForHResult(
     const std::string &errorMessage, HRESULT resultHandle
   ) {
-    using Nuclex::Support::Platform::WindowsApi;
-
     std::string combinedErrorMessage(errorMessage);
     combinedErrorMessage.append(u8" - ");
     combinedErrorMessage.append(WindowsApi::GetErrorMessage(resultHandle));

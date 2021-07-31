@@ -49,7 +49,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///     log files or exception/error messages are, but user-displayable).
   ///   </para>
   /// </remarks>
-  class StatusObserver {
+  class NUCLEX_SUPPORT_TYPE StatusObserver {
 
     /// <summary>Frees all resources owned by the feedback receiver</summary>
     public: NUCLEX_SUPPORT_API virtual ~StatusObserver() = default;

@@ -64,7 +64,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   ///     or less, allowing even
   ///   </para>
   /// </remarks>
-  class ThreadPool {
+  class NUCLEX_SUPPORT_TYPE ThreadPool {
 
     #pragma region class Task
 

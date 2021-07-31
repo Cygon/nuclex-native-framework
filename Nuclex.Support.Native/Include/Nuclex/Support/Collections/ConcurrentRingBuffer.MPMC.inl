@@ -77,7 +77,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     ///   Initializes a new concurrent queue for multiple producers and consumers
     /// </summary>
     /// <param name="capacity">Maximum amount of items the queue can hold</param>
-    public: ConcurrentRingBuffer(std::size_t capacity) :
+    public: explicit ConcurrentRingBuffer(std::size_t capacity) :
       capacity(capacity),
       itemMemory(nullptr),
       itemStatus(nullptr),

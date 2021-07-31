@@ -42,7 +42,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   ///     of threads), please use pthreads, libnuma or a portable wrapper.
   ///   </para>
   /// </remarks>
-  class Thread {
+  class NUCLEX_SUPPORT_TYPE Thread {
 
     /// <summary>Lets the calling thread wait for the specified amount of time</summary>
     /// <param name="time">Duration for which the thread will wait</param>

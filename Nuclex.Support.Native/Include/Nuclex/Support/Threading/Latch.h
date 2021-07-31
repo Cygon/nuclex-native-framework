@@ -41,7 +41,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   ///     a set of resources to complete a process before shutting down.
   ///   </para>
   /// </remarks>
-  class Latch {
+  class NUCLEX_SUPPORT_TYPE Latch {
 
     /// <summary>Initializes a new countdown latch with the specified initial count</summary>
     /// <param name="initialCount">

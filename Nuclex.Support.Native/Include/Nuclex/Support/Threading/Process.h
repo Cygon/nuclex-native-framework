@@ -61,7 +61,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   ///     hang on an std::cout or printf() call waiting for buffer space to free up.
   ///   </para>
   /// </remarks>
-  class Process {
+  class NUCLEX_SUPPORT_TYPE Process {
 
     /// <summary>Returns the directory in which the running executable resides</summary>
     /// <returns>The directory holding the currently running executable</returns>

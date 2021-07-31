@@ -58,7 +58,7 @@ namespace Nuclex { namespace Support {
   ///     </code>
   ///   </example>
   /// </remarks>
-  class TemporaryFileScope {
+  class NUCLEX_SUPPORT_TYPE TemporaryFileScope {
 
     /// <summary>Reserves and creates a unique temporary file</summary>
     /// <param name="namePrefix">Prefix for the temporary filename</param>

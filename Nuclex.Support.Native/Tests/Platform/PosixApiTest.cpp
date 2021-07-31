@@ -19,7 +19,7 @@ License along with this library
 #pragma endregion // CPL License
 
 // If the library is compiled as a DLL, this ensures symbols are exported
-#define NUCLEX_STORAGE_SOURCE 1
+#define NUCLEX_SUPPORT_SOURCE 1
 
 #include "../Source/Platform/PosixApi.h"
 
