@@ -22,10 +22,10 @@ License along with this library
 #define NUCLEX_SUPPORT_SOURCE 1
 
 #include "Nuclex/Support/Text/StringMatcher.h"
+#include "Nuclex/Support/Text/UnicodeHelper.h"
 
-#include "Utf8/checked.h"
-#include "Utf8/unchecked.h"
-#include "Utf8Fold/Utf8Fold.h"
+#include "Utf8/checked.h" // remove this
+#include "Utf8/unchecked.h" // remove this
 
 #include <vector> // for std::vector
 #include <cassert> // for assert()
@@ -68,13 +68,20 @@ namespace {
 #endif
   // ------------------------------------------------------------------------------------------- //
 
+  // Helper until I've completely removed the utf8cpp library from this file
+  std::uint32_t toFoldedLowercase(std::uint32_t codePoint) {
+    return static_cast<std::uint32_t>(
+      Nuclex::Support::Text::UnicodeHelper::ToFoldedLowercase(static_cast<char32_t>(codePoint))
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   /// <summary>C-style function that checks if a string matches a wild card</summary>
   /// <param name="text">Text that will be checked against the wild card</param>
   /// <param name="wildcard">Wild card against which the text will be matched</param>
   /// <returns>True if the text matches the wild card, false otherwise</returns>
   bool matchWildcardUtf8(const char *text, const char *wildcard) {
-    using Nuclex::ToFoldedLowercase;
-
     assert((text != nullptr) && u8"Text must not be a NULL pointer");
 
     std::uint32_t wildcardCodepoint;
@@ -102,7 +109,7 @@ namespace {
 
       // Otherwise, the text must match the wildcard character
       if(wildcardCodepoint != '?') {
-        if(ToFoldedLowercase(textCodepoint) != ToFoldedLowercase(wildcardCodepoint)) {
+        if(toFoldedLowercase(textCodepoint) != toFoldedLowercase(wildcardCodepoint)) {
           return false;
         }
       }
@@ -136,8 +143,6 @@ namespace {
   /// <param name="wildcard">Wild card against which the text will be matched</param>
   /// <returns>True if the text matches the wild card, false otherwise</returns>
   bool matchWildcardUtf8CaseSensitive(const char *text, const char *wildcard) {
-    using Nuclex::ToFoldedLowercase;
-
     assert((text != nullptr) && u8"Text must not be a NULL pointer");
 
     std::uint32_t wildcardCodepoint;
@@ -198,13 +203,11 @@ namespace {
   ///   if no matches were found
   /// </returns>
   const char *findSubstringUtf8(const char *haystack, const char *needle) {
-    using Nuclex::ToFoldedLowercase;
-
     std::uint32_t firstNeedleCodepoint = utf8::unchecked::next(needle);
     if(firstNeedleCodepoint == 0) {
       return haystack;
     }
-    firstNeedleCodepoint = ToFoldedLowercase(firstNeedleCodepoint);
+    firstNeedleCodepoint = toFoldedLowercase(firstNeedleCodepoint);
     const char *needleFromSecondCodepoint = needle;
 
     const char *haystackAtStart = haystack;
@@ -218,7 +221,7 @@ namespace {
 
       // In the outer loop, scan only for the a match of the first needle codepoint.
       // Keeping this loop tight allows the compiler to optimize it into a simple scan.
-      if(unlikely(ToFoldedLowercase(haystackCodepoint) == firstNeedleCodepoint)) {
+      if(unlikely(toFoldedLowercase(haystackCodepoint) == firstNeedleCodepoint)) {
         std::uint32_t needleCodepoint = firstNeedleCodepoint;
         const char *current = haystack;
         do {
@@ -231,7 +234,7 @@ namespace {
           if(haystackCodepoint == 0) {
             break;
           }
-        } while(ToFoldedLowercase(haystackCodepoint) == ToFoldedLowercase(needleCodepoint));
+        } while(toFoldedLowercase(haystackCodepoint) == toFoldedLowercase(needleCodepoint));
 
         // No match found. Reset the needle for the next scan.
         needle = needleFromSecondCodepoint;
@@ -302,8 +305,6 @@ namespace {
   /// <param name="needle">Substring that will be searched for</param>
   /// <returns>True if the 'haystack' string starts with the 'needle' string</returns>
   bool checkStringStartsWithUtf8(const char *haystack, const char *needle) {
-    using Nuclex::ToFoldedLowercase;
-
     for(;;) {
       std::uint32_t needleCodepoint = utf8::unchecked::next(needle);
       if(needleCodepoint == 0) {
@@ -315,7 +316,7 @@ namespace {
         return false;
       }
 
-      if(ToFoldedLowercase(needleCodepoint) != ToFoldedLowercase(haystackCodepoint)) {
+      if(toFoldedLowercase(needleCodepoint) != toFoldedLowercase(haystackCodepoint)) {
         return false;
       }
     }
@@ -328,8 +329,6 @@ namespace {
   /// <param name="needle">Substring that will be searched for</param>
   /// <returns>True if the 'haystack' string starts with the 'needle' string</returns>
   bool checkStringStartsWithUtf8CaseSensitive(const char *haystack, const char *needle) {
-    using Nuclex::ToFoldedLowercase;
-
     for(;;) {
       std::uint32_t needleCodepoint = utf8::unchecked::next(needle);
       if(needleCodepoint == 0) {
@@ -452,7 +451,34 @@ namespace Nuclex { namespace Support { namespace Text {
     if(caseSensitive) {
       return (left == right);
     } else {
-      return (ToFoldedLowercase(left) == ToFoldedLowercase(right));
+      if(left.length() != right.length()) {
+        return false;
+      }
+
+      typedef UnicodeHelper::char8_t my_char8_t;
+
+      const my_char8_t *currentLeft = reinterpret_cast<const my_char8_t *>(left.c_str());
+      const my_char8_t *leftEnd = currentLeft + left.length();
+
+      const my_char8_t *currentRight = reinterpret_cast<const my_char8_t *>(right.c_str());
+      const my_char8_t *rightEnd = currentRight + right.length();
+
+      for(;;) {
+        if(currentLeft >= leftEnd) {
+          return (currentRight >= rightEnd); // Both must end at the same time
+        } else if(currentRight >= rightEnd) {
+          return false; // right ended before left
+        }
+
+        char32_t leftCodePoint = UnicodeHelper::ReadCodePoint(currentLeft, leftEnd);
+        char32_t rightCodePoint = UnicodeHelper::ReadCodePoint(currentRight, rightEnd);
+
+        leftCodePoint = UnicodeHelper::ToFoldedLowercase(leftCodePoint);
+        rightCodePoint = UnicodeHelper::ToFoldedLowercase(rightCodePoint);
+        if(leftCodePoint != rightCodePoint) {
+          return false;
+        }
+      }
     }
   }
 
@@ -506,14 +532,14 @@ namespace Nuclex { namespace Support { namespace Text {
         return hash;
       }
 
-      codepoint = ToFoldedLowercase(codepoint);
+      codepoint = toFoldedLowercase(codepoint);
 
       // We're abusing the Murmur hashing function a bit here. It's not intended for
       // incremental generation and this will likely decrease hashing quality...
       if constexpr(sizeof(std::size_t) >= 8) {
         hash = CalculateMurmur64(
           reinterpret_cast<const std::uint8_t *>(&codepoint), 4,
-          static_cast<std::uint64_t>(hash)
+          static_cast<std::uint32_t>(hash)
         );
       } else {
         hash = CalculateMurmur32(
@@ -540,7 +566,7 @@ namespace Nuclex { namespace Support { namespace Text {
         return false;
       }
 
-      if(ToFoldedLowercase(leftCodepoint) != ToFoldedLowercase(rightCodepoint)) {
+      if(toFoldedLowercase(leftCodepoint) != toFoldedLowercase(rightCodepoint)) {
         return false;
       }
     }
@@ -562,8 +588,8 @@ namespace Nuclex { namespace Support { namespace Text {
         return false; // false because left is longer
       }
 
-      leftCodepoint = ToFoldedLowercase(leftCodepoint);
-      rightCodepoint = ToFoldedLowercase(rightCodepoint);
+      leftCodepoint = toFoldedLowercase(leftCodepoint);
+      rightCodepoint = toFoldedLowercase(rightCodepoint);
       if(leftCodepoint < rightCodepoint) {
         return true;
       } else if(leftCodepoint > rightCodepoint) {

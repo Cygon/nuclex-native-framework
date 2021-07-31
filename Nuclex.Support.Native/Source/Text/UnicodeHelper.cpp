@@ -18,26 +18,23 @@ License along with this library
 */
 #pragma endregion // CPL License
 
-#ifndef NUCLEX_UTF8FOLD_H
-#define NUCLEX_UTF8FOLD_H
+#include "Nuclex/Support/Text/UnicodeHelper.h"
 
-// Requires Nemanja Trifunovic's "utf for cpp" library to iterate codepoints
-#include "../Utf8/checked.h"
-
-#include <string> // for std::string
 #include <algorithm> // for std::lower_bound()
 
+#if defined(NUCLEX_SUPPORT_ENABLE_INTERNAL_TESTS)
 #if !defined(NDEBUG)
 #include <cassert> // for assert() to fail tests
 #include <set> // for std::set to detect ambiguous mappings in tests
 #endif
+#endif // defined(NUCLEX_SUPPORT_ENABLE_INTERNAL_TESTS)
 
 // References
 // http://www.unicode.org/faq/casemap_charprop.html
 // https://www.ibm.com/support/knowledgecenter/en/ssw_ibm_i_73/nls/rbagslowtoupmaptable.htm
 // https://pastebin.com/fuw4Uizk
 
-namespace Nuclex {
+namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -45,8 +42,8 @@ namespace Nuclex {
   /// <remarks>
   ///   This table is taken from http://www.unicode.org/faq/casemap_charprop.html and is
   ///   actively maintained by the Unicode consortium. It is paired with the lowercase
-  ///   table (following below) and must be sorted by uchar32 character value because
-  ///   we're doing a binary search on this table.
+  ///   table (following below) and must be sorted by code point index because we're doing
+  ///   a binary search on this table.
   /// </remarks>
   const char32_t uppercase[] = {
     0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047, 0x0048,
@@ -235,7 +232,7 @@ namespace Nuclex {
   ///   This table is taken from http://www.unicode.org/faq/casemap_charprop.html and is
   ///   actively maintained by the Unicode consortium. It is paired with the uppercase
   ///   table (from before). The sort order of this table probably mostly ascending by
-  ///   uchar32 character value, but the sort order is defined by the uppercase table.
+  ///   code point index, but the sort order is defined by the uppercase table.
   /// </remarks>
   const char32_t lowercase[] = {
     0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067, 0x0068,
@@ -425,7 +422,8 @@ namespace Nuclex {
   }
 
   // ------------------------------------------------------------------------------------------- //
-#if defined(_DEBUG)
+#if defined(NUCLEX_SUPPORT_ENABLE_INTERNAL_TESTS)
+#if !defined(NDEBUG)
   /// <summary>
   ///   Verifies that there is a matching lowercase character for each uppercase character
   /// </summary>
@@ -436,7 +434,7 @@ namespace Nuclex {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(_DEBUG)
+#if !defined(NDEBUG)
   /// <summary>Verifies that the array of uppercase characters is sorted</summary>
   /// <remarks>
   ///   The array must be sorted because the case folding functions below use binary search
@@ -451,7 +449,7 @@ namespace Nuclex {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(_DEBUG)
+#if !defined(NDEBUG)
   /// <summary>Verifies that there are no duplicates in the uppercase array</summary>
   /// <remarks>
   ///   This is a plausibility check (if the compiler did something bad with char32_t,
@@ -469,7 +467,7 @@ namespace Nuclex {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(_DEBUG)
+#if !defined(NDEBUG)
   /// <summary>Verifies that characters can't get wider when case-folded</summary>
   /// <remarks>
   ///   This guarantee is needed to support case-folding UTF-8 strings without needing more
@@ -489,83 +487,31 @@ namespace Nuclex {
     }
   }
 #endif
+#endif // defined(NUCLEX_SUPPORT_ENABLE_INTERNAL_TESTS)
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Converts the specified Unicode code point to folded lowercase</summary>
-  /// <param name="codepoint">
-  ///   Overlong UTF-8 codepoint that will be converted to folded lowercase
-  /// </param>
-  /// <returns>The character (if not uppercase) or its folded lowercase equivalent</returns>
-  /// <remarks>
-  ///   Do not use this method for UTF-16 (Windows people) or UTF-32. It will not work.
-  ///   The mapping array contains UTF-8 codepoints as octet sequences stored in 32 bit
-  ///   integers (leaving the unused bits empty). This is called an &quot;overlong&quot;
-  ///   codepoint by the unicode consortium and is different from UTF-32.
-  /// </remarks>
-  inline char32_t ToFoldedLowercase(char32_t codepoint) {
+} // anonymous namespace
+
+namespace Nuclex { namespace Support { namespace Text {
+
+  // ------------------------------------------------------------------------------------------- //
+
+  char32_t UnicodeHelper::ToFoldedLowercase(char32_t codePoint) {
     const char32_t *upperCaseBegin = uppercase;
     const char32_t *upperCaseEnd = upperCaseBegin + characterCount();
 
     // Do a binary search in the uppercase table
-    const char32_t *upperCaseIndex = std::lower_bound(upperCaseBegin, upperCaseEnd, codepoint);
+    const char32_t *upperCaseIndex = std::lower_bound(upperCaseBegin, upperCaseEnd, codePoint);
     if(upperCaseIndex == upperCaseEnd) {
-      return codepoint; // Character was not an uppercase character
-    } else if(*upperCaseIndex == codepoint) {
+      return codePoint; // Character was not an uppercase character
+    } else if(*upperCaseIndex == codePoint) {
       std::size_t characterIndex = (upperCaseIndex - uppercase);
       return lowercase[characterIndex];
     } else {
-      return codepoint; // std::lower_bound() gave us a different character
+      return codePoint; // std::lower_bound() gave us a different character
     }
   }
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Converts the specified UTF-8 string to &quot;folded lowercase&quot;</summary>
-  /// <param name="text">String that will be converted</param>
-  /// <returns>An equivalent-ish string using only lowercase characters</returns>
-  /// <remarks>
-  ///   Folded lowercase is a special variant of lowercase that will result in a string of
-  ///   equal or shorter length (codepoint-wise). It is not guaranteed to always give the
-  ///   correct result for a human reading the string (though in the vast majority of cases
-  ///   it does) -- it's purpose is to enable case-insensitive comparison of strings.
-  /// </remarks>
-  inline std::string ToFoldedLowercase(const std::string &text) {
-    std::string::const_iterator current = text.begin();
-    std::string::const_iterator end = text.end();
-
-    // The folding map will never increase the length of the string (and there are only
-    // a very small number of cases where it decreases the length), so preallocating
-    // the same amount of memory for the new string is a very good approximation.
-    std::string result;
-    result.reserve(text.length());
-
-    // Go over all codepoints and replace uppercase characters with folded lowercase
-    while(current != end) { // Check is needed, utf8 asserts when called after hitting end
-
-      // Obtain the whole codepoint (all bytes belonging to the character in a single 32 bit
-      // integer - this is not UTF-32 encoded, it's a 32-bit 'overlong' UTF-8 codepoint)
-      std::uint32_t codePoint = utf8::next(current, end);
-      if(codePoint == 0) {
-        break;
-      }
-
-      // Convert the codepoint to lowercase if it is an uppercase charactrer
-      codePoint = ToFoldedLowercase(codePoint);
-
-      // Append the codepoint to the result string
-      std::uint8_t buffer[4];
-      std::uint8_t *bufferEnd = utf8::append(codePoint, buffer);
-      for(const std::uint8_t *octet = buffer; octet < bufferEnd; ++octet) {
-        result.append(1, *reinterpret_cast<const std::string::value_type *>(octet));
-      }
-
-    }
-
-    return result;
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-} // namespace Nuclex
-
-#endif // NUCLEX_UTF8FOLD_H
+}}} // namespace Nuclex::Support::Text

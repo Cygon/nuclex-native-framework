@@ -32,9 +32,15 @@ namespace Nuclex { namespace Support { namespace Text {
   /// <summary>Converts strings between explicitly specified UTF-formats</summary>
   /// <remarks>
   ///   <para>
+  ///     UTF-8 is the de-facto standard of the web and on all mobile and desktop platforms
+  ///     in general. That's because it is compact, has no endian issues, can resync to
+  ///     the very next letter when data gets corrupted and is overall well defined.
+  ///     However, there's an operating system where many things went very wrong...
+  ///   </para>
+  ///   <para>
   ///     On Windows, 8 bit char strings are usually assumed to be ANSI (that is,
   ///     the 127 standard ASCII characters for the values 1-127 and a set of special
-  ///     characters that is defined by the &quot;code page&quot; in the remaining values
+  ///     glyphs that are defined by the &quot;code page&quot; in the remaining values
   ///     from 128 to 255. Showing strings with the wrong code page displays the wrong
   ///     special characters (but ASCII characters remain intact).
   ///   </para>
@@ -44,34 +50,29 @@ namespace Nuclex { namespace Support { namespace Text {
   ///     Microsoft's unicode APIs and UI tooling uses this for all i18n support.
   ///   </para>
   ///   <para>
-  ///     In the rest of the computing world, the preferred format for unicode is UTF-8.
-  ///     It's shorter and survives transmission through non-UTF-8 APIs.
-  ///   </para>
-  ///   <para>
-  ///     The fun begins with wchar_t. It's 32 bits wide on most non-Microsoft systems
-  ///     and compilers like GCC default to using UTF-32 when seeing a string like
-  ///     L&quot;hello&quot;. You can force GCC to put UTF-16 in the 32 bit wide wchar_ts
-  ///     (via -fwide-exec-charset=UTF-16) but then every other library accepting
+  ///     On platforms other than Windows, wchar_t is instead 32 bits wide and compilers
+  ///     like GCC default to using UTF-32 when seeing a string like L&quot;hello&quot;.
+  ///     You can force GCC to put UTF-16 in the 32 bit wide wchar_ts (via
+  ///     -fwide-exec-charset=UTF-16) but then every other library accepting
   ///     &quot;wide strings&quot; will be confused by your UTF-16-inside-UTF-32-strings.
   ///   </para>
   ///   <para>
   ///     So, to summarize: u8&quot;Hello&quot; works everywhere. L&quot;Hello&quot; works
-  ///     for calls from Windows applications to Microsoft APIs but gives you a headache
-  ///     in any other case, you don't even know if you'll get UTF-16 or UTF-32 until you
-  ///     compile it.
-  ///   </para>
-  ///   <para>
-  ///     So use u8&quot;Hello&quot; everywhere. When interacting with Microsoft APIs,
-  ///     translate via Utf16FromUtf8(). If you need &quot;wide strings&quot; (you shouldn't)
-  ///     use WideCharFromUtf8() - it will select UTF-16 or UTF-32 to match wchar_t.
+  ///     for calls inside Windows applications to Microsoft APIs but gives you a headache
+  ///     in any other case. This class provides a few wrappers to convert between strings
+  ///     using the different UTF encodings. When interacting with Microsoft APIs in Windows
+  ///     builds, translate via <see cref="WideFromUtf8" /> and <see cref="Utf8FromWide" />.
+  ///     If you need to transmit UTF-16 over the network to Microsoft systems, use
+  ///     <see cref="Utf16FromUtf8" /> and <see cref="Utf8FromUtf16" /> to portably
+  ///     translate to and from UTF-16 encoded strings.
   ///   </para>
   /// </remarks>
-  class StringConverter {
+  class NUCLEX_SUPPORT_TYPE StringConverter {
 
     /// <summary>Counts the number of UTF-8 characters in a string</summary>
     /// <param name="from">UTF-8 string whose characters will be counted</param>
     /// <returns>The number of UTF-8 characters the string is holding</returns>
-    public: NUCLEX_SUPPORT_API static std::string::size_type CountUtf8Characters(
+    public: NUCLEX_SUPPORT_API static std::string::size_type CountUtf8Letters(
       const std::string &from
     );
 

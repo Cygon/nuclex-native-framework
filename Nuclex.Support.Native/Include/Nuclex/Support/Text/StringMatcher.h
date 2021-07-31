@@ -31,7 +31,7 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Compares strings using different matching algorithms</summary>
-  class StringMatcher {
+  class NUCLEX_SUPPORT_TYPE StringMatcher {
 
     /// <summary>Compares two UTF-8 strings for equality, optionally ignoring case</summary>
     /// <param name="left">String that will be compared on the left side</param>
@@ -96,7 +96,7 @@ namespace Nuclex { namespace Support { namespace Text {
   /// <remarks>
   ///   You can use this to construct a case-insensitive <code>std::unordered_map</code>.
   /// </remarks>
-  struct CaseInsensitiveUtf8Hash {
+  struct NUCLEX_SUPPORT_TYPE CaseInsensitiveUtf8Hash {
     /// <summary>Calculates a case-insensitive hash of an UTF-8 string</summary>
     /// <param name="text">UTF-8 string of which a hash value will be calculated</param>
     /// <returns>The case-insensitive hash value of the provided string</returns>
@@ -111,7 +111,7 @@ namespace Nuclex { namespace Support { namespace Text {
   /// <remarks>
   ///   You can use this to construct a case-insensitive <code>std::unordered_map</code>.
   /// </remarks>
-  struct CaseInsensitiveUtf8EqualTo {
+  struct NUCLEX_SUPPORT_TYPE CaseInsensitiveUtf8EqualTo {
     /// <summary>Checks if two UTF-8 strings are equal, ignoring case</summary>
     /// <param name="left">First UTF-8 string to compare</param>
     /// <param name="right">Other UTF-8 string to compare</param>
@@ -127,7 +127,7 @@ namespace Nuclex { namespace Support { namespace Text {
   /// <remarks>
   ///   You can use this to construct a case-insensitive <code>std::map</code>.
   /// </remarks>
-  struct CaseInsensitiveUtf8Less {
+  struct NUCLEX_SUPPORT_TYPE CaseInsensitiveUtf8Less {
     /// <summary>Checks if the first UTF-8 string is 'less' than the second</summary>
     /// <param name="left">First UTF-8 string to compare</param>
     /// <param name="right">Other UTF-8 string to compare</param>
