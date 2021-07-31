@@ -24,6 +24,8 @@ License along with this library
 #include "Nuclex/Support/Config.h"
 
 #include <string> // for std::string
+#include <optional> // for std::optional
+#include <cstdint> // for std::uint32_t, std::int32_t, std::uint64_t, std::int64_t
 
 namespace Nuclex { namespace Support { namespace Text {
 
@@ -46,7 +48,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///     an UTF-8 string by returning individual characters as UTF-32).
   ///   </para>
   /// </remarks>
-  class ParserHelper {
+  class NUCLEX_SUPPORT_TYPE ParserHelper {
 
     /// <summary>Checks whether the specified character is a whitespace</summary>
     /// <param name="utf8Byte">
@@ -58,12 +60,22 @@ namespace Nuclex { namespace Support { namespace Text {
     );
 
     /// <summary>Checks whether the specified character is a whitespace</summary>
-    /// <param name="unicodeCharacter">
-    ///   Character that will be checked for being a whitespace
+    /// <param name="codepoint">
+    ///   Unicode code point that will be checked for being a whitespace
     /// </param>
     /// <returns>True if the character was a whitespace, false otherwise</returns>
     public: NUCLEX_SUPPORT_API static constexpr bool IsWhitespace(
-      char32_t unicodeCharacter
+      char32_t codepoint
+    );
+
+    /// <summary>
+    ///   Moves <paramref cref="start" /> ahead until the first non-whitespace UTF-8
+    ///   character or until hitting <paramref cref="end" />
+    /// </summary>
+    /// <param name="start">Start pointer from which on whitespace will be skipped</param>
+    /// <param name="end">End pointer that may not be overrun</param>
+    public: NUCLEX_SUPPORT_API static void SkipWhitespace(
+      const std::uint8_t *&start, const std::uint8_t *end
     );
 
   };

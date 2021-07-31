@@ -57,4 +57,52 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(ParserHelperTest, CanSkipWhitespaces) {
+    const char text[] = u8"\t Hellø Ünicøde Wórld ";
+    const std::uint8_t *start = reinterpret_cast<const std::uint8_t *>(text);
+    const std::uint8_t *end = start + sizeof(text);
+
+    // Beginning w/multiple whitespaces
+    {
+      const std::uint8_t *current = start;
+      ParserHelper::SkipWhitespace(current, end);
+      EXPECT_EQ(current, start + 2);
+    }
+
+    // On letter
+    {
+      const std::uint8_t *current = start + 3;
+      ParserHelper::SkipWhitespace(current, end);
+      EXPECT_EQ(current, start + 3);
+    }
+
+    // Inside two-byte encoded code point
+    {
+      const std::uint8_t *current = start + 21;
+      ParserHelper::SkipWhitespace(current, end);
+      EXPECT_EQ(current, start + 21);
+    }
+
+    // On last character
+    {
+      const std::uint8_t *current = start + 25;
+      ParserHelper::SkipWhitespace(current, end);
+      EXPECT_EQ(current, start + 26);
+    }
+
+    // Past last character
+    {
+      const std::uint8_t *current = start + 26;
+      ParserHelper::SkipWhitespace(current, end);
+      EXPECT_EQ(current, start + 26);
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ParserHelperTest, CanParseUInt32) {
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 }}} // namespace Nuclex::Support::Text
