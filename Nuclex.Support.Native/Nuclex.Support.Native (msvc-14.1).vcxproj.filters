@@ -72,9 +72,6 @@
     <Filter Include="Source\Text\Utf8">
       <UniqueIdentifier>{7f8c6eb7-89ef-4d69-ba39-1aceecbfc54a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Text\Utf8Fold">
-      <UniqueIdentifier>{a464efe7-4a41-43bd-8cc9-46d5ae179e0f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Threading">
       <UniqueIdentifier>{c3c71559-2291-4f45-8938-c3cf232c87c5}</UniqueIdentifier>
     </Filter>
@@ -207,6 +204,9 @@
       <Filter>Include\Text</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\UnicodeHelper.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Threading\Latch.h">
@@ -496,9 +496,6 @@
     <ClInclude Include="Source\Text\Utf8\unchecked.h">
       <Filter>Source\Text\Utf8</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Text\Utf8Fold\Utf8Fold.h">
-      <Filter>Source\Text\Utf8Fold</Filter>
-    </ClInclude>
     <ClCompile Include="Source\Text\LexicalAppend.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
@@ -521,6 +518,9 @@
       <Filter>Source\Text</Filter>
     </ClCompile>
     <ClCompile Include="Source\Text\StringMatcher.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\UnicodeHelper.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
     <ClCompile Include="Source\Threading\Latch.cpp">

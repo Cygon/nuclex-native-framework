@@ -27,6 +27,7 @@ License along with this library
 #include <string> // for std::string
 #include <cstdint> // for std::uint32_t, std::int32_t, std::uint64_t, std::int64_t
 #include <optional> // for std::optional
+#include <type_traits> // for std::is_same
 
 namespace Nuclex { namespace Support { namespace Settings {
 
@@ -82,7 +83,7 @@ namespace Nuclex { namespace Support { namespace Settings {
   ///     </code>
   ///   </example>
   /// </remarks>
-  class SettingsStore {
+  class NUCLEX_SUPPORT_TYPE SettingsStore {
 
     /// <summary>Frees all resources owned by the settings store</summary>
     public: NUCLEX_SUPPORT_API virtual ~SettingsStore() = default;
@@ -265,7 +266,17 @@ namespace Nuclex { namespace Support { namespace Settings {
   NUCLEX_SUPPORT_API inline std::optional<TValue> SettingsStore::Retrieve(
     const std::string &, const std::string &
   ) const {
-    static_assert(u8"Only boolean, 32/64 bit integer and std::string properties are supported");
+    static_assert(
+      (
+        std::is_same<TValue, bool>::value ||
+        std::is_same<TValue, std::uint32_t>::value ||
+        std::is_same<TValue, std::int32_t>::value ||
+        std::is_same<TValue, std::uint64_t>::value ||
+        std::is_same<TValue, std::int64_t>::value ||
+        std::is_same<TValue, std::string>::value
+      ) &&
+      u8"Only boolean, 32/64 bit integer and std::string properties are supported"
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -328,7 +339,17 @@ namespace Nuclex { namespace Support { namespace Settings {
   NUCLEX_SUPPORT_API inline void SettingsStore::Store(
     const std::string &, const std::string &, const TValue &
   ) {
-    static_assert(u8"Only boolean, 32/64 bit integer and std::string properties are supported");
+    static_assert(
+      (
+        std::is_same<TValue, bool>::value ||
+        std::is_same<TValue, std::uint32_t>::value ||
+        std::is_same<TValue, std::int32_t>::value ||
+        std::is_same<TValue, std::uint64_t>::value ||
+        std::is_same<TValue, std::int64_t>::value ||
+        std::is_same<TValue, std::string>::value
+      ) &&
+      u8"Only boolean, 32/64 bit integer and std::string properties are supported"
+    );
   }
 
   // ------------------------------------------------------------------------------------------- //
