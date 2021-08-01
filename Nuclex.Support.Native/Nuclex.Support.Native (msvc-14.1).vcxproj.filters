@@ -69,9 +69,6 @@
     <Filter Include="Source\Text\Ryu">
       <UniqueIdentifier>{6d6734f5-932c-4dcd-bb67-6a9b69db0f2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Text\Utf8">
-      <UniqueIdentifier>{7f8c6eb7-89ef-4d69-ba39-1aceecbfc54a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Threading">
       <UniqueIdentifier>{c3c71559-2291-4f45-8938-c3cf232c87c5}</UniqueIdentifier>
     </Filter>
@@ -486,15 +483,6 @@
     </ClInclude>
     <ClInclude Include="Source\Text\Ryu\ryu_parse.h">
       <Filter>Source\Text\Ryu</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Text\Utf8\checked.h">
-      <Filter>Source\Text\Utf8</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Text\Utf8\core.h">
-      <Filter>Source\Text\Utf8</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Text\Utf8\unchecked.h">
-      <Filter>Source\Text\Utf8</Filter>
     </ClInclude>
     <ClCompile Include="Source\Text\LexicalAppend.cpp">
       <Filter>Source\Text</Filter>

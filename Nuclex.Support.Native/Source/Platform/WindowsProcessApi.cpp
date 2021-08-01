@@ -27,9 +27,8 @@ License along with this library
 
 #include "WindowsPathApi.h"
 
-#include "Nuclex/Support/Text/StringConverter.h"
-#include "../Text/Utf8/checked.h"
-#include "Nuclex/Support/ScopeGuard.h"
+#include "Nuclex/Support/Text/StringConverter.h" // to convert UTF-16 wholesome
+#include "Nuclex/Support/ScopeGuard.h" // for cleaning up handles and allocations
 
 #include <algorithm> // for std::max()
 #include <cassert> // for assert()

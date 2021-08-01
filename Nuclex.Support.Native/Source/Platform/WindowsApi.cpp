@@ -25,11 +25,10 @@ License along with this library
 
 #if defined(NUCLEX_SUPPORT_WINDOWS)
 
-#include "Nuclex/Support/Text/StringConverter.h"
-#include "Nuclex/Support/Text/ParserHelper.h"
-#include "Nuclex/Support/Text/LexicalAppend.h"
-
-#include "../Text/Utf8/checked.h"
+#include "Nuclex/Support/Text/StringConverter.h" // to convert UTF-16 wholesome
+#include "Nuclex/Support/Text/ParserHelper.h" // to skip trailing whitespace
+#include "Nuclex/Support/Text/LexicalAppend.h" // to append error codes to strings
+#include "Nuclex/Support/Text/UnicodeHelper.h" // for UTF-16 <-> UTF-8 conversion
 
 #include <vector> // for std::vector
 #include <system_error> // for std::system_error
@@ -156,13 +155,29 @@ namespace Nuclex { namespace Support { namespace Platform {
     // We don't want UTF-16 anywhere - at all. So convert this mess to UTF-8.
     std::string utf8ErrorMessage;
     {
+      using Nuclex::Support::Text::UnicodeHelper;
+
       LocalAllocScope errorMessageScope(errorMessageBuffer);
 
-      utf8ErrorMessage.reserve(errorMessageLength);
-      utf8::utf16to8(
-        errorMessageBuffer, errorMessageBuffer + errorMessageLength,
-        std::back_inserter(utf8ErrorMessage)
-      );
+      utf8ErrorMessage.resize(errorMessageLength);
+      {
+        const char16_t *current = reinterpret_cast<const char16_t *>(errorMessageBuffer);
+        const char16_t *end = current + errorMessageLength;
+        UnicodeHelper::char8_t *write = reinterpret_cast<UnicodeHelper::char8_t *>(
+          utf8ErrorMessage.data()
+        );
+        while(current < end) {
+          char32_t codePoint = UnicodeHelper::ReadCodePoint(current, end);
+          if(codePoint == char32_t(-1)) {
+            break;
+          }
+          UnicodeHelper::WriteCodePoint(codePoint, write);
+        }
+
+        utf8ErrorMessage.resize(
+          write - reinterpret_cast<UnicodeHelper::char8_t *>(utf8ErrorMessage.data())
+        );
+      }
     }
 
     // Microsoft likes to end their error messages with various spaces and newlines,

@@ -332,9 +332,6 @@
     <ClInclude Include="Source\Text\Ryu\ryu_generic_128.h" />
     <ClInclude Include="Source\Text\Ryu\ryu_parse.h" />
     <ClCompile Include="Source\Text\Ryu\s2d.c" />
-    <ClInclude Include="Source\Text\Utf8\checked.h" />
-    <ClInclude Include="Source\Text\Utf8\core.h" />
-    <ClInclude Include="Source\Text\Utf8\unchecked.h" />
     <ClCompile Include="Source\Text\LexicalAppend.cpp" />
     <ClCompile Include="Source\Text\LexicalCast.cpp" />
     <ClCompile Include="Source\Text\Logger.cpp" />

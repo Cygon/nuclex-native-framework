@@ -25,10 +25,23 @@ License along with this library
 
 #if defined(NUCLEX_SUPPORT_WINDOWS)
 
-#include "WindowsApi.h"
-#include "../Text/Utf8/checked.h"
+#include "Nuclex/Support/Text/UnicodeHelper.h" // for UTF-16 <-> UTF-8 conversion
 
 namespace {
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Throws an exception of the code point is invalid</summary>
+  /// <param name="codePoint">Unicode code point that will be checked</param>
+  /// <remarks>
+  ///   This does a generic code point check, but since within this file the code point
+  ///   must be coming from an UTF-8 encoded string, we do complain about invalid UTF-8.
+  /// </remarks>
+  void requireValidCodePoint(char32_t codePoint) {
+    if(!Nuclex::Support::Text::UnicodeHelper::IsValidCodePoint(codePoint)) {
+      throw std::invalid_argument(u8"Illegal UTF-8 character(s) encountered");
+    }
+  }
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -69,7 +82,25 @@ namespace {
 
     // Do the conversions. If the vector was too short, it will be grown in factors
     // of 2 usually (depending on the standard library implementation)
-    utf8::utf8to16(utf8Path.begin(), utf8Path.end(), std::back_inserter(utf16Path));
+    {
+      using Nuclex::Support::Text::UnicodeHelper;
+
+      const UnicodeHelper::char8_t *current = reinterpret_cast<const UnicodeHelper::char8_t *>(
+        utf8Path.c_str()
+      );
+      const UnicodeHelper::char8_t *end = current + utf8Path.length();
+
+      utf16Path.resize(utf8Path.length() + 4);
+
+      char16_t *write = reinterpret_cast<char16_t *>(utf16Path.data()) + 4;
+      while(current < end) {
+        char32_t codePoint = UnicodeHelper::ReadCodePoint(current, end);
+        requireValidCodePoint(codePoint);
+        UnicodeHelper::WriteCodePoint(codePoint, write);
+      }
+
+      utf16Path.resize(write - reinterpret_cast<char16_t *>(utf16Path.data()));
+    }
 
     return utf16Path;
   }
