@@ -129,7 +129,7 @@ namespace Nuclex { namespace Support { namespace Text {
     ///   Code point for which the needed UTF-8 characters will be counted
     /// </param>
     /// <returns>The number of characters needed to encode the code point in UTF-8</returns>
-    public: NUCLEX_SUPPORT_API static constexpr std::size_t CountUtf8Letters(
+    public: NUCLEX_SUPPORT_API static constexpr std::size_t CountUtf8Characters(
       char32_t codePoint
     );
 
@@ -277,7 +277,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  inline constexpr std::size_t UnicodeHelper::CountUtf8Letters(char32_t codePoint) {
+  inline constexpr std::size_t UnicodeHelper::CountUtf8Characters(char32_t codePoint) {
     if(codePoint < 128) {
       return 1;
     } else if(codePoint < 2048) {

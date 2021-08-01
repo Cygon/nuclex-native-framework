@@ -513,51 +513,5 @@ namespace Nuclex { namespace Support { namespace Text {
   }
 
   // ------------------------------------------------------------------------------------------- //
-/*
-  /// <summary>Converts the specified UTF-8 string to &quot;folded lowercase&quot;</summary>
-  /// <param name="text">String that will be converted</param>
-  /// <returns>An equivalent-ish string using only lowercase characters</returns>
-  /// <remarks>
-  ///   Folded lowercase is a special variant of lowercase that will result in a string of
-  ///   equal or shorter length (code point-wise). It is not guaranteed to always give the
-  ///   correct result for a human reading the string (though in the vast majority of cases
-  ///   it does) -- it's purpose is to enable case-insensitive comparison of strings.
-  /// </remarks>
-  inline std::string ToFoldedLowercase(const std::string &text) {
-    std::string::const_iterator current = text.begin();
-    std::string::const_iterator end = text.end();
-
-    // The folding map will never increase the length of the string (and there are only
-    // a very small number of cases where it decreases the length), so preallocating
-    // the same amount of memory for the new string is a very good approximation.
-    std::string result;
-    result.reserve(text.length());
-
-    // Go over all codepoints and replace uppercase characters with folded lowercase
-    while(current != end) { // Check is needed, utf8 asserts when called after hitting end
-
-      // Obtain the whole codepoint (all bytes belonging to the character in a single 32 bit
-      // integer - this is not UTF-32 encoded, it's a 32-bit 'overlong' UTF-8 codepoint)
-      std::uint32_t codePoint = utf8::next(current, end);
-      if(codePoint == 0) {
-        break;
-      }
-
-      // Convert the codepoint to lowercase if it is an uppercase charactrer
-      codePoint = ToFoldedLowercase(codePoint);
-
-      // Append the codepoint to the result string
-      std::uint8_t buffer[4];
-      std::uint8_t *bufferEnd = utf8::append(codePoint, buffer);
-      for(const std::uint8_t *octet = buffer; octet < bufferEnd; ++octet) {
-        result.append(1, *reinterpret_cast<const std::string::value_type *>(octet));
-      }
-
-    }
-
-    return result;
-  }
-*/
-  // ------------------------------------------------------------------------------------------- //
 
 }}} // namespace Nuclex::Support::Text

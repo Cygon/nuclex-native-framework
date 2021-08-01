@@ -41,19 +41,19 @@ namespace Nuclex { namespace Support { namespace Text {
 
   TEST(UnicodeHelperTest, CalculatesUtf8CharacterCount) {
     char32_t asciiCodePoint = U'x';
-    EXPECT_EQ(UnicodeHelper::CountUtf8Letters(asciiCodePoint), 1U);
+    EXPECT_EQ(UnicodeHelper::CountUtf8Characters(asciiCodePoint), 1U);
 
     char32_t centCodePoint = U'¢';
-    EXPECT_EQ(UnicodeHelper::CountUtf8Letters(centCodePoint), 2U);
+    EXPECT_EQ(UnicodeHelper::CountUtf8Characters(centCodePoint), 2U);
 
     char32_t euroCodePoint = U'€';
-    EXPECT_EQ(UnicodeHelper::CountUtf8Letters(euroCodePoint), 3U);
+    EXPECT_EQ(UnicodeHelper::CountUtf8Characters(euroCodePoint), 3U);
 
     char32_t gothicCodePoint = U'𐍈';
-    EXPECT_EQ(UnicodeHelper::CountUtf8Letters(gothicCodePoint), 4U);
+    EXPECT_EQ(UnicodeHelper::CountUtf8Characters(gothicCodePoint), 4U);
 
     char32_t invalidCodePoint = 1114111;
-    EXPECT_EQ(UnicodeHelper::CountUtf8Letters(invalidCodePoint), std::size_t(-1));
+    EXPECT_EQ(UnicodeHelper::CountUtf8Characters(invalidCodePoint), std::size_t(-1));
   }
 
   // ------------------------------------------------------------------------------------------- //
