@@ -50,22 +50,30 @@ namespace Nuclex { namespace Support { namespace Text {
   /// </remarks>
   class NUCLEX_SUPPORT_TYPE ParserHelper {
 
+    /// <summary>UTF-8 character of which either 1, 2, 3 or 4 specify one codepoint</summary>
+    /// <remarks>
+    ///   Under C++20, this will be a native type like char16_t and char32_t. There will also
+    ///   be an std::u8string using this character type to unambiguously indicate that
+    ///   the contents of the string are supposed to be UTF-8 encoded.
+    /// </remarks>
+    public: typedef unsigned char char8_t;
+
     /// <summary>Checks whether the specified character is a whitespace</summary>
     /// <param name="utf8Byte">
     ///   UTF-8 byte or single-byte character that will be checked for being a whitespace
     /// </param>
     /// <returns>True if the character was a whitespace, false otherwise</returns>
     public: NUCLEX_SUPPORT_API static constexpr bool IsWhitespace(
-      std::uint8_t utf8Byte
+      char8_t utf8Character
     );
 
     /// <summary>Checks whether the specified character is a whitespace</summary>
-    /// <param name="codepoint">
+    /// <param name="codePoint">
     ///   Unicode code point that will be checked for being a whitespace
     /// </param>
     /// <returns>True if the character was a whitespace, false otherwise</returns>
     public: NUCLEX_SUPPORT_API static constexpr bool IsWhitespace(
-      char32_t codepoint
+      char32_t codePoint
     );
 
     /// <summary>
@@ -75,7 +83,7 @@ namespace Nuclex { namespace Support { namespace Text {
     /// <param name="start">Start pointer from which on whitespace will be skipped</param>
     /// <param name="end">End pointer that may not be overrun</param>
     public: NUCLEX_SUPPORT_API static void SkipWhitespace(
-      const std::uint8_t *&start, const std::uint8_t *end
+      const char8_t *&start, const char8_t *end
     );
 
   };

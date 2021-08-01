@@ -25,11 +25,11 @@ License along with this library
 
 #if !defined(NUCLEX_SUPPORT_WINDOWS)
 
-#include "../Text/Utf8/checked.h"
 #include "Nuclex/Support/Text/LexicalAppend.h"
 
 #include <vector> // for std::vector
 #include <cstring> // string.h for strerror()
+#include <system_error> // for std::system_error
 #include <cerrno> // for direct access to 'errno'
 
 #if defined(__clang__)

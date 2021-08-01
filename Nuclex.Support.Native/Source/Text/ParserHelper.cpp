@@ -22,13 +22,11 @@ License along with this library
 #define NUCLEX_SUPPORT_SOURCE 1
 
 #include "Nuclex/Support/Text/ParserHelper.h"
-
-#include "Utf8/checked.h"
+#include "Nuclex/Support/Text/UnicodeHelper.h"
 
 namespace {
 
   // ------------------------------------------------------------------------------------------- //
-
   // ------------------------------------------------------------------------------------------- //
 
 } // anonymous namespace
@@ -37,23 +35,18 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void ParserHelper::SkipWhitespace(
-    const std::uint8_t *&start, const std::uint8_t *end
-  ) {
-    const std::uint8_t *next = start;
-    for(;;) {
-      char32_t codePoint;
-      utf8::internal::utf_error result = utf8::internal::validate_next(
-        next, end, reinterpret_cast<std::uint32_t *>(&codePoint)
-      );
-      if(result == utf8::internal::UTF8_OK) {
-        if(IsWhitespace(codePoint)) {
-          start = next;
-        } else {
-          return;
-        }
-      } else { // End or invalid character encountered
-        return;
+  void ParserHelper::SkipWhitespace(const char8_t *&start, const char8_t *end) {
+    const char8_t *current = start;
+    while(current < end) {
+      char32_t codePoint = UnicodeHelper::ReadCodePoint(current, end);
+      if(codePoint == char32_t(-1)) {
+        break;
+      }
+
+      if(IsWhitespace(codePoint)) {
+        start = current;
+      } else {
+        break;
       }
     }
   }

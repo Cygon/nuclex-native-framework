@@ -40,6 +40,19 @@ namespace {
       return std::wstring();
     }
 
+    // Valid inputs
+    //   - file.txt                      -> \\?\file.txt
+    //   - D:/dir/file.txt               -> \\?\D:\dir\file.txt
+    //   - \\Server\share\file.txt       -> \\?\UNC\Server\share\file.txt
+    //   - \\?\D:\file.txt               -> \\?\D:\file.txt
+    //   - \\?\UNC\Server\share\file.txt -> (keep)
+/*
+    std::string::size_type length = utf8Path.length();
+    if(length >= 3) {
+      bool
+      if(utf8Path[0] == '\\')
+    }
+*/
     // We guess that we need as many UTF-16 characters as we needed UTF-8 characters
     // based on the assumption that most text will only use ascii characters.
     std::wstring utf16Path;
