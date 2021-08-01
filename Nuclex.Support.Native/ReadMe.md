@@ -115,9 +115,6 @@ ingredients[u8"Rødløg"] = 2;
 int onionCount = ingredients.at(u8"RØDLØG"); // Different case, still a match
 ```
 
-Uses [UTF8-CPP](https://github.com/nemtrif/utfcpp) and some custom code.
-See Copyright.md in the Documents directory for more details.
-
 
 Application Settings Storage
 ----------------------------

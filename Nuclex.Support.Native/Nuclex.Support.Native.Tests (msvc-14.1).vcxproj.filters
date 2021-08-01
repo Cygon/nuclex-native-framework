@@ -770,5 +770,6 @@
     <None Include="Documents\Hakan Sundell - Fast and Lock-Free Concurrent Priority Queues.pdf">
       <Filter>Documents</Filter>
     </None>
+    <None Include="ReadMe.md" />
   </ItemGroup>
 </Project>
