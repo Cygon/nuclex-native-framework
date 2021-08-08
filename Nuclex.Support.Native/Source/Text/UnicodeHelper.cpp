@@ -18,6 +18,9 @@ License along with this library
 */
 #pragma endregion // CPL License
 
+// If the library is compiled as a DLL, this ensures symbols are exported
+#define NUCLEX_SUPPORT_SOURCE 1
+
 #include "Nuclex/Support/Text/UnicodeHelper.h"
 
 #include <algorithm> // for std::lower_bound()
