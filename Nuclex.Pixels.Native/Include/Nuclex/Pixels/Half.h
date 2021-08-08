@@ -23,8 +23,8 @@ License along with this library
 
 #include "Nuclex/Pixels/Config.h"
 
-#include <cstdint>
-#include <limits>
+#include <cstdint> // for std::uint16_t
+#include <limits> // for std::numeric_limits
 
 namespace Nuclex { namespace Pixels {
 
@@ -50,7 +50,10 @@ namespace Nuclex { namespace Pixels {
     ///   the variable is accessed.
     /// </remarks>
     public: NUCLEX_PIXELS_API Half() {}
-
+/*
+    /// <summary>Initializes a half-precision floating point value as copy of another</summary>
+    public: NUCLEX_PIXELS_API Half(const Half &other) : bits(other.bits) {}
+*/
     /// <summary>Initializes a new half-precision floating point value</summary>
     /// <param name="value">Floating point value the half will be initialized with</param>
     public: NUCLEX_PIXELS_API Half(float value) :
@@ -96,7 +99,7 @@ namespace Nuclex { namespace Pixels {
       } else if(valueAsFloat >= 1.0f) {
         return 255;
       } else {
-        return static_cast<std::uint8_t>(valueAsFloat * 255.0f) + 1;
+        return static_cast<std::uint8_t>(valueAsFloat * 255.0f + 0.5f);
       }
     }
 

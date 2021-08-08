@@ -23,9 +23,10 @@ License along with this library
 
 #include "Nuclex/Pixels/Config.h"
 
-#include <cstdint>
-#include <limits>
-#include <type_traits>
+#include <cstdint> // for std::uint8_t, std::uint16_t, std::uint32_t, std::uint64_t
+#include <cassert> // for assert()
+#include <limits> // for std::numeric_limits
+#include <type_traits> // for std::true_type
 
 namespace Nuclex { namespace Pixels {
 
@@ -65,6 +66,17 @@ namespace Nuclex { namespace Pixels {
 #else
       mostSignificant(mostSignificant),
       leastSignificant(leastSignificant) {}
+#endif
+
+    /// <summary>Initializes a new 128 bit unsigned integer from an integer</summary>
+    /// <param name="value">Value with which the 128 bit integer will be initialized</param>
+    public: constexpr NUCLEX_PIXELS_API UInt128(int value) :
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+      leastSignificant(static_cast<std::uint64_t>(value)),
+      mostSignificant((value < 0) ? 0xFFFFFFFFFFFFFFFF : 0) {}
+#else
+      mostSignificant((value < 0) ? 0xFFFFFFFFFFFFFFFF : 0),
+      leastSignificant(static_cast<std::uint64_t>(value)) {}
 #endif
 
     /// <summary>Initializes a new 128 bit unsigned integer from an 8 bit integer</summary>
@@ -112,6 +124,15 @@ namespace Nuclex { namespace Pixels {
 #endif
 
 #if defined(NUCLEX_PIXELS_HAVE_BUILTIN_INT128)
+
+  #if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wpedantic" // ISO C++ does not support ‘__int128’
+  #elif defined(__GNUC__) || defined(__GNUG__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wpedantic" // ISO C++ does not support ‘__int128’
+  #endif
+
     /// <summary>Initializes a new 128 bit unsigned integer from a 128 bit integer</summary>
     /// <param name="value">Value with which the 128 bit integer will be initialized</param>
     public: constexpr NUCLEX_PIXELS_API UInt128(unsigned __int128 value) :
@@ -122,6 +143,13 @@ namespace Nuclex { namespace Pixels {
       mostSignificant(static_cast<std::uint64_t>(value >> 64)),
       leastSignificant(static_cast<std::uint64_t>(value)) {}
 #endif
+
+  #if defined(__clang__)
+    #pragma clang diagnostic pop
+  #elif defined(__GNUC__) || defined(__GNUG__)
+    #pragma GCC diagnostic pop
+  #endif
+
 #endif // defined(NUCLEX_PIXELS_HAVE_BUILTIN_INT128)
 
     /// <summary>Returns only the lower 8 bits of the 128 bit integer</summary>
@@ -204,10 +232,12 @@ namespace Nuclex { namespace Pixels {
       );
     }
 
-    /// <summary>Returns the integer bit-shifted to the right</summary>
+    /// <summary>Returns the integer bit-shifted to the left</summary>
     /// <param name="bitOffset">Number of bits the integer will be shifted</param>
     /// <returns>The bit-shifted copy of the integer</summary>
-    public: NUCLEX_PIXELS_API UInt128 operator <<(int bitOffset) const {
+    public: NUCLEX_PIXELS_API constexpr UInt128 operator <<(int bitOffset) const {
+      assert((bitOffset >= 0) && u8"UInt128 shift operator doesn't support negative shifts");
+
       if(bitOffset == 0) { // Using <64 case would result in undefined behavior
         return *this;
       } else if(bitOffset < 64) {
@@ -224,10 +254,12 @@ namespace Nuclex { namespace Pixels {
       }
     }
 
-    /// <summary>Returns the integer bit-shifted to the left</summary>
+    /// <summary>Returns the integer bit-shifted to the right</summary>
     /// <param name="bitOffset">Number of bits the integer will be shifted</param>
     /// <returns>The bit-shifted copy of the integer</summary>
-    public: NUCLEX_PIXELS_API UInt128 operator >>(int bitOffset) const {
+    public: NUCLEX_PIXELS_API constexpr UInt128 operator >>(int bitOffset) const {
+      assert((bitOffset >= 0) && u8"UInt128 shift operator doesn't support negative shifts");
+
       if(bitOffset == 0) { // Using <64 case would result in undefined behavior
         return *this;
       } else if(bitOffset < 64) {
@@ -247,7 +279,9 @@ namespace Nuclex { namespace Pixels {
     /// <summary>Bit shifts the integer to the left</summary>
     /// <param name="bitOffset">Number of bits the integer will be shifted</param>
     /// <returns>The bit-shifted integer</summary>
-    public: NUCLEX_PIXELS_API UInt128 &operator <<=(int bitOffset) {
+    public: NUCLEX_PIXELS_API constexpr UInt128 &operator <<=(int bitOffset) {
+      assert((bitOffset >= 0) && u8"UInt128 shift operator doesn't support negative shifts");
+
       if(bitOffset == 0) { // Can't use generic method because shift by 64 is undefined
         return *this;
       } else if(bitOffset < 64) {
@@ -265,7 +299,9 @@ namespace Nuclex { namespace Pixels {
     /// <summary>Bit shifts the integer to the right</summary>
     /// <param name="bitOffset">Number of bits the integer will be shifted</param>
     /// <returns>The bit-shifted integer</summary>
-    public: NUCLEX_PIXELS_API UInt128 &operator >>=(int bitOffset) {
+    public: NUCLEX_PIXELS_API constexpr UInt128 &operator >>=(int bitOffset) {
+      assert((bitOffset >= 0) && u8"UInt128 shift operator doesn't support negative shifts");
+
       if(bitOffset == 0) {
         return *this; // Can't use generic method because shift by 64 is undefined
       } else if(bitOffset < 64) {
@@ -283,7 +319,7 @@ namespace Nuclex { namespace Pixels {
     /// <summary>Returns the integer ORed with another integer</summary>
     /// <param name="other">Other integer that will be ORed with this one</param>
     /// <returns>The ORed copy of the integer</summary>
-    public: NUCLEX_PIXELS_API UInt128 operator |(const UInt128 &other) const {
+    public: NUCLEX_PIXELS_API constexpr UInt128 operator |(const UInt128 &other) const {
       UInt128 combined;
       combined.mostSignificant = this->mostSignificant | other.mostSignificant;
       combined.leastSignificant = this->leastSignificant | other.leastSignificant;
@@ -293,17 +329,27 @@ namespace Nuclex { namespace Pixels {
     /// <summary>Returns the integer ANDed with another integer</summary>
     /// <param name="other">Other integer that will be ANDed with this one</param>
     /// <returns>The ANDed copy of the integer</summary>
-    public: NUCLEX_PIXELS_API UInt128 operator &(const UInt128 &other) const {
+    public: NUCLEX_PIXELS_API constexpr UInt128 operator &(const UInt128 &other) const {
       UInt128 combined;
       combined.mostSignificant = this->mostSignificant & other.mostSignificant;
       combined.leastSignificant = this->leastSignificant & other.leastSignificant;
       return combined;
     }
 
+    /// <summary>Returns the integer XORed with another integer</summary>
+    /// <param name="other">Other integer that will be XORed with this one</param>
+    /// <returns>The XORed copy of the integer</summary>
+    public: NUCLEX_PIXELS_API constexpr UInt128 operator ^(const UInt128 &other) const {
+      UInt128 combined;
+      combined.mostSignificant = this->mostSignificant ^ other.mostSignificant;
+      combined.leastSignificant = this->leastSignificant ^ other.leastSignificant;
+      return combined;
+    }
+
     /// <summary>Returns the integer ORed with another integer</summary>
     /// <param name="other">Other integer that will be ORed with this one</param>
     /// <returns>The ORed copy of the integer</summary>
-    public: NUCLEX_PIXELS_API UInt128 &operator |=(const UInt128 &other) {
+    public: NUCLEX_PIXELS_API constexpr UInt128 &operator |=(const UInt128 &other) {
       this->mostSignificant |= other.mostSignificant;
       this->leastSignificant |= other.leastSignificant;
       return *this;
@@ -312,144 +358,10 @@ namespace Nuclex { namespace Pixels {
     /// <summary>Returns the integer ANDed with another integer</summary>
     /// <param name="other">Other integer that will be ANDed with this one</param>
     /// <returns>The ANDed copy of the integer</summary>
-    public: NUCLEX_PIXELS_API UInt128 &operator &=(const UInt128 &other) {
+    public: NUCLEX_PIXELS_API constexpr UInt128 &operator &=(const UInt128 &other) {
       this->mostSignificant &= other.mostSignificant;
       this->leastSignificant &= other.leastSignificant;
       return *this;
-    }
-
-    /// <summary>Bit-shifts the value by the specified number of bits</summary>
-    /// <typeparam name="ShiftOffset">Number of bits the value will be shifted</typeparam>
-    /// <returns>The bit-shifted 128 bit integer</returns>
-    /// <remarks>
-    ///   Specialization for shifts that result in shifting all bits away
-    /// </remarks>
-    public: template<
-      int ShiftOffset,
-      typename std::enable_if_t<(ShiftOffset <= -128) || (ShiftOffset >= 128)> * = nullptr
-    >
-    NUCLEX_PIXELS_API static constexpr UInt128 BitShift(UInt128 integer) {
-      (void)integer;
-      UInt128 shifted;
-      shifted.mostSignificant = 0;
-      shifted.leastSignificant = 0;
-      return shifted;
-    }
-
-    /// <summary>Bit-shifts the value by the specified number of bits</summary>
-    /// <typeparam name="ShiftOffset">Number of bits the value will be shifted</typeparam>
-    /// <returns>The bit-shifted 128 bit integer</returns>
-    /// <remarks>
-    ///   Specialization for shifts that are guaranteed to clear the lower bits
-    /// </remarks>
-    public: template<
-      int ShiftOffset,
-      typename std::enable_if_t<(ShiftOffset > -128) && (ShiftOffset < -64)> * = nullptr
-    >
-    NUCLEX_PIXELS_API static constexpr UInt128 BitShift(UInt128 integer) {
-      UInt128 shifted;
-      shifted.mostSignificant = (integer.leastSignificant << (-64 - ShiftOffset));
-      shifted.leastSignificant = 0;
-      return shifted;
-    }
-
-    /// <summary>Bit-shifts the value by the specified number of bits</summary>
-    /// <typeparam name="ShiftOffset">Number of bits the value will be shifted</typeparam>
-    /// <returns>The bit-shifted 128 bit integer</returns>
-    /// <remarks>
-    ///   Specialization for shifts that exactly move the lower bits to the higher bits
-    /// </remarks>
-    public: template<
-      int ShiftOffset,
-      typename std::enable_if_t<(ShiftOffset == -64)> * = nullptr
-    >
-    NUCLEX_PIXELS_API static constexpr UInt128 BitShift(UInt128 integer) {
-      UInt128 shifted;
-      shifted.mostSignificant = integer.leastSignificant;
-      shifted.leastSignificant = 0;
-      return shifted;
-    }
-
-    /// <summary>Bit-shifts the value by the specified number of bits</summary>
-    /// <typeparam name="ShiftOffset">Number of bits the value will be shifted</typeparam>
-    /// <returns>The bit-shifted 128 bit integer</returns>
-    /// <remarks>
-    ///   Specialization for shifts that bleed the lower bits into the higher bits
-    /// </remarks>
-    public: template<
-      int ShiftOffset,
-      typename std::enable_if_t<((ShiftOffset > -64) && (ShiftOffset < 0))> * = nullptr
-    >
-    NUCLEX_PIXELS_API static constexpr UInt128 BitShift(UInt128 integer) { // TODO: Unfinished
-      UInt128 shifted;
-      shifted.mostSignificant = (integer.mostSignificant << (-ShiftOffset));
-      shifted.mostSignificant |= (integer.leastSignificant >> (64 + ShiftOffset));
-      shifted.leastSignificant = integer.leastSignificant << (-ShiftOffset);
-      return shifted;
-    }
-
-    /// <summary>Bit-shifts the value by the specified number of bits</summary>
-    /// <typeparam name="ShiftOffset">Number of bits the value will be shifted</typeparam>
-    /// <returns>The bit-shifted 128 bit integer</returns>
-    /// <remarks>
-    ///   Specialization for do-nothing shifts
-    /// </remarks>
-    public: template<
-      int ShiftOffset,
-      typename std::enable_if_t<(ShiftOffset == 0)> * = nullptr
-    >
-    NUCLEX_PIXELS_API static constexpr UInt128 BitShift(UInt128 integer) { return integer; }
-
-    /// <summary>Bit-shifts the value by the specified number of bits</summary>
-    /// <typeparam name="ShiftOffset">Number of bits the value will be shifted</typeparam>
-    /// <returns>The bit-shifted 128 bit integer</returns>
-    /// <remarks>
-    ///   Specialization for shifts that bleed the higher bits into the lower bits
-    /// </remarks>
-    public: template<
-      int ShiftOffset,
-      typename std::enable_if_t<((ShiftOffset > 0) && (ShiftOffset < 64))> * = nullptr
-    >
-    NUCLEX_PIXELS_API static constexpr UInt128 BitShift(UInt128 integer) {
-      UInt128 shifted;
-      shifted.leastSignificant = (integer.leastSignificant >> ShiftOffset);
-      shifted.leastSignificant |= (integer.mostSignificant << (64 - ShiftOffset));
-      shifted.mostSignificant = integer.mostSignificant >> ShiftOffset;
-      return shifted;
-    }
-
-    /// <summary>Bit-shifts the value by the specified number of bits</summary>
-    /// <typeparam name="ShiftOffset">Number of bits the value will be shifted</typeparam>
-    /// <returns>The bit-shifted 128 bit integer</returns>
-    /// <remarks>
-    ///   Specialization for shifts that exactly move the higher bits to the lower bits
-    /// </remarks>
-    public: template<
-      int ShiftOffset,
-      typename std::enable_if_t<(ShiftOffset == 64)> * = nullptr
-    >
-    NUCLEX_PIXELS_API static constexpr UInt128 BitShift(UInt128 integer) {
-      UInt128 shifted;
-      shifted.mostSignificant = 0;
-      shifted.leastSignificant = integer.mostSignificant;
-      return shifted;
-    }
-
-    /// <summary>Bit-shifts the value by the specified number of bits</summary>
-    /// <typeparam name="ShiftOffset">Number of bits the value will be shifted</typeparam>
-    /// <returns>The bit-shifted 128 bit integer</returns>
-    /// <remarks>
-    ///   Specialization for shifts that are guaranteed clear the higher bits
-    /// </remarks>
-    public: template<
-      int ShiftOffset,
-      typename std::enable_if_t<(ShiftOffset > 64) && (ShiftOffset < 128)> * = nullptr
-    >
-    NUCLEX_PIXELS_API static constexpr UInt128 BitShift(UInt128 integer) {
-      UInt128 shifted;
-      shifted.mostSignificant = 0;
-      shifted.leastSignificant = (integer.mostSignificant >> (ShiftOffset - 64));
-      return shifted;
     }
 
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
@@ -469,58 +381,27 @@ namespace Nuclex { namespace Pixels {
 
 #if defined(NUCLEX_PIXELS_HAVE_BUILTIN_INT128)
 
+  #if defined(__clang__)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wpedantic" // ISO C++ does not support ‘__int128’
+  #elif defined(__GNUC__) || defined(__GNUG__)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wpedantic" // ISO C++ does not support ‘__int128’
+  #endif
+
   /// <summary>Alias for the best 128 bit integer implementation to use</summary>
   typedef unsigned __int128 uint128_t;
 
-  /// <summary>Shifts the specified 128 bit integer bitwise to the left</summary>
-  /// <typeparam name="ShiftOffset">Number of bits the integer will be shifted</typeparam>
-  /// <returns>The bit-shifted 128 bit integer</returns>
-  /// <remarks>
-  ///   Specialization for shifts that clear out all the bits
-  /// </remarks>
-  public: template<
-    int ShiftOffset,
-    typename std::enable_if_t<(ShiftOffset <= -128) || (ShiftOffset >= 128)> * = nullptr
-  >
-  NUCLEX_PIXELS_API inline constexpr uint128_t BitShift(uint128_t integer) {
-    (void)uint128_t;
-    return 0;
-  }
-
-  /// <summary>Shifts the specified 128 bit integer bitwise to the left</summary>
-  /// <typeparam name="ShiftOffset">Number of bits the integer will be shifted</typeparam>
-  /// <returns>The bit-shifted 128 bit integer</returns>
-  public: template<
-    int ShiftOffset,
-    typename std::enable_if_t<(ShiftOffset > -128) && (ShiftOffset < 0)> * = nullptr
-  >
-  NUCLEX_PIXELS_API inline constexpr uint128_t BitShift(uint128_t integer) {
-    return integer << (-ShiftOffset);
-  }
-
-  /// <summary>Shifts the specified 128 bit integer bitwise to the right</summary>
-  /// <typeparam name="ShiftOffset">Number of bits the integer will be shifted</typeparam>
-  /// <returns>The bit-shifted 128 bit integer</returns>
-  public: template<
-    int ShiftOffset,
-    typename std::enable_if_t<(ShiftOffset >= 0) && (ShiftOffset < 128)> * = nullptr
-  >
-  NUCLEX_PIXELS_API inline constexpr uint128_t BitShift(uint128_t integer) {
-    return integer >> ShiftOffset;
-  }
+  #if defined(__clang__)
+    #pragma clang diagnostic pop
+  #elif defined(__GNUC__) || defined(__GNUG__)
+    #pragma GCC diagnostic pop
+  #endif
 
 #else
 
   /// <summary>Alias for the best 128 bit integer implementation to use</summary>
   typedef UInt128 uint128_t;
-
-  /// <summary>Shifts the specified 128 bit integer bitwise</summary>
-  /// <typeparam name="ShiftOffset">Number of bits the integer will be shifted</typeparam>
-  /// <returns>The bit-shifted 128 bit integer</returns>
-  template<int ShiftOffset>
-  NUCLEX_PIXELS_API inline constexpr uint128_t BitShift(uint128_t integer) {
-    return uint128_t::BitShift<ShiftOffset>(integer);
-  }
 
 #endif
 
@@ -571,7 +452,11 @@ namespace std {
     ///   Maximum finite value that is representable by a 128 bit integer
     /// </summary>
     public: static _Ty max() throw() {
+#if defined(NUCLEX_PIXELS_HAVE_BUILTIN_INT128)
+      return (_Ty(18446744073709551615U) << 64) | _Ty(18446744073709551615U);
+#else
       return _Ty(18446744073709551615U, 18446744073709551615U);
+#endif
     }
 
     /// <summary>
