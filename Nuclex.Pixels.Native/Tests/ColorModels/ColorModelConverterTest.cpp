@@ -463,7 +463,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(ColorModelConverterTest, RgbYuvRoundtripWorksInBt709) {
-    static constexpr float MaximumError = 0.00000001f;
+    static constexpr float MaximumError = 0.0000001f;
 
     YuvColor yuv = ColorModelConverter::YuvFromRgb(
       { 1.0f, 1.0f, 1.0f, 1.0f }, YuvColorSystem::Bt709
