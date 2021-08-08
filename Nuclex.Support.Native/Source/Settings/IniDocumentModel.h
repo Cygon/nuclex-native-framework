@@ -179,7 +179,7 @@ namespace Nuclex { namespace Support { namespace Settings {
 
     #pragma region class IndexedSection
 
-    /// <summary>A line in an .ini file containing a property assignment</summary>
+    /// <summary>Index for quick lookup of all properties in a section by name</summary>
     protected: class IndexedSection {
 
       /// <summary>Map from (case-insensitive) property name to property line</summary>
@@ -189,10 +189,21 @@ namespace Nuclex { namespace Support { namespace Settings {
       > PropertyMap;
 
       /// <summary>Line in which this section is declared. Can be a nullptr.</summary>
+      /// <remarks>
+      ///   Section contents immediately follow this line. The section line is only
+      ///   a nullptr if this section it the implicit default section, in which case
+      ///   it covers all properties from the beginning of the file until the first
+      ///   explicit section declaration (important for the DeleteSection() method).
+      /// </remarks>
       public: SectionLine *DeclarationLine;
       /// <summary>Index of property lines in this section by their property name</summary>
       public: PropertyMap Properties;
-      /// <summary>Last line in this section</summary>
+      /// <summary>Last line in this section. Can be a nullptr.</summary>
+      /// <remarks>
+      ///   Used when appending properties to the section so they appear at the very end.
+      ///   Is only a nullptr when constructing a new .ini file or loading an empty one,
+      ///   in which case properties will be appended as the last line in the file.
+      /// </remarks>
       public: Line *LastLine;
 
     };
