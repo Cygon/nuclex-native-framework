@@ -22,15 +22,19 @@ License along with this library
 #define NUCLEX_PIXELS_SOURCE 1
 
 #include "RealFile.h"
-#include "Nuclex/Pixels/Errors/FileAccessError.h"
 
-#include <vector>
-#include <limits>
-#include <cassert>
+#if defined(NUCLEX_PIXELS_LINUX)
+#include "../Platform/LinuxFileApi.h"
+#include <unistd.h> // ::read(), ::write(), ::close(), etc.
+#elif defined(NUCLEX_PIXELS_WINDOWS)
+#include "../Platform/WindowsFileApi.h"
+#endif
 
-#include "RealFile.Windows.inl"
-#include "RealFile.Posix.inl"
-#include "RealFile.Linux.inl"
+#if !defined(NUCLEX_PIXELS_WINDOWS)
+#include "../Platform/PosixFileApi.h" // for ThrowExceptionForFileAccessError(), etc.
+#endif
+
+#include <cassert> // for assert()
 
 namespace Nuclex { namespace Pixels { namespace Storage {
 
@@ -39,70 +43,56 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   RealFile::RealFile(
     const std::string &path, bool promiseSequentialAccess, bool readOnly
   ) : position(0) {
-#if defined(NUCLEX_PIXELS_WIN32)
-
-    if(readOnly) {
-      this->fileHandle = openWindowsFileForReading(path, promiseSequentialAccess);
-      this->length = getWindowsFileSize(this->fileHandle);
-    } else {
-      this->fileHandle = openWindowsFileForWriting(path, promiseSequentialAccess);
-      this->length = 0;
-    }
-
-#elif defined(NUCLEX_PIXELS_LINUX)
-
+#if defined(NUCLEX_PIXELS_LINUX)
     (void)promiseSequentialAccess; // Not supported here.
     if(readOnly) {
-      this->fileDescriptor = ::open(path.c_str(), O_RDONLY | O_NOATIME);
-      if(this->fileDescriptor == -1) {
-        int errorNumber = errno;
-        throwPosixFileAccessError(errorNumber);
-      }
-      this->length = getLinuxFileSize(this->fileDescriptor);
+      this->fileDescriptor = Platform::LinuxFileApi::OpenFileForReading(path);
+      this->length = Platform::LinuxFileApi::StatFileSize(this->fileDescriptor);
     } else {
-      this->fileDescriptor = ::open(
-        path.c_str(),
-        O_CREAT | O_WRONLY | O_TRUNC,
-        S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH // rw-rw-r--
+      this->fileDescriptor = Platform::LinuxFileApi::OpenFileForWriting(path);
+      this->length = 0;
+    }
+#elif defined(NUCLEX_PIXELS_WINDOWS)
+    if(readOnly) {
+      this->fileHandle = Platform::WindowsFileApi::OpenFileForReading(
+        path, promiseSequentialAccess
       );
-      if(this->fileDescriptor == -1) {
-        int errorNumber = errno;
-        throwPosixFileAccessError(errorNumber);
-      }
+      this->length = Platform::WindowsFileApi::GetFileSize(this->fileHandle);
+    } else {
+      this->fileHandle = Platform::WindowsFileApi::OpenFileForWriting(
+        path, promiseSequentialAccess
+      );
       this->length = 0;
     }
-
 #else // No Windows, no Linux, let's try Posix
-
     (void)promiseSequentialAccess; // Not supported here.
     if(readOnly) {
-      this->filePointer = ::fopen(path.c_str(), "rb");
-      if(this->filePointer == nullptr) {
-        int errorNumber = errno;
-        throwPosixFileAccessError(errorNumber);
-      }
-      this->length = getPosixFileSize(path.c_str());
+      this->file = Platform::PosixFileApi::OpenFileForReading(path);
+      Platform::PosixFileApi::Seek(this->file, 0, SEEK_END);
+      this->length = Platform::PosixFileApi::Tell(this->file);
+      Platform::PosixFileApi::Seek(this->file, 0, SEEK_SET);
     } else {
-      this->filePointer = ::fopen(path.c_str(), "wb");
-      if(this->filePointer == nullptr) {
-        int errorNumber = errno;
-        throwPosixFileAccessError(errorNumber);
-      }
+      this->file = Platform::PosixFileApi::OpenFileForWriting(path);
       this->length = 0;
     }
-
 #endif
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   RealFile::~RealFile() {
-#if defined(NUCLEX_PIXELS_WIN32)
-    ::CloseHandle(this->fileHandle);
-#elif defined(NUCLEX_PIXELS_LINUX)
-    ::close(this->fileDescriptor);
+#if defined(NUCLEX_PIXELS_LINUX)
+    int result = ::close(this->fileDescriptor);
+    NUCLEX_PIXELS_NDEBUG_UNUSED(result);
+    assert((result != -1) && u8"File descriptor is closed successfully");
+#elif defined(NUCLEX_PIXELS_WINDOWS)
+    BOOL result = ::CloseHandle(this->fileHandle);
+    NUCLEX_PIXELS_NDEBUG_UNUSED(result);
+    assert((result != FALSE) && u8"File handle is closed successfully");
 #else // No Windows, no Linux, let's try Posix
-    ::fclose(this->filePointer);
+    int result = ::fclose(this->file);
+    NUCLEX_PIXELS_NDEBUG_UNUSED(result);
+    assert((result == 0) && u8"File is closed successfully");
 #endif
   }
 
@@ -111,43 +101,92 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   void RealFile::ReadAt(
     std::uint64_t start, std::size_t byteCount, std::uint8_t *buffer
   ) const {
-#if defined(NUCLEX_PIXELS_WIN32)
+#if defined(NUCLEX_PIXELS_LINUX)
+    if(start == this->position) { // Prefer read() to support stdin etc.
+      std::size_t remainingByteCount = byteCount;
+      for(;;) {
+        std::size_t readByteCount = Platform::LinuxFileApi::Read(
+          this->fileDescriptor, buffer, remainingByteCount
+        );
+        this->position += readByteCount;
 
+        if(likely(readByteCount == remainingByteCount)) {
+          return;
+        } else if(unlikely(readByteCount == 0)) {
+          Platform::PosixFileApi::ThrowExceptionForFileAccessError(
+            u8"Encountered unexpected end of file", EIO
+          );
+        }
+
+        buffer += readByteCount;
+        remainingByteCount -= readByteCount;
+      }
+    } else { // If seeking needed anyway, use pread() instead
+      std::size_t remainingByteCount = byteCount;
+      for(;;) {
+        std::size_t readByteCount = Platform::LinuxFileApi::PositionalRead(
+          this->fileDescriptor, buffer, byteCount, start
+        );
+        if(likely(readByteCount == remainingByteCount)) {
+          return;
+        } else if(unlikely(readByteCount == 0)) {
+          Platform::PosixFileApi::ThrowExceptionForFileAccessError(
+            u8"Encountered unexpected end of file", EIO
+          );
+        }
+
+        buffer += readByteCount;
+        start += readByteCount;
+        remainingByteCount -= readByteCount;
+      }
+    }
+#elif defined(NUCLEX_PIXELS_WINDOWS)
     if(start != this->position) {
-      moveWindowsFileCursor(this->fileHandle, start);
+      Platform::WindowsFileApi::Seek(this->fileHandle, start, FILE_BEGIN);
       this->position = start;
     }
-    readWindowsFile(this->fileHandle, this->position, byteCount, buffer);
-
-#elif defined(NUCLEX_PIXELS_LINUX)
-
-    ssize_t readByteCount;
-    if(start == this->position) { // Prefer read() when not seeking to support stdin etc.
-      readByteCount = ::read(this->fileDescriptor, buffer, byteCount);
-      if(readByteCount == -1) {
-        int errorNumber = errno;
-        throwPosixFileAccessError(errorNumber);
-      }
+    std::size_t remainingByteCount = byteCount;
+    for(;;) {
+      std::size_t readByteCount = Platform::WindowsFileApi::Read(
+        this->fileHandle, buffer, remainingByteCount
+      );
       this->position += readByteCount;
-    } else {
-      readByteCount = ::pread(this->fileDescriptor, buffer, byteCount, start);
-      if(readByteCount == -1) {
-        int errorNumber = errno;
-        throwPosixFileAccessError(errorNumber);
+
+      if(likely(readByteCount == remainingByteCount)) {
+        return; // All done
+      } else if(unlikely(readByteCount == 0)) {
+        Platform::WindowsFileApi::ThrowExceptionForFileAccessError(
+          u8"Encountered unexpected end of file", ERROR_HANDLE_EOF
+        );
       }
-    }
-    if(static_cast<std::size_t>(readByteCount) != byteCount) {
-      throwPosixFileAccessError(EINVAL);
-    }
 
+      remainingByteCount -= readByteCount;
+      buffer -= readByteCount;
+    }
 #else // No Windows, no Linux, let's try Posix
-
     if(start != this->position) {
-      movePosixFileCursor(this->filePointer, start);
+      Platform::PosixFileApi::Seek(this->file, start, SEEK_SET);
       this->position = start;
     }
-    readPosixFile(this->filePointer, this->position, byteCount, buffer);
 
+    std::size_t remainingByteCount = byteCount;
+    for(;;) {
+      std::size_t readByteCount = Platform::PosixFileApi::Read(
+        this->file, buffer, remainingByteCount
+      );
+      this->position += readByteCount;
+
+      if(likely(readByteCount == remainingByteCount)) {
+        return; // All done
+      } else if(unlikely(readByteCount == 0)) {
+        Platform::PosixFileApi::ThrowExceptionForFileAccessError(
+          u8"Encountered unexpected end of file", EIO
+        );
+      }
+
+      remainingByteCount -= readByteCount;
+      buffer -= readByteCount;
+    }
 #endif
   }
 
@@ -156,51 +195,78 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   void RealFile::WriteAt(
     std::uint64_t start, std::size_t byteCount, const std::uint8_t *buffer
   ) {
-#if defined(NUCLEX_PIXELS_WIN32)
-
-    if(start != this->position) {
-      if(start > this->length) { // Don't allow writing past end with gap
-        throwWindowsFileAccessError(ERROR_HANDLE_EOF);
-      }
-      moveWindowsFileCursor(this->fileHandle, start);
-    }
-    writeWindowsFile(this->fileHandle, this->position, byteCount, buffer);
-
-#elif defined(NUCLEX_PIXELS_LINUX)
-
-    ssize_t writtenByteCount;
-    if(start == this->position) { // Prefer write() when not seeking to support stdout etc.
-      writtenByteCount = ::write(this->fileDescriptor, buffer, byteCount);
-      if(writtenByteCount == -1) {
-        int errorNumber = errno;
-        throwPosixFileAccessError(errorNumber);
-      }
+#if defined(NUCLEX_PIXELS_LINUX)
+    std::size_t writtenByteCount;
+    if(start == this->position) { // Prefer write() to support stdout etc.
+      writtenByteCount = Platform::LinuxFileApi::Write(
+        this->fileDescriptor, buffer, byteCount
+      );
       this->position += writtenByteCount;
-    } else {
+      if(this->position > this->length) {
+        this->length = this->position;
+      }
+    } else { // If seeking needed anyway, use pwrite()
       if(start > this->length) { // Don't allow writing past end with gap
-        throwPosixFileAccessError(EINVAL);
+        Platform::PosixFileApi::ThrowExceptionForFileAccessError(
+          u8"Attempted write position would leave a gap in the file", EINVAL
+        );
       }
-      writtenByteCount = ::pwrite(this->fileDescriptor, buffer, byteCount, start);
-      if(writtenByteCount == -1) {
-        int errorNumber = errno;
-        throwPosixFileAccessError(errorNumber);
+      writtenByteCount = Platform::LinuxFileApi::PositionalWrite(
+        this->fileDescriptor, buffer, byteCount, start
+      );
+      if(start + writtenByteCount > this->length) {
+        this->length = start + writtenByteCount;
       }
     }
-    if(static_cast<std::size_t>(writtenByteCount) != byteCount) {
-      throwPosixFileAccessError(EINVAL);
+    if(writtenByteCount != byteCount) {
+      Platform::PosixFileApi::ThrowExceptionForFileAccessError(
+        u8"Write finished without storing the entire buffer", EIO
+      );
     }
-
-#else // No Windows, no Linux, let's try Posix
-
+#elif defined(NUCLEX_PIXELS_WINDOWS)
     if(start != this->position) {
       if(start > this->length) { // Don't allow writing past end with gap
-        throwPosixFileAccessError(EINVAL);
+        Platform::WindowsFileApi::ThrowExceptionForFileAccessError(
+          u8"Attempted write position would leave a gap in the file", ERROR_HANDLE_EOF
+        );
       }
-      movePosixFileCursor(this->filePointer, start);
-      this->position = start;
+      Platform::WindowsFileApi::Seek(this->fileHandle, start, FILE_BEGIN);
     }
-    writePosixFile(this->filePointer, this->position, byteCount, buffer);
 
+    std::size_t writtenByteCount = Platform::WindowsFileApi::Write(
+      this->fileHandle, buffer, byteCount
+    );
+    this->position += writtenByteCount;
+    if(this->position > this->length) {
+      this->length = this->position;
+    }
+    if(writtenByteCount != byteCount) {
+      Platform::WindowsFileApi::ThrowExceptionForFileAccessError(
+        u8"Write finished without storing the entire buffer", ERROR_WRITE_FAULT
+      );
+    }
+#else // No Windows, no Linux, let's try Posix
+    if(start != this->position) {
+      if(start > this->length) { // Don't allow writing past end with gap
+        Platform::PosixFileApi::ThrowExceptionForFileAccessError(
+          u8"Attempted write position would leave a gap in the file", EIO
+        );
+      }
+      Platform::PosixFileApi::Seek(this->file, start, SEEK_SET);
+    }
+
+    std::size_t writtenByteCount = Platform::PosixFileApi::Write(
+      this->file, buffer, byteCount
+    );
+    this->position += writtenByteCount;
+    if(this->position > this->length) {
+      this->length = this->position;
+    }
+    if(writtenByteCount != byteCount) {
+      Platform::PosixFileApi::ThrowExceptionForFileAccessError(
+        u8"Write finished without storing the entire buffer", EIO
+      );
+    }
 #endif
   }
 
