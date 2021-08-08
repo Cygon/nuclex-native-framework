@@ -37,15 +37,19 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
   ///   </para>
   ///   <para>
   ///     As it turned out, this format was also useful for digital signals because
-  ///     the human eye is more sensitive to brightness that to color, thus, separating
+  ///     the human eye is more sensitive to brightness than to color, so separating
   ///     luminance from chroma meant you could use lower-resolution chroma (i.e. only
-  ///     store a color value for every second or fourth pixel).
+  ///     store it for every second or fourth pixel and interpolate the ones inbetween.
   ///   </para>
   ///   <para>
   ///     When made <em>digital</em> by quantizing, this format is called YCbCr (storing
   ///     Y, U and V as bytes either from 0..255 (&qout;full swing&quot;) or 16..235
   ///     (studio swing). However, this structure stores analogous values with U and V
   ///     components ranging from -1.0 .. +1.0, so this is actual YUV, not YCbCr.
+  ///   </para>
+  ///   <para>
+  ///     (Or perhaps not, ITU appears to define YUV as &quot;analogue TV&quot; and
+  ///     even non-quantized math in BT.2020 refers to the numbers as YCbCr...)
   ///   </para>
   /// </remarks>
   struct YuvColor {
