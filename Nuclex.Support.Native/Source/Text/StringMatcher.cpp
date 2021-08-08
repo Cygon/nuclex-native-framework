@@ -112,7 +112,7 @@ namespace {
 
       // Try to obtain the next wild card letter. We do this before checking
       // for the end of the text because wildcards can match zero letters, too.
-      char32_t wildcardCodePoint = UnicodeHelper::ReadCodePoint(wildcard, wildcardEnd);
+      wildcardCodePoint = UnicodeHelper::ReadCodePoint(wildcard, wildcardEnd);
       requireValidCodePoint(wildcardCodePoint);
       if(wildcardCodePoint == U'*') {
         break; // Wildcard had a star, enter skip mode
