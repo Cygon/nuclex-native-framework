@@ -56,21 +56,48 @@ License along with this library
 // https://vulkan.gpuinfo.org/displayreport.php?id=5126#formats
 // https://vulkan.gpuinfo.org/displayreport.php?id=5133#formats
 
+// Short recap on how I pick the pixel formats that go in here:
+//
+// - Contains only formats that are useful
+//   (i.e. popular with graphics APIs or needed to represent contents of image file)
+// - Enum jumps by 1024 each time a new channel set or layout begins
+//   (i.e. next pixel format has one more channel or is differently ordered)
+// - Native16/Native32 formats are present when it's convenient to treat them that way
+//   (i.e. if color channels are 16/32 bits or if whole pixel fits in 16/32 bits)
+//   Also taking into consideration when a known API exposes such a format.
+// - If Native16/Native32 exist, normally a Flipped16/Flipped32 exists, too.
+//   Often, the Flipped32 variant happens to be another common (non-BE) pixel format.
+// - Big endian support is not a goal currently, but design is careful to not prevent it.
+//   (i.e. no Flipped16/Flipped32 for floats that would be needed for big endian,
+//   but these can be added; enum is endian-specific, so if an image is loaded on
+//   a different endian platform, the opposite pixel format will be seen)
+//
+// The pixel formats are a combination of flags. I selected these based on the following:
+//
+// - Extra informations can easily be made available at compile-time by simply specializing
+//   the PixelFormatDescription<> template for each pixel format.
+// - So the only useful informations to encode in the pixel format enum directly are
+//
+
 namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
 
+  // Considered macros instead of writing out the shifts, but lines get too long...
   //#define SMALLEST_UNIT(size) (size << 24)
   //#define BITS_PER_PIXEL(count) (count << 16)
   //#define ID(number) (number)
 
-  /// <summary>Data formats that can be used to describe a pixel</summary>
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Color channel sets and their bit layouts used to describe a pixel</summary>
   /// <remarks>
   ///   <para>
   ///     All pixel formats specify the in-memory ordering of the color channels (anything
   ///     else would be insane, considering non-byte-sized color channels in R5-G6-B5 and
   ///     A2-R10-G10-B10). Thus, R8-G8-B8-A8 is the same in memory, no matter if big endian
-  ///     or little endian.
+  ///     or little endian. R5-G6-B5 will also look the same in memory, meaning the green
+  ///     channel will be split.
   ///   </para>
   ///   <para>
   ///     The exception to this are pixel formats ending in _NativeNN and _FlippedNN.
@@ -83,7 +110,7 @@ namespace Nuclex { namespace Pixels {
   ///     The enum values are defined as follows:
   ///   </para>
   ///   <code>
-  ///     0sssssss pppppppp nnnnnnnn nnnnnnnn
+  ///     0sssssss pppppppp ccnnnnnn nnnnnfff
   ///   </code>
   ///   <para>
   ///     Where 's' indicates the size of the smallest unit addressable in the pixel format
@@ -93,26 +120,45 @@ namespace Nuclex { namespace Pixels {
   ///     in units of 128 bits / 16 bytes.
   ///   </para>
   ///   <para>
-  ///     The next byte, 'p' contains the number of bits per pixel. It is useful for
+  ///     The next byte contains the number of bits per pixel, 'p'. It is useful for
   ///     calculating the amount of memory required to hold an image of size x by y.
   ///   </para>
   ///   <para>
-  ///     In the remaining two bytes, tagged as 'n', a unique id of each pixel format
-  ///     will be stored.
+  ///     In the final two bytes, 'c' is the number of channels stored for each pixel minus
+  ///     one (00 = 1 channel, 01 = 2 channels, 10 = 3 channels, 11 = 4 channels), while
+  ///     'n' is a unique id of each pixel format that generally counts up sequentially or
+  ///     jumps when a new unique channel layout begins. The last three bits, 'f', try to
+  ///     conform to the following meaning where possible: endianness (+4), floatness (+2),
+  ///     signedness (+1).
   ///   </para>
   /// </remarks>
   enum class PixelFormat {
 
-    // Last bits, not strictly enforced:
-    //  +0 = unsigned
-    //  +1 = signed
-    //  +2 = (unsigned float -- not used)
-    //  +3 = float
-    //  +4 = unsigned, little endian
-    //  +5 = signed, little endian
-    //  +6 = (unsigned float, little endian -- not used)
-    //  +7 = float, little endian
+    // The list below contains all the supported pixel formats.
+    //
+    // If your code editor supports folding, just collapse all regions to get
+    // a decent list of the supported pixel formats.
+    //
+    // Visual Studio Code/Codium users can press Ctrl + (K, 0) to collapse all
+    // regions and Ctrl + (K, J) to expand all regions.
+    //
+
+    // Last bits:
+    //  +0 = unsigned, big endian            rare
+    //  +1 = signed, big endian              rare
+    //  +2 = unsigned float, big endian      <unused>
+    //  +3 = float, big endian               <unused>
+    //  +4 = unsigned, little endian         common
+    //  +5 = signed, little endian           rare
+    //  +6 = unsigned float, little endian   <unused>
+    //  +7 = float, little endian            common
+    //
     // Note to self: yes, endianness for floats exists.
+    // But I'm not sure it is used anywhere, even on big endian machines.
+    // If it exists, the separation allows us to avoid loading serialized data wrongly.
+    //
+
+    #pragma region Format 1024-1031 | R8 (unsigned)
 
     /// <summary>8 bit unsigned single color stored in the red channel</summary>
     /// <remarks>
@@ -124,10 +170,14 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     ///   <para>
     ///     Compatible to VK_FORMAT_R8_UNORM, GL_RED+GL_UNSIGNED_BYTE, GL_R8 and
-    ///     DXGI_FORMAT_R8_UNORM. 
+    ///     DXGI_FORMAT_R8_UNORM.
     ///   </para>
     /// </remarks>
-    R8_Unsigned = (1 << 24) | (8 << 16) | 0 | 0,
+    R8_Unsigned = (1 << 24) | (8 << 16) | (0 << 14) | 1024 | 0,
+
+    #pragma endregion // Format 1024-1031 | R8 (unsigned)
+
+    #pragma region Format 1032-1039 | R16 (unsigned, float)
 
     /// <summary>16 bit unsigned single color stored in the red channel</summary>
     /// <remarks>
@@ -145,10 +195,12 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    R16_Unsigned_Native16 = (2 << 24) | (16 << 16) | 8 | 4,
+    R16_Unsigned_Native16 = (2 << 24) | (16 << 16) | (0 << 14) | 1032 | 4,
 #else
-    R16_Unsigned_Native16 = (2 << 24) | (16 << 16) | 8 | 0,
+    R16_Unsigned_Native16 = (2 << 24) | (16 << 16) | (0 << 14) | 1032 | 0,
 #endif
+
+    // CHECK: Add unsigned Flipped16 formats to exchange above format with BE systems?
 
     /// <summary>16 bit floating point single color stored in the red channel</summary>
     /// <remarks>
@@ -166,10 +218,16 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    R16_Float_Native16 = (2 << 24) | (16 << 16) | 8 | 7,
+    R16_Float_Native16 = (2 << 24) | (16 << 16) | (0 << 14) | 1032 | 7,
 #else
-    R16_Float_Native16 = (2 << 24) | (16 << 16) | 8 | 3,
+    R16_Float_Native16 = (2 << 24) | (16 << 16) | (0 << 14) | 1032 | 3,
 #endif
+
+    // CHECK: Add float flipped16 formats to exchange above format with BE systems?
+
+    #pragma endregion // Format 1032-1039 | R16 (unsigned, float)
+
+    #pragma region Format 1040-1047 | R32 (float)
 
     /// <summary>32 bit floating point single color stored in the red channel</summary>
     /// <remarks>
@@ -189,10 +247,98 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    R32_Float_Native32 = (4 << 24) | (32 << 16) | 16 | 7,
+    R32_Float_Native32 = (4 << 24) | (32 << 16) | (0 << 14) | 1040 | 7,
 #else
-    R32_Float_Native32 = (4 << 24) | (23 << 16) | 16 | 3,
+    R32_Float_Native32 = (4 << 24) | (23 << 16) | (0 << 14) | 1040 | 3,
 #endif
+
+    // CHECK: Add float flipped32 formats to exchange above format with BE systems?
+
+    #pragma endregion // Format 1040-1047 | R32 (float)
+
+    #pragma region Format 2048-2055 | A8 (unsigned)
+
+    /// <summary>8 bit unsigned opacity stored in the alpha channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     This is a good format for masks and characters in a font.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout: A₇A₆A₅A₄A₃A₂A₁A₀
+    ///   </para>
+    /// </remarks>
+    A8_Unsigned = (1 << 24) | (8 << 16) | (0 << 14) | 2048 | 0,
+
+    #pragma endregion // Format 2048-2055 | A8 (unsigned)
+
+    #pragma region Format 2056-2063 | A16 (unsigned, float)
+
+    /// <summary>16 bit unsigned opacity stored in the alpha channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     This uses the native format, so what ends up in memory depends on
+    ///     the platform the library is compiled for.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///     Memory layout BE: A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A16_Unsigned_Native16 = (2 << 24) | (16 << 16) | (0 << 14) | 2056 | 4,
+#else
+    A16_Unsigned_Native16 = (2 << 24) | (16 << 16) | (0 << 14) | 2056 | 0,
+#endif
+
+    // CHECK: Add unsigned Flipped16 formats to exchange above format with BE systems?
+
+    /// <summary>16 bit floating point opacity stored in the alpha channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     This uses the native format, so what ends up in memory depends on
+    ///     the platform the library is compiled for.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///     Memory layout BE: A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A16_Float_Native16 = (2 << 24) | (16 << 16) | (0 << 14) | 2056 | 7,
+#else
+    A16_Float_Native16 = (2 << 24) | (16 << 16) | (0 << 14) | 2056 | 3,
+#endif
+
+    // CHECK: Add float flipped16 formats to exchange above format with BE systems?
+
+    #pragma endregion // Format 1032-1039 | R16 (unsigned, float)
+
+    #pragma region Format 2064-2071 | A32 (float)
+
+    /// <summary>32 bit floating point opacity stored in the alpha channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     This uses the native format, so what ends up in memory depends on
+    ///     the platform the library is compiled for.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: A₇ A₆ A₅ A₄ A₃ A₂ A₁ A₀  | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉ A₈
+    ///                       A₂₃A₂₂A₂₁A₂₀A₁₉A₁₈A₁₇A₁₆ | A₃₁A₃₀A₂₉A₂₈A₂₇A₂₆A₂₅A₂₄
+    ///     Memory layout BE: A₃₁A₃₀A₂₉A₂₈A₂₇A₂₆A₂₅A₂₄ | A₂₃A₂₂A₂₁A₂₀A₁₉A₁₈A₁₇A₁₆
+    ///                       A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉ A₈  | A₇ A₆ A₅ A₄ A₃ A₂ A₁ A₀
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A32_Float_Native32 = (4 << 24) | (32 << 16) | (0 << 14) | 2064 | 7,
+#else
+    A32_Float_Native32 = (4 << 24) | (23 << 16) | (0 << 14) | 2064 | 3,
+#endif
+
+    // CHECK: Add float flipped32 formats to exchange above format with BE systems?
+
+    #pragma endregion // Format 2064-2071 | A32 (float)
+
+    #pragma region Format 3072-3079 | R8_G8 (unsigned)
 
     /// <summary>16 bits total with unsigned red and green channels</summary>
     /// <remarks>
@@ -209,7 +355,11 @@ namespace Nuclex { namespace Pixels {
     ///     GL_RG8 and DXGI_FORMAT_R8G8_UNORM.
     ///   </para>
     /// </remarks>
-    R8_G8_Unsigned = (2 << 24) | (16 << 16) | 1024 | 0,
+    R8_G8_Unsigned = (2 << 24) | (16 << 16) | (1 << 14) | 3072 | 0,
+
+    #pragma endregion // Format 3072-3079 | R8_G8 (unsigned)
+
+    #pragma region Format 3080-3087 | R16_G16 (unsigned, float)
 
     /// <summary>32 bits total with unsigned red and green channels</summary>
     /// <remarks>
@@ -229,9 +379,9 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    R16_G16_Unsigned_Native16 = (4 << 24) | (32 << 16) | 1032 | 4,
+    R16_G16_Unsigned_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 3080 | 4,
 #else
-    R16_G16_Unsigned_Native16 = (4 << 24) | (32 << 16) | 1032 | 0,
+    R16_G16_Unsigned_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 3080 | 0,
 #endif
 
     /// <summary>32 bits total with floating point red and green channels</summary>
@@ -252,12 +402,61 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    R16_G16_Float_Native16 = (4 << 24) | (32 << 16) | 1032 | 7,
+    R16_G16_Float_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 3080 | 7,
 #else
-    R16_G16_Float_Native16 = (4 << 24) | (32 << 16) | 1032 | 3,
+    R16_G16_Float_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 3080 | 3,
 #endif
 
-    #pragma region R5_G6_B5 and B5_G6_R5 formats
+    #pragma endregion // Format 3080-3087 | R16_G16 (unsigned, float)
+
+    #pragma region Format 4096-4103 | R8_A8 (unsigned)
+
+    /// <summary>8 bit unsigned single color with an alpha channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     Sometimes used for masks where just an intensity value isn't enough.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout: R₇R₆R₅R₄R₃R₂R₁R₀ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///   </para>
+    ///   <para>
+    ///     Graphics APIs usually use an R8_G8 pixel format to store this as the meaning
+    ///     of the channels is up to the shader anyway. Here the format is used to
+    ///     semantically distinguish between R8G8 as used for normals and R8A8 as found
+    ///     in grayscale + alpha PNG files.
+    ///   </para>
+    /// </remarks>
+    R8_A8_Unsigned = (2 << 24) | (16 << 16) | (1 << 14) | 4096 | 0,
+
+    /// <summary>8 bit unsigned single color with an alpha channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     Sometimes used for masks where just an inzzzaa  tensity value isn't enough.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///                       A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///     Memory layout BE: R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                       A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///   </para>
+    ///   <para>
+    ///     Graphics APIs usually use an R16_G16 pixel format to store this as the meaning
+    ///     of the channels is up to the shader anyway. Here the format is used to
+    ///     semantically distinguish between R16G16 as used for normals and R16A16 as found
+    ///     in grayscale + alpha PNG files.
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    R16_A16_Unsigned_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 4096 | 4,
+#else
+    R16_A16_Unsigned_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 4096 | 0,
+#endif
+
+    // CHECK: Add unsigned flipped32 formats to exchange above format with BE systems?
+
+    #pragma endregion // Format 4096-4103 | R8_A8 (unsigned)
+
+    #pragma region Format 5120-5127 | R5_G6_B5 (unsigned)
 
     /// <summary>16 bit in memory order with three colors<summary>
     /// <remarks>
@@ -268,7 +467,7 @@ namespace Nuclex { namespace Pixels {
     ///     Memory layout: R₄R₃R₂R₁R₀G₅G₄G₃ | G₂G₁G₀B₄B₃B₂B₁B₀
     ///   </para>
     /// </remarks>
-    R5_G6_B5_Unsigned = (2 << 24) | (16 << 16) | 2048 | 0,
+    R5_G6_B5_Unsigned = (2 << 24) | (16 << 16) | (2 << 14) | 5120 | 0,
 
     /// <summary>16 bit in native endianness with three colors<summary>
     /// <remarks>
@@ -287,7 +486,7 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    R5_G6_B5_Unsigned_Native16 = (2 << 24) | (16 << 16) | 2048 | 4,
+    R5_G6_B5_Unsigned_Native16 = (2 << 24) | (16 << 16) | (2 << 14) | 5120 | 4,
 #else
     R5_G6_B5_Unsigned_Native16 = R5_G6_B5_Unsigned,
 #endif
@@ -306,8 +505,12 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     R5_G6_B5_Unsigned_Flipped16 = R5_G6_B5_Unsigned,
 #else
-    R5_G6_B5_Unsigned_Flipped16 = (2 << 24) | (16 << 16) | 2048 | 4,
+    R5_G6_B5_Unsigned_Flipped16 = (2 << 24) | (16 << 16) | (2 << 14) | 5120 | 4,
 #endif
+
+    #pragma endregion // Format 5120-5127 | R5_G6_B5 (unsigned)
+
+    #pragma region Format 5128-5135 | B5_G6_R5 (unsigned)
 
     /// <summary>16 bit in memory order with three colors<summary>
     /// <remarks>
@@ -318,7 +521,7 @@ namespace Nuclex { namespace Pixels {
     ///     Memory layout: B₄B₃B₂B₁B₀G₅G₄G₃ | G₂G₁G₀R₄R₃R₂R₁R₀
     ///   </para>
     /// </remarks>
-    B5_G6_R5_Unsigned = (2 << 24) | (16 << 16) | 2056 | 0,
+    B5_G6_R5_Unsigned = (2 << 24) | (16 << 16) | (2 << 14) | 5128 | 0,
 
     /// <summary>16 bit in native endianness with three colors<summary>
     /// <remarks>
@@ -336,7 +539,7 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    B5_G6_R5_Unsigned_Native16 = (2 << 24) | (16 << 16) | 2056 | 4,
+    B5_G6_R5_Unsigned_Native16 = (2 << 24) | (16 << 16) | (2 << 14) | 5128 | 4,
 #else
     B5_G6_R5_Unsigned_Native16 = B5_G6_R5_Unsigned,
 #endif
@@ -355,12 +558,12 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     B5_G6_R5_Unsigned_Flipped16 = B5_G6_R5_Unsigned,
 #else
-    B5_G6_R5_Unsigned_Flipped16 = (2 << 24) | (16 << 16) | 2056 | 4,
+    B5_G6_R5_Unsigned_Flipped16 = (2 << 24) | (16 << 16) | (2 << 14) | 5128 | 4,
 #endif
 
-    #pragma endregion // R5_G6_B5 and B5_G6_R5 formats
+    #pragma endregion // Format 5128-5135 | B5_G6_R5 (unsigned)
 
-    #pragma region R8_G8_B8 and B8_G8_R8 formats
+    #pragma region Format 5136-5143 | R8_G8_B8 (unsigned, signed)
 
     /// <summary>24 bits total with unsigned red, green and blue channels</summary>
     /// <remarks>
@@ -376,7 +579,7 @@ namespace Nuclex { namespace Pixels {
     ///     GL_RGB+GL_UNSIGNED_BYTE and GL_RGB8.
     ///   </para>
     /// </remarks>
-    R8_G8_B8_Unsigned = (3 << 24) | (24 << 16) | 3072 | 0,
+    R8_G8_B8_Unsigned = (3 << 24) | (24 << 16) | (2 << 14) | 5136 | 0,
 
     /// <summary>16 bits total with signed red, green and blue channels</summary>
     /// <summary>24 bits total with unsigned red, green and blue channels</summary>
@@ -393,7 +596,11 @@ namespace Nuclex { namespace Pixels {
     ///     Compatible with VK_FORMAT_R8G8B8_SNORM and GL_RGB+GL_BYTE
     ///   </para>
     /// </remarks>
-    R8_G8_B8_Signed = (3 << 24) | (24 << 16) | 3072 | 1,
+    R8_G8_B8_Signed = (3 << 24) | (24 << 16) | (2 << 14) | 5136 | 1,
+
+    #pragma endregion // Format 5136-5143 | R8_G8_B8 (unsigned, signed)
+
+    #pragma region Format 5144-5151 | B8_G8_R8 (unsigned, signed)
 
     /// <summary>24 bits total with unsigned blue, green and red channels</summary>
     /// <remarks>
@@ -408,7 +615,7 @@ namespace Nuclex { namespace Pixels {
     ///     GL_BGR+GL_UNSIGNED_BYTE
     ///   </para>
     /// </remarks>
-    B8_G8_R8_Unsigned = (3 << 24) | (24 << 16) | 3080 | 0,
+    B8_G8_R8_Unsigned = (3 << 24) | (24 << 16) | (2 << 14) | 5144 | 0,
 
     /// <summary>24 bits total with signed blue, green and red channels</summary>
     /// <remarks>
@@ -423,11 +630,11 @@ namespace Nuclex { namespace Pixels {
     ///     Compatible with VK_FORMAT_B8G8R8_SNORM and GL_RGB+GL_BYTE
     ///   </para>
     /// </remarks>
-    B8_G8_R8_Signed = (3 << 24) | (24 << 16) | 3080 | 1,
+    B8_G8_R8_Signed = (3 << 24) | (24 << 16) | (2 << 14) | 5144 | 1,
 
-    #pragma endregion // R8_G8_B8 and B8_G8_R8 formats
+    #pragma endregion // Format 5144-5151 | B8_G8_R8 (unsigned, signed)
 
-    #pragma region A8_B8_G8_R8 + R8_G8_B8_A8 formats
+    #pragma region Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (unsigned)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -442,7 +649,7 @@ namespace Nuclex { namespace Pixels {
     ///     Compatible with SDL_PIXELFORMAT_ABGR32
     ///   </para>
     /// </remarks>
-    A8_B8_G8_R8_Unsigned = (4 << 24) | (32 << 16) | 4096 | 0,
+    A8_B8_G8_R8_Unsigned = (4 << 24) | (32 << 16) | (3 << 14) | 6144 | 0,
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -460,7 +667,7 @@ namespace Nuclex { namespace Pixels {
     ///     GL_RGBA+GL_UNSIGNED_BYTE, GL_RGBA8 and DXGI_FORMAT_R8G8B8A8_UNORM.
     ///   </para>
     /// </remarks>
-    R8_G8_B8_A8_Unsigned = (4 << 24) | (32 << 16) | 4096 | 4,
+    R8_G8_B8_A8_Unsigned = (4 << 24) | (32 << 16) | (3 << 14) | 6144 | 4,
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -476,7 +683,7 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     ///   <para>
     ///     Compatible with VK_FORMAT_A8B8G8R8_UNORM_PACK32, SDL_PIXELFORMAT_ABGR8888
-    ///     and GL_RGBA+GL_UNSIGNED_INT_8_8_8_8
+    ///     and GL_RGBA+GL_UNSIGNED_INT_8_8_8_8.
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
@@ -546,11 +753,11 @@ namespace Nuclex { namespace Pixels {
     R8_G8_B8_A8_Unsigned_Flipped32 = A8_B8_G8_R8_Unsigned,
 #endif
 
-    #pragma endregion // A8_B8_G8_R8 + R8_G8_B8_A8 formats
+    #pragma endregion // Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (unsigned)
 
     // ----- Everything below here needs to be checked for API compatibility still -----
 
-    #pragma region A8_B8_G8_R8 + R8_G8_B8_A8 signed formats
+    #pragma region Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (signed)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -563,7 +770,7 @@ namespace Nuclex { namespace Pixels {
     ///                   G₇G₆G₅G₄G₃G₂G₁G₀ R₇R₆R₅R₄R₃R₂R₁R₀
     ///   </para>
     /// </remarks>
-    A8_B8_G8_R8_Signed = (4 << 24) | (32 << 16) | 4096 | 1,
+    A8_B8_G8_R8_Signed = (4 << 24) | (32 << 16) | (3 << 14) | 6144 | 1,
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -579,7 +786,7 @@ namespace Nuclex { namespace Pixels {
     ///     Compatible to DXGI_FORMAT_R8G8B8A8_SNORM
     ///   </para>
     /// </remarks>
-    R8_G8_B8_A8_Signed = (4 << 24) | (32 << 16) | 4096 | 5,
+    R8_G8_B8_A8_Signed = (4 << 24) | (32 << 16) | (3 << 14) | 6144 | 5,
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -664,9 +871,69 @@ namespace Nuclex { namespace Pixels {
     R8_G8_B8_A8_Signed_Flipped32 = A8_B8_G8_R8_Signed,
 #endif
 
-    #pragma endregion // A8_B8_G8_R8 and R8_G8_B8_A8 signed formats
+    #pragma endregion // Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (signed)
 
-    #pragma region A16_B16_G16_R16 + R16_G16_B16_A16 float formats
+    #pragma region Format 6152-6159 | A16_B16_G16_R16 (unsigned, float)
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     A 64 bit format with static byte order, useful for storage or offline video
+    ///     processing at high fidelity to prevent banding.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///                   B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///                   G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                   R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///   </para>
+    /// </remarks>
+    A16_B16_G16_R16_Unsigned = (8 << 24) | (64 << 16) | (3 << 14) | 6152 | 0,
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     A 64 bit format with unsigned integer values in native byte order.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///                       B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///     Memory layout BE: A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///                       B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A16_B16_G16_R16_Unsigned_Native16 = (8 << 24) | (64 << 16) | (3 << 14) | 6152 | 4,
+#else
+    A16_B16_G16_R16_Unsigned_Native16 = A16_B16_G16_R16_Unsigned,
+#endif
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     This uses the native format, so what ends up in memory depends
+    ///     on the platform the library is compiled for.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///                       B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///     Memory layout BE: A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///                       B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A16_B16_G16_R16_Unsigned_Flipped16 = A16_B16_G16_R16_Unsigned,
+#else
+    A16_B16_G16_R16_Unsigned_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6152 | 4,
+#endif
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
     /// <remarks>
@@ -680,7 +947,7 @@ namespace Nuclex { namespace Pixels {
     ///                   R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
     ///   </para>
     /// </remarks>
-    A16_B16_G16_R16_Float = (8 << 24) | (64 << 16) | 4104 | 3,
+    A16_B16_G16_R16_Float = (8 << 24) | (64 << 16) | (3 << 14) | 6152 | 3,
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
     /// <remarks>
@@ -700,7 +967,7 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    A16_B16_G16_R16_Float_Native16 = (8 << 24) | (64 << 16) | 4104 | 7,
+    A16_B16_G16_R16_Float_Native16 = (8 << 24) | (64 << 16) | (3 << 14) | 6152 | 7,
 #else
     A16_B16_G16_R16_Float_Native16 = A16_B16_G16_R16_Float,
 #endif
@@ -725,7 +992,71 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     A16_B16_G16_R16_Float_Flipped16 = A16_B16_G16_R16_Float,
 #else
-    A16_B16_G16_R16_Float_Flipped16 = (8 << 24) | (64 << 16) | 4104 | 7,
+    A16_B16_G16_R16_Float_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6152 | 7,
+#endif
+
+    #pragma endregion // Format 6152-6159 | A16_B16_G16_R16 (unsigned, float)
+
+    #pragma region Format 6160-6167 | R16_G16_B16_A16 (unsigned, float)
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     A 64 bit format with static byte order, useful for storage.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                   G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                   B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///                   A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///   </para>
+    /// </remarks>
+    R16_G16_B16_A16_Unsigned = (8 << 24) | (64 << 16) | (3 << 14) | 6160 | 3,
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     A 64 bit format with Unsigneding point values in native byte order,
+    ///     widely what GPUs and 3D APIs expect.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///                       A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///     Memory layout BE: R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///                       A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    R16_G16_B16_A16_Unsigned_Native16 = (8 << 24) | (64 << 16) | (3 << 14) | 6160 | 7,
+#else
+    R16_G16_B16_A16_Unsigned_Native16 = R16_G16_B16_A16_Unsigned,
+#endif
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     This uses the native format, so what ends up in memory depends
+    ///     on the platform the library is compiled for.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///                       A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///     Memory layout BE: R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///                       A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    R16_G16_B16_A16_Unsigned_Flipped16 = R16_G16_B16_A16_Unsigned,
+#else
+    R16_G16_B16_A16_Unsigned_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6160 | 7,
 #endif
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
@@ -740,7 +1071,7 @@ namespace Nuclex { namespace Pixels {
     ///                   A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
     ///   </para>
     /// </remarks>
-    R16_G16_B16_A16_Float = (8 << 24) | (64 << 16) | 4112 | 3,
+    R16_G16_B16_A16_Float = (8 << 24) | (64 << 16) | (3 << 14) | 6160 | 3,
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
     /// <remarks>
@@ -749,10 +1080,10 @@ namespace Nuclex { namespace Pixels {
     ///     widely what GPUs and 3D APIs expect.
     ///   </para>
     ///   <para>
-    ///     Memory layout LE: R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ 
-    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ 
-    ///                       B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ 
-    ///                       A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ 
+    ///     Memory layout LE: R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///                       A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
     ///     Memory layout BE: R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
     ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
     ///                       B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
@@ -760,7 +1091,7 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    R16_G16_B16_A16_Float_Native16 = (8 << 24) | (64 << 16) | 4112 | 7,
+    R16_G16_B16_A16_Float_Native16 = (8 << 24) | (64 << 16) | (3 << 14) | 6160 | 7,
 #else
     R16_G16_B16_A16_Float_Native16 = R16_G16_B16_A16_Float,
 #endif
@@ -776,21 +1107,23 @@ namespace Nuclex { namespace Pixels {
     ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
     ///                       B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
     ///                       A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
-    ///     Memory layout BE: R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ 
-    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ 
-    ///                       B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ 
-    ///                       A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ 
+    ///     Memory layout BE: R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///                       A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     R16_G16_B16_A16_Float_Flipped16 = R16_G16_B16_A16_Float,
 #else
-    R16_G16_B16_A16_Float_Flipped16 = (8 << 24) | (64 << 16) | 4112 | 7,
+    R16_G16_B16_A16_Float_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6160 | 7,
 #endif
 
-    #pragma endregion // A16_B16_G16_R16 and R16_G16_B16_A16 float formats
+    #pragma endregion // Format 6160-6167 | R16_G16_B16_A16 (unsigned, float)
 
-    #pragma region A32_B32_G32_R32 + R32_G32_B32_A32 float formats
+    // TODO: Insert A16_B16_G16_R16_Signed and R16_G16_B16_A16_Signed
+
+    #pragma region Format 6168-6175 | A32_B32_G32_R32 (float)
 
     /// <summary>128 bit color with alpha using 32 bits for each channel</summary>
     /// <remarks>
@@ -808,7 +1141,7 @@ namespace Nuclex { namespace Pixels {
     ///                   R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉ R₈  | R₇ R₆ R₅ R₄ R₃ R₂ R₁ R₀
     ///   </para>
     /// </remarks>
-    A32_B32_G32_R32_Float = (16 << 24) | (128 << 16) | 4120 | 3,
+    A32_B32_G32_R32_Float = (16 << 24) | (128 << 16) | (3 << 14) | 6168 | 3,
 
     /// <summary>128 bit color with alpha using 32 bits for each channel</summary>
     /// <remarks>
@@ -836,7 +1169,7 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    A32_B32_G32_R32_Float_Native32 = (16 << 24) | (64 << 16) | 4120 | 7,
+    A32_B32_G32_R32_Float_Native32 = (16 << 24) | (64 << 16) | (3 << 14) | 6168 | 7,
 #else
     A32_B32_G32_R32_Float_Native32 = A32_B32_G32_R32_Float,
 #endif
@@ -869,8 +1202,12 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     A32_B32_G32_R32_Float_Flipped32 = A32_B32_G32_R32_Float,
 #else
-    A32_B32_G32_R32_Float_Flipped32 = (16 << 24) | (64 << 16) | 4120 | 7,
+    A32_B32_G32_R32_Float_Flipped32 = (16 << 24) | (64 << 16) | (3 << 14) | 6168 | 7,
 #endif
+
+    #pragma endregion // Format 6168-6175 | A32_B32_G32_R32 (float)
+
+    #pragma region Format 6176-6183 | R32_G32_B32_A32 (float)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -888,7 +1225,7 @@ namespace Nuclex { namespace Pixels {
     ///                   A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉ A₈  | A₇ A₆ A₅ A₄ A₃ A₂ A₁ A₀
     ///   </para>
     /// </remarks>
-    R32_G32_B32_A32_Float = (16 << 24) | (128 << 16) | 4128 | 3,
+    R32_G32_B32_A32_Float = (16 << 24) | (128 << 16) | (3 << 14) | 6176 | 3,
 
     /// <summary>128 bit color with alpha using 32 bits for each channel</summary>
     /// <remarks>
@@ -916,7 +1253,7 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    R32_G32_B32_A32_Float_Native32 = (16 << 24) | (64 << 16) | 4128 | 7,
+    R32_G32_B32_A32_Float_Native32 = (16 << 24) | (64 << 16) | (3 << 14) | 6176 | 7,
 #else
     R32_G32_B32_A32_Float_Native32 = R32_G32_B32_A32_Float,
 #endif
@@ -949,12 +1286,12 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     R32_G32_B32_A32_Float_Flipped32 = R32_G32_B32_A32_Float,
 #else
-    R32_G32_B32_A32_Float_Flipped32 = (16 << 24) | (64 << 16) | 4128 | 7,
+    R32_G32_B32_A32_Float_Flipped32 = (16 << 24) | (64 << 16) | (3 << 14) | 6176 | 7,
 #endif
 
     #pragma endregion // A32_B32_G32_R32 and R32_G32_B32_A32 float formats
 
-    #pragma region B8_G8_R8_A8 + A8_R8_G8_B8 formats
+    #pragma region Format 6184-6191 | B8_G8_R8_A8 / A8_R8_G8_B8 (unsigned)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -966,7 +1303,7 @@ namespace Nuclex { namespace Pixels {
     ///                   R₇R₆R₅R₄R₃R₂R₁R₀ A₇A₆A₅A₄A₃A₂A₁A₀
     ///   </para>
     /// </remarks>
-    B8_G8_R8_A8_Unsigned = (4 << 24) | (32 << 16) | 5120 | 0,
+    B8_G8_R8_A8_Unsigned = (4 << 24) | (32 << 16) | (3 << 14) | 6184 | 0,
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -975,10 +1312,10 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     ///   <para>
     ///     Memory layout: A₇A₆A₅A₄A₃A₂A₁A₀ R₇R₆R₅R₄R₃R₂R₁R₀
-    ///                    G₇G₆G₅G₄G₃G₂G₁G₀ B₇B₆B₅B₄B₃B₂B₁B₀ 
+    ///                    G₇G₆G₅G₄G₃G₂G₁G₀ B₇B₆B₅B₄B₃B₂B₁B₀
     ///   </para>
     /// </remarks>
-    A8_R8_G8_B8_Unsigned = (4 << 24) | (32 << 16) | 5120 | 4,
+    A8_R8_G8_B8_Unsigned = (4 << 24) | (32 << 16) | (3 << 14) | 6184 | 4,
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -1018,9 +1355,47 @@ namespace Nuclex { namespace Pixels {
     B8_G8_R8_A8_Unsigned_Flipped32 = A8_R8_G8_B8_Unsigned,
 #endif
 
+    /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     This is in native layout, so what ends up in memory
+    ///     is different depending on endianness.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: B₇B₆B₅B₄B₃B₂B₁B₀ G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       R₇R₆R₅R₄R₃R₂R₁R₀ A₇A₆A₅A₄A₃A₂A₁A₀
+    ///     Memory layout BE: A₇A₆A₅A₄A₃A₂A₁A₀ R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ B₇B₆B₅B₄B₃B₂B₁B₀
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A8_R8_G8_B8_Unsigned_Native32 = B8_G8_R8_A8_Unsigned,
+#else
+    A8_R8_G8_B8_Unsigned_Native32 = A8_R8_G8_B8_Unsigned,
+#endif
+
+    /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     This is in native layout, so what ends up in memory is different
+    ///     depending on endianness.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: A₇A₆A₅A₄A₃A₂A₁A₀ R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ B₇B₆B₅B₄B₃B₂B₁B₀
+    ///     Memory layout BE: B₇B₆B₅B₄B₃B₂B₁B₀ G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       R₇R₆R₅R₄R₃R₂R₁R₀ A₇A₆A₅A₄A₃A₂A₁A₀
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A8_R8_G8_B8_Unsigned_Flipped32 = A8_R8_G8_B8_Unsigned,
+#else
+    A8_R8_G8_B8_Unsigned_Flipped32 = B8_G8_R8_A8_Unsigned,
+#endif
+
     #pragma endregion // B8_G8_R8_A8 + A8_R8_G8_B8 formats
 
-    #pragma region B8_G8_R8_A8 + A8_R8_G8_B8 signed formats
+    #pragma region Format 6192-6199 | B8_G8_R8_A8 / A8_R8_G8_B8 (signed)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -1033,7 +1408,7 @@ namespace Nuclex { namespace Pixels {
     ///                   R₇R₆R₅R₄R₃R₂R₁R₀ A₇A₆A₅A₄A₃A₂A₁A₀
     ///   </para>
     /// </remarks>
-    B8_G8_R8_A8_Signed = (4 << 24) | (32 << 16) | 5128 | 1,
+    B8_G8_R8_A8_Signed = (4 << 24) | (32 << 16) | (3 << 14) | 6192 | 1,
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -1046,7 +1421,7 @@ namespace Nuclex { namespace Pixels {
     ///                    G₇G₆G₅G₄G₃G₂G₁G₀ B₇B₆B₅B₄B₃B₂B₁B₀
     ///   </para>
     /// </remarks>
-    A8_R8_G8_B8_Signed = (4 << 24) | (32 << 16) | 5128 | 5,
+    A8_R8_G8_B8_Signed = (4 << 24) | (32 << 16) | (3 << 14) | 6192 | 5,
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -1128,9 +1503,9 @@ namespace Nuclex { namespace Pixels {
     A8_R8_G8_B8_Signed_Flipped32 = B8_G8_R8_A8_Signed,
 #endif
 
-    #pragma endregion // B8_G8_R8_A8 and A8_R8_G8_B8 signed formats
+    #pragma endregion // Format 6192-6199 | B8_G8_R8_A8 / A8_R8_G8_B8 (signed)
 
-    #pragma region B16_G16_R16_A16 + A16_R16_G16_B16 float formats
+    #pragma region Format 6200-6207 | B16_G16_R16_A16 (unsigned, float)
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
     /// <remarks>
@@ -1144,7 +1519,66 @@ namespace Nuclex { namespace Pixels {
     ///                   A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
     ///   </para>
     /// </remarks>
-    B16_G16_R16_A16_Float = (8 << 24) | (64 << 16) | 8192 | 3,
+    B16_G16_R16_A16_Unsigned = (8 << 24) | (64 << 16) | (3 << 14) | 6200 | 0,
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     A 64 bit format with unsigned integers in native byte order.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///                       A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///     Memory layout BE: B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                       A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    B16_G16_R16_A16_Unsigned_Native16 = (8 << 24) | (64 << 16) | (3 << 14) | 6200 | 4,
+#else
+    B16_G16_R16_A16_Unsigned_Native16 = B16_G16_R16_A16_Unsigned,
+#endif
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     This uses the native format, so what ends up in memory depends
+    ///     on the platform the library is compiled for.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                       A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///     Memory layout BE: B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///                       A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    B16_G16_R16_A16_Unsigned_Flipped16 = B16_G16_R16_A16_Unsigned,
+#else
+    B16_G16_R16_A16_Unsigned_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6200 | 4,
+#endif
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     A 64 bit format with static byte order, useful for storage.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///                   G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                   R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                   A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///   </para>
+    /// </remarks>
+    B16_G16_R16_A16_Float = (8 << 24) | (64 << 16) | (3 << 14) | 6200 | 3,
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
     /// <remarks>
@@ -1164,7 +1598,7 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    B16_G16_R16_A16_Float_Native16 = (8 << 24) | (64 << 16) | 8192 | 7,
+    B16_G16_R16_A16_Float_Native16 = (8 << 24) | (64 << 16) | (3 << 14) | 6200 | 7,
 #else
     B16_G16_R16_A16_Float_Native16 = B16_G16_R16_A16_Float,
 #endif
@@ -1189,7 +1623,70 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     B16_G16_R16_A16_Float_Flipped16 = B16_G16_R16_A16_Float,
 #else
-    B16_G16_R16_A16_Float_Flipped16 = (8 << 24) | (64 << 16) | 8192 | 7,
+    B16_G16_R16_A16_Float_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6200 | 7,
+#endif
+
+    #pragma endregion // Format 6200-6207 | B16_G16_R16_A16 (unsigned, float)
+
+    #pragma region Format 6208-6215 | A16_R16_G16_B16 (unsigned, float)
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     A 64 bit format with static byte order, useful for storage.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///                   R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                   G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                   B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///   </para>
+    /// </remarks>
+    A16_R16_G16_B16_Unsigned = (8 << 24) | (64 << 16) | (3 << 14) | 6208 | 0,
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     A 64 bit format with unsigned integer values in native byte order.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///                       R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///     Memory layout BE: A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///                       R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A16_R16_G16_B16_Unsigned_Native16 = (8 << 24) | (64 << 16) | (3 << 14) | 6208 | 4,
+#else
+    A16_R16_G16_B16_Unsigned_Native16 = A16_R16_G16_B16_Unsigned,
+#endif
+
+    /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     This uses the native format, so what ends up in memory depends
+    ///     on the platform the library is compiled for.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈ | A₇A₆A₅A₄A₃A₂A₁A₀
+    ///                       R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///     Memory layout BE: A₇A₆A₅A₄A₃A₂A₁A₀ | A₁₅A₁₄A₁₃A₁₂A₁₁A₁₀A₉A₈
+    ///                       R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A16_R16_G16_B16_Unsigned_Flipped16 = A16_R16_G16_B16_Unsigned,
+#else
+    A16_R16_G16_B16_Unsigned_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6208 | 4,
 #endif
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
@@ -1204,7 +1701,7 @@ namespace Nuclex { namespace Pixels {
     ///                   B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
     ///   </para>
     /// </remarks>
-    A16_R16_G16_B16_Float = (8 << 24) | (64 << 16) | 8200 | 3,
+    A16_R16_G16_B16_Float = (8 << 24) | (64 << 16) | (3 << 14) | 6208 | 3,
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
     /// <remarks>
@@ -1224,7 +1721,7 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    A16_R16_G16_B16_Float_Native16 = (8 << 24) | (64 << 16) | 8200 | 7,
+    A16_R16_G16_B16_Float_Native16 = (8 << 24) | (64 << 16) | (3 << 14) | 6208 | 7,
 #else
     A16_R16_G16_B16_Float_Native16 = A16_R16_G16_B16_Float,
 #endif
@@ -1249,12 +1746,71 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     A16_R16_G16_B16_Float_Flipped16 = A16_R16_G16_B16_Float,
 #else
-    A16_R16_G16_B16_Float_Flipped16 = (8 << 24) | (64 << 16) | 8200 | 7,
+    A16_R16_G16_B16_Float_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6208 | 7,
 #endif
 
-    #pragma endregion // B16_G16_R16_A16 and A16_R16_G16_B16 float formats
+    #pragma endregion // Format 6208-6215 | A16_R16_G16_B16 (unsigned, float)
 
-    #pragma region A2_R10_G10_B10 and A2_B10_G10_R10 formats
+    // TODO: Insert B16_G16_R16_A16_Signed and A16_R16_G16_B16_Signed
+
+    #pragma region Format 7168-7175 | A2_B10_G10_R10 (unsigned)
+
+    /// <summary>32 bit in memory order with three colors<summary>
+    /// <remarks>
+    ///   <para>
+    ///     Space-saving RGB format.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout: A₁A₀B₉B₈B₇B₆B₅B₄ | B₃B₂B₁B₀G₉G₈G₇G₆
+    ///                    G₅G₄G₃G₂G₁G₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///   </para>
+    /// </remarks>
+    A2_B10_G10_R10_Unsigned = (4 << 24) | (32 << 16) | (3 << 14) | 7168 | 0,
+
+    /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
+    /// <remarks>
+    ///   <para>
+    ///     This uses the native format, so what ends up in memory depends
+    ///     on the platform the library is compiled for.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: R₇R₆R₅R₄R₃R₂R₁R₀ | G₅G₄G₃G₂G₁G₀R₉R₈
+    ///                       B₃B₂B₁B₀G₉G₈G₇G₆ | A₁A₀B₉B₈B₇B₆B₅B₄
+    ///     Memory layout BE: A₁A₀B₉B₈B₇B₆B₅B₄ | B₃B₂B₁B₀G₉G₈G₇G₆
+    ///                       G₅G₄G₃G₂G₁G₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///   </para>
+    ///   <para>
+    ///     Compatible with VK_FORMAT_A2B10G10R10_UNORM_PACK32.
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A2_B10_G10_R10_Unsigned_Native32 = (4 << 24) | (32 << 16) | (3 << 14) | 7168 | 4,
+#else
+    A2_B10_G10_R10_Unsigned_Native32 = A2_B10_G10_R10_Unsigned,
+#endif
+
+    /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
+    /// <remarks>
+    ///   <para>
+    ///     This uses the native format, so what ends up in memory depends
+    ///     on the platform the library is compiled for.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: A₁A₀B₉B₈B₇B₆B₅B₄ | B₃B₂B₁B₀G₉G₈G₇G₆
+    ///                       G₅G₄G₃G₂G₁G₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///     Memory layout BE: R₇R₆R₅R₄R₃R₂R₁R₀ | G₅G₄G₃G₂G₁G₀R₉R₈
+    ///                       B₃B₂B₁B₀G₉G₈G₇G₆ | A₁A₀B₉B₈B₇B₆B₅B₄
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    A2_B10_G10_R10_Unsigned_Flipped32 = A2_B10_G10_R10_Unsigned,
+#else
+    A2_B10_G10_R10_Unsigned_Flipped32 = (4 << 24) | (32 << 16) | (3 << 14) | 7168 | 4,
+#endif
+
+    #pragma endregion // Format 7168-7175 | A2_B10_G10_R10 (unsigned)
+
+    #pragma region Format 7176-7183 | A2_R10_G10_B10 (unsigned)
 
     /// <summary>32 bit in memory order with three colors<summary>
     /// <remarks>
@@ -1266,7 +1822,7 @@ namespace Nuclex { namespace Pixels {
     ///                    G₅G₄G₃G₂G₁G₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
     ///   </para>
     /// </remarks>
-    A2_R10_G10_B10_Unsigned = (4 << 24) | (32 << 16) | 6144 | 0,
+    A2_R10_G10_B10_Unsigned = (4 << 24) | (32 << 16) | (3 << 14) | 7176 | 0,
 
     /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
     /// <remarks>
@@ -1286,9 +1842,9 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    A2_R10_G10_B10_Unsigned_Native16 = (4 << 24) | (32 << 16) | 6144 | 4,
+    A2_R10_G10_B10_Unsigned_Native32 = (4 << 24) | (32 << 16) | (3 << 14) | 7176 | 4,
 #else
-    A2_R10_G10_B10_Unsigned_Native16 = A2_R10_G10_B10_Unsigned,
+    A2_R10_G10_B10_Unsigned_Native32 = A2_R10_G10_B10_Unsigned,
 #endif
 
     /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
@@ -1305,71 +1861,14 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    A2_R10_G10_B10_Unsigned_Flipped16 = A2_R10_G10_B10_Unsigned,
+    A2_R10_G10_B10_Unsigned_Flipped32 = A2_R10_G10_B10_Unsigned,
 #else
-    A2_R10_G10_B10_Unsigned_Flipped16 = (4 << 24) | (32 << 16) | 6144 | 4,
+    A2_R10_G10_B10_Unsigned_Flipped32 = (4 << 24) | (32 << 16) | (3 << 14) | 7176 | 4,
 #endif
 
-    /// <summary>32 bit in memory order with three colors<summary>
-    /// <remarks>
-    ///   <para>
-    ///     Space-saving RGB format.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout: A₁A₀B₉B₈B₇B₆B₅B₄ | B₃B₂B₁B₀G₉G₈G₇G₆
-    ///                    G₅G₄G₃G₂G₁G₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
-    ///   </para>
-    /// </remarks>
-    A2_B10_G10_R10_Unsigned = (4 << 24) | (32 << 16) | 6152 | 0,
-
-    /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
-    /// <remarks>
-    ///   <para>
-    ///     This uses the native format, so what ends up in memory depends
-    ///     on the platform the library is compiled for.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout LE: R₇R₆R₅R₄R₃R₂R₁R₀ | G₅G₄G₃G₂G₁G₀R₉R₈
-    ///                       B₃B₂B₁B₀G₉G₈G₇G₆ | A₁A₀B₉B₈B₇B₆B₅B₄
-    ///     Memory layout BE: A₁A₀B₉B₈B₇B₆B₅B₄ | B₃B₂B₁B₀G₉G₈G₇G₆
-    ///                       G₅G₄G₃G₂G₁G₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
-    ///   </para>
-    ///   <para>
-    ///     Compatible with VK_FORMAT_A2B10G10R10_UNORM_PACK32.
-    ///   </para>
-    /// </remarks>
-#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    A2_B10_G10_R10_Unsigned_Native16 = (4 << 24) | (32 << 16) | 6152 | 4,
-#else
-    A2_B10_G10_R10_Unsigned_Native16 = A2_B10_G10_R10_Unsigned,
-#endif
-
-    /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
-    /// <remarks>
-    ///   <para>
-    ///     This uses the native format, so what ends up in memory depends
-    ///     on the platform the library is compiled for.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout LE: A₁A₀B₉B₈B₇B₆B₅B₄ | B₃B₂B₁B₀G₉G₈G₇G₆
-    ///                       G₅G₄G₃G₂G₁G₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
-    ///     Memory layout BE: R₇R₆R₅R₄R₃R₂R₁R₀ | G₅G₄G₃G₂G₁G₀R₉R₈
-    ///                       B₃B₂B₁B₀G₉G₈G₇G₆ | A₁A₀B₉B₈B₇B₆B₅B₄
-    ///   </para>
-    /// </remarks>
-#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    A2_B10_G10_R10_Unsigned_Flipped16 = A2_B10_G10_R10_Unsigned,
-#else
-    A2_B10_G10_R10_Unsigned_Flipped16 = (4 << 24) | (32 << 16) | 6152 | 4,
-#endif
-
-    #pragma endregion // A2_R10_G10_B10 and A2_B10_G10_R10 formats
+    #pragma endregion // Format 7176-7183 | A2_R10_G10_B10 (unsigned)
 
   };
-
-  //#define SMALLEST_UNIT(size) (size << 24)
-  //#define BITS_PER_PIXEL(count) (count << 16)
-  //#define ID(number) (number)
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -1411,6 +1910,28 @@ namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
 
+  /// <summary>Reports the number of color channels in a pixel format</summary>
+  /// <param name="pixelFormat">Pixel format whose color channels to count</param>
+  /// <returns>The number of color channels in the pixel format</returns>
+  constexpr inline std::size_t CountChannels(PixelFormat pixelFormat) {
+    return ((static_cast<std::size_t>(pixelFormat) >> 14) & 3) + 1;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+#if 0 // In considered embedding this information in enum values, currently it's not there.
+  /// <summary>
+  ///   Determines the number of color channels stored per pixel
+  /// </summary>
+  /// <param name="pixelFormat">
+  ///   Pixel format for which the channel count will be determined
+  /// </param>
+  /// <returns>The number of color channels stored for each pixel in the format</returns>
+  constexpr inline std::size_t CountChannels(PixelFormat pixelFormat) {
+    return (static_cast<std::size_t>(pixelFormat) & 0x00E00000) >> 21;
+  }
+#endif
+  // ------------------------------------------------------------------------------------------- //
+#if 1 // I'm probably going to drop BCx support as a PixelFormat for the Bitmap class
   /// <summary>Determines the size of the smallest interdepenent pixel block</summary>
   /// <param name="pixelFormat">
   ///   Pixel format whose smallest interdependent block size will be returned
@@ -1437,7 +1958,7 @@ namespace Nuclex { namespace Pixels {
       }
     }
   }
-
+#endif
   // ------------------------------------------------------------------------------------------- //
 
 }} // namespace Nuclex::Pixels
