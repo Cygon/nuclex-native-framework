@@ -1,5 +1,5 @@
 #!/usr/bin/cmake
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.15)
 
 # -------------------------------------------------------------------------------------------------
 
@@ -9,67 +9,95 @@ project(
 	DESCRIPTION "Bitmap loading, pixel format conversion and scaling library"
 )
 
+# Contains compiler options, compiler tag for output directory, etc.
 include("../BuildSystem/cmake/cplusplus.cmake")
 
 set(BUILD_DOCS OFF CACHE BOOL "Whether to generate documentation via Doxygen")
-set(ENABLE_COVERAGE OFF CACHE BOOL "Whether to instrument binaries for code coverage metrics")
 
-set(WANT_PNG ON CACHE BOOL "Whether to integrate PNG image loading and saving")
+# JPEG-XL depends on AVIF and WEBP.
+set(WANT_JPEGXL OFF CACHE BOOL "Whether to integrate JPEG-XL image loading and saving")
+set(WANT_AVIF OFF CACHE BOOL "Whether to integrate AV1 image loading and saving")
+set(WANT_WEBP ON CACHE BOOL "Whether to integrate WebP image loading and saving")
+# TIFF depends on LibJPEG and OpenEXR
+set(WANT_TIFF ON CACHE BOOL "Whether to integrate TIFF image loading and saving")
 set(WANT_JPG ON CACHE BOOL "Whether to integrate JPG image loading and saving")
 set(WANT_EXR ON CACHE BOOL "Whether to integrate OpenEXR image loading and saving")
-set(WANT_AV1F OFF CACHE BOOL "Whether to integrate AV1 image loading and saving")
-set(WANT_WEBP OFF CACHE BOOL "Whether to integrate WebP image loading and saving")
+set(WANT_PNG ON CACHE BOOL "Whether to integrate PNG image loading and saving")
 
 # -------------------------------------------------------------------------------------------------
 
+# Include threading library (on Linux/Posix pthreads must be linked)
 find_package(Threads REQUIRED)
 
+# Use CMake's own package for locating Doxygen on the system
 if(BUILD_DOCS)
 	find_package(Doxygen)
 endif()
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/../Nuclex.Support.Native ${CMAKE_BINARY_DIR}/Nuclex.Support.Native)
+# Add Nuclex.Support.Native as a sub-project, we link it for utility methods.
+if(NOT (TARGET NuclexSupportNative))
+	add_subdirectory(
+		${PROJECT_SOURCE_DIR}/../Nuclex.Support.Native
+		${CMAKE_BINARY_DIR}/NuclexSupportNative
+	)
+endif()
 
 # Already included by Nuclex.Support.Native, CMake doesn't like a second inclusion...
-#add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
+if(NOT (TARGET GoogleTest))
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
+endif()
 
-if(WANT_PNG)
-	#add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/zlib ${CMAKE_BINARY_DIR}/zlib)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libpng ${CMAKE_BINARY_DIR}/libpng)
+# Libraries to load and save each image format
+if(WANT_JPEGXL)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/jpeg-xl ${CMAKE_BINARY_DIR}/jpeg-xl)
 endif()
-if(WANT_JPG)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libjpeg ${CMAKE_BINARY_DIR}/libjpeg)
-endif()
-if(WANT_EXR)
-	#add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/ilmbase ${CMAKE_BINARY_DIR}/ilmbase)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/openexr ${CMAKE_BINARY_DIR}/openexr)
-endif()
-if(WANT_AV1F)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/av1f ${CMAKE_BINARY_DIR}/av1f)
+if(WANT_AVIF)
+	# LibAVIF may have already been referenced by JPEG-XL to borrow its compression code
+	if(NOT (TARGET LibAVIF))
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/av1f ${CMAKE_BINARY_DIR}/av1f)
+	endif()
 endif()
 if(WANT_WEBP)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/web ${CMAKE_BINARY_DIR}/webp)
+	# LibWebP may have already been referenced by JPEG-XL to borrow its compression code
+	if(NOT (TARGET LibWebP))
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libwebp ${CMAKE_BINARY_DIR}/libwebp)
+	endif()
+endif()
+if(WANT_TIFF)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libtiff ${CMAKE_BINARY_DIR}/libtiff)
+endif()
+if(WANT_JPG)
+	# LibJPEG may have already been referenced by LibTIFF to borrow its compression code
+	if(NOT (TARGET LibJPEG))
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../libjpeg ${CMAKE_BINARY_DIR}/libjpeg)
+	endif()
+endif()
+if(WANT_EXR)
+	# OpenEXR may have already been referenced by LibTIFF to borrow its compression code
+	if(NOT (TARGET OpenEXR))
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/openexr ${CMAKE_BINARY_DIR}/openexr)
+	endif()
+endif()
+if(WANT_PNG)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libpng ${CMAKE_BINARY_DIR}/libpng)
 endif()
 
 # -------------------------------------------------------------------------------------------------
 
-if(ENABLE_COVERAGE)
-
-	# Function from cplusplus.cmake that adds the required flags to
-	# the CMAKE_C_FLAGS and CMAKE_CXX_FLAGS globally-applied build flags
-	set_coverage_c_cxx_flags()
-
-endif()
-
-# -------------------------------------------------------------------------------------------------
-
-# "Note: We do not recommend using GLOB to collect a list of source files from your source tree.
-# If no CMakeLists.txt file changes when a source is added or removed then the generated
-# build system cannot know when to ask CMake to regenerate."
+# All source files are in the Source/ directory.
+# All (public) headers are in the Include/ directory.
+# All unit test source file are in the Tests/ directory.
 #
-# What are you f-ing smoking over there?
-# Why would I even use this turd of a Makefile generator if I have to list my source files by hand?
-
+# CMake documentation:
+#   |  Note: We do not recommend using GLOB to collect a list of
+#   |  source files from your source tree. If no CMakeLists.txt file
+#   |  changes when a source is added or removed then the generated
+#   |  build system cannot know when to ask CMake to regenerate.
+#
+# As so very often, CMake becomes a hurdle rather than helping.
+# I'm not going to manually maintain a list of source files. Rebuilds
+# where files are added, removed or renamed need to be from scratch.
+#
 file(
 	GLOB_RECURSE sourceFiles
 	CONFIGURE_DEPENDS
@@ -81,7 +109,6 @@ file(
 	CONFIGURE_DEPENDS
 	"Include/Nuclex/Pixels/*.h"
 )
-
 file(
 	GLOB_RECURSE unittestFiles
 	CONFIGURE_DEPENDS
@@ -90,75 +117,127 @@ file(
 
 # -------------------------------------------------------------------------------------------------
 
+function(add_third_party_libraries target_name)
+
+	if(WANT_JPEGXL)
+		target_compile_definitions(${target_name} PRIVATE NUCLEX_PIXELS_HAVE_JPEGXL)
+		target_link_libraries(${target_name} PRIVATE JPEG-XL::Static)
+	endif()
+	if(WANT_AV1F)
+		target_compile_definitions(${target_name} PRIVATE NUCLEX_PIXELS_HAVE_AV1F)
+		target_link_libraries(${target_name} PRIVATE AV1F::Static)
+	endif()
+	if(WANT_WEBP)
+		target_compile_definitions(${target_name} PRIVATE NUCLEX_PIXELS_HAVE_WEBP)
+		message(STATUS "Enabled LibWebP for ${target_name}")
+		target_link_libraries(${target_name} PRIVATE LibWebP::Static)
+	endif()
+	if(WANT_TIFF)
+		target_compile_definitions(${target_name} PRIVATE NUCLEX_PIXELS_HAVE_LIBTIFF)
+		target_link_libraries(${target_name} PRIVATE LibTIFF::Static)
+	endif()
+	if(WANT_JPG)
+		target_compile_definitions(${target_name} PRIVATE NUCLEX_PIXELS_HAVE_LIBJPEG)
+		target_link_libraries(${target_name} PRIVATE LibJPEG::Static)
+	endif()
+	if(WANT_EXR)
+		target_compile_definitions(${target_name} PRIVATE NUCLEX_PIXELS_HAVE_OPENEXR)
+		target_link_libraries(${target_name} PRIVATE OpenEXR::Static)
+	endif()
+	if(WANT_PNG)
+		target_compile_definitions(${target_name} PRIVATE NUCLEX_PIXELS_HAVE_LIBPNG)
+		target_link_libraries(${target_name} PRIVATE ZLib::Static)
+		target_link_libraries(${target_name} PRIVATE LibPNG::Static)
+	endif()
+
+	# On Unix systems, the library and unit test executable should look for
+	# dependencies in its own directory first.
+	set_target_properties(
+		${target_name} PROPERTIES
+		BUILD_RPATH_USE_ORIGIN ON
+		BUILD_WITH_INSTALL_RPATH ON
+		INSTALL_RPATH_USE_LINK_PATH OFF
+		INSTALL_RPATH "\${ORIGIN}"
+	)
+
+endfunction()
+
+# -------------------------------------------------------------------------------------------------
+
+# Shared library that can be linked to other projects
 add_library(NuclexPixelsNative SHARED)
 
+# Enable compiler warnings only if this library is compiles on its own.
+# If it's used as a sub-project, the including project's developers aren't
+# interested in seeing warnings from a project they're not maintaining.
+if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexPixelsNative")
+	enable_target_compiler_warnings(NuclexPixelsNative)
+else()
+	disable_target_compiler_warnings(NuclexPixelsNative)
+endif()
+
+# Add directory with public headers to include path
 target_include_directories(
 	NuclexPixelsNative
 	PUBLIC "Include"
 )
 
+# Add public headers and sources to compilation list
+# (headers, too, in case CMake is used to generate an IDE project)
 target_sources(
 	NuclexPixelsNative
 	PUBLIC ${headerFiles}
 	PRIVATE ${sourceFiles}
 )
 
+# Link against PThreads and Nuclex.Support.Native
 target_link_libraries(
 	NuclexPixelsNative
+	PRIVATE Threads::Threads
 	PUBLIC NuclexSupportNative
 )
 
-if(WANT_PNG)
-	target_compile_definitions(NuclexPixelsNative PRIVATE NUCLEX_PIXELS_HAVE_LIBPNG)
-	target_link_libraries(NuclexPixelsNative PRIVATE ZLib::Static)
-	target_link_libraries(NuclexPixelsNative PRIVATE LibPNG::Static)
-endif()
-if(WANT_JPG)
-	target_compile_definitions(NuclexPixelsNative PRIVATE NUCLEX_PIXELS_HAVE_LIBJPEG)
-	target_link_libraries(NuclexPixelsNative PRIVATE LibJPEG::Static)
-endif()
-if(WANT_EXR)
-	target_compile_definitions(NuclexPixelsNative PRIVATE NUCLEX_PIXELS_HAVE_OPENEXR)
-	target_link_libraries(NuclexPixelsNative PRIVATE OpenEXR::Static)
-endif()
-if(WANT_AV1F)
-	target_compile_definitions(NuclexPixelsNative PRIVATE NUCLEX_PIXELS_HAVE_AV1F)
-	target_link_libraries(NuclexPixelsNative PRIVATE AV1F::Static)
-endif()
-if(WANT_WEBP)
-	target_compile_definitions(NuclexPixelsNative PRIVATE NUCLEX_PIXELS_HAVE_WEBP)
-	target_link_libraries(NuclexPixelsNative PRIVATE WebP::Static)
-endif()
+# Add include directories and static libraries of all enabled image formats
+add_third_party_libraries(NuclexPixelsNative)
 
+# On Windows, we want the shared library to be named Nuclex.Pixels.Native.dll
 if(WIN32)
-	set_target_properties(NuclexPixelsNative PROPERTIES OUTPUT_NAME "Nuclex.Pixels.Native")
+	set_target_properties(
+		NuclexPixelsNative
+		PROPERTIES OUTPUT_NAME "Nuclex.Pixels.Native"
+	)
 endif()
-
-# On Unix/Linux systems, look for shared libraries in the same directory
-# (this is where libNuclexSupportNative.so is searched first)
-set_target_properties(
-	NuclexPixelsNative PROPERTIES
-	BUILD_RPATH_USE_ORIGIN ON
-	BUILD_WITH_INSTALL_RPATH ON
-	INSTALL_RPATH_USE_LINK_PATH OFF
-	INSTALL_RPATH "\${ORIGIN}"
-)
 
 # -------------------------------------------------------------------------------------------------
 
+# Executable that runs the unit tests (main() supplied by Googletest)
 add_executable(NuclexPixelsNativeTests)
 
+# Enable compiler warnings only if this library is compiles on its own.
+# If it's used as a sub-project, the including project's developers aren't
+# interested in seeing warnings from a project they're not maintaining.
+if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexPixelsNative")
+	enable_target_compiler_warnings(NuclexPixelsNativeTests)
+else()
+	disable_target_compiler_warnings(NuclexPixelsNativeTests)
+endif()
+
+# Let the code know it's not being compiled into a shared library
+# (this disables visibility/exports, thus allowing the compiler detect
+# additional unused code and warn about it)
 target_compile_definitions(
 	NuclexPixelsNativeTests
 	PRIVATE NUCLEX_PIXELS_EXECUTABLE
 )
 
+# Add directory with public headers to include path
 target_include_directories(
 	NuclexPixelsNativeTests
 	PUBLIC "Include"
 )
-#	PUBLIC NuclexSupportNative
 
+# Add public headers and sources (normal + unit tests) to compilation list
+# (headers, too, in case CMake is used to generate an IDE project)
 target_sources(
 	NuclexPixelsNativeTests
 	PRIVATE ${headerFiles}
@@ -166,6 +245,8 @@ target_sources(
 	PRIVATE ${unittestFiles}
 )
 
+# Link GoogleTest and the main() function supplied by GoogleTest
+# Also link against PThreads
 target_link_libraries(
 	NuclexPixelsNativeTests
 	PRIVATE GoogleTest::Static
@@ -174,47 +255,22 @@ target_link_libraries(
 	PUBLIC NuclexSupportNative
 )
 
-if(WANT_PNG)
-	target_compile_definitions(NuclexPixelsNativeTests PRIVATE NUCLEX_PIXELS_HAVE_LIBPNG)
-	target_link_libraries(NuclexPixelsNativeTests PRIVATE ZLib::Static)
-	target_link_libraries(NuclexPixelsNativeTests PRIVATE LibPNG::Static)
-endif()
-if(WANT_JPG)
-	target_compile_definitions(NuclexPixelsNativeTests PRIVATE NUCLEX_PIXELS_HAVE_LIBJPEG)
-	target_link_libraries(NuclexPixelsNativeTests PRIVATE LibJPEG::Static)
-endif()
-if(WANT_EXR)
-	target_compile_definitions(NuclexPixelsNativeTests PRIVATE NUCLEX_PIXELS_HAVE_OPENEXR)
-	#target_link_libraries(NuclexPixelsNativeTests PRIVATE IlmBase::Static)
-	target_link_libraries(NuclexPixelsNativeTests PRIVATE OpenEXR::Static)
-endif()
-if(WANT_AV1F)
-	target_compile_definitions(NuclexPixelsNativeTests PRIVATE NUCLEX_PIXELS_HAVE_AV1F)
-	target_link_libraries(NuclexPixelsNativeTests PRIVATE AV1F::Static)
-endif()
-if(WANT_WEBP)
-	target_compile_definitions(NuclexPixelsNativeTests PRIVATE NUCLEX_PIXELS_HAVE_WEBP)
-	target_link_libraries(NuclexPixelsNativeTests PRIVATE WebP::Static)
-endif()
+add_third_party_libraries(NuclexPixelsNativeTests)
 
+# On Windows, we want the executable to be named Nuclex.Pixels.Native.Tests.exe
 if(WIN32)
 	set_target_properties(
-		NuclexPixelsNativeTests PROPERTIES OUTPUT_NAME "Nuclex.Pixels.Native.Tests"
+		NuclexPixelsNativeTests
+		PROPERTIES OUTPUT_NAME "Nuclex.Pixels.Native.Tests"
 	)
 endif()
 
-# On Unix/Linux systems, look for shared libraries in the same directory
-# (this is where libNuclexSupportNative.so is searched first)
-set_target_properties(
-	NuclexPixelsNativeTests PROPERTIES
-	BUILD_RPATH_USE_ORIGIN ON
-	BUILD_WITH_INSTALL_RPATH ON
-	INSTALL_RPATH_USE_LINK_PATH OFF
-	INSTALL_RPATH "\${ORIGIN}"
-)
-
 # -------------------------------------------------------------------------------------------------
 
+# Install the shared library into a subdirectory of this CMakeLists.txt file
+# under ./bin/linux-gcc9.3-amd64-debug/ (the second-level directory is called
+# "compiler tag" and dynamically formed -- it ensures that when linking
+# a pre-compiled shared library, the correct library is used).
 install(
 	TARGETS NuclexPixelsNative
 	ARCHIVE DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
@@ -222,6 +278,8 @@ install(
 	RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
 )
 
+# Do the same for Nuclex.Support.Native. Since we depend on this library
+# and have set the rpath accordingly, it needs to be in the same directory
 install(
 	TARGETS NuclexSupportNative
 	ARCHIVE DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
@@ -229,10 +287,14 @@ install(
 	RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
 )
 
+# Install unit tests in same location as shared library.
 install(
 	TARGETS NuclexPixelsNativeTests
 	RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
 )
+
+# Install .pdb files on Windows platforms for the unit tests, too.
+install_debug_symbols(NuclexPixelsNativeTests)
 
 # -------------------------------------------------------------------------------------------------
 

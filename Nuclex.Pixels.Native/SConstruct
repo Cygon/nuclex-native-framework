@@ -16,6 +16,11 @@ def add_third_party_libraries(environment):
 
     @param  environment  Build environment the libraries will be added to"""
 
+    # Whether Nuclex.Pixels should be able to load and save .tif images
+    # Adds about ? KiB to the .dll on Windows
+    # Adds about ? KiB to the .so on Linux
+    want_libtiff = True
+
     # Whether Nuclex.Pixels should be able to load and save .png images
     # Adds about 120 KiB to the .dll on Windows
     # Adds about 160 KiB to the .so on Linux
@@ -26,10 +31,31 @@ def add_third_party_libraries(environment):
     # Adds about 163 KiB to the .so on Linux
     want_libjpeg = True
 
+    # Whether Nuclex.Pixels should be able to load and save .webp images
+    # Adds about ? KiB to the .dll on Windows
+    # Adds about ? KiB to the .so on Linux
+    want_libwebp = True
+
     # Whether Nuclex.Pixels should be able to load and save .exr images
     # Adds about 2507 KiB to the .dll on Windows
     # Adds about 2754 KiB to the .so on Linux
     want_openexr = True
+
+    if want_libwebp:
+        environment.add_project('../ThirdParty/libwebp', [ 'webp' ])
+        environment.add_preprocessor_constant('NUCLEX_PIXELS_HAVE_LIBWEBP')
+
+    if want_libtiff:
+        environment.add_project('../ThirdParty/libtiff', [ 'tiff' ])
+        environment.add_preprocessor_constant('NUCLEX_PIXELS_HAVE_LIBTIFF')
+
+    if want_libpng:
+        environment.add_project('../ThirdParty/libpng', [ 'png' ])
+        environment.add_preprocessor_constant('NUCLEX_PIXELS_HAVE_LIBPNG')
+
+    if want_libjpeg:
+        environment.add_project('../ThirdParty/libjpeg', [ 'jpeg' ])
+        environment.add_preprocessor_constant('NUCLEX_PIXELS_HAVE_LIBJPEG')
 
     if want_openexr:
         environment.add_project('../ThirdParty/openexr', [ 'openexr' ])
@@ -49,15 +75,8 @@ def add_third_party_libraries(environment):
         environment.add_include_directory('../ThirdParty/ilmbase/Include/Half')
         environment.add_include_directory('../ThirdParty/openexr/Include/config')
 
-    if want_libjpeg:
-        environment.add_project('../ThirdParty/libjpeg', [ 'jpeg' ])
-        environment.add_preprocessor_constant('NUCLEX_PIXELS_HAVE_LIBJPEG')
-
-    if want_libpng:
-        environment.add_project('../ThirdParty/libpng', [ 'png' ])
-        environment.add_preprocessor_constant('NUCLEX_PIXELS_HAVE_LIBPNG')
-
-    if want_openexr or want_libpng:
+    if want_openexr or want_libpng or want_libtiff:
+        environment.add_preprocessor_constant('Z_SOLO')
         environment.add_project('../ThirdParty/zlib', [ 'zlib' ])
 
 # ----------------------------------------------------------------------------------------------- #
@@ -66,6 +85,8 @@ def add_third_party_libraries(environment):
 common_environment = nuclex.create_cplusplus_environment()
 #common_environment['ENV'] = os.environ
 #common_environment['CXX'] = 'clang++'
+
+common_environment.add_project('../Nuclex.Support.Native')
 
 # Compile the main library
 library_environment = common_environment.Clone()
@@ -83,8 +104,8 @@ unit_test_binaries = unit_test_environment.build_unit_tests(
 # ----------------------------------------------------------------------------------------------- #
 
 artifact_directory = os.path.join(
-        unit_test_environment['ARTIFACT_DIRECTORY'],
-        unit_test_environment.get_build_directory_name()
+    unit_test_environment['ARTIFACT_DIRECTORY'],
+    unit_test_environment.get_build_directory_name()
 )
 unit_test_results = unit_test_environment.Command(
     source = unit_test_binaries,
