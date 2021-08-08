@@ -23,8 +23,10 @@ License along with this library
 
 #include "Nuclex/Pixels/ColorModels/ColorModelConverter.h"
 
-#include <cmath>
-#include <limits>
+#include <cmath> // for std::floor()
+#include <limits> // for std::numeric_limits()
+#include <cassert> // for assert()
+#include <stdexcept> // for std::invalid_argument
 
 namespace {
 
@@ -32,7 +34,7 @@ namespace {
 
   /// <summary>Wraps an angle into the positive 0..Tau range</summary>
   /// <param name="angle">Angle that will be wrapped</param>
-  /// <returns>The equivalent angle in the positive 0..Tau range</returns>  
+  /// <returns>The equivalent angle in the positive 0..Tau range</returns>
   float wrapAngle(float angle) {
     static constexpr float Tau = (
       6.283185307179586476925286766559005768394338798750211641949889184615632812572417997256069651f
@@ -207,7 +209,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
           result.Hue = 4.0f;
         } else {
           result.Hue = (color.Red - color.Green) / result.Saturation + 4.0f;
-          result.Saturation /= (1.0f - std::fabs(2.0f * result.Lightness - 1.0));
+          result.Saturation /= (1.0f - std::fabs(2.0f * result.Lightness - 1.0f));
         }
       } else {
         result.Saturation = result.Lightness = color.Green; // Green is highest
@@ -225,7 +227,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
           result.Hue = 2.0f;
         } else {
           result.Hue = (color.Blue - color.Red) / result.Saturation + 2.0f;
-          result.Saturation /= (1.0f - std::fabs(2.0f * result.Lightness - 1.0));
+          result.Saturation /= (1.0f - std::fabs(2.0f * result.Lightness - 1.0f));
         }
       }
     } else {
@@ -240,7 +242,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
           result.Hue = 4.0f;
         } else {
           result.Hue = (color.Red - color.Green) / result.Saturation + 4.0f;
-          result.Saturation /= (1.0f - std::fabs(2.0f * result.Lightness - 1.0));
+          result.Saturation /= (1.0f - std::fabs(2.0f * result.Lightness - 1.0f));
         }
       } else {
         result.Saturation = result.Lightness = color.Red; // Red is highest
@@ -258,7 +260,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
           result.Hue = 0.0f;
         } else {
           result.Hue = (color.Green - color.Blue) / result.Saturation;
-          result.Saturation /= (1.0f - std::fabs(2.0f * result.Lightness - 1.0));
+          result.Saturation /= (1.0f - std::fabs(2.0f * result.Lightness - 1.0f));
         }
       }
     }
@@ -333,6 +335,10 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
         result.Blue = (1.0f - fraction) * primary;
         break;
       }
+      default: { // This is unreachable, but MSVC's static analysis doesn't know
+        assert(!u8"Determined HSL sextant was out of range");
+        result.Red = result.Green = result.Blue = -1.0;
+      }
     }
 
     // Lightness above 0.5 blends into pure white,
@@ -405,6 +411,80 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
 
     // Move the value up so 1.0 rather than 0.5 means full saturation
     result.Value = adjustment + color.Lightness;
+
+    result.Alpha = color.Alpha;
+
+    return result;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  YuvColor ColorModelConverter::YuvFromRgb(
+    const RgbColor &color, YuvColorSystem colorSystem /* = YuvColorSystem::Bt709 */
+  ) {
+    YuvColor result;
+
+    switch(colorSystem) {
+      case YuvColorSystem::Bt470: {
+        result.Y = (color.Red * 0.299f) + (color.Green * 0.587f) + (color.Blue * 0.114f);
+        result.U = (color.Blue - result.Y) / 1.772f;
+        result.V = (color.Red - result.Y) / 1.402f;
+        break;
+      }
+      case YuvColorSystem::Bt709: {
+        result.Y = (color.Red * 0.2126f) + (color.Green * 0.7152f) + (color.Blue * 0.0722f);
+        result.U = (color.Blue - result.Y) / 1.8556f;
+        result.V = (color.Red - result.Y) / 1.5748f;
+        break;
+      }
+      case YuvColorSystem::Bt2020: {
+        result.Y = (color.Red * 0.2627f) + (color.Green * 0.6780f) + (color.Blue * 0.0593f);
+        result.U = (color.Blue - result.Y) / 1.8814f;
+        result.V = (color.Red - result.Y) / 1.4746f;
+        break;
+      }
+      default: { throw std::invalid_argument(u8"Unknown color system specified"); }
+    }
+
+    result.Alpha = color.Alpha;
+
+    return result;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  RgbColor ColorModelConverter::RgbFromYuv(
+    const YuvColor &color, YuvColorSystem colorSystem /* = YuvColorSystem::Bt709 */
+  ) {
+    RgbColor result;
+
+    switch(colorSystem) {
+      case YuvColorSystem::Bt470: {
+        result.Red = color.Y + (color.V * 1.402f);
+        result.Green = color.Y;
+        result.Green -= (0.299f * 1.402f / 0.587f) * color.V;
+        result.Green -= (0.114f * 1.772f / 0.587f) * color.U;
+        result.Blue = color.Y + (color.U * 1.772f);
+        break;
+      }
+      case YuvColorSystem::Bt709: {
+        result.Red = color.Y + (color.V * 1.5748f);
+        result.Green = color.Y;
+        result.Green -= (0.2126f * 1.5748f / 0.7152f) * color.V;
+        result.Green -= (0.0722f * 1.8556f / 0.7152f) * color.U;
+        result.Blue = color.Y + (color.U * 1.8556f);
+        break;
+      }
+      case YuvColorSystem::Bt2020: {
+        result.Red = color.Y + (color.V * 1.4746f);
+        result.Green = color.Y;
+        result.Green -= (0.2627f * 1.4746f / 0.6780f) * color.V;
+        result.Green -= (0.0593f * 1.8814f / 0.6780f) * color.U;
+        result.Blue = color.Y + (color.U * 1.8814f);
+        break;
+      }
+      default: { throw std::invalid_argument(u8"Unknown color system specified"); }
+    }
 
     result.Alpha = color.Alpha;
 

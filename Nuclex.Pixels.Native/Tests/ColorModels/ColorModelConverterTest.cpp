@@ -416,4 +416,142 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(ColorModelConverterTest, RgbYuvRoundtripWorksInBt470) {
+    static constexpr float MaximumError = 0.0000001f;
+
+    YuvColor yuv = ColorModelConverter::YuvFromRgb(
+      { 1.0f, 1.0f, 1.0f, 1.0f }, YuvColorSystem::Bt470
+    );
+    RgbColor rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt470);
+
+    EXPECT_NEAR(rgb.Red, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+
+    yuv = ColorModelConverter::YuvFromRgb(
+      { 1.0f, 0.0f, 0.0f, 1.0f }, YuvColorSystem::Bt470
+    );
+    rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt470);
+
+    EXPECT_NEAR(rgb.Red, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+
+    yuv = ColorModelConverter::YuvFromRgb(
+      { 0.0f, 1.0f, 0.0f, 1.0f }, YuvColorSystem::Bt470
+    );
+    rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt470);
+
+    EXPECT_NEAR(rgb.Red, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+
+    yuv = ColorModelConverter::YuvFromRgb(
+      { 0.0f, 0.0f, 1.0f, 1.0f }, YuvColorSystem::Bt470
+    );
+    rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt470);
+
+    EXPECT_NEAR(rgb.Red, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ColorModelConverterTest, RgbYuvRoundtripWorksInBt709) {
+    static constexpr float MaximumError = 0.00000001f;
+
+    YuvColor yuv = ColorModelConverter::YuvFromRgb(
+      { 1.0f, 1.0f, 1.0f, 1.0f }, YuvColorSystem::Bt709
+    );
+    RgbColor rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt709);
+
+    EXPECT_NEAR(rgb.Red, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+
+    yuv = ColorModelConverter::YuvFromRgb(
+      { 1.0f, 0.0f, 0.0f, 1.0f }, YuvColorSystem::Bt709
+    );
+    rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt709);
+
+    EXPECT_NEAR(rgb.Red, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+
+    yuv = ColorModelConverter::YuvFromRgb(
+      { 0.0f, 1.0f, 0.0f, 1.0f }, YuvColorSystem::Bt709
+    );
+    rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt709);
+
+    EXPECT_NEAR(rgb.Red, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+
+    yuv = ColorModelConverter::YuvFromRgb(
+      { 0.0f, 0.0f, 1.0f, 1.0f }, YuvColorSystem::Bt709
+    );
+    rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt709);
+
+    EXPECT_NEAR(rgb.Red, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(ColorModelConverterTest, RgbYuvRoundtripWorksInBt2020) {
+    static constexpr float MaximumError = 0.0000001f;
+
+    YuvColor yuv = ColorModelConverter::YuvFromRgb(
+      { 1.0f, 1.0f, 1.0f, 1.0f }, YuvColorSystem::Bt2020
+    );
+    RgbColor rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt2020);
+
+    EXPECT_NEAR(rgb.Red, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+
+    yuv = ColorModelConverter::YuvFromRgb(
+      { 1.0f, 0.0f, 0.0f, 1.0f }, YuvColorSystem::Bt2020
+    );
+    rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt2020);
+
+    EXPECT_NEAR(rgb.Red, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+
+    yuv = ColorModelConverter::YuvFromRgb(
+      { 0.0f, 1.0f, 0.0f, 1.0f }, YuvColorSystem::Bt2020
+    );
+    rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt2020);
+
+    EXPECT_NEAR(rgb.Red, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+
+    yuv = ColorModelConverter::YuvFromRgb(
+      { 0.0f, 0.0f, 1.0f, 1.0f }, YuvColorSystem::Bt2020
+    );
+    rgb = ColorModelConverter::RgbFromYuv(yuv, YuvColorSystem::Bt2020);
+
+    EXPECT_NEAR(rgb.Red, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Green, 0.0f, MaximumError);
+    EXPECT_NEAR(rgb.Blue, 1.0f, MaximumError);
+    EXPECT_NEAR(rgb.Alpha, 1.0f, MaximumError);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
 }}} // namespace Nuclex::Pixels::ColorModels
