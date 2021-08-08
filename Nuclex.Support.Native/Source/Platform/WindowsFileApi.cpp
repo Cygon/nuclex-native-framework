@@ -25,6 +25,8 @@ License along with this library
 
 #if defined(NUCLEX_SUPPORT_WINDOWS)
 
+#include <stdexcept> // for std::invalid_argument
+
 #include "Nuclex/Support/Text/UnicodeHelper.h" // for UTF-16 <-> UTF-8 conversion
 
 namespace {
@@ -73,7 +75,8 @@ namespace {
 
     // According to Microsoft, this is how you lift the 260 char MAX_PATH limit.
     // Also skips the internal call to GetFullPathName() every API method does internally,
-    // so paths have to be normalized and
+    // so paths have to be normalized.
+    // https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file
     const wchar_t prefix[] = L"\\\\?\\";
     utf16Path.push_back(prefix[0]);
     utf16Path.push_back(prefix[1]);
