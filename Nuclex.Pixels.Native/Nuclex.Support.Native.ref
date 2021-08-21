@@ -1,0 +1,8 @@
+This is just a plain text file.
+
+In Visual Studio projects, it has a custom build step configured
+that will copy Nuclex.Support.Native.dll from the appropriate directory
+(compiler version and debug/release postfix) into this project's
+build target directory.
+
+For SCons builds, it is not used at all.
