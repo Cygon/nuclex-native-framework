@@ -9,11 +9,11 @@ Not to be mistaken for the GNU Public License (GPL).
 You can:
 --------
 
-- Use this library in commercial applications
-- Use this library in closed-source applications
+- Use this library in commercial applications.
+- Use this library in closed-source applications.
 
-- Distribute this library's unmodified source code
-- Distribute binaries of library compiled from unmodified source code
+- Distribute this library's unmodified source code.
+- Distribute binaries compiled from the unmodified source code.
 
 - Modify the source code of this library and keep the changes to yourself
   as long as you also keep the compiled binaries to yourself.
@@ -21,17 +21,51 @@ You can:
 You can not:
 ------------
 
-- Modify the source code of this library and keep the changes to yourself
-  while sharing the compiled binaries with someone else / the world.
+- Make changes to this library and then publish the compiled binaries
+  without also sharing the changes you made to this library's source code.
 
 - Sue anyone for issues you have with this code. 
+
+- Pretend that you wrote this or use the names of any of this library's
+  authors to promote your own work.
+
+
+Attribution
+===========
+
+If you distribute binaries of this library, you should include this license
+file somewhere in your documentation or other legal text.
+
+A mention of your product's use of this library as well as of the embedded
+third-party libraries in your splash screen, credits or such would be nice,
+but is not required.
+
+
+Example Attribution Text
+------------------------
+
+The Nuclex.Pixels.Native library is used for image file loading/saving,
+pixel format conversion and resizing. It is written by Markus Ewald and
+licensed under the terms of the IBM Common Public License
+(https://opensource.org/licenses/cpl1.0.php)
+
+This library also embeds additional libraries, belonging to their respective
+owners and used according to their respective licenses:
+
+  * The AVIR image resampling library under the MIT license
+//  * LibTARGA for .tga loading/saving under the MIT license
+  * LibTIFF for .tif loading/saving under the LibTIFF license
+  * LibPNG for .png loading/saving under the LibPNG license
+  * LlibJPEG for .jpg loading/saving under the LibJPEG license
+  * OpenEXR for .exr loading/saving under a modified BSD license
+  * ZLib internally by LibTIFF and LibPNG under the ZLib license
 
 
 Third-Party Code
 ================
 
-This library also embeds carefully selected third-party code which falls
-under its own licenses, listed below
+Nuclex.Pixels.Native also embeds carefully selected third-party code which
+falls under its own licenses, listed below
 
 
 AVIR high quality image resampling library
@@ -45,12 +79,67 @@ If you distribute binaries compiled from this library, you do not have to
 do anything, but an acknowledgement of the original author would be nice.
 
 
-UTF-8, UTF-16, UTF-32 Converter: Boost Software License
--------------------------------------------------------
+LibTARGA: MIT License
+---------------------
 
-Conversion between UTF-8 and UTF-16 is provided through the UTF-8 for C++
-library. It is written by Nemanja Trifunovic and licensed under the
-Boost Software License (https://www.boost.org/users/license.html)
+Loading and saving of image files in the .tga format is done via a modified
+version of LibTARGA. It was originally written my Michael L. Gleicher and
+offered under the MIT License (https://en.wikipedia.org/wiki/MIT_License)
+
+If you distribute binaries compiled from this library, you do not have to
+do anything, but an acknowledgement of the original author would be nice.
+
+
+LibTIFF: LibTIFF License (MIT/BSD-like)
+---------------------------------------
+
+Loading and saving of image files in the .tif format is done via LibTIFF. It
+was released by Silicon Graphics, Inc. and continued by Sam Leffler under the
+LibTIFF license (https://gitlab.com/libtiff/libtiff/-/blob/master/COPYRIGHT)
+
+If you distribute binaries compiled from this library, you do not have to
+do anything, but an acknowledgement of the original author would be nice.
+
+
+LibPNG: LibPNG License
+----------------------
+
+Loading and saving of image files in the .png format is done via LibPNG.
+It is copyrighted to the PNG Reference Library Authors and licensed under
+the LibPNG license (http://www.libpng.org/pub/png/src/libpng-LICENSE.txt)
+
+If you distribute binaries compiled from this library, you do not have to
+do anything, but an acknowledgement of the original author would be nice.
+
+
+LibJPEG: LibJPEG License
+------------------------
+
+Loading and saving of image files in the .jpg format is done via LibJPEG.
+It is copyrighted to the Independent JPEG Group and licensed under the
+LibJPEG license (https://jpegclub.org/reference/libjpeg-license/)
+
+If you distribute binaries compiled from this library, you do not have to
+do anything, but an acknowledgement of the original author would be nice.
+
+
+OpenEXR: Modified BSD License
+-----------------------------
+
+Loading and saving of image files in the .exr format is done via OpenEXR.
+It is copyrighted to the OpenEXR Contributors and licensed under the a
+modified BSD license (https://www.openexr.com/license.html)
+
+If you distribute binaries compiled from this library, you do not have to
+do anything, but an acknowledgement of the original author would be nice.
+
+
+ZLib: ZLib License
+------------------
+
+Some compression methods inside LibPNG and LibTIFF rely on ZLib. ZLib is
+copyrighted to Jean-loup Gailly and Mark Adler and licensed under the
+ZLib license (https://www.zlib.net/zlib_license.html)
 
 If you distribute binaries compiled from this library, you do not have to
 do anything, but an acknowledgement of the original author would be nice.

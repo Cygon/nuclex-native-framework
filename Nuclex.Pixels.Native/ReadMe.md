@@ -1,129 +1,153 @@
 Nuclex.Pixels.Native
 ====================
 
-This is a convenient library for raster image processing. Its centerpiece
-is the `Bitmap` class which either owns the memory storing the pixels or
-merely wraps it for you. In either case, a `Bitmap` in `Nuclex::Pixels`
-is a very lean object weighing 2 pointers and 4 integers.
+This library contains a clean implementation of all the graphics plumbing
+code you need in a video game or graphical application. It covers a lean
+bitmap class that can work on foreign memory, pixel format conversion,
+image file loading/saving and image scaling.
 
-For that, you get easy, standardized bitmap storage, copy-on-write,
-optimized support for a wealth of pixel formats and pixel manipulation.
+As usual, there are unit tests for the whole library, so everything is
+verifiably working on all platforms tested (Linux, Windows, Raspberry).
+
+**Bitmaps**
+* Clean cross-platform definition of all pixel formats
+* Bitmap instances can use own or access foreign memory
+* Copy-on-write with sub-bitmaps (called views)
+* Autonomize bitmaps to clone foreign memory or force copy
+
+**Storage**
+* BitmapSerializer to read and write image file formats
+* All I/O happens through 3-method VirtualFile interface
+* Supports .png, .tif, .tga, .jpg, .webp and .exr out-of-the-box
+* Extensible (i.e. proprietary formats or image library integration)
+
+**Scaling**
+* Simple scaling (nearest neighbour and linear interpolation)
+* Advanced scaling (lanczos and Aleksey Vaneev's AVIR)
+
+**Everything:**
+* Supports Windows, Linux and ARM Linux (Raspberry PI)
+* Compiles cleanly at maximum warning levels with MSVC, GCC and clang
+* If it's there, it's unit-tested
 
 
-`Bitmap` Class
---------------
+Bitmap class
+------------
 
-This class tries to give you a tidy standard interface to pixel-based
-graphics. It's usage is simple:
+The Bitmap class wraps a simple pixel-based image. The pixels can either be
+allocated by the Bitmap class upon constructor or it can access an existing
+memory buffer.
 
 ```cpp
-int main() {
-  using Nuclex::Pixels::Bitmap;
+// Construct a new bitmap using its own memory
+Bitmap blankImage(1024, 768, PixelFormat::A8_R8_G8_B8_Unsigned);
 
-  Bitmap myBitmap(640, 480);
-  Bitmap copyOnWriteClone = myBitmap;
+// Bitmaps are copy-on-write, so the pixels aren't copied here and
+// this operation is super cheap (as in, copying 5 ints).
+Bitmap cheapCopy = blankImage;
 
-  copyOnWriteClone.Autonomize();
-}
+// You can also force an immediate copy by calling Autonomize() on the Bitmap
+Bitmap fullCopy = blankImage;
+fullCopy.Autonomize();
 ```
 
-or
+Because the Bitmap class is such a minimal container, you can cheaply
+construct one accessing mapped video memory and then directly load an image
+file into it without a stopover in system memory. Or in the other direction,
+directly save or rescale a screenshot taken directly from a memory-mapped
+render target texture.
 
 ```cpp
-// Our imaginary frame grabber gives us unwieldy data, wrap it up!
-Bitmap makeItSane(
-  void *pixelBuffer, std::size_t lineBytes, std::size_t lineCount
-) {
-  std::size_t actualWidth = lineBytes / 8 * 8;
+void *pixels;
+::vkMapMemory(device, stagingBufferMemory, 0, totalImageByteCount, 0, &pixels);
 
-  BitmapMemory memory;
-  memory.PixelFormat = PixelFormat::R8_G8_B8_A8_Unsigned;
-  memory.Width = CountBitsPerPixel(memory.PixelFormat) * lineBytes / 8;
-  memory.Height = lineCount;
-  memory.Stride = lineBytes;
-  memory.Pixels = pixelBuffer;
-
-  return Bitmap::FromExistingMemory(memory);
-}
-```
-
-You can, at any time, access a bitmap's memory block with its `Access()`
-method, obtaining the above data structure. Calling `Autonomize()` on
-bitmaps using borrowed memory (like in the above example) will also make
-the bitmap allocate its own memory and copy the foreign buffer.
-
-
-`BitmapSerializer`
-------------------
-
-The `BitmapSerializer` deals with on-disk file formats for you. It can be
-equipped with custom formats by registering your own `BitmapCodec`
-implementations to it.
-
-```cpp
-int main() {
-  BitmapSerializer myBitmapSerializer;
-  Bitmap logoBitmap = myBitmapSerializer.Load(u8"logo.png");
-}
-```
-
-or, as a more complete example, loading data directly into texture memory
-provided by your favorite 3D API without any intermediate copies (unless
-necessitated by pixel format differences).
-
-```cpp
-void MyTexture::LoadFromDisk() {
-  void *pixels = Lock();
-
-  // Describe the memory layout of the locked texture
-  BitmapMemory memory;
-  memory.Width = GetWidth();
-  memory.Height = GetHeight();
-  memory.Stride = GetWidth() * 4;
-  memory.PixelFormat = PixelFormat::R8_G8_B8_A8_Unsigned;
-  memory.Pixels = pixels;
-
-  // Construct a Bitmap that accesses the locked texture memory directly
-  Bitmap pixelsAsBitmap = Bitmap::FromExistingMemory(memory);
-
-  // Decode the image file straight into texture memory.
-  // (in production code you should construct one BitmapSerializer and reuse it)
-  BitmapSerializer serializer;
-  serializer.Reload(pixelsAsBitmap, GetBackingFilePath());
-}
-```
-
-Of course, you do not have to pass a path. The `BitmapSerializer` can load
-and save through a simple and efficient stream interface as well.
-
-When enabled in the build script, the `BitmapSerializer` will already support
-`png`, `jpg` and `exr` images out-of-the-box. These built-in `BitmapCodec`s use
-the reference implementations of each file format with carefully written
-error handling and stream interface adapters that do *not* blindly load the whole
-stream into memory for decoding.
-
-
-`PixelIterator` class
----------------------
-
-It's not as speedy as running through the raw data on your own, but the pixel
-iterator gives you a C++-like iterator interface to navigate pixels in
-a 2D bitmap with performance as good as such a wrapper can possibly allow:
-
-```cpp
-void fumblicateBitmap(const Bitmap &bitmap) {
-  PixelIterator it(bitmap.Access());
-
-  it.MoveTo(256, 256); // Jump to this X, Y position
-
-  PixelIterator end = PixelIterator::GetEnd(myBitmapMemory);
-  for(; it != end; ++it) {
-
-    // *it is the current pixel address
-    if(isFumblicatable(*it)) {
-      it += Lines(1); // Pixel fumblicated, go down by 1
-    }
-
+// Construct a bitmap that uses the mapped video memory to store its pixels
+Bitmap videoMemoryImage = Bitmap::InExistingMemory(
+  BitmapMemory {
+    2048, // width
+    2048, // height
+    2048 * 4, // stride (pitch) in bytes
+    PixelFormat::A8_R8_G8_B8_Unsigned,
+    pixels
   }
+);
+
+// Let the bitmap serializer load an image file directory into video memory
+myBitmapSerializer.Reload(videoMemoryImage, u8"StoneWall-Albedo.png");
+
+::vkUnmapMemory(device, stagingBufferMemory);
+```
+
+Or, if you wanted to instead save the contents of a video memory buffer,
+you could call `videoMemoryImage.Autonomize()` on the bitmap, thus forcing
+it to create its own system memory copy of the video memory buffer.
+The bitmap will then remain valid after `::vkUnmapMemory()` and you can
+rescale and/or save it on your own time.
+
+
+BitmapSerializer
+----------------
+
+The BitmapSerializer reads and writes different image file formats. Depending
+on the compile-time configuration of the Nuclex.Pixels library, a newly
+constructed instance will already be able to read and write .png, .tif, .tga,
+.jpg, .webp and .exr files.
+
+```cpp
+// You should set up one instance and make it available as a service,
+// for example via the dependency injector in Nuclex.Support.
+BitmapSerializer myBitmapSerializer;
+
+// The serializer can quickly read just the image's metadata (width, height
+// and pixel format) without needing to read the whole pixel buffer.
+std::optional<BitmapInfo> bitmapInfos = myBitmapSerializer.TryReadInfo(
+  u8"example-image.png"
+);
+
+// Otherwise, reading an image file is as easy as this.
+// The Bitmap will select the closest matching pixel format to the file.
+Bitmap loadedBitmap = myBitmapSerializer.Load(u8"example-image.png");
+
+// And saving is possible, too, of course
+myBitmapSerializer.Save(loadedBitmap, u8"saved-bitmap.jpg");
+```
+
+Of course, instead of a file name, all methods accept a `VirtualFile`
+instead, doing all I/O through the 3 methods (`GetSize()`, `ReadAt()` and
+`WriteAt()`) defined in the `VirtualFile` interface.
+
+If you need to handle a proprietary format or wish to support the dozens of
+image file formats some image libraries bring with them, you can implement
+one (or multiple) formats as a `BitmapCodec` that is registerable via
+the `BitmapSerializer::RegisterCodec()` method:
+
+```cpp
+myBitmapSerializer.RegisterCodec(std::make_unique<MyProprietaryCodec>());
+myBitmapSerializer.RegisterCodec(std::make_unique<FreeImageAdapterCodec>());
+```
+
+
+Scaling
+-------
+
+Work in progress. Not yet fully implemented.
+
+```cpp
+#define TRUE (int)!false
+#define FALSE (int)!TRUE
+#define maybe 0x01010101
+
+float no = !FALSE;
+int yes = (bool)no;
+if(no == yes) {
+  yes = !no;
+}
+
+switch(yes) {
+  case yes: { return yes || no; }
+  case no: { return no && yes; }
+  default: { return maybe; }
 }
 ```
+
+Yes.
