@@ -38,11 +38,15 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
+  void discardJpegMessage(struct ::jpeg_common_struct *cinfo) { (void)cinfo; }
+
+  // ------------------------------------------------------------------------------------------- //
+
   /// <summary>Handles an error inside libjpeg</summary>
   /// <param name="info">Main structure containing all libjpeg configuration</param>
   /// <remarks>
   ///   <para>
-  ///     libjpeg  is a C library, but its error handling scheme expects this function to
+  ///     libjpeg is a C library, but its error handling scheme expects this function to
   ///     never return (either it calls abort() or longjmp()). To allow this, all memory
   ///     libjpeg allocates must be tracked in the jpeg_common_struct and there must be no
   ///     open ends on the stack when the error handler is called.
@@ -177,7 +181,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
     // If the extension indicates a JPEG file (or no extension was provided),
     // check the file header to see if this is really a JPEG file
     if(mightBeJpeg) {
-      std::size_t fileLength = source.GetSize();
+      std::uint64_t fileLength = source.GetSize();
       if(fileLength >= SmallestPossibleJpegSize) {
         std::uint8_t fileHeader[16];
         source.ReadAt(0, 16, fileHeader);
@@ -198,7 +202,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
 
   // ------------------------------------------------------------------------------------------- //
 
-  BitmapInfo JpegBitmapCodec::TryReadInfo(
+  std::optional<BitmapInfo> JpegBitmapCodec::TryReadInfo(
     const VirtualFile &source, const std::string &extensionHint /* = std::string() */
   ) const {
     (void)extensionHint; // Unused
@@ -212,6 +216,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       struct ::jpeg_error_mgr errorManager;
       ::jpeg_std_error(&errorManager);
       errorManager.error_exit = &handleJpegError;
+      errorManager.output_message = &discardJpegMessage;
       commonInfo.err = &errorManager;
 
       // Set up a custom data source that reads from a virtual file
@@ -220,18 +225,14 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
 
       // If the file is too small to be a JPEG image, bail out
       if(virtualFileSource.Length < SmallestPossibleJpegSize) {
-        BitmapInfo result;
-        result.Loadable = false;
-        return result;
+        return std::optional<BitmapInfo>();
       }
 
       // Do the first fill ourselves so we can check the file's identity
       // and exit early if it doesn't look like a JPEG file
       virtualFileSource.fill_input_buffer(&commonInfo);
       if(!Helpers::IsValidJpegHeader(virtualFileSource.Buffer)) {
-        BitmapInfo result;
-        result.Loadable = false;
-        return result;
+        return std::optional<BitmapInfo>();
       }
 
       // Finally, we can read the JPEG file header to get file infos
@@ -242,10 +243,9 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
 
       // Create an information structure holding the informations we found
       BitmapInfo info;
-      info.Loadable = true;
       info.Width = static_cast<std::size_t>(commonInfo.image_width);
       info.Height = static_cast<std::size_t>(commonInfo.image_height);
-      info.PixelFormat = Helpers::GetEquivalentPixelFormat(commonInfo);
+      info.PixelFormat = Helpers::GetClosestPixelFormat(commonInfo);
       info.MemoryUsage = (
         (CountRequiredBytes(info.PixelFormat, info.Width) * info.Height) +
         (sizeof(std::intptr_t) * 3) +
@@ -258,7 +258,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
 
   // ------------------------------------------------------------------------------------------- //
 
-  OptionalBitmap JpegBitmapCodec::TryLoad(
+  std::optional<Bitmap> JpegBitmapCodec::TryLoad(
     const VirtualFile &source, const std::string &extensionHint /* = std::string() */
   ) const {
     (void)extensionHint; // Unused
@@ -272,6 +272,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       struct ::jpeg_error_mgr errorManager;
       ::jpeg_std_error(&errorManager);
       errorManager.error_exit = &handleJpegError;
+      errorManager.output_message = &discardJpegMessage;
       commonInfo.err = &errorManager;
 
       // Set up a custom data source that reads from a virtual file
@@ -280,20 +281,20 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
 
       // If the file is too small for even the JPEG/JFIF header, bail out
       if(virtualFileSource.Length < SmallestPossibleJpegSize) {
-        return OptionalBitmap();
+        return std::optional<Bitmap>();
       }
 
       // Do the first fill ourselves so we can check the file's identity
       // and exit early if it doesn't look like a JPEG file
       virtualFileSource.fill_input_buffer(&commonInfo);
       if(!Helpers::IsValidJpegHeader(virtualFileSource.Buffer)) {
-        return OptionalBitmap(); // file header did not indicate a JPEG file
+        return std::optional<Bitmap>(); // file header did not indicate a JPEG file
       }
 
       // Finally, we can read the JPEG file header to get file infos
       int result = ::jpeg_read_header(&commonInfo, TRUE);
       if(result != JPEG_HEADER_OK) {
-        throw std::runtime_error(u8"libjpeg failed to read the file header");
+        throw Errors::FileFormatError(u8"libjpeg failed to read the file header");
       }
 
       // TODO: Use fastest color space and copy/convert to Bitmap
@@ -306,10 +307,10 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       // usually to the same as image_width, image_height unless scaling is set up.
       ::boolean startedWithoutSuspension = ::jpeg_start_decompress(&commonInfo);
       if(startedWithoutSuspension == FALSE) { // decompressor was suspended -- we don't support this
-        throw std::runtime_error(u8"Input file truncated");
+        throw Errors::FileFormatError(u8"Input file truncated");
       }
 
-      // Create the bitmap so we can directly decode into its pixel buffer 
+      // Create the bitmap so we can directly decode into its pixel buffer
       Bitmap decodedBitmap(
         static_cast<std::size_t>(commonInfo.output_width),
         static_cast<std::size_t>(commonInfo.output_height),
@@ -324,7 +325,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       while(commonInfo.output_scanline < commonInfo.output_height) {
         JDIMENSION readScanlineCount = ::jpeg_read_scanlines(&commonInfo, &currentRowPointer, 1);
         if(readScanlineCount != 1) {
-          throw std::runtime_error(u8"Unknown error reading scanline from jpeg");
+          throw Errors::FileFormatError(u8"Unknown error reading scanline from jpeg");
         }
         currentRowPointer += memory.Stride;
       }
@@ -334,10 +335,10 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       // market (in case it contains multiple images).
       ::boolean endedWithoutSuspension = ::jpeg_finish_decompress(&commonInfo);
       if(endedWithoutSuspension == FALSE) { // decompressor was suspended -- we don't support this
-        throw std::runtime_error(u8"Input file truncated");
+        throw Errors::FileFormatError(u8"Input file truncated");
       }
 
-      return OptionalBitmap(std::move(decodedBitmap));
+      return std::optional<Bitmap>(std::move(decodedBitmap));
     }
   }
 
@@ -358,6 +359,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       struct ::jpeg_error_mgr errorManager;
       ::jpeg_std_error(&errorManager);
       errorManager.error_exit = &handleJpegError;
+      errorManager.output_message = &discardJpegMessage;
       commonInfo.err = &errorManager;
 
       // Set up a custom data source that reads from a virtual file
@@ -379,7 +381,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       // Finally, we can read the JPEG file header to get file infos
       int result = ::jpeg_read_header(&commonInfo, TRUE);
       if(result != JPEG_HEADER_OK) {
-        throw std::runtime_error(u8"libjpeg failed to read the file header");
+        throw Errors::FileFormatError(u8"libjpeg failed to read the file header");
       }
 
       // TODO: Use fastest color space and copy/convert to Bitmap
@@ -392,7 +394,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       // usually to the same as image_width, image_height unless scaling is set up.
       ::boolean startedWithoutSuspension = ::jpeg_start_decompress(&commonInfo);
       if(startedWithoutSuspension == FALSE) { // decompressor was suspended -- we don't support this
-        throw std::runtime_error(u8"Input file truncated");
+        throw Errors::FileFormatError(u8"Input file truncated");
       }
 
       const BitmapMemory &memory = exactlyFittingBitmap.Access();
@@ -414,7 +416,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       while(commonInfo.output_scanline < commonInfo.output_height) {
         JDIMENSION readScanlineCount = ::jpeg_read_scanlines(&commonInfo, &currentRowPointer, 1);
         if(readScanlineCount != 1) {
-          throw std::runtime_error(u8"Unknown error reading scanline from jpeg");
+          throw Errors::FileFormatError(u8"Unknown error reading scanline from jpeg");
         }
         currentRowPointer += memory.Stride;
       }
@@ -424,7 +426,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       // market (in case it contains multiple images).
       ::boolean endedWithoutSuspension = ::jpeg_finish_decompress(&commonInfo);
       if(endedWithoutSuspension == FALSE) { // decompressor was suspended -- we don't support this
-        throw std::runtime_error(u8"Input file truncated");
+        throw Errors::FileFormatError(u8"Input file truncated");
       }
 
       return true;
@@ -433,9 +435,14 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void JpegBitmapCodec::Save(const Bitmap &bitmap, VirtualFile &target) const {
+  void JpegBitmapCodec::Save(
+    const Bitmap &bitmap, VirtualFile &target,
+    float compressionEffortHint /* = 0.75f */, float outputQualityHint /* = 0.95f */
+  ) const {
     (void)bitmap;
     (void)target;
+    (void)compressionEffortHint;
+    (void)outputQualityHint;
 
     ::jpeg_compress_struct commonInfo;
     ::jpeg_create_compress(&commonInfo);

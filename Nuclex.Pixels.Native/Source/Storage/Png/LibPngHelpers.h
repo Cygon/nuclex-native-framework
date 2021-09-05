@@ -44,14 +44,19 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Helper class for reading JPEG files using libjpeg</summary>
+  /// <summary>Helper class for reading PNG files using libpng</summary>
   class Helpers {
+
+    /// <summary>Checks if the specified file starts with a valid .png header</summary>
+    /// <param name="source">File that will be checked for a valid .png header</param>
+    /// <returns>True if a valid .png header was found, false otherwise</returns>
+    public: static bool CheckIfPngHeaderPresent(const VirtualFile &source);
 
     /// <summary>Finds the supported pixel format that is closest to the PNG's</summary>
     /// <param name="pngRead">Main PNG structure storing libpng settings</param>
     /// <param name="pngInfo">PNG info structure storing information about an image</param>
     /// <returns>The pixel format that's most like the one of the PNG image</returns>
-    public: static PixelFormat GetEquivalentPixelFormat(
+    public: static PixelFormat GetClosestPixelFormat(
       const ::png_struct &pngRead, const ::png_info &pngInfo
     );
 

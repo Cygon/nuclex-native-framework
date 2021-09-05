@@ -158,7 +158,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
   bool Helpers::IsValidJpegHeader(const std::uint8_t *fileHeader) {
     return (
       (fileHeader[0] == 0xff) && //  1 SOI ("Start of Image" marker)
-      (fileHeader[1] == 0xd8) && //  1 
+      (fileHeader[1] == 0xd8) && //  1
       (fileHeader[2] == 0xff) && //  2 JFIF marker (magic number #1)
       (fileHeader[3] == 0xe0) && //  2
       (
@@ -183,9 +183,9 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
   /// <summary>Finds the supported pixel format that is closest to the JPEG's</summary>
   /// <param name="commonInfo">JPEG decompression structure with image information</param>
   /// <returns>The pixel format that's most like the one of the JPEG image</returns>
-  PixelFormat Helpers::GetEquivalentPixelFormat(const ::jpeg_decompress_struct &commonInfo) {
+  PixelFormat Helpers::GetClosestPixelFormat(const ::jpeg_decompress_struct &commonInfo) {
     switch(commonInfo.jpeg_color_space) {
-      case JCS_UNKNOWN: { 
+      case JCS_UNKNOWN: {
         throw Nuclex::Pixels::Errors::FileFormatError(u8"Unsupported pixel format");
       }
       case JCS_GRAYSCALE: {

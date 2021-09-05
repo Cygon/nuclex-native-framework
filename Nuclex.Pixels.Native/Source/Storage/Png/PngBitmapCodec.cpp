@@ -27,9 +27,10 @@ License along with this library
 
 #include "Nuclex/Pixels/Storage/VirtualFile.h"
 #include "Nuclex/Pixels/Errors/FileFormatError.h"
+
 #include "LibPngHelpers.h"
 
-#include <png.h>
+#include <png.h> // libpng main header
 
 namespace {
 
@@ -52,7 +53,7 @@ namespace {
   /// </remarks>
   void handlePngError(::png_struct *png, const char *errorMessage) {
     (void)png;
-    throw std::runtime_error(errorMessage);
+    throw Nuclex::Pixels::Errors::FileFormatError(errorMessage);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -76,7 +77,7 @@ namespace {
     /// </param>
     public: PngReadScope(::png_struct *pngStruct) :
       pngStruct(pngStruct) {}
-    
+
     /// <summary>Frees the PNG main structure</summary>
     public: ~PngReadScope() {
       ::png_destroy_read_struct(&this->pngStruct, nullptr, nullptr);
@@ -100,7 +101,7 @@ namespace {
     public: PngInfoScope(const ::png_struct *pngStruct, ::png_info *pngInfo) :
       pngStruct(pngStruct),
       pngInfo(pngInfo) {}
-    
+
     /// <summary>Frees the PNG information structure</summary>
     public: ~PngInfoScope() {
       ::png_destroy_info_struct(this->pngStruct, &this->pngInfo);
@@ -128,10 +129,15 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
 
   // ------------------------------------------------------------------------------------------- //
 
-  BitmapInfo PngBitmapCodec::TryReadInfo(
+  std::optional<BitmapInfo> PngBitmapCodec::TryReadInfo(
     const VirtualFile &source, const std::string &extensionHint /* = std::string() */
   ) const {
     (void)extensionHint; // Unused
+
+    // If this doesn't look like a .png file, bail out immediately
+    if(!Helpers::CheckIfPngHeaderPresent(source)) {
+      return std::optional<BitmapInfo>();
+    }
 
     // Allocate the main LibPNG structure. It contains all pointers to user-defined
     // functions (IO, error handling and custom chunk processing, etc.)
@@ -143,9 +149,6 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
     }
     {
       PngReadScope pngReadScope(pngRead);
-
-      // Go with setjmp()/longjmp() here to avoid exceptions for TryReadInfo()?
-      // Probably better to just add the signature check here
 
       // Install a custom error handler function that simply throws a C++ exception.
       // LibPNG is one of the few C libraries designed to allow exceptions passing through.
@@ -169,10 +172,9 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
         ::png_read_info(pngRead, pngInfo);
 
         BitmapInfo result;
-        result.Loadable = true;
         result.Width = ::png_get_image_width(pngRead, pngInfo);
         result.Height = ::png_get_image_height(pngRead, pngInfo);
-        result.PixelFormat = Helpers::GetEquivalentPixelFormat(*pngRead, *pngInfo);
+        result.PixelFormat = Helpers::GetClosestPixelFormat(*pngRead, *pngInfo);
         result.MemoryUsage = (
           (CountRequiredBytes(result.PixelFormat, result.Width) * result.Height) +
           (sizeof(std::intptr_t) * 3) +
@@ -219,7 +221,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
     // If the extension indicates a PNG file (or no extension was provided),
     // check the file header to see if this is really a PNG file
     if(mightBePng) {
-      std::size_t fileLength = source.GetSize();
+      std::uint64_t fileLength = source.GetSize();
       if(fileLength >= SmallestPossiblePngSize) {
         std::uint8_t fileHeader[16];
         source.ReadAt(0, 16, fileHeader);
@@ -231,103 +233,6 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
       return false;
     }
 
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  bool PngBitmapCodec::CanSave() const {
-    return false; // Still working in this...
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  OptionalBitmap PngBitmapCodec::TryLoad(
-    const VirtualFile &source, const std::string &extensionHint /* = std::string() */
-  ) const {
-    (void)extensionHint;
-    
-    // Allocate the main LibPNG structure. It contains all pointers to user-defined
-    // functions (IO, error handling and custom chunk processing, etc.)
-    ::png_struct *pngRead = ::png_create_read_struct(
-      PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr
-    );
-    if(pngRead == nullptr) {
-      throw std::bad_alloc();
-    }
-    {
-      PngReadScope pngReadScope(pngRead);
-
-      // Install a custom error handler function that simply throws a C++ exception.
-      // LibPNG is one of the few C libraries designed to allow exceptions passing through.
-      ::png_set_error_fn(pngRead, nullptr, &handlePngError, &handlePngWarning);
-
-      // We also need the info structure. This holds all importing informations describing
-      // the image's dimensions, pixel format, palette, gamma etc.
-      ::png_info *pngInfo = ::png_create_info_struct(pngRead);
-      if(pngInfo == nullptr) {
-        throw std::bad_alloc();
-      }
-      {
-        PngInfoScope pngInfoScope(pngRead, pngInfo);
-
-        // Install a custom read function. This is used to read data from the virtual
-        // file. The read environment emulates a file cursor.
-        PngReadEnvironment environment(*pngRead, source);
-
-        // Now we're ready for actually accessing a PNG file, attempt to obtain the image's
-        // resolution, pixel format and so on
-        ::png_read_info(pngRead, pngInfo);
-
-        std::size_t width = ::png_get_image_width(pngRead, pngInfo);
-        std::size_t height = ::png_get_image_height(pngRead, pngInfo);
-        PixelFormat pixelFormat = Helpers::GetEquivalentPixelFormat(*pngRead, *pngInfo);
-
-        Bitmap image(width, height, pixelFormat);
-        const BitmapMemory &memory = image.Access();
-
-        std::size_t bytesPerRow = ::png_get_rowbytes(pngRead, pngInfo);
-        if(bytesPerRow > static_cast<std::size_t>(std::abs(memory.Stride))) {
-          throw std::runtime_error(u8"libpng row size unexpectedly large, wrong pixel format?");
-        }
-
-        std::vector<::png_byte *> rowAddresses;
-        {
-          rowAddresses.reserve(height);
-
-          std::uint8_t *rowStartPointer = reinterpret_cast<std::uint8_t *>(memory.Pixels);
-          for(std::size_t index = 0; index < height; ++index) {
-            rowAddresses.push_back(rowStartPointer);
-            rowStartPointer += memory.Stride;
-          }
-        }
-
-        ::png_read_image(pngRead, &rowAddresses[0]);
-
-        return OptionalBitmap(std::move(image));
-      }
-    }
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  bool PngBitmapCodec::TryReload(
-    Bitmap &exactlyFittingBitmap,
-    const VirtualFile &source, const std::string &extensionHint /* = std::string() */
-  ) const {
-    (void)exactlyFittingBitmap;
-    (void)source;
-    (void)extensionHint;
-
-    throw std::runtime_error(u8"Not implemented yet");
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  void PngBitmapCodec::Save(const Bitmap &bitmap, VirtualFile &target) const {
-    (void)bitmap;
-    (void)target;
-
-    throw std::runtime_error(u8"Not implemented yet");
   }
 
   // ------------------------------------------------------------------------------------------- //

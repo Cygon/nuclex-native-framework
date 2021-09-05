@@ -46,8 +46,9 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
   /// <summary>Size of the smallest valid JPEG file possible</summary>
   /// <remarks>
   ///   From https://stackoverflow.com/questions/2253404
+  ///   From https://github.com/mathiasbynens/small/blob/master/jpeg.jpg
   /// </remarks>
-  constexpr const std::size_t SmallestPossibleJpegSize = 119; // byte
+  constexpr const std::size_t SmallestPossibleJpegSize = 107; // byte
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -68,7 +69,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
     /// <summary>Finds the supported pixel format that is closest to the JPEG's</summary>
     /// <param name="commonInfo">JPEG decompression structure with image information</param>
     /// <returns>The pixel format that's most like the one of the JPEG image</returns>
-    public: static PixelFormat GetEquivalentPixelFormat(
+    public: static PixelFormat GetClosestPixelFormat(
       const ::jpeg_decompress_struct &commonInfo
     );
 
