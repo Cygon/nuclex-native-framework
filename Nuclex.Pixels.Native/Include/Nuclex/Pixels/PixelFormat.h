@@ -65,8 +65,8 @@ License along with this library
 // - Native16/Native32 formats are present when it's convenient to treat them that way
 //   (i.e. if color channels are 16/32 bits or if whole pixel fits in 16/32 bits)
 //   Also taking into consideration when a known API exposes such a format.
-// - If Native16/Native32 exist, normally a Flipped16/Flipped32 exists, too.
-//   Often, the Flipped32 variant happens to be another common (non-BE) pixel format.
+// - If Native16/Native32 exist, a Flipped16/Flipped32 may exist, too.
+//   Either because the Flipped32 variant matches another HW format or for cross-endianness.
 // - Big endian support is not a goal currently, but design is careful to not prevent it.
 //   (i.e. no Flipped16/Flipped32 for floats that would be needed for big endian,
 //   but these can be added; enum is endian-specific, so if an image is loaded on
@@ -78,6 +78,29 @@ License along with this library
 //   the PixelFormatDescription<> template for each pixel format.
 // - So the only useful informations to encode in the pixel format enum directly are
 //
+
+// More design notes:
+//
+// Oww, my brain! The name of all formats gives the in-memory order,
+// but when the whole 16 bit pixel format is _Native16...
+//
+// If we'd go with "format name is memory order" and then this won't
+// be true for B5_G6_R5.
+//
+// Maybe we can achieve consistency if the format name is defined to
+// state the /observed/ layout in the PixelType?
+// And the _Flipped16 variant would require endian flipping anyway...
+//
+// But then the non-_Native16/_Flipped16 formats (which actually
+// specify memory order) would lie on little endian (i.e. all) systems.
+//
+// Solution
+// - non-_Native16/_Flipped16 formats are always byte-aligned
+// - _NativeXX (where XX = pixel size) formats state observed order
+// - _FlippedXX (where XX = pixel size) formats same, but after endian flip
+// - Some formats only have _NativeXX without _FlippedXX, these are not
+//   cross-endian-serialization safe, obviously. Perhaps this could be
+//   another method for PixelFormatQuery (+ GetClosestEndianSafeFormat())?
 
 namespace Nuclex { namespace Pixels {
 
@@ -93,27 +116,55 @@ namespace Nuclex { namespace Pixels {
   /// <summary>Color channel sets and their bit layouts used to describe a pixel</summary>
   /// <remarks>
   ///   <para>
-  ///     All pixel formats specify the in-memory ordering of the color channels (anything
-  ///     else would be insane, considering non-byte-sized color channels in R5-G6-B5 and
-  ///     A2-R10-G10-B10). Thus, R8-G8-B8-A8 is the same in memory, no matter if big endian
-  ///     or little endian. R5-G6-B5 will also look the same in memory, meaning the green
-  ///     channel will be split.
+  ///     Pixel formats are named after the in-memory ordering of the color channels,
+  ///     with _NativeXX / _FlippedXX postfixes to indicate if part of all of the bytes are
+  ///     dependent on the native byte order (endianness).
   ///   </para>
   ///   <para>
-  ///     The exception to this are pixel formats ending in _NativeNN and _FlippedNN.
-  ///     These consist of native types sized 'NN' bytes, so R16_Native16 would be
-  ///     a little endian integer on Intel platforms, for example. Some popular GPU
-  ///     pixel formats are in fact little endian. Native indicates the current platform's
-  ///     byte order, flipped the opposite one.
+  ///     For example, R8_G8_B8_A8_Unsigned would always have the bytes in that exact
+  ///     order in memory. If you read it into an std::uint32_t on a little endian system,
+  ///     the red channel's mask would be 0x000000ff while on a big endian system, it would
+  ///     be 0xff000000.
   ///   </para>
   ///   <para>
-  ///     The enum values are defined as follows:
+  ///     If the format was called R8_G8_B8_A8_Unsigned_Native32, the channel order is
+  ///     the <em>observed</em> order when stored in the platform's native std::uint32_t,
+  ///     thus, the red channel's mask would be 0xff000000 on both endians, with memory
+  ///     order being platform dependent. Formats with non-byte-aligned channels only provide
+  ///     native byte order constants, i.e. R5_G6_B5_Unsigned_Native16 or
+  ///     A2_R10_G10_B10_Unsigned_Native32 because (afaik) there's not crazy hardware that
+  ///     demands endian-flipped channels (like G3_B5_R5_G3) as input.
+  ///   </para>
+  ///   <para>
+  ///     All formats with _NativeXX / _FlippedXX postfixes encode their endianness:
+  ///   </para>
+  ///   <para>
+  ///     <code>
+  ///       // Library compiled for + running on little endian system
+  ///       A8_R8_G8_B8_Unsigned_Native32 == 69261352
+  ///       A8_R8_G8_B8_Unsigned_Flipped32 == 69261356
+  ///
+  ///       // Library compiles for + running on big endian system
+  ///       A8_R8_G8_B8_Unsigned_Native32 == 69261356
+  ///       A8_R8_G8_B8_Unsigned_Flipped32 == 69261352
+  ///     </code>
+  ///   </para>
+  ///   <para>
+  ///     For pure runtime usage, this behavior is of no consequence. But if you numerically
+  ///     save the pixel format constant to a file and open that file on an opposite-endian
+  ///     system, the opposite-endian system will automatically see it as endian-flipped and
+  ///     load it correctly. Some format have only _NativeXX variants and no _FlippedXX
+  ///     variant - these formats are not safe for cross-endian serialization and would map
+  ///     to an unassigned pixel format when you load them.
+  ///   </para>
+  ///   <para>
+  ///     Here's a complete list of the information the enum values encode in their bits:
   ///   </para>
   ///   <code>
   ///     0sssssss pppppppp ccnnnnnn nnnnnfff
   ///   </code>
   ///   <para>
-  ///     Where 's' indicates the size of the smallest unit addressable in the pixel format
+  ///     The 's' indicates the size of the smallest unit addressable in the pixel format
   ///     in bytes. For a 32 bit RGBA format, this would be 4 (if a write to the texture
   ///     was off by two bytes, R would become B, G would become A and so on). Compressed
   ///     pixel formats may have larger chunks - DXT5 for example would only be addressable
@@ -428,6 +479,10 @@ namespace Nuclex { namespace Pixels {
     /// </remarks>
     R8_A8_Unsigned = (2 << 24) | (16 << 16) | (1 << 14) | 4096 | 0,
 
+    #pragma endregion // Format 4096-4103 | R8_A8 (unsigned)
+
+    #pragma region Format 4104-4111 | R16_A16 (unsigned)
+
     /// <summary>8 bit unsigned single color with an alpha channel</summary>
     /// <remarks>
     ///   <para>
@@ -447,27 +502,16 @@ namespace Nuclex { namespace Pixels {
     ///   </para>
     /// </remarks>
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    R16_A16_Unsigned_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 4096 | 4,
+    R16_A16_Unsigned_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 4104 | 4,
 #else
-    R16_A16_Unsigned_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 4096 | 0,
+    R16_A16_Unsigned_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 4104 | 0,
 #endif
 
     // CHECK: Add unsigned flipped32 formats to exchange above format with BE systems?
 
-    #pragma endregion // Format 4096-4103 | R8_A8 (unsigned)
+    #pragma endregion // Format 4104-4111 | R16_A16 (unsigned)
 
     #pragma region Format 5120-5127 | R5_G6_B5 (unsigned)
-
-    /// <summary>16 bit in memory order with three colors<summary>
-    /// <remarks>
-    ///   <para>
-    ///     Space-saving RGB format.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout: R₄R₃R₂R₁R₀G₅G₄G₃ | G₂G₁G₀B₄B₃B₂B₁B₀
-    ///   </para>
-    /// </remarks>
-    R5_G6_B5_Unsigned = (2 << 24) | (16 << 16) | (2 << 14) | 5120 | 0,
 
     /// <summary>16 bit in native endianness with three colors<summary>
     /// <remarks>
@@ -488,40 +532,12 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     R5_G6_B5_Unsigned_Native16 = (2 << 24) | (16 << 16) | (2 << 14) | 5120 | 4,
 #else
-    R5_G6_B5_Unsigned_Native16 = R5_G6_B5_Unsigned,
-#endif
-
-    /// <summary>16 bit in reversed native endianness with three colors<summary>
-    /// <remarks>
-    ///   <para>
-    ///     Space-saving RGB format. This uses the native format, so what ends
-    ///     up in memory depends on the platform the library is compiled for.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout LE: R₄R₃R₂R₁R₀G₅G₄G₃ | G₂G₁G₀B₄B₃B₂B₁B₀
-    ///     Memory layout BE: G₂G₁G₀B₄B₃B₂B₁B₀ | R₄R₃R₂R₁R₀G₅G₄G₃
-    ///   </para>
-    /// </remarks>
-#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    R5_G6_B5_Unsigned_Flipped16 = R5_G6_B5_Unsigned,
-#else
-    R5_G6_B5_Unsigned_Flipped16 = (2 << 24) | (16 << 16) | (2 << 14) | 5120 | 4,
+    R5_G6_B5_Unsigned_Native16 = (2 << 24) | (16 << 16) | (2 << 14) | 5120 | 0,
 #endif
 
     #pragma endregion // Format 5120-5127 | R5_G6_B5 (unsigned)
 
     #pragma region Format 5128-5135 | B5_G6_R5 (unsigned)
-
-    /// <summary>16 bit in memory order with three colors<summary>
-    /// <remarks>
-    ///   <para>
-    ///     Space-saving BGR format.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout: B₄B₃B₂B₁B₀G₅G₄G₃ | G₂G₁G₀R₄R₃R₂R₁R₀
-    ///   </para>
-    /// </remarks>
-    B5_G6_R5_Unsigned = (2 << 24) | (16 << 16) | (2 << 14) | 5128 | 0,
 
     /// <summary>16 bit in native endianness with three colors<summary>
     /// <remarks>
@@ -541,24 +557,7 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     B5_G6_R5_Unsigned_Native16 = (2 << 24) | (16 << 16) | (2 << 14) | 5128 | 4,
 #else
-    B5_G6_R5_Unsigned_Native16 = B5_G6_R5_Unsigned,
-#endif
-
-    /// <summary>16 bit in reversed native endianness with three colors<summary>
-    /// <remarks>
-    ///   <para>
-    ///     Space-saving BGR format. This uses the native format, so what ends
-    ///     up in memory depends on the platform the library is compiled for.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout LE: B₄B₃B₂B₁B₀G₅G₄G₃ | G₂G₁G₀R₄R₃R₂R₁R₀
-    ///     Memory layout BE: G₂G₁G₀R₄R₃R₂R₁R₀ | B₄B₃B₂B₁B₀G₅G₄G₃
-    ///   </para>
-    /// </remarks>
-#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    B5_G6_R5_Unsigned_Flipped16 = B5_G6_R5_Unsigned,
-#else
-    B5_G6_R5_Unsigned_Flipped16 = (2 << 24) | (16 << 16) | (2 << 14) | 5128 | 4,
+    B5_G6_R5_Unsigned_Native16 = (2 << 24) | (16 << 16) | (2 << 14) | 5128 | 0,
 #endif
 
     #pragma endregion // Format 5128-5135 | B5_G6_R5 (unsigned)
@@ -633,7 +632,44 @@ namespace Nuclex { namespace Pixels {
     B8_G8_R8_Signed = (3 << 24) | (24 << 16) | (2 << 14) | 5144 | 1,
 
     #pragma endregion // Format 5144-5151 | B8_G8_R8 (unsigned, signed)
+#if 0
+    #pragma region Format 5152-5159 | R16_G16_B16 (unsigned)
 
+    /// <summary>48 bits total with unsigned red, green and blue channels</summary>
+    /// <remarks>
+    ///   <para>
+    ///     Used for compact storage in some image file formats, i.e. PNG.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout: B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///                    G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                    R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///   </para>
+    /// </remarks>
+    R16_G16_B16_Unsigned = (3 << 24) | (24 << 16) | (2 << 14) | 5152 | 0,
+
+    /// <summary>48 bit color using 16 bits for each channel</summary>
+    /// <remarks>
+    ///   <para>
+    ///     A 48 bit format with unsigned integer values in native byte order.
+    ///   </para>
+    ///   <para>
+    ///     Memory layout LE: B₇B₆B₅B₄B₃B₂B₁B₀ | B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈
+    ///                       G₇G₆G₅G₄G₃G₂G₁G₀ | G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈
+    ///                       R₇R₆R₅R₄R₃R₂R₁R₀ | R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈
+    ///     Memory layout BE: B₁₅B₁₄B₁₃B₁₂B₁₁B₁₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
+    ///                       G₁₅G₁₄G₁₃G₁₂G₁₁G₁₀G₉G₈ | G₇G₆G₅G₄G₃G₂G₁G₀
+    ///                       R₁₅R₁₄R₁₃R₁₂R₁₁R₁₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
+    ///   </para>
+    /// </remarks>
+#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
+    R16_G16_B16_Unsigned_Native16 = (8 << 24) | (64 << 16) | (3 << 14) | 5152 | 4,
+#else
+    R16_G16_B16_Unsigned_Native16 = A16_B16_G16_R16_Unsigned,
+#endif
+
+    #pragma endregion // Format 5152-5159 | R16_G16_B16 (unsigned)
+#endif
     #pragma region Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (unsigned)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
@@ -1755,18 +1791,6 @@ namespace Nuclex { namespace Pixels {
 
     #pragma region Format 7168-7175 | A2_B10_G10_R10 (unsigned)
 
-    /// <summary>32 bit in memory order with three colors<summary>
-    /// <remarks>
-    ///   <para>
-    ///     Space-saving RGB format.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout: A₁A₀B₉B₈B₇B₆B₅B₄ | B₃B₂B₁B₀G₉G₈G₇G₆
-    ///                    G₅G₄G₃G₂G₁G₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
-    ///   </para>
-    /// </remarks>
-    A2_B10_G10_R10_Unsigned = (4 << 24) | (32 << 16) | (3 << 14) | 7168 | 0,
-
     /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
     /// <remarks>
     ///   <para>
@@ -1786,43 +1810,12 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     A2_B10_G10_R10_Unsigned_Native32 = (4 << 24) | (32 << 16) | (3 << 14) | 7168 | 4,
 #else
-    A2_B10_G10_R10_Unsigned_Native32 = A2_B10_G10_R10_Unsigned,
-#endif
-
-    /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
-    /// <remarks>
-    ///   <para>
-    ///     This uses the native format, so what ends up in memory depends
-    ///     on the platform the library is compiled for.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout LE: A₁A₀B₉B₈B₇B₆B₅B₄ | B₃B₂B₁B₀G₉G₈G₇G₆
-    ///                       G₅G₄G₃G₂G₁G₀R₉R₈ | R₇R₆R₅R₄R₃R₂R₁R₀
-    ///     Memory layout BE: R₇R₆R₅R₄R₃R₂R₁R₀ | G₅G₄G₃G₂G₁G₀R₉R₈
-    ///                       B₃B₂B₁B₀G₉G₈G₇G₆ | A₁A₀B₉B₈B₇B₆B₅B₄
-    ///   </para>
-    /// </remarks>
-#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    A2_B10_G10_R10_Unsigned_Flipped32 = A2_B10_G10_R10_Unsigned,
-#else
-    A2_B10_G10_R10_Unsigned_Flipped32 = (4 << 24) | (32 << 16) | (3 << 14) | 7168 | 4,
+    A2_B10_G10_R10_Unsigned_Native32 = (4 << 24) | (32 << 16) | (3 << 14) | 7168 | 0,
 #endif
 
     #pragma endregion // Format 7168-7175 | A2_B10_G10_R10 (unsigned)
 
     #pragma region Format 7176-7183 | A2_R10_G10_B10 (unsigned)
-
-    /// <summary>32 bit in memory order with three colors<summary>
-    /// <remarks>
-    ///   <para>
-    ///     Space-saving RGB format.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout: A₁A₀R₉R₈R₇R₆R₅R₄ | R₃R₂R₁R₀G₉G₈G₇G₆
-    ///                    G₅G₄G₃G₂G₁G₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
-    ///   </para>
-    /// </remarks>
-    A2_R10_G10_B10_Unsigned = (4 << 24) | (32 << 16) | (3 << 14) | 7176 | 0,
 
     /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
     /// <remarks>
@@ -1844,26 +1837,7 @@ namespace Nuclex { namespace Pixels {
 #if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
     A2_R10_G10_B10_Unsigned_Native32 = (4 << 24) | (32 << 16) | (3 << 14) | 7176 | 4,
 #else
-    A2_R10_G10_B10_Unsigned_Native32 = A2_R10_G10_B10_Unsigned,
-#endif
-
-    /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
-    /// <remarks>
-    ///   <para>
-    ///     This uses the native format, so what ends up in memory depends
-    ///     on the platform the library is compiled for.
-    ///   </para>
-    ///   <para>
-    ///     Memory layout LE: A₁A₀R₉R₈R₇R₆R₅R₄ | R₃R₂R₁R₀G₉G₈G₇G₆
-    ///                       G₅G₄G₃G₂G₁G₀B₉B₈ | B₇B₆B₅B₄B₃B₂B₁B₀
-    ///     Memory layout BE: B₇B₆B₅B₄B₃B₂B₁B₀ | G₅G₄G₃G₂G₁G₀B₉B₈
-    ///                       R₃R₂R₁R₀G₉G₈G₇G₆ | A₁A₀R₉R₈R₇R₆R₅R₄
-    ///   </para>
-    /// </remarks>
-#if defined(NUCLEX_PIXELS_LITTLE_ENDIAN)
-    A2_R10_G10_B10_Unsigned_Flipped32 = A2_R10_G10_B10_Unsigned,
-#else
-    A2_R10_G10_B10_Unsigned_Flipped32 = (4 << 24) | (32 << 16) | (3 << 14) | 7176 | 4,
+    A2_R10_G10_B10_Unsigned_Native32 = (4 << 24) | (32 << 16) | (3 << 14) | 7176 | 0,
 #endif
 
     #pragma endregion // Format 7176-7183 | A2_R10_G10_B10 (unsigned)
@@ -1877,7 +1851,7 @@ namespace Nuclex { namespace Pixels {
   /// </summary>
   /// <param name="pixelFormat">Pixel format whose bits per pixel will be determined</param>
   /// <returns>The bits per pixel in the specified pixel format</returns>
-  constexpr inline std::size_t CountBitsPerPixel(PixelFormat pixelFormat) {
+  NUCLEX_PIXELS_API constexpr inline std::size_t CountBitsPerPixel(PixelFormat pixelFormat) {
     return (static_cast<std::size_t>(pixelFormat) >> 16) & 0xFF;
   }
 
@@ -1888,7 +1862,7 @@ namespace Nuclex { namespace Pixels {
   /// </summary>
   /// <param name="pixelFormat">Pixel format whose unit size will be determined</param>
   /// <returns>The smallest changeable number of bytes in the specified pixel format</returns>
-  constexpr inline std::size_t CountBytesPerBlock(PixelFormat pixelFormat) {
+  NUCLEX_PIXELS_API constexpr inline std::size_t CountBytesPerBlock(PixelFormat pixelFormat) {
     return (static_cast<std::size_t>(pixelFormat) >> 24);
   }
 
@@ -1902,7 +1876,7 @@ namespace Nuclex { namespace Pixels {
   ///   Number of pixels for which the memory required will be calculated
   /// </param>
   /// <returns>The size of a single pixel in the specified pixel format</returns>
-  constexpr inline std::size_t CountRequiredBytes(
+  NUCLEX_PIXELS_API constexpr inline std::size_t CountRequiredBytes(
     PixelFormat pixelFormat, std::size_t pixelCount
   ) {
     return ((CountBitsPerPixel(pixelFormat) * pixelCount) + 7) / 8; // Always round up
@@ -1913,7 +1887,7 @@ namespace Nuclex { namespace Pixels {
   /// <summary>Reports the number of color channels in a pixel format</summary>
   /// <param name="pixelFormat">Pixel format whose color channels to count</param>
   /// <returns>The number of color channels in the pixel format</returns>
-  constexpr inline std::size_t CountChannels(PixelFormat pixelFormat) {
+  NUCLEX_PIXELS_API constexpr inline std::size_t CountChannels(PixelFormat pixelFormat) {
     return ((static_cast<std::size_t>(pixelFormat) >> 14) & 3) + 1;
   }
 
