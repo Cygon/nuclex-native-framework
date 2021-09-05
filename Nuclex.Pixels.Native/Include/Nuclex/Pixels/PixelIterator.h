@@ -24,24 +24,24 @@ License along with this library
 #include "Nuclex/Pixels/Config.h"
 #include "Nuclex/Pixels/BitmapMemory.h"
 
-#include <cstdint>
-#include <iterator>
+#include <cstdint> // for std::ptrdiff_t
+#include <iterator> // for std::random_access_iterator_tag
 
 namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Allows an offset in lines to be passed to pixel accessors</summary>
-  class Lines {
+  class NUCLEX_PIXELS_TYPE Lines {
 
     /// <summary>Initializes a new line offset</summary>
     /// <param name="offset">Number of lines the pixel accessor should advance</param>
-    public: explicit Lines(std::ptrdiff_t offset) :
+    public: NUCLEX_PIXELS_API explicit Lines(std::ptrdiff_t offset) :
       offset(offset) {}
 
     /// <summary>Retrieves the vertical offset to advance</summary>
     /// <returns>The vertical offset the pixel accessor should advance</returns>
-    public: std::ptrdiff_t GetOffset() const { return this->offset; }
+    public: NUCLEX_PIXELS_API std::ptrdiff_t GetOffset() const { return this->offset; }
 
     /// <summary>Number of lines the pixel accessor should advance</summary>
     private: std::ptrdiff_t offset;
@@ -92,12 +92,12 @@ namespace Nuclex { namespace Pixels {
   ///
   ///         do {
   ///           current += Lines(1); // Go down 1 pixel
-  ///         } while(current.GetY() < (myBitmapMemory.Height - 1)) {
+  ///         } while(current.GetY() < (myBitmapMemory.Height)) {
   ///       </code>
   ///     </example>
   ///   </para>
   /// </remarks>
-  class PixelIterator {
+  class NUCLEX_PIXELS_TYPE PixelIterator {
 
     /// <summary>Type that results when the distance of two iterators is calculated</summary>
     public: typedef std::ptrdiff_t difference_type;
@@ -127,7 +127,7 @@ namespace Nuclex { namespace Pixels {
     public: NUCLEX_PIXELS_API static PixelIterator GetEnd(const BitmapMemory &memory) {
       return PixelIterator(memory) += (memory.Width * memory.Height);
     }
- 
+
     /// <summary>Initializes a new pixel accessor for the specified bitmap memory</summary>
     /// <param name="memory">Bitmap memory the pixel accessor will work on</param>
     public: NUCLEX_PIXELS_API PixelIterator(const BitmapMemory &memory) :
@@ -356,13 +356,13 @@ namespace Nuclex { namespace Pixels {
     /// <param name="checkY">Y coordinate that will be checked</param>
     private: void enforceAtEndPosition(std::size_t checkX, std::size_t checkY) const;
 
-    /// <summary>Bitmap memory the pixel accessor is accessing</summary>
+    /// <summary>Bitmap memory the pixel iterator is accessing</summary>
     private: BitmapMemory memory;
-    /// <summary>Current X coordinate of the accessor</summary>
+    /// <summary>Current X coordinate of the iterator</summary>
     private: std::size_t x;
-    /// <summary>Current Y coordinate of the accessor</summary>
+    /// <summary>Current Y coordinate of the iterator</summary>
     private: std::size_t y;
-    /// <summary>Current address the pixel accessor is at</summary>
+    /// <summary>Current address the pixel iterator is at</summary>
     private: std::uint8_t *current;
     /// <summary>Number of bytes in a single pixel</summary>
     private: std::size_t bytesPerPixel;
