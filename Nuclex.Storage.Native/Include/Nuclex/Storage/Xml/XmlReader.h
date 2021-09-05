@@ -27,6 +27,7 @@ License along with this library
 #include "Nuclex/Storage/Xml/XmlBinaryFormat.h"
 
 #include <memory>
+#include <stdexcept>
 
 namespace Nuclex { namespace Storage { namespace Xml {
 

@@ -25,7 +25,15 @@ License along with this library
 #include "Nuclex/Pixels/Storage/VirtualFile.h"
 #include "Nuclex/Pixels/Storage/BitmapCodec.h"
 #include "Nuclex/Pixels/Errors/FileFormatError.h"
+
 #include "Nuclex/Support/Text/StringConverter.h"
+
+// Disable things that have not yet made their way into
+// the GitHub repository. If you want these, use the Subversion repo
+#undef NUCLEX_PIXELS_HAVE_LIBTIFF
+#undef NUCLEX_PIXELS_HAVE_OPENEXR
+#undef NUCLEX_PIXELS_HAVE_LIBWEBP
+#undef NUCLEX_PIXELS_HAVE_LIBAVIF
 
 #if defined(NUCLEX_PIXELS_HAVE_LIBWEBP)
 #include "WebP/WebPBitmapCodec.h"
