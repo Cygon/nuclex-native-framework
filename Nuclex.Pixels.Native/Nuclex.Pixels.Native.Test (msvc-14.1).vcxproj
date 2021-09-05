@@ -200,6 +200,7 @@
     <ClInclude Include="Include\Nuclex\Pixels\ColorModels\RgbColor.h" />
     <ClInclude Include="Include\Nuclex\Pixels\Errors\FileAccessError.h" />
     <ClInclude Include="Include\Nuclex\Pixels\Errors\FileFormatError.h" />
+    <ClInclude Include="Include\Nuclex\Pixels\Errors\WrongSizeError.h" />
     <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapCodec.h" />
     <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapSerializer.h" />
     <ClInclude Include="Include\Nuclex\Pixels\Storage\OptionalBitmap.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="Source\ColorModels\RgbColor.cpp" />
     <ClCompile Include="Source\Errors\FileAccessError.cpp" />
     <ClCompile Include="Source\Errors\FileFormatError.cpp" />
+    <ClCompile Include="Source\Errors\WrongSizeError.cpp" />
     <ClCompile Include="Source\Storage\Exr\ExrBitmapCodec.cpp" />
     <ClInclude Include="Source\Storage\Exr\ExrBitmapCodec.h" />
     <ClCompile Include="Source\Storage\Exr\OpenExrHelpers.cpp" />

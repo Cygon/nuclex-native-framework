@@ -59,117 +59,34 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Bitmap.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BitmapMemory.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Config.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Half.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\PixelIterator.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\PixelFormatTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\PixelIteratorDeathTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\PixelIteratorTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\HalfTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\BitmapTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\PixelFormat.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Size.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\SizeTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\RectangleTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Rectangle.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\UInt128.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\UInt128Test.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\BitmapCodec.cpp">
-      <Filter>Source\Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\BitmapSerializer.cpp">
-      <Filter>Source\Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\RealFile.cpp">
-      <Filter>Source\Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\VirtualFile.cpp">
-      <Filter>Source\Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Storage\VirtualFileTest.cpp">
-      <Filter>Tests\Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Storage\TemporaryDirectoryScope.cpp">
-      <Filter>Tests\Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Storage\BitmapSerializerTest.cpp">
-      <Filter>Tests\Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\BitmapInfo.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\OptionalBitmap.cpp">
-      <Filter>Source\Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\Jpeg\JpegBitmapCodec.cpp">
-      <Filter>Source\Storage\Jpeg</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\Jpeg\LibJpegHelpers.cpp">
-      <Filter>Source\Storage\Jpeg</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\Png\PngBitmapCodec.cpp">
-      <Filter>Source\Storage\Png</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\Png\LibPngHelpers.cpp">
-      <Filter>Source\Storage\Png</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\Exr\ExrBitmapCodec.cpp">
-      <Filter>Source\Storage\Exr</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Storage\Exr\OpenExrHelpers.cpp">
-      <Filter>Source\Storage\Exr</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Storage\OptionalBitmapTest.cpp">
-      <Filter>Tests\Storage</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Errors\FileAccessError.cpp">
-      <Filter>Source\Errors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Errors\FileFormatError.cpp">
-      <Filter>Source\Errors</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ColorModels\RgbColor.cpp">
-      <Filter>Source\ColorModels</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Pixels\Errors\FileAccessError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Errors\FileFormatError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Errors\WrongSizeError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapCodec.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapSerializer.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\VirtualFile.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\Storage\OptionalBitmap.h">
+      <Filter>Include\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\ColorModels\RgbColor.h">
+      <Filter>Include\ColorModels</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Pixels\Bitmap.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Pixels\BitmapInfo.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Pixels\BitmapMemory.h">
@@ -187,17 +104,79 @@
     <ClInclude Include="Include\Nuclex\Pixels\PixelIterator.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\Rectangle.h">
+    <ClInclude Include="Include\Nuclex\Pixels\Size.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\Size.h">
+    <ClInclude Include="Include\Nuclex\Pixels\Rectangle.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Pixels\UInt128.h">
       <Filter>Include</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Errors\FileAccessError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\FileFormatError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\WrongSizeError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\BitmapCodec.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\OptionalBitmap.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\RealFile.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\VirtualFile.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\BitmapSerializer.cpp">
+      <Filter>Source\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Png\PngBitmapCodec.cpp">
+      <Filter>Source\Storage\Png</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Jpeg\JpegBitmapCodec.cpp">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Jpeg\LibJpegHelpers.cpp">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Png\LibPngHelpers.cpp">
+      <Filter>Source\Storage\Png</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Exr\ExrBitmapCodec.cpp">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ColorModels\RgbColor.cpp">
+      <Filter>Source\ColorModels</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Exr\OpenExrHelpers.cpp">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Storage\Exr\OpenExrHelpers.h">
+      <Filter>Source\Storage\Exr</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.Windows.inl">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Storage\RealFile.h">
       <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.Linux.inl">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\RealFile.Posix.inl">
+      <Filter>Source\Storage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Storage\Utf8Fold\Utf8Fold.h">
+      <Filter>Source\Storage\Utf8Fold</Filter>
     </ClInclude>
     <ClInclude Include="Source\Storage\Utf8\checked.h">
       <Filter>Source\Storage\Utf8</Filter>
@@ -208,35 +187,8 @@
     <ClInclude Include="Source\Storage\Utf8\unchecked.h">
       <Filter>Source\Storage\Utf8</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapCodec.h">
-      <Filter>Include\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\Storage\BitmapSerializer.h">
-      <Filter>Include\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\Storage\VirtualFile.h">
-      <Filter>Include\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Tests\Storage\TemporaryDirectoryScope.h">
-      <Filter>Tests\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\BitmapInfo.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\Storage\OptionalBitmap.h">
-      <Filter>Include\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\Utf8Fold\Utf8Fold.h">
-      <Filter>Source\Storage\Utf8Fold</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\RealFile.Linux.inl">
-      <Filter>Source\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\RealFile.Posix.inl">
-      <Filter>Source\Storage</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\RealFile.Windows.inl">
-      <Filter>Source\Storage</Filter>
+    <ClInclude Include="Source\Storage\Png\PngBitmapCodec.h">
+      <Filter>Source\Storage\Png</Filter>
     </ClInclude>
     <ClInclude Include="Source\Storage\Jpeg\JpegBitmapCodec.h">
       <Filter>Source\Storage\Jpeg</Filter>
@@ -244,26 +196,82 @@
     <ClInclude Include="Source\Storage\Jpeg\LibJpegHelpers.h">
       <Filter>Source\Storage\Jpeg</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Storage\Png\PngBitmapCodec.h">
-      <Filter>Source\Storage\Png</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Storage\Png\LibPngHelpers.h">
       <Filter>Source\Storage\Png</Filter>
     </ClInclude>
     <ClInclude Include="Source\Storage\Exr\ExrBitmapCodec.h">
       <Filter>Source\Storage\Exr</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\ColorModels\RgbColor.h">
-      <Filter>Include\ColorModels</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Storage\Exr\OpenExrHelpers.h">
-      <Filter>Source\Storage\Exr</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\Errors\FileAccessError.h">
-      <Filter>Include\Errors</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Pixels\Errors\FileFormatError.h">
-      <Filter>Include\Errors</Filter>
+    <ClCompile Include="Source\Bitmap.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BitmapInfo.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BitmapMemory.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Config.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Half.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PixelIterator.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PixelFormat.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Rectangle.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Size.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UInt128.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Tests\PixelFormatTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelIteratorDeathTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelIteratorTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\HalfTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\BitmapTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\SizeTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\RectangleTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\UInt128Test.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\VirtualFileTest.cpp">
+      <Filter>Tests\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\TemporaryDirectoryScope.cpp">
+      <Filter>Tests\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\BitmapSerializerTest.cpp">
+      <Filter>Tests\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\OptionalBitmapTest.cpp">
+      <Filter>Tests\Storage</Filter>
+    </ClCompile>
+    <ClInclude Include="Tests\Storage\TemporaryDirectoryScope.h">
+      <Filter>Tests\Storage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
