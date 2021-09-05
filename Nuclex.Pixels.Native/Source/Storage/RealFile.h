@@ -24,9 +24,11 @@ License along with this library
 #include "Nuclex/Pixels/Config.h"
 #include "Nuclex/Pixels/Storage/VirtualFile.h"
 
-#if defined(NUCLEX_PIXELS_WINDOWS)
-#include "../Platform/WindowsApi.h" /// for HANDLE, etc.
-#elif !defined(NUCLEX_PIXELS_LINUX) // No Windows, no Linux -> use Posix!
+#if defined(NUCLEX_PIXELS_LINUX)
+// File handles are ints, we don't need no headers!
+#elif defined(NUCLEX_PIXELS_WINDOWS)
+#include "../Platform/WindowsApi.h" // for HANDLE, etc.
+#else // No Windows, no Linux -> use Posix!
 #include <cstdio> // for FILE, ::fopen(), etc.
 #endif
 
@@ -47,7 +49,7 @@ namespace Nuclex { namespace Pixels { namespace Storage {
       const std::string &path, bool promiseSequentialAccess, bool readOnly
     );
 
-    /// <summary>Frees all memory used by the instance</summary>
+    /// <summary>Closes the file and frees all memory used by the instance</summary>
     public: virtual ~RealFile();
 
     /// <summary>Determines the current size of the file in bytes</summary>
@@ -75,10 +77,10 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     private: int fileDescriptor;
 #elif defined(NUCLEX_PIXELS_WINDOWS)
     /// <summary>File handle returned by ::CreateFile() or ::OpenFile()</summary>
-    private: HANDLE fileHandle;
+    private: ::HANDLE fileHandle;
 #else // Go with old-school Posix and hope for the best
     /// <summary>File pointer returned by ::fopen()</summary>
-    private: FILE *file;
+    private: ::FILE *file;
 #endif
     /// <summary>Length of the file in bytes</summary>
     private: std::uint64_t length;

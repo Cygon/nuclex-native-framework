@@ -25,9 +25,14 @@ License along with this library
 #include "Nuclex/Pixels/Storage/VirtualFile.h"
 #include "Nuclex/Pixels/Storage/BitmapCodec.h"
 #include "Nuclex/Pixels/Errors/FileFormatError.h"
+#include "Nuclex/Support/Text/StringConverter.h"
 
-#include "Utf8Fold/Utf8Fold.h"
-
+#if defined(NUCLEX_PIXELS_HAVE_LIBWEBP)
+#include "WebP/WebPBitmapCodec.h"
+#endif
+#if defined(NUCLEX_PIXELS_HAVE_LIBTIFF)
+#include "Tiff/TiffBitmapCodec.h"
+#endif
 #if defined(NUCLEX_PIXELS_HAVE_LIBPNG)
 #include "Png/PngBitmapCodec.h"
 #endif
@@ -54,10 +59,23 @@ namespace {
     public: const Nuclex::Pixels::Storage::VirtualFile *File;
 
     /// <summary>Container that receives the loaded bitmap if successful</summary>
-    public: Nuclex::Pixels::Storage::OptionalBitmap Bitmap;
+    public: std::optional<Nuclex::Pixels::Bitmap> Bitmap;
 
     /// <summary>Bitmap into whih the TryLoad() methods will load the pixels</summary>
     public: Nuclex::Pixels::Bitmap *TargetBitmap;
+
+  };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Helper used to pass information through lambda methods</summary>
+  struct FileAndBitmapInfo {
+
+    /// <summary>File the bitmap serializer has been tasked with reading</summary>
+    public: const Nuclex::Pixels::Storage::VirtualFile *File;
+
+    /// <summary>Information container that will be filled if successful</summary>
+    public: std::optional<Nuclex::Pixels::BitmapInfo> BitmapInfo;
 
   };
 
@@ -72,6 +90,12 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   BitmapSerializer::BitmapSerializer() :
     mostRecentCodecIndex(InvalidIndex),
     secondMostRecentCodecIndex(InvalidIndex) {
+#if defined(NUCLEX_PIXELS_HAVE_LIBWEBP)
+    RegisterCodec(std::make_unique<WebP::WebPBitmapCodec>());
+#endif
+#if defined(NUCLEX_PIXELS_HAVE_LIBTIFF)
+    RegisterCodec(std::make_unique<Tiff::TiffBitmapCodec>());
+#endif
 #if defined(NUCLEX_PIXELS_HAVE_LIBPNG)
     RegisterCodec(std::make_unique<Png::PngBitmapCodec>());
 #endif
@@ -114,24 +138,83 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     // Update the extension lookup map for quick codec finding
     std::size_t extensionCount = extensions.size();
     for(std::size_t index = 0; index < extensionCount; ++index) {
+      using Nuclex::Support::Text::StringConverter;
+
       const std::string &extension = extensions[index];
       std::string::size_type extensionLength = extension.length();
 
       if(extensionLength > 0) {
         if(extension[0] == '.') {
           if(extensionLength > 1) {
-            std::string lowerExtension = toFoldedLowercase(extension.substr(1));
+            std::string lowerExtension = StringConverter::FoldedLowercaseFromUtf8(
+              extension.substr(1)
+            );
             this->codecsByExtension.insert(
               ExtensionCodecIndexMap::value_type(lowerExtension, codecCount)
             );
           }
         } else {
-          std::string lowerExtension = toFoldedLowercase(extension);
+          std::string lowerExtension = StringConverter::FoldedLowercaseFromUtf8(extension);
           this->codecsByExtension.insert(
             ExtensionCodecIndexMap::value_type(lowerExtension, codecCount)
           );
         }
       }
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<BitmapInfo> BitmapSerializer::TryReadInfo(
+    const VirtualFile &file, const std::string &extensionHint /* = std::string() */
+  ) const {
+    FileAndBitmapInfo fileProvider;
+    fileProvider.File = &file;
+
+    bool wasLoaded = tryCodecsInOptimalOrder<FileAndBitmapInfo>(
+      extensionHint,
+      [](const BitmapCodec &codec, const std::string &extension, FileAndBitmapInfo &fileAndBitmap) {
+        fileAndBitmap.BitmapInfo = std::move(
+          codec.TryReadInfo(*fileAndBitmap.File, extension)
+        );
+        return fileAndBitmap.BitmapInfo.has_value();
+      },
+      fileProvider
+    );
+    if(wasLoaded) {
+      return fileProvider.BitmapInfo;
+    } else {
+      return std::optional<BitmapInfo>();
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  std::optional<BitmapInfo> BitmapSerializer::TryReadInfo(const std::string &path) const {
+    std::string::size_type extensionDotIndex = path.find_last_of('.');
+#if defined(NUCLEX_PIXELS_WINDOWS)
+    std::string::size_type lastPathSeparatorIndex = path.find_last_of('\\');
+#else
+    std::string::size_type lastPathSeparatorIndex = path.find_last_of('/');
+#endif
+
+    // Check if the provided path contains a file extension and if so, pass it along to
+    // the CanLoad() method as a hint (this speeds up codec search)
+    if(extensionDotIndex != std::string::npos) {
+      bool dotBelongsToFilename = (
+        (lastPathSeparatorIndex == std::string::npos) ||
+        (extensionDotIndex > lastPathSeparatorIndex)
+      );
+      if(dotBelongsToFilename) {
+        std::unique_ptr<const VirtualFile> file = VirtualFile::OpenRealFileForReading(path, true);
+        return TryReadInfo(*file.get(), path.substr(extensionDotIndex + 1));
+      }
+    }
+
+    // The specified file has no extension, so do not provide the extension hint
+    {
+      std::unique_ptr<const VirtualFile> file = VirtualFile::OpenRealFileForReading(path, true);
+      return TryReadInfo(*file.get());
     }
   }
 
@@ -156,7 +239,7 @@ namespace Nuclex { namespace Pixels { namespace Storage {
 
   bool BitmapSerializer::CanLoad(const std::string &path) const {
     std::string::size_type extensionDotIndex = path.find_last_of('.');
-#if defined(NUCLEX_PIXELS_WIN32)
+#if defined(NUCLEX_PIXELS_WINDOWS)
     std::string::size_type lastPathSeparatorIndex = path.find_last_of('\\');
 #else
     std::string::size_type lastPathSeparatorIndex = path.find_last_of('/');
@@ -193,8 +276,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     bool wasLoaded = tryCodecsInOptimalOrder<FileAndBitmap>(
       extensionHint,
       [](const BitmapCodec &codec, const std::string &extension, FileAndBitmap &fileAndBitmap) {
-        OptionalBitmap loadedBitmap = codec.TryLoad(*fileAndBitmap.File, extension);
-        if(loadedBitmap.HasValue()) {
+        std::optional<Bitmap> loadedBitmap = codec.TryLoad(*fileAndBitmap.File, extension);
+        if(loadedBitmap.has_value()) {
           fileAndBitmap.Bitmap = std::move(loadedBitmap);
           return true;
         } else {
@@ -204,9 +287,9 @@ namespace Nuclex { namespace Pixels { namespace Storage {
       fileProvider
     );
     if(wasLoaded) {
-      return fileProvider.Bitmap.Take();
+      return fileProvider.Bitmap.value();
     } else {
-      throw Errors::FileFormatError("File format not supported by any registered codec");
+      throw Errors::FileFormatError(u8"File format not supported by any registered codec");
     }
   }
 
@@ -214,7 +297,7 @@ namespace Nuclex { namespace Pixels { namespace Storage {
 
   Bitmap BitmapSerializer::Load(const std::string &path) const {
     std::string::size_type extensionDotIndex = path.find_last_of('.');
-#if defined(NUCLEX_PIXELS_WIN32)
+#if defined(NUCLEX_PIXELS_WINDOWS)
     std::string::size_type lastPathSeparatorIndex = path.find_last_of('\\');
 #else
     std::string::size_type lastPathSeparatorIndex = path.find_last_of('/');
@@ -271,7 +354,7 @@ namespace Nuclex { namespace Pixels { namespace Storage {
 
   void BitmapSerializer::Reload(Bitmap &exactFittingBitmap, const std::string &path) const {
     std::string::size_type extensionDotIndex = path.find_last_of('.');
-#if defined(NUCLEX_PIXELS_WIN32)
+#if defined(NUCLEX_PIXELS_WINDOWS)
     std::string::size_type lastPathSeparatorIndex = path.find_last_of('\\');
 #else
     std::string::size_type lastPathSeparatorIndex = path.find_last_of('/');
@@ -302,22 +385,29 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   // ------------------------------------------------------------------------------------------- //
 
   void BitmapSerializer::Save(
-    const Bitmap &bitmap, VirtualFile &file, const std::string &extension
+    const Bitmap &bitmap, VirtualFile &file, const std::string &extension,
+    float compressionStrengthHint /* = 0.75f */, float outputQualityHint /* = 0.95f */
   ) const {
     (void)bitmap;
     (void)file;
     (void)extension;
+    (void)compressionStrengthHint;
+    (void)outputQualityHint;
     throw std::runtime_error("Not implemented yet");
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   void BitmapSerializer::Save(
-    const Bitmap &bitmap, const std::string &path, const std::string &extension
+    const Bitmap &bitmap, const std::string &path,
+    const std::string &extension /* = std::string() */,
+    float compressionStrengthHint /* = 0.75f */, float outputQualityHint /* = 0.95f */
   ) const {
     (void)bitmap;
     (void)path;
     (void)extension;
+    (void)compressionStrengthHint;
+    (void)outputQualityHint;
     throw std::runtime_error("Not implemented yet");
   }
 
@@ -337,7 +427,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     if(extension.empty()) {
       hintCodecIndex = InvalidIndex;
     } else {
-      std::string foldedLowercaseExtension = toFoldedLowercase(extension);
+      using Nuclex::Support::Text::StringConverter;
+      std::string foldedLowercaseExtension = StringConverter::FoldedLowercaseFromUtf8(extension);
       ExtensionCodecIndexMap::const_iterator iterator = (
         this->codecsByExtension.find(foldedLowercaseExtension)
       );
@@ -401,8 +492,12 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   // ------------------------------------------------------------------------------------------- //
 
   void BitmapSerializer::updateMostRecentCodecIndex(std::size_t codecIndex) const {
-    this->secondMostRecentCodecIndex = this->mostRecentCodecIndex;
-    this->mostRecentCodecIndex = codecIndex;
+    this->secondMostRecentCodecIndex.store(
+      this->mostRecentCodecIndex.load(std::memory_order::memory_order_relaxed),
+      std::memory_order::memory_order_relaxed
+    );
+
+    this->mostRecentCodecIndex.store(codecIndex, std::memory_order::memory_order_relaxed);
   }
 
   // ------------------------------------------------------------------------------------------- //

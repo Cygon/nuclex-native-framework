@@ -22,11 +22,12 @@ License along with this library
 #define NUCLEX_PIXELS_STORAGE_BITMAPCODEC_H
 
 #include "Nuclex/Pixels/Config.h"
-#include "Nuclex/Pixels/Storage/OptionalBitmap.h"
 #include "Nuclex/Pixels/BitmapInfo.h"
+#include "Nuclex/Pixels/Bitmap.h"
 
-#include <string>
-#include <vector>
+#include <string> // for std::string
+#include <vector> // for std::vector
+#include <optional> // for std::optional
 
 namespace Nuclex { namespace Pixels { namespace Storage {
 
@@ -37,7 +38,7 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Codec that loads and saves bitmaps in a predefined file format</summary>
-  class BitmapCodec {
+  class NUCLEX_PIXELS_TYPE BitmapCodec {
 
     /// <summary>Frees all resources owned by the instance</summary>
     public: virtual ~BitmapCodec() = default;
@@ -53,11 +54,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     /// <summary>Tries to read informations for a bitmap</summary>
     /// <param name="source">Source data from which the informations should be extracted</param>
     /// <param name="extensionHint">Optional file extension the loaded data had</param>
-    /// <returns>
-    ///   Informations about the bitmap, if the codec is able to load it, otherwise
-    ///   a BitmapInfo structure with 'Loadable' set to false.
-    /// </returns>
-    public: virtual BitmapInfo TryReadInfo(
+    /// <returns>Informations about the bitmap, if the codec is able to load it</returns>
+    public: virtual std::optional<BitmapInfo> TryReadInfo(
       const VirtualFile &source, const std::string &extensionHint = std::string()
     ) const = 0;
 
@@ -90,10 +88,10 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     ///   <para>
     ///     On any other error (i.e. exception from the data source, corrupted image data,
     ///     unsupported version of the file format, etc.), the codec must throw an exception
-    ///     rather than return an empty OptionalBitmap instance.
+    ///     rather than return an empty <code>std::optional&lt;Bitmap&gt;</code> instance.
     ///   </para>
     /// </remarks>
-    public: virtual OptionalBitmap TryLoad(
+    public: virtual std::optional<Bitmap> TryLoad(
       const VirtualFile &source, const std::string &extensionHint = std::string()
     ) const = 0;
 
@@ -127,7 +125,16 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     /// <summary>Saves the specified bitmap into a file</summary>
     /// <param name="bitmap">Bitmap that will be saved into a file</param>
     /// <param name="target">File into which the bitmap will be saved</param>
-    public: virtual void Save(const Bitmap &bitmap, VirtualFile &target) const = 0;
+    /// <param name="compressionEffortHint">
+    ///   How much effort (CPU time) should be put into reducing the size of the image.
+    /// </param>
+    /// <param name="outputQualityHint">
+    ///   How much image quality should be prioritized over achieving small file sizes.
+    /// </param>
+    public: virtual void Save(
+      const Bitmap &bitmap, VirtualFile &target,
+      float compressionEffortHint = 0.75f, float outputQualityHint = 0.95f
+    ) const = 0;
 
   };
 

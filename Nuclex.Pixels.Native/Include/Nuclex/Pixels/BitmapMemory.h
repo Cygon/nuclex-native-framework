@@ -24,7 +24,7 @@ License along with this library
 #include "Nuclex/Pixels/Config.h"
 #include "Nuclex/Pixels/PixelFormat.h"
 
-#include <cstddef>
+#include <cstddef> // for std::size_t
 
 namespace Nuclex { namespace Pixels {
 
@@ -37,7 +37,7 @@ namespace Nuclex { namespace Pixels {
   ///   bitmap-based graphics API that allows raw-memory access to bitmaps will provide
   ///   you with these informations, so it is the universal key to access bitmaps.
   /// </remarks>
-  struct BitmapMemory {
+  struct NUCLEX_PIXELS_TYPE BitmapMemory {
 
     /// <summary>Width of the bitmap in pixels</summary>
     public: std::size_t Width;

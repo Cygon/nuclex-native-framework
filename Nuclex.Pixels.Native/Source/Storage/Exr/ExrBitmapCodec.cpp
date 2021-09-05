@@ -87,7 +87,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
     // If the extension indicates an .exr file (or no extension was provided),
     // check the file header to see if this is really an .exr file
     if(mightBeExr) {
-      std::size_t fileLength = source.GetSize();
+      std::uint64_t fileLength = source.GetSize();
       if(fileLength >= SmallestPossibleExrSize) {
         std::uint8_t fileHeader[16];
         source.ReadAt(0, 16, fileHeader); // Yes, we read a few bytes more than needed.
@@ -109,10 +109,24 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
 
   // ------------------------------------------------------------------------------------------- //
 
-  BitmapInfo ExrBitmapCodec::TryReadInfo(
+  std::optional<BitmapInfo> ExrBitmapCodec::TryReadInfo(
     const VirtualFile &source, const std::string &extensionHint /* = std::string() */
   ) const {
     (void)extensionHint; // Unused
+
+    // If the file is too small to be a OpenEXR file, bail out
+    if(source.GetSize() < SmallestPossibleExrSize) {
+      return std::optional<BitmapInfo>();
+    }
+
+    // If the file header is not indicative of a OpenEXR file, bail out
+    {
+      std::uint8_t fileHeader[16];
+      source.ReadAt(0, 16, fileHeader);
+      if(!Helpers::IsValidExrHeader(fileHeader)) {
+        return std::optional<BitmapInfo>();
+      }
+    }
 
     VirtualFileInputStream inputStream(source);
     try {
@@ -121,7 +135,6 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
       const Imath::Box2i &dataWindow = inputFile.header().dataWindow();
 
       BitmapInfo result;
-      result.Loadable = true;
       result.Width = static_cast<std::size_t>(dataWindow.max.x - dataWindow.min.x + 1);
       result.Height = static_cast<std::size_t>(dataWindow.max.y - dataWindow.min.y + 1);
       result.PixelFormat = PixelFormat::R16_G16_B16_A16_Float; // Always. See Imf::Rgba
@@ -131,7 +144,6 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
         (sizeof(std::size_t) * 3) +
         (sizeof(int) * 2)
       );
-
       return result;
     }
     catch(const Iex::BaseExc &error) { // Convert exception to a FileFormatError
@@ -141,7 +153,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
 
   // ------------------------------------------------------------------------------------------- //
 
-  OptionalBitmap ExrBitmapCodec::TryLoad(
+  std::optional<Bitmap> ExrBitmapCodec::TryLoad(
     const VirtualFile &source, const std::string &extensionHint /* = std::string() */
   ) const {
     (void)extensionHint; // Unused
@@ -154,9 +166,8 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
       std::size_t imageWidth = dataWindow.max.x - dataWindow.min.x + 1;
       std::size_t imageHeight = dataWindow.max.y - dataWindow.min.y + 1;
 
-      // CHECK: OpenEXR has some intermedia 'YCA' format. When does this apply?
+      // CHECK: OpenEXR has some intermediate 'YCA' format. When does this apply?
 
-      // TODO: Should be 16 bit float, not 8 bit signed integer
       Bitmap result(imageWidth, imageHeight, PixelFormat::R16_G16_B16_A16_Float);
       const BitmapMemory &memory = result.Access();
 
@@ -165,7 +176,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
       inputFile.setFrameBuffer(frameBuffer);
       inputFile.readPixels(dataWindow.min.y, dataWindow.max.y);
 
-      return OptionalBitmap(std::move(result));
+      return std::optional<Bitmap>(std::move(result));
     }
     catch(const Iex::BaseExc &error) { // Convert exception to a FileFormatError
       throw Errors::FileFormatError(error.message());
@@ -217,9 +228,14 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void ExrBitmapCodec::Save(const Bitmap &bitmap, VirtualFile &target) const {
+  void ExrBitmapCodec::Save(
+    const Bitmap &bitmap, VirtualFile &target,
+    float compressionEffortHint /* = 0.75f */, float outputQualityHint /* = 0.95f */
+  ) const {
     (void)bitmap;
     (void)target;
+    (void)compressionEffortHint;
+    (void)outputQualityHint;
 
     throw std::runtime_error(u8"Not implemented yet");
   }

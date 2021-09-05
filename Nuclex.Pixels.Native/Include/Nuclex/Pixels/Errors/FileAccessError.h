@@ -23,7 +23,28 @@ License along with this library
 
 #include "Nuclex/Pixels/Config.h"
 
-#include <system_error>
+#include <system_error> // for std::system_error
+
+// DESIGN: Both Nuclex.Pixels + Nuclex.Storage will have a FileAccessError class
+//
+// It's perfectly reasonable to use both libraries in the same application.
+// In Nuclex.Pixels, file system access is provided for convenience. Just throwing
+// a std::system_error would suck because the user would lose the ability to filter
+// exceptions by class (which is the main advantage and why I use exceptions over
+// error codes).
+//
+// Current concept: FileAccessError will only be thrown by the minimal file system
+// wrappers in Nuclex.Pixels. If someone uses Nuclex.Storage, they are expected to
+// write their own glue (it's a matter of <10 lines) that adapts a VirtualFile from
+// this library a File from Nuclex.Storage.
+//
+// Then all file access errors happening in such an application will be
+// Nuclex::Storage::Errors::FileAccessError.
+//
+//
+// The alternative, adding a 3rd library with shared exception definitions would add
+// additional hoops for users of this library
+//
 
 namespace Nuclex { namespace Pixels { namespace Errors {
 
@@ -44,19 +65,21 @@ namespace Nuclex { namespace Pixels { namespace Errors {
   ///     virtual file implementation will have failed to fetch and transmit data.
   ///   </para>
   /// </remarks>
-  class FileAccessError : public std::system_error {
+  class NUCLEX_PIXELS_TYPE FileAccessError : public std::system_error {
 
     /// <summary>Initializes a new file access error</summary>
     /// <param name="errorCode">Error code reported by the operating system</param>
     /// <param name="message">Message that describes the error</param>
-    public: explicit FileAccessError(std::error_code errorCode, const std::string &message) :
-      std::system_error(errorCode, message) {}
+    public: NUCLEX_PIXELS_API explicit FileAccessError(
+      std::error_code errorCode, const std::string &message
+    ) : std::system_error(errorCode, message) {}
 
     /// <summary>Initializes a new file access error</summary>
     /// <param name="errorCode">Error code reported by the operating system</param>
     /// <param name="message">Message that describes the error</param>
-    public: explicit FileAccessError(std::error_code errorCode, const char *message) :
-      std::system_error(errorCode, message) {}
+    public: NUCLEX_PIXELS_API explicit FileAccessError(
+      std::error_code errorCode, const char *message
+    ) : std::system_error(errorCode, message) {}
 
   };
 

@@ -25,14 +25,14 @@ License along with this library
 #include "Nuclex/Pixels/Errors/FileAccessError.h"
 #include <gtest/gtest.h>
 
-#include "TemporaryDirectoryScope.h"
+#include "Nuclex/Support/TemporaryDirectoryScope.h"
 
 namespace Nuclex { namespace Pixels { namespace Storage {
 
   // ------------------------------------------------------------------------------------------- //
 
   TEST(VirtualFileTest, CanWriteToRealFile) {
-    TemporaryDirectoryScope temporaryDirectory;
+    Nuclex::Support::TemporaryDirectoryScope temporaryDirectory;
 
     std::string expectedFileContents = u8"Hello World!";
 
@@ -47,9 +47,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     }
 
     // Now read the file back using an alternative file system implementation
-    std::string actualFileContents = temporaryDirectory.ReadFullFile(
-      u8"write-test.tmp"
-    );
+    std::string actualFileContents;
+    temporaryDirectory.ReadFile(u8"write-test.tmp", actualFileContents);
 
     EXPECT_EQ(actualFileContents, expectedFileContents);
   }
@@ -57,11 +56,11 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(VirtualFileTest, CanReadFromRealFile) {
-    TemporaryDirectoryScope temporaryDirectory;
+    Nuclex::Support::TemporaryDirectoryScope temporaryDirectory;
 
     std::string actualFileContents = u8"Hello World!";
 
-    temporaryDirectory.WriteFullFile(u8"read-test.tmp", actualFileContents);
+    temporaryDirectory.PlaceFile(u8"read-test.tmp", actualFileContents);
 
     // Write something into a file using the VirtualFile's convenience methods
     std::string testPath = temporaryDirectory.GetPath(u8"read-test.tmp");
@@ -80,8 +79,8 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(VirtualFileTest, AccessingNonExistingFileThrowsError) {
-    TemporaryDirectoryScope temporaryDirectory;
-    
+    Nuclex::Support::TemporaryDirectoryScope temporaryDirectory;
+
     EXPECT_THROW(
       VirtualFile::OpenRealFileForReading(u8"does-not-exist.tmp"),
       Errors::FileAccessError
@@ -91,9 +90,9 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(VirtualFileTest, ReadingOutOfBoundsThrowsError) {
-    TemporaryDirectoryScope temporaryDirectory;
+    Nuclex::Support::TemporaryDirectoryScope temporaryDirectory;
 
-    temporaryDirectory.WriteFullFile(u8"read-test.tmp", "0123456789");
+    temporaryDirectory.PlaceFile(u8"read-test.tmp", "0123456789");
 
     std::string testPath = temporaryDirectory.GetPath(u8"read-test.tmp");
     std::uint8_t buffer[8];
@@ -111,9 +110,9 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(VirtualFileTest, WritingWithGapBeyondEndOfFileThrowsError) {
-    TemporaryDirectoryScope temporaryDirectory;
+    Nuclex::Support::TemporaryDirectoryScope temporaryDirectory;
 
-    temporaryDirectory.WriteFullFile(u8"read-test.tmp", "0123456789");
+    temporaryDirectory.PlaceFile(u8"read-test.tmp", "0123456789");
 
     std::string testPath = temporaryDirectory.GetPath(u8"read-test.tmp");
     std::uint8_t buffer[8] = { '0', '1', '2', '3', '4', '5', '6', '7' };
@@ -132,9 +131,9 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(VirtualFileTest, FilePartsCanBeReread) {
-    TemporaryDirectoryScope temporaryDirectory;
+    Nuclex::Support::TemporaryDirectoryScope temporaryDirectory;
 
-    temporaryDirectory.WriteFullFile(u8"read-test.tmp", "0123456789");
+    temporaryDirectory.PlaceFile(u8"read-test.tmp", "0123456789");
 
     std::string testPath = temporaryDirectory.GetPath(u8"read-test.tmp");
     std::uint8_t buffer[8] = { '0', '1', '2', '3', '4', '5', '6', '7' };

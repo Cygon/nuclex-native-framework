@@ -28,7 +28,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Describes a color value using the HSV color model</summary>
-  struct HsvColor {
+  struct NUCLEX_PIXELS_TYPE HsvColor {
 
     /// <summary>Hue value that will result in the color red</summary>
     public: static constexpr float RedHue = (

@@ -71,7 +71,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>Helper class for reading .ext image files using OpenEXR</summary>
+  /// <summary>Helper class for reading .exr image files using OpenEXR</summary>
   class Helpers {
 
     /// <summary>

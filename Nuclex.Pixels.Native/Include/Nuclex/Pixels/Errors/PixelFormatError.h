@@ -23,7 +23,7 @@ License along with this library
 
 #include "Nuclex/Pixels/Config.h"
 
-#include <stdexcept>
+#include <stdexcept> // for std::runtime_error
 
 namespace Nuclex { namespace Pixels { namespace Errors {
 
@@ -51,16 +51,16 @@ namespace Nuclex { namespace Pixels { namespace Errors {
   ///     the problem to the user is probably a good idea in such cases.
   ///   </para>
   /// </remarks>
-  class PixelFormatError : public std::runtime_error {
+  class NUCLEX_PIXELS_TYPE PixelFormatError : public std::runtime_error {
 
     /// <summary>Initializes a new bad pixel format error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: explicit PixelFormatError(const std::string &message) :
+    public: NUCLEX_PIXELS_API explicit PixelFormatError(const std::string &message) :
       std::runtime_error(message) {}
 
     /// <summary>Initializes a bad pixel format error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: explicit PixelFormatError(const char *message) :
+    public: NUCLEX_PIXELS_API explicit PixelFormatError(const char *message) :
       std::runtime_error(message) {}
 
   };

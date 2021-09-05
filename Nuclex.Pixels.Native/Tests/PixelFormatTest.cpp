@@ -29,40 +29,36 @@ namespace Nuclex { namespace Pixels {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(PixelFormatTest, BitsPerPixelCanBeCounted) {
-    EXPECT_EQ(8, CountBitsPerPixel(PixelFormat::R8_Unsigned));
-    EXPECT_EQ(16, CountBitsPerPixel(PixelFormat::R16_Unsigned_Native16));
-    EXPECT_EQ(16, CountBitsPerPixel(PixelFormat::R16_Float_Native16));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::R32_Float_Native32));
-    EXPECT_EQ(16, CountBitsPerPixel(PixelFormat::R8_G8_Unsigned));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::R16_G16_Unsigned_Native16));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::R16_G16_Float_Native16));
+    EXPECT_EQ(8U, CountBitsPerPixel(PixelFormat::R8_Unsigned));
+    EXPECT_EQ(16U, CountBitsPerPixel(PixelFormat::R16_Unsigned_Native16));
+    EXPECT_EQ(16U, CountBitsPerPixel(PixelFormat::R16_Float_Native16));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::R32_Float_Native32));
+    EXPECT_EQ(16U, CountBitsPerPixel(PixelFormat::R8_G8_Unsigned));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::R16_G16_Unsigned_Native16));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::R16_G16_Float_Native16));
 
-    EXPECT_EQ(16, CountBitsPerPixel(PixelFormat::R5_G6_B5_Unsigned));
-    EXPECT_EQ(16, CountBitsPerPixel(PixelFormat::R5_G6_B5_Unsigned_Native16));
-    EXPECT_EQ(16, CountBitsPerPixel(PixelFormat::R5_G6_B5_Unsigned_Flipped16));
-    EXPECT_EQ(16, CountBitsPerPixel(PixelFormat::B5_G6_R5_Unsigned));
-    EXPECT_EQ(16, CountBitsPerPixel(PixelFormat::B5_G6_R5_Unsigned_Native16));
-    EXPECT_EQ(16, CountBitsPerPixel(PixelFormat::B5_G6_R5_Unsigned_Flipped16));
+    EXPECT_EQ(16U, CountBitsPerPixel(PixelFormat::R5_G6_B5_Unsigned_Native16));
+    EXPECT_EQ(16U, CountBitsPerPixel(PixelFormat::B5_G6_R5_Unsigned_Native16));
 
-    EXPECT_EQ(24, CountBitsPerPixel(PixelFormat::R8_G8_B8_Unsigned));
-    EXPECT_EQ(24, CountBitsPerPixel(PixelFormat::R8_G8_B8_Signed));
-    EXPECT_EQ(24, CountBitsPerPixel(PixelFormat::B8_G8_R8_Unsigned));
-    EXPECT_EQ(24, CountBitsPerPixel(PixelFormat::B8_G8_R8_Signed));
+    EXPECT_EQ(24U, CountBitsPerPixel(PixelFormat::R8_G8_B8_Unsigned));
+    EXPECT_EQ(24U, CountBitsPerPixel(PixelFormat::R8_G8_B8_Signed));
+    EXPECT_EQ(24U, CountBitsPerPixel(PixelFormat::B8_G8_R8_Unsigned));
+    EXPECT_EQ(24U, CountBitsPerPixel(PixelFormat::B8_G8_R8_Signed));
 
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Unsigned));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Unsigned));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Unsigned_Native32));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Unsigned_Flipped32));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Unsigned_Native32));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Unsigned_Flipped32));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Signed));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Signed));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Signed_Native32));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Signed_Flipped32));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Signed_Native32));
-    EXPECT_EQ(32, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Signed_Flipped32));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Unsigned));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Unsigned));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Unsigned_Native32));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Unsigned_Flipped32));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Unsigned_Native32));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Unsigned_Flipped32));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Signed));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Signed));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Signed_Native32));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::A8_B8_G8_R8_Signed_Flipped32));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Signed_Native32));
+    EXPECT_EQ(32U, CountBitsPerPixel(PixelFormat::R8_G8_B8_A8_Signed_Flipped32));
 
-/*    
+/*
     EXPECT_EQ(4, CountBitsPerPixel(OldPixelFormat::BC1_Compressed));
     EXPECT_EQ(8, CountBitsPerPixel(OldPixelFormat::BC2_Compressed));
     EXPECT_EQ(8, CountBitsPerPixel(OldPixelFormat::BC3_Compressed));
@@ -72,38 +68,34 @@ namespace Nuclex { namespace Pixels {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(PixelFormatTest, BytesPerBlockCanBeCounted) {
-    EXPECT_EQ(1, CountBytesPerBlock(PixelFormat::R8_Unsigned));
-    EXPECT_EQ(2, CountBytesPerBlock(PixelFormat::R16_Unsigned_Native16));
-    EXPECT_EQ(2, CountBytesPerBlock(PixelFormat::R16_Float_Native16));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::R32_Float_Native32));
-    EXPECT_EQ(2, CountBytesPerBlock(PixelFormat::R8_G8_Unsigned));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::R16_G16_Unsigned_Native16));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::R16_G16_Float_Native16));
+    EXPECT_EQ(1U, CountBytesPerBlock(PixelFormat::R8_Unsigned));
+    EXPECT_EQ(2U, CountBytesPerBlock(PixelFormat::R16_Unsigned_Native16));
+    EXPECT_EQ(2U, CountBytesPerBlock(PixelFormat::R16_Float_Native16));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::R32_Float_Native32));
+    EXPECT_EQ(2U, CountBytesPerBlock(PixelFormat::R8_G8_Unsigned));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::R16_G16_Unsigned_Native16));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::R16_G16_Float_Native16));
 
-    EXPECT_EQ(2, CountBytesPerBlock(PixelFormat::R5_G6_B5_Unsigned));
-    EXPECT_EQ(2, CountBytesPerBlock(PixelFormat::R5_G6_B5_Unsigned_Native16));
-    EXPECT_EQ(2, CountBytesPerBlock(PixelFormat::R5_G6_B5_Unsigned_Flipped16));
-    EXPECT_EQ(2, CountBytesPerBlock(PixelFormat::B5_G6_R5_Unsigned));
-    EXPECT_EQ(2, CountBytesPerBlock(PixelFormat::B5_G6_R5_Unsigned_Native16));
-    EXPECT_EQ(2, CountBytesPerBlock(PixelFormat::B5_G6_R5_Unsigned_Flipped16));
+    EXPECT_EQ(2U, CountBytesPerBlock(PixelFormat::R5_G6_B5_Unsigned_Native16));
+    EXPECT_EQ(2U, CountBytesPerBlock(PixelFormat::B5_G6_R5_Unsigned_Native16));
 
-    EXPECT_EQ(3, CountBytesPerBlock(PixelFormat::R8_G8_B8_Unsigned));
-    EXPECT_EQ(3, CountBytesPerBlock(PixelFormat::R8_G8_B8_Signed));
-    EXPECT_EQ(3, CountBytesPerBlock(PixelFormat::B8_G8_R8_Unsigned));
-    EXPECT_EQ(3, CountBytesPerBlock(PixelFormat::B8_G8_R8_Signed));
+    EXPECT_EQ(3U, CountBytesPerBlock(PixelFormat::R8_G8_B8_Unsigned));
+    EXPECT_EQ(3U, CountBytesPerBlock(PixelFormat::R8_G8_B8_Signed));
+    EXPECT_EQ(3U, CountBytesPerBlock(PixelFormat::B8_G8_R8_Unsigned));
+    EXPECT_EQ(3U, CountBytesPerBlock(PixelFormat::B8_G8_R8_Signed));
 
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Unsigned));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Unsigned));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Unsigned_Native32));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Unsigned_Flipped32));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Unsigned_Native32));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Unsigned_Flipped32));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Signed));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Signed));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Signed_Native32));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Signed_Flipped32));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Signed_Native32));
-    EXPECT_EQ(4, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Signed_Flipped32));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Unsigned));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Unsigned));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Unsigned_Native32));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Unsigned_Flipped32));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Unsigned_Native32));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Unsigned_Flipped32));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Signed));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Signed));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Signed_Native32));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::A8_B8_G8_R8_Signed_Flipped32));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Signed_Native32));
+    EXPECT_EQ(4U, CountBytesPerBlock(PixelFormat::R8_G8_B8_A8_Signed_Flipped32));
   }
 
   // ------------------------------------------------------------------------------------------- //

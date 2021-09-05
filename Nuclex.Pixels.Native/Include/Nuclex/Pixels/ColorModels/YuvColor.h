@@ -52,7 +52,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
   ///     even non-quantized math in BT.2020 refers to the numbers as YCbCr...)
   ///   </para>
   /// </remarks>
-  struct YuvColor {
+  struct NUCLEX_PIXELS_TYPE YuvColor {
 
     /// <summary>Normalized (0.0 .. 1.0) luminance (brightness)</summary>
     /// <remarks>

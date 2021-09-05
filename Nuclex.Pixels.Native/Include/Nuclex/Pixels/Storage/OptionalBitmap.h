@@ -28,6 +28,10 @@ License along with this library
 #include <utility>
 #include <stdexcept>
 
+#if !defined(NUCLEX_PIXELS_SOURCE)
+  #warning Nuclex::Pixels::Storage::OptionalBitmap has been deprecated in favor of C++17 std::optional
+#endif
+
 namespace Nuclex { namespace Pixels { namespace Storage {
 
   // ------------------------------------------------------------------------------------------- //

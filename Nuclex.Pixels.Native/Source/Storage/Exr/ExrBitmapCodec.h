@@ -64,11 +64,8 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
     /// <summary>Tries to read informations for a bitmap</summary>
     /// <param name="source">Source data from which the informations should be extracted</param>
     /// <param name="extensionHint">Optional file extension the loaded data had</param>
-    /// <returns>
-    ///   Informations about the bitmap, if the codec is able to load it, otherwise
-    ///   a BitmapInfo structure with 'Loadable' set to false.
-    /// </returns>
-    public: BitmapInfo TryReadInfo(
+    /// <returns>Informations about the bitmap, if the codec is able to load it</returns>
+    public: std::optional<BitmapInfo> TryReadInfo(
       const VirtualFile &source, const std::string &extensionHint = std::string()
     ) const override;
 
@@ -79,7 +76,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
     ///   The bitmap loaded from the specified file data or an empty value if the file format
     ///   is not supported by the codec
     /// </returns>
-    public: virtual OptionalBitmap TryLoad(
+    public: virtual std::optional<Bitmap> TryLoad(
       const VirtualFile &source, const std::string &extensionHint = std::string()
     ) const override;
 
@@ -98,7 +95,16 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Exr {
     /// <summary>Saves the specified bitmap into a file</summary>
     /// <param name="bitmap">Bitmap that will be saved into a file</param>
     /// <param name="target">File into which the bitmap will be saved</param>
-    public: void Save(const Bitmap &bitmap, VirtualFile &target) const override;
+    /// <param name="compressionEffortHint">
+    ///   How much effort (CPU time) should be put into reducing the size of the image.
+    /// </param>
+    /// <param name="outputQualityHint">
+    ///   How much image quality should be prioritized over achieving small file sizes.
+    /// </param>
+    public: void Save(
+      const Bitmap &bitmap, VirtualFile &target,
+      float compressionEffortHint = 0.75f, float outputQualityHint = 0.95f
+    ) const override;
 
     /// <summary>Human-readable name of the file format this codec implements</summary>
     private: std::string name;

@@ -38,21 +38,21 @@ namespace Nuclex { namespace Pixels {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(BitmapTest, HasCopyConstructor) {
-    Bitmap newBitmap(123, 234, PixelFormat::R5_G6_B5_Unsigned);
+    Bitmap newBitmap(123, 234, PixelFormat::R5_G6_B5_Unsigned_Native16);
     Bitmap clone(newBitmap);
     EXPECT_EQ(123U, clone.GetWidth());
     EXPECT_EQ(234U, clone.GetHeight());
-    EXPECT_EQ(PixelFormat::R5_G6_B5_Unsigned, clone.GetPixelFormat());
+    EXPECT_EQ(PixelFormat::R5_G6_B5_Unsigned_Native16, clone.GetPixelFormat());
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   TEST(BitmapTest, HasMoveConstructor) {
-    Bitmap newBitmap(12, 23, PixelFormat::A2_B10_G10_R10_Unsigned);
+    Bitmap newBitmap(12, 23, PixelFormat::A2_B10_G10_R10_Unsigned_Native32);
     Bitmap moved = std::move(newBitmap);
     EXPECT_EQ(12U, moved.GetWidth());
     EXPECT_EQ(23U, moved.GetHeight());
-    EXPECT_EQ(PixelFormat::A2_B10_G10_R10_Unsigned, moved.GetPixelFormat());
+    EXPECT_EQ(PixelFormat::A2_B10_G10_R10_Unsigned_Native32, moved.GetPixelFormat());
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -114,11 +114,11 @@ namespace Nuclex { namespace Pixels {
       memory.PixelFormat = PixelFormat::R8_Unsigned;
       memory.Pixels = foreignBitmap;
 
-      Bitmap borrowedBitmap = Bitmap::FromExistingMemory(memory);
+      Bitmap borrowedBitmap = Bitmap::InExistingMemory(memory);
       EXPECT_EQ(16U, borrowedBitmap.GetWidth());
       EXPECT_EQ(17U, borrowedBitmap.GetHeight());
       EXPECT_EQ(PixelFormat::R8_Unsigned, borrowedBitmap.GetPixelFormat());
-      
+
       {
         BitmapMemory accessedMemory = borrowedBitmap.Access();
         EXPECT_EQ(memory.Width, accessedMemory.Width);

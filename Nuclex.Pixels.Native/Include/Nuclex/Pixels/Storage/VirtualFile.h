@@ -23,15 +23,30 @@ License along with this library
 
 #include "Nuclex/Pixels/Config.h"
 
-#include <string>
-#include <memory>
+#include <string> // for std::string
+#include <memory> // for std::unique_ptr
 
 namespace Nuclex { namespace Pixels { namespace Storage {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Allows reading and writing data to an on-disk or streamed file</summary>
-  class VirtualFile {
+  /// <remarks>
+  ///   <para>
+  ///     If you want to read data from a source other than a file, this class is your
+  ///     means to achieve that. All codecs fully and correctly implement their underlying
+  ///     library's custom IO callbacks, so no temporary files are created and all IO
+  ///     is translated into the 3 methods exposed in this interface.
+  ///   </para>
+  ///   <para>
+  ///     Custom implementations of a VirtualFile are allowed to throw exceptions from
+  ///     all their methods. Such exceptions will resurface from the
+  ///     <see cref="BitmapCodec.TryRead" />, <see cref="BitmapCodec.Load" /> or
+  ///     <see cref="BitmapCodec.Save" /> method (or their respective wrappers in the
+  ///     <see cref="BitmapSerializer" /> class) and there will be no memory leaks.
+  ///   </para>
+  /// </remarks>
+  class NUCLEX_PIXELS_TYPE VirtualFile {
 
     /// <summary>Opens a real file stored in the OS' file system for reading</summary>
     /// <param name="path">
@@ -42,8 +57,17 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     /// </param>
     /// <returns>The file at the specified path, opened in read-only mode</returns>
     /// <remarks>
-    ///   This opens a file using the appropriate OS-specific API. 
-    ///   provided by the current OS.
+    ///   <para>
+    ///     This opens a file using the most direct/efficient method for accessing files
+    ///     provided by the current OS.
+    ///   </para>
+    ///   <para>
+    ///     The returned file is *not* thread-safe. This means if
+    ///     <see cref="VirtualFile.ReadAt" /> and <see cref="VirtualFile.WriteAt" />
+    ///     calls happen from different threads, mixed-up data, spurious exceptions and
+    ///     all kinds of wrong behavior will ensue. If you want to access the same file
+    ///     from multiple threads, each should call this method to get its own instance.
+    ///   </para>
     /// </remarks>
     public: NUCLEX_PIXELS_API static std::unique_ptr<const VirtualFile> OpenRealFileForReading(
       const std::string &path, bool promiseSequentialAccess = false
@@ -58,9 +82,18 @@ namespace Nuclex { namespace Pixels { namespace Storage {
     /// </param>
     /// <returns>The file at the specified path, opened in write-only mode</returns>
     /// <remarks>
-    ///   If the file already exists, it will be truncated to 0 bytes. This creates
-    ///   a file using the most direct/efficient method for accessing files provided by
-    ///   the current OS.
+    ///   <para>
+    ///     If the file already exists, it will be truncated to 0 bytes. This creates
+    ///     a file using the most direct/efficient method for accessing files provided by
+    ///     the current OS.
+    ///   </para>
+    ///   <para>
+    ///     The returned file is *not* thread-safe. This means if
+    ///     <see cref="VirtualFile.ReadAt" /> and <see cref="VirtualFile.WriteAt" />
+    ///     calls happen from different threads, mixed-up data, spurious exceptions and
+    ///     all kinds of wrong behavior will ensue. If you want to access the same file
+    ///     from multiple threads, each should call this method to get its own instance.
+    ///   </para>
     /// </remarks>
     public: NUCLEX_PIXELS_API static std::unique_ptr<VirtualFile> OpenRealFileForWriting(
       const std::string &path, bool promiseSequentialAccess = false

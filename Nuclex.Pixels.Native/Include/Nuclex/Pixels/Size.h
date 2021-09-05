@@ -22,14 +22,15 @@ License along with this library
 #define NUCLEX_PIXELS_SIZE_H
 
 #include "Nuclex/Pixels/Config.h"
-#include <cstddef>
+
+#include <cstddef> // for std::size_t
 
 namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Size of a 2D rectangle in pixels</summary>
-  struct Size {
+  struct NUCLEX_PIXELS_TYPE Size {
 
     /// <summary>Initializes a new rectangle size</summary>
     /// <param name="width">Width of the rectangle in pixels</param>

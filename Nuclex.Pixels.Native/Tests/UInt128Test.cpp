@@ -77,7 +77,7 @@ namespace Nuclex { namespace Pixels {
     uint128_t test(std::uint64_t(12345678901234567890UL));
     EXPECT_EQ(std::uint64_t(12345678901234567890UL), static_cast<std::uint64_t>(test));
   }
- 
+
   // ------------------------------------------------------------------------------------------- //
 
   TEST(UInt128Test, CanBeCastToUInt8) {

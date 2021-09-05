@@ -22,11 +22,13 @@ License along with this library
 #define NUCLEX_PIXELS_SOURCE 1
 
 #include "Nuclex/Pixels/Bitmap.h"
+#include "Nuclex/Pixels/Errors/PixelFormatError.h"
 
-#include <algorithm>
-#include <cstdint>
-#include <cassert>
-#include <memory>
+#include <algorithm> // for std::min
+#include <cstdint> // for std::uint8_t
+#include <memory> // for std::unique_ptr
+
+#include <cassert> // for assert()
 
 namespace {
 
@@ -117,7 +119,7 @@ namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
 
-  Bitmap Bitmap::FromExistingMemory(const BitmapMemory &bitmapMemory) {
+  Bitmap Bitmap::InExistingMemory(const BitmapMemory &bitmapMemory) {
 
     // Allocate the shared buffer this way because it's released via delete[]
     // (other constructors allocate the shared buffer + bitmap memory in one block)
@@ -215,6 +217,21 @@ namespace Nuclex { namespace Pixels {
     // Assumption: allocation-free Bitmap constructor will not throw.
     ++this->buffer->OwnerCount;
     return Bitmap(this->buffer, viewMemory);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void Bitmap::ReinterpretPixelFormat(PixelFormat newPixelFormat) {
+    std::size_t currentBitsPerPixel = CountBitsPerPixel(this->memory.PixelFormat);
+    std::size_t newBitsPerPixel = CountBitsPerPixel(newPixelFormat);
+    if(newBitsPerPixel != currentBitsPerPixel) {
+      throw Errors::PixelFormatError(
+        u8"Cannot reinterpret as a pixel format with different bits per pixel"
+      );
+    }
+
+    // It's that simple :)
+    this->memory.PixelFormat = newPixelFormat;
   }
 
   // ------------------------------------------------------------------------------------------- //

@@ -24,8 +24,6 @@ License along with this library
 #include "Nuclex/Pixels/Config.h"
 #include "Nuclex/Pixels/BitmapMemory.h"
 
-#include <cstddef>
-
 namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
@@ -51,7 +49,7 @@ namespace Nuclex { namespace Pixels {
   ///     block and storing a unique copy of all pixels it was referencing.
   ///   </para>
   /// </remarks>
-  class Bitmap {
+  class NUCLEX_PIXELS_TYPE Bitmap {
 
     /// <summary>Creates a bitmap that accesses an existing memory area</summary>
     /// <param name="bitmapMemory">
@@ -64,7 +62,7 @@ namespace Nuclex { namespace Pixels {
     ///   bitmap that is initialized from an existing memory buffer, immediately
     ///   call the <see cref="Autonomize" /> method on it.
     /// </remarks>
-    public: NUCLEX_PIXELS_API static Bitmap FromExistingMemory(const BitmapMemory &bitmapMemory);
+    public: NUCLEX_PIXELS_API static Bitmap InExistingMemory(const BitmapMemory &bitmapMemory);
 
     /// <summary>Initializes a new bitmap</summary>
     /// <param name="width">Width of the bitmap in pixels</param>
@@ -176,6 +174,7 @@ namespace Nuclex { namespace Pixels {
     public: NUCLEX_PIXELS_API Bitmap GetView(
       std::size_t x, std::size_t y, std::size_t width, std::size_t height
     );
+
 #if 0
     /// <summary>Returns the amount of memory used by the bitmap</summary>
     /// <returns>The number of bytes used to store the bitmap's pixels</returns>
@@ -189,8 +188,56 @@ namespace Nuclex { namespace Pixels {
     /// </remarks>
     public: NUCLEX_PIXELS_API std::size_t GetMemoryUsed() const;
 
+    // CHECK: Does the IsWastingMemory() method serve any purpose?
+    //
+    // It is supposed to report when a bitmap is only accessing a small region inside
+    // a larger bitmap (and no bitmap is referencing the larger region)
+    //
+    // * It will be unreliable if multiple Bitmap instances reference the smaller
+    //   region because it cannot look into the other Bitmap instance
+    // * On the other hand, just leaving it up to calling Autonomize() will also
+    //   not be ideal because it would always unify a copy-on-write clone even if
+    //   the whole bitmap is being referenced.
     public: NUCLEX_PIXELS_API bool IsWastingMemory() const;
 #endif
+
+#if !defined(MOVED_THIS_TO_PIXELFORMATCONVERTER)
+    /// <summary>Acts as if a bitmap had a different pixel format all along</summary>
+    /// <param name="newPixelFormat">New pixel format under which the bitmap have</param>
+    /// <remarks>
+    ///   This operation comes with the same caveats as the C++ reinterpret_cast keyword.
+    ///   The bitmap's current pixel format must have the same width and the target pixel
+    ///   format, so this method only allows you to fix issues like R-G-B / B-G-R mismapping,
+    ///   interpreting a loaded PNG as RGB-signed for normals maps even though it was loaded
+    ///   as RGB-unsigned and similar tweaks.
+    /// </remarks>
+    public: NUCLEX_PIXELS_API void ReinterpretPixelFormat(PixelFormat newPixelFormat);
+#endif
+
+#if 0
+    /// <summary>Converts the bitmap to a different pixel format</summary>
+    /// <param name="newPixelFormat">New pixel format the bitmap will be converted to</param>
+    /// <remarks>
+    ///   This method performs the conversion on the current bitmap (rather than returning
+    ///   a converted copy of the bitmap). Since the Bitmap class is copy-on-write (i.e.
+    ///   cloning a bitmap will not copy its pixels until you try to modify it), this does
+    ///   not result in much overhead.
+    /// </remarks>
+    public: NUCLEX_PIXELS_API void ConvertPixelFormat(PixelFormat newPixelFormat);
+
+    /// <summary>Copies this bitmap into another bitmap</summary>
+    /// <param name="target">Target bitmap this bitmap will be copied into</param>
+    /// <param name="x">X coordinate of the bitmap's left border in the target bitmap</param>
+    /// <param name="y">Y coordinate of the bitmap's lower border in the target bitmap</param>
+    /// <remarks>
+    ///   This is a highly optimized blit operation if both bitmaps have identical pixel
+    ///   formats. Copying into a bitmap with a different pixel format is possible, too,
+    ///   but will be slower and, depending on the pixel formats involved, can remove or
+    ///   default-initialize some color channels.
+    /// </remarks>
+    public: NUCLEX_PIXELS_API void CopyTo(Bitmap &target, std::size_t x, std::size_t y);
+#endif
+
     /// <summary>Copies another bitmap instance into this one</summary>
     /// <param name="other">Other bitmap instance that will be copied</param>
     /// <returns>This bitmap instance</returns>
@@ -226,7 +273,7 @@ namespace Nuclex { namespace Pixels {
     private: static void releaseSharedBuffer(SharedBuffer *buffer) throw();
 
     /// <summary>Description of the memory allocated for the bitmaps and its layout</summary>
-    private: BitmapMemory memory; 
+    private: BitmapMemory memory;
     /// <summary>Memory buffer holding or accessing the bitmap's pixels</summary>
     private: SharedBuffer *buffer;
 

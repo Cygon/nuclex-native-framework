@@ -23,7 +23,7 @@ License along with this library
 
 #include "Nuclex/Pixels/Config.h"
 
-#include <stdexcept>
+#include <stdexcept> // for std::runtime_error
 
 namespace Nuclex { namespace Pixels { namespace Errors {
 
@@ -47,11 +47,11 @@ namespace Nuclex { namespace Pixels { namespace Errors {
   ///     the image you're trying to save (i.e. floating point pixel format in jpg).
   ///   </para>
   /// </remarks>
-  class FileFormatError : public std::runtime_error {
+  class NUCLEX_PIXELS_TYPE FileFormatError : public std::runtime_error {
 
     /// <summary>Initializes a new file format error</summary>
     /// <param name="message">Message that describes the error</param>
-    public: explicit FileFormatError(const std::string &message) :
+    public: NUCLEX_PIXELS_API explicit FileFormatError(const std::string &message) :
       std::runtime_error(message) {}
 
     /// <summary>Initializes a new file format error</summary>

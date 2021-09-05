@@ -36,7 +36,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
 
     /// <summary>BT.470 also known as SDTV, barely covering common colors</summary>
     /// <remarks>
-    ///   Used by old analog systems like PAL and NTSC.
+    ///   Used by old analog formats like PAL and NTSC.
     /// </remarks>
     Bt470,
 
@@ -61,6 +61,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
     ///     Still, the specification talks about YCbCr so maybe ITU wants YUV to mean
     ///     analoguously transmitted (rather than &quot;not quantized&quot;) and bury
     ///     the whole term. Which means my YuvColor class should be YCbCrColor still :/
+    ///   </para>
     /// </remarks>
     Bt2020
 
@@ -71,7 +72,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Converts colors between different color models</summary>
-  class ColorModelConverter {
+  class NUCLEX_PIXELS_TYPE ColorModelConverter {
 
     /// <summary>Converts an RGB color value to an HSV color value</summary>
     /// <param name="color">RGB color that will be converted</param>

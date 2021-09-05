@@ -35,7 +35,7 @@ namespace Nuclex { namespace Pixels {
   ///   The format matches the IEEE-754 binary-16 specification
   ///   http://en.wikipedia.org/wiki/Half-precision_floating-point_format
   /// </remarks>
-  class Half {
+  class NUCLEX_PIXELS_TYPE Half {
 
     /// <summary>The value 1.0 as a half-precision float</summary>
     public: NUCLEX_PIXELS_API static const Half One;

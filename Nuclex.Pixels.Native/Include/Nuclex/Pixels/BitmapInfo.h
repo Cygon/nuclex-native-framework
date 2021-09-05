@@ -24,7 +24,7 @@ License along with this library
 #include "Nuclex/Pixels/Config.h"
 #include "Nuclex/Pixels/PixelFormat.h"
 
-#include <cstddef>
+#include <cstddef> // for std::size_t
 
 namespace Nuclex { namespace Pixels {
 
@@ -35,10 +35,7 @@ namespace Nuclex { namespace Pixels {
   ///   This structure is returned if you ask a codec to provide informations about
   ///   a bitmap before actually loading it.
   /// </remarks>
-  struct BitmapInfo {
-
-    /// <summary>Whether the file can be loaded</summary>
-    public: bool Loadable;
+  struct NUCLEX_PIXELS_TYPE BitmapInfo {
 
     /// <summary>Width of the bitmap in pixels</summary>
     public: std::size_t Width;
@@ -46,8 +43,11 @@ namespace Nuclex { namespace Pixels {
     /// <summary>Height of the bitmap in pixels</summary>
     public: std::size_t Height;
 
-    /// <summary>Describes the memory layout and contents of a pixel</summary>
+    /// <summary>Memory layout and contents of pixels in the bitmap</summary>
     public: enum PixelFormat PixelFormat;
+
+    // TODO: Expose color space (sRGB, Linear, other?)
+    //public: enum ColorSpace ColorSpace;
 
     /// <summary>Memory usage of the bitmap when loaded into memory</summary>
     /// <remarks>

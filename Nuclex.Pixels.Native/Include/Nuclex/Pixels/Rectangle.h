@@ -22,14 +22,15 @@ License along with this library
 #define NUCLEX_PIXELS_RECTANGLE_H
 
 #include "Nuclex/Pixels/Config.h"
-#include <cstddef>
+
+#include <cstddef> // for std::size_t
 
 namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>2D rectangle using pixel coordinates</summary>
-  struct Rectangle {
+  struct NUCLEX_PIXELS_TYPE Rectangle {
 
     /// <summary>Constructs a new rectangle from a minimum and maximum point</summary>
     /// <param name="minX">X coordinate of the rectangle's left side</param>
@@ -38,16 +39,16 @@ namespace Nuclex { namespace Pixels {
     /// <param name="maxY">Y coordinate of the rectangle's upper side</param>
     /// <remarks>
     ///   <para>
-    ///     The maximum (far) point is exclusive. Pixels in which one or both coordinates
-    ///     match with the maximum coordinates specified here are considered to be
-    ///     outside of the rectangle. A 1x1 rectangle would have the far X and Y corner
-    ///     coordinates be 1 larger than the those of the near corner.
+    ///     As a convention, the maximum (far) point is exclusive. Pixels in which
+    ///     one or both coordinates match with the maximum coordinates specified here
+    ///     are considered to be outside of the rectangle (i.e. a rectange (0,0)-(0,0)
+    ///     is empty and contains nothing, while (0,0)-(1,1) contains exactly one pixel).
     ///   </para>
     ///   <para>
-    ///     This library does not make any assumptions over whether you Y-axis is counting
-    ///     upwards or downwards, but documentation will treat the Y-axis as extending
-    ///     towards the top (the upside-down Y-axis common in 2D graphics is an artifact
-    ///     of ancient computer/TV design)
+    ///     This library does not make any assumptions about whether you Y-axis is
+    ///     counting upwards or downwards, but documentation will treat the Y-axis as
+    ///     extending towards the top (the upside-down Y-axis common in 2D graphics
+    ///     is an artifact of ancient computer/TV design).
     ///   </para>
     /// </remarks>
     public: NUCLEX_PIXELS_API static Rectangle FromMinAndMax(

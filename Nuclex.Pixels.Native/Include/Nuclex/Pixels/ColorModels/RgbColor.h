@@ -28,7 +28,7 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Describes a color value using the RGB color model</summary>
-  struct RgbColor {
+  struct NUCLEX_PIXELS_TYPE RgbColor {
 
     /// <summary>Normalized (0.0 .. 1.0) amount of red in the color</summary>
     public: float Red;

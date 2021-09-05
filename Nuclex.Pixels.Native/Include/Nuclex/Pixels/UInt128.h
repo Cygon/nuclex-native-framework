@@ -33,7 +33,7 @@ namespace Nuclex { namespace Pixels {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>128 bit unsigned intgeer</summary>
-  class UInt128 {
+  class NUCLEX_PIXELS_TYPE UInt128 {
 
     /// <summary>Initializes a new 128 bit unsigned integer</summary>
     /// <remarks>
