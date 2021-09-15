@@ -231,6 +231,15 @@ namespace Nuclex { namespace Pixels { namespace Storage {
       float compressionEffortHint = 0.75f, float outputQualityHint = 0.95f
     ) const;
 
+    /// <summary>Looks up the codec for a file format from the file extension</summary>
+    /// <param name="extension">File extension for which the codec will be looked up</param>
+    /// <returns>A reference to the bitmap codec associated with the extension</returns>
+    /// <remarks>
+    ///   This will throw the appropriate exception if no matching codec is found and also
+    ///   if a codec is found but it does not support saving images.
+    /// </remarks>
+    private: const BitmapCodec &getSavingCodecForExtension(const std::string &extension) const;
+
     /// <summary>Builds a new iterator that checks codecs in the most likely order</summary>
     /// <param name="extension">File extension, if known</param>
     /// <param name="tryCodecCallback">

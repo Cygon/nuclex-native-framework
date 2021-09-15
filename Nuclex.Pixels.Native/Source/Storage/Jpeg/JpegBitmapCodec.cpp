@@ -27,9 +27,13 @@ License along with this library
 
 #include "Nuclex/Pixels/Storage/VirtualFile.h"
 #include "Nuclex/Pixels/Errors/FileFormatError.h"
+#include "Nuclex/Pixels/Errors/WrongSizeError.h"
+
+#include "Nuclex/Support/ScopeGuard.h"
+
 #include "LibJpegHelpers.h"
 
-#include <cassert>
+#include <cassert> // for assert()
 #include <algorithm>
 
 #include <jpeglib.h>
@@ -38,6 +42,8 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
+  /// <summary>Ignores diagnostic messages from jpeglib</summary>
+  /// <param name="cinfo">Jpeg common info containing the diagnostic message</param>
   void discardJpegMessage(struct ::jpeg_common_struct *cinfo) { (void)cinfo; }
 
   // ------------------------------------------------------------------------------------------- //
@@ -70,46 +76,6 @@ namespace {
 
     throw Nuclex::Pixels::Errors::FileFormatError(u8"Error occurred in libjpeg");
   }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  /// <summary>RAII helper that frees a JPEG decompression structure upon scope exit</summary>
-  class JpegDecompressStructScope {
-
-    /// <summary>Frees a JPEG decompression structure upon termination</summary>
-    /// <param name="commonInfo">JPEG decompression structure that will be freed</summary>
-    public: JpegDecompressStructScope(::jpeg_decompress_struct *commonInfo) :
-      commonInfo(commonInfo) {}
-
-    /// <summary>Frees the JPEG decompression structure</summary>
-    public: ~JpegDecompressStructScope() {
-      ::jpeg_destroy_decompress(this->commonInfo);
-    }
-
-    /// <summary>JPEG decompression structure that will be freed</summary>
-    private: ::jpeg_decompress_struct *commonInfo;
-
-  };
-
-  // ------------------------------------------------------------------------------------------- //
-
-  /// <summary>RAII helper that frees a JPEG compression structure upon scope exit</summary>
-  class JpegCompressStructScope {
-
-    /// <summary>Frees a JPEG compression structure upon termination</summary>
-    /// <param name="commonInfo">JPEG compression structure that will be freed</summary>
-    public: JpegCompressStructScope(::jpeg_compress_struct *commonInfo) :
-      commonInfo(commonInfo) {}
-
-    /// <summary>Frees the JPEG compression structure</summary>
-    public: ~JpegCompressStructScope() {
-      ::jpeg_destroy_compress(this->commonInfo);
-    }
-
-    /// <summary>JPEG compression structure that will be freed</summary>
-    private: ::jpeg_compress_struct *commonInfo;
-
-  };
 
   // ------------------------------------------------------------------------------------------- //
 
@@ -207,10 +173,12 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
   ) const {
     (void)extensionHint; // Unused
 
-    ::jpeg_decompress_struct commonInfo;
-    ::jpeg_create_decompress(&commonInfo);
     {
-      JpegDecompressStructScope decompressScope(&commonInfo);
+      ::jpeg_decompress_struct commonInfo;
+      ::jpeg_create_decompress(&commonInfo);
+      ON_SCOPE_EXIT {
+        ::jpeg_destroy_decompress(&commonInfo);
+      };
 
       // Set up a custom error manager that throws exceptions rather than exit()
       struct ::jpeg_error_mgr errorManager;
@@ -252,205 +220,9 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
         (sizeof(std::size_t) * 3) +
         (sizeof(int) * 2)
       );
+
       return info;
     }
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  std::optional<Bitmap> JpegBitmapCodec::TryLoad(
-    const VirtualFile &source, const std::string &extensionHint /* = std::string() */
-  ) const {
-    (void)extensionHint; // Unused
-
-    ::jpeg_decompress_struct commonInfo;
-    ::jpeg_create_decompress(&commonInfo);
-    {
-      JpegDecompressStructScope decompressScope(&commonInfo);
-
-      // Set up a custom error manager that throws exceptions rather than exit()
-      struct ::jpeg_error_mgr errorManager;
-      ::jpeg_std_error(&errorManager);
-      errorManager.error_exit = &handleJpegError;
-      errorManager.output_message = &discardJpegMessage;
-      commonInfo.err = &errorManager;
-
-      // Set up a custom data source that reads from a virtual file
-      JpegReadEnvironment virtualFileSource(source);
-      commonInfo.src = &virtualFileSource;
-
-      // If the file is too small for even the JPEG/JFIF header, bail out
-      if(virtualFileSource.Length < SmallestPossibleJpegSize) {
-        return std::optional<Bitmap>();
-      }
-
-      // Do the first fill ourselves so we can check the file's identity
-      // and exit early if it doesn't look like a JPEG file
-      virtualFileSource.fill_input_buffer(&commonInfo);
-      if(!Helpers::IsValidJpegHeader(virtualFileSource.Buffer)) {
-        return std::optional<Bitmap>(); // file header did not indicate a JPEG file
-      }
-
-      // Finally, we can read the JPEG file header to get file infos
-      int result = ::jpeg_read_header(&commonInfo, TRUE);
-      if(result != JPEG_HEADER_OK) {
-        throw Errors::FileFormatError(u8"libjpeg failed to read the file header");
-      }
-
-      // TODO: Use fastest color space and copy/convert to Bitmap
-      //       Bitmap of type returned by TryReadInfo() MUST be able to hold this data!
-      // Force libjpeg to convert to 24 bit RGB for us
-      commonInfo.output_components = 3;
-      commonInfo.out_color_space = JCS_RGB;
-
-      // Begin decompression, this will update output_width and output_height,
-      // usually to the same as image_width, image_height unless scaling is set up.
-      ::boolean startedWithoutSuspension = ::jpeg_start_decompress(&commonInfo);
-      if(startedWithoutSuspension == FALSE) { // decompressor was suspended -- we don't support this
-        throw Errors::FileFormatError(u8"Input file truncated");
-      }
-
-      // Create the bitmap so we can directly decode into its pixel buffer
-      Bitmap decodedBitmap(
-        static_cast<std::size_t>(commonInfo.output_width),
-        static_cast<std::size_t>(commonInfo.output_height),
-        PixelFormat::R8_G8_B8_Unsigned
-      );
-      const BitmapMemory &memory = decodedBitmap.Access();
-
-      // Read the bitmap scanline by scanline. The function can also take an array of
-      // scanlines, which may be faster than decoding line-by-line, but this is
-      // the most straightforward way to do it.
-      std::uint8_t *currentRowPointer = reinterpret_cast<std::uint8_t *>(memory.Pixels);
-      while(commonInfo.output_scanline < commonInfo.output_height) {
-        JDIMENSION readScanlineCount = ::jpeg_read_scanlines(&commonInfo, &currentRowPointer, 1);
-        if(readScanlineCount != 1) {
-          throw Errors::FileFormatError(u8"Unknown error reading scanline from jpeg");
-        }
-        currentRowPointer += memory.Stride;
-      }
-
-      // Finish decompression. This does some additional sanity checks, verifying that
-      // the image was decompressed completely and reading the input stream up to the EOI
-      // market (in case it contains multiple images).
-      ::boolean endedWithoutSuspension = ::jpeg_finish_decompress(&commonInfo);
-      if(endedWithoutSuspension == FALSE) { // decompressor was suspended -- we don't support this
-        throw Errors::FileFormatError(u8"Input file truncated");
-      }
-
-      return std::optional<Bitmap>(std::move(decodedBitmap));
-    }
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  bool JpegBitmapCodec::TryReload(
-    Bitmap &exactlyFittingBitmap,
-    const VirtualFile &source, const std::string &extensionHint /* = std::string() */
-  ) const {
-    (void)extensionHint;
-
-    ::jpeg_decompress_struct commonInfo;
-    ::jpeg_create_decompress(&commonInfo);
-    {
-      JpegDecompressStructScope decompressScope(&commonInfo);
-
-      // Set up a custom error manager that throws exceptions rather than exit()
-      struct ::jpeg_error_mgr errorManager;
-      ::jpeg_std_error(&errorManager);
-      errorManager.error_exit = &handleJpegError;
-      errorManager.output_message = &discardJpegMessage;
-      commonInfo.err = &errorManager;
-
-      // Set up a custom data source that reads from a virtual file
-      JpegReadEnvironment virtualFileSource(source);
-      commonInfo.src = &virtualFileSource;
-
-      // If the file is too small for even the JPEG/JFIF header, bail out
-      if(virtualFileSource.Length < 16) {
-        return false;
-      }
-
-      // Do the first fill ourselves so we can check the file's identity
-      // and exit early if it doesn't look like a JPEG file
-      virtualFileSource.fill_input_buffer(&commonInfo);
-      if(!Helpers::IsValidJpegHeader(virtualFileSource.Buffer)) {
-        return false;
-      }
-
-      // Finally, we can read the JPEG file header to get file infos
-      int result = ::jpeg_read_header(&commonInfo, TRUE);
-      if(result != JPEG_HEADER_OK) {
-        throw Errors::FileFormatError(u8"libjpeg failed to read the file header");
-      }
-
-      // TODO: Use fastest color space and copy/convert to Bitmap
-      //       Bitmap of type returned by TryReadInfo() MUST be able to hold this data!
-      // Force libjpeg to convert to 24 bit RGB for us
-      commonInfo.output_components = 3;
-      commonInfo.out_color_space = JCS_RGB;
-
-      // Begin decompression, this will update output_width and output_height,
-      // usually to the same as image_width, image_height unless scaling is set up.
-      ::boolean startedWithoutSuspension = ::jpeg_start_decompress(&commonInfo);
-      if(startedWithoutSuspension == FALSE) { // decompressor was suspended -- we don't support this
-        throw Errors::FileFormatError(u8"Input file truncated");
-      }
-
-      const BitmapMemory &memory = exactlyFittingBitmap.Access();
-      bool matchesExpectations = (
-        (memory.Width == commonInfo.output_width) &&
-        (memory.Height == commonInfo.output_height) &&
-        (memory.PixelFormat == PixelFormat::R8_G8_B8_Unsigned)
-      );
-      if(!matchesExpectations) {
-        throw std::runtime_error(
-          u8"Bitmap provided to Reload() does not have a correct dimensions and pixel format"
-        );
-      }
-
-      // Read the bitmap scanline by scanline. The function can also take an array of
-      // scanlines, which may be faster than decoding line-by-line, but this is
-      // the most straightforward way to do it.
-      std::uint8_t *currentRowPointer = reinterpret_cast<std::uint8_t *>(memory.Pixels);
-      while(commonInfo.output_scanline < commonInfo.output_height) {
-        JDIMENSION readScanlineCount = ::jpeg_read_scanlines(&commonInfo, &currentRowPointer, 1);
-        if(readScanlineCount != 1) {
-          throw Errors::FileFormatError(u8"Unknown error reading scanline from jpeg");
-        }
-        currentRowPointer += memory.Stride;
-      }
-
-      // Finish decompression. This does some additional sanity checks, verifying that
-      // the image was decompressed completely and reading the input stream up to the EOI
-      // market (in case it contains multiple images).
-      ::boolean endedWithoutSuspension = ::jpeg_finish_decompress(&commonInfo);
-      if(endedWithoutSuspension == FALSE) { // decompressor was suspended -- we don't support this
-        throw Errors::FileFormatError(u8"Input file truncated");
-      }
-
-      return true;
-    }
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  void JpegBitmapCodec::Save(
-    const Bitmap &bitmap, VirtualFile &target,
-    float compressionEffortHint /* = 0.75f */, float outputQualityHint /* = 0.95f */
-  ) const {
-    (void)bitmap;
-    (void)target;
-    (void)compressionEffortHint;
-    (void)outputQualityHint;
-
-    ::jpeg_compress_struct commonInfo;
-    ::jpeg_create_compress(&commonInfo);
-    {
-      JpegCompressStructScope decompressScope(&commonInfo);
-    }
-
-    throw std::runtime_error(u8"Not implemented yet");
   }
 
   // ------------------------------------------------------------------------------------------- //

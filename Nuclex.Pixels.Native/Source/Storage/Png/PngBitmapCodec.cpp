@@ -28,6 +28,8 @@ License along with this library
 #include "Nuclex/Pixels/Storage/VirtualFile.h"
 #include "Nuclex/Pixels/Errors/FileFormatError.h"
 
+#include "Nuclex/Support/ScopeGuard.h"
+
 #include "LibPngHelpers.h"
 
 #include <png.h> // libpng main header
@@ -68,54 +70,6 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>RAII helper class that frees a PNG struct again</summary>
-  class PngReadScope {
-
-    /// <summary>Initializes a new png_struct deleter</summary>
-    /// <param name="pngStruct">
-    ///   PNG main structure that should be deleted on scope exit
-    /// </param>
-    public: PngReadScope(::png_struct *pngStruct) :
-      pngStruct(pngStruct) {}
-
-    /// <summary>Frees the PNG main structure</summary>
-    public: ~PngReadScope() {
-      ::png_destroy_read_struct(&this->pngStruct, nullptr, nullptr);
-    }
-
-    /// <summary>PNG main structure that will be deleted</summary>
-    private: ::png_struct *pngStruct;
-
-  };
-
-  // ------------------------------------------------------------------------------------------- //
-
-  /// <summary>RAII helper class that frees a PNG struct again</summary>
-  class PngInfoScope {
-
-    /// <summary>Initializes a new png_struct deleter</summary>
-    /// <param name="pngStruct">PNG main structure needed for the API call</param>
-    /// <param name="pngInfo">
-    ///   PNG infomration structure that should be deleted on scope exit
-    /// </param>
-    public: PngInfoScope(const ::png_struct *pngStruct, ::png_info *pngInfo) :
-      pngStruct(pngStruct),
-      pngInfo(pngInfo) {}
-
-    /// <summary>Frees the PNG information structure</summary>
-    public: ~PngInfoScope() {
-      ::png_destroy_info_struct(this->pngStruct, &this->pngInfo);
-    }
-
-    /// <summary>PNG main structure required for the API call</summary>
-    private: const ::png_struct *pngStruct;
-    /// <summary>PNG info structure that will be deleted</summary>
-    private: ::png_info *pngInfo;
-
-  };
-
-  // ------------------------------------------------------------------------------------------- //
-
 } // anonymous namespace
 
 namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
@@ -139,29 +93,33 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
       return std::optional<BitmapInfo>();
     }
 
-    // Allocate the main LibPNG structure. It contains all pointers to user-defined
-    // functions (IO, error handling and custom chunk processing, etc.)
-    ::png_struct *pngRead = ::png_create_read_struct(
-      PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr
-    );
-    if(pngRead == nullptr) {
-      throw std::bad_alloc();
-    }
     {
-      PngReadScope pngReadScope(pngRead);
+      // Allocate the main LibPNG structure. It contains all pointers to user-defined
+      // functions (IO, error handling and custom chunk processing, etc.)
+      ::png_struct *pngRead = ::png_create_read_struct(
+        PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr
+      );
+      if(pngRead == nullptr) {
+        throw std::bad_alloc();
+      }
+      ON_SCOPE_EXIT {
+        ::png_destroy_read_struct(&pngRead, nullptr, nullptr);
+      };
 
       // Install a custom error handler function that simply throws a C++ exception.
       // LibPNG is one of the few C libraries designed to allow exceptions passing through.
       ::png_set_error_fn(pngRead, nullptr, &handlePngError, &handlePngWarning);
 
-      // We also need the info structure. This holds all importing informations describing
-      // the image's dimensions, pixel format, palette, gamma etc.
-      ::png_info *pngInfo = ::png_create_info_struct(pngRead);
-      if(pngInfo == nullptr) {
-        throw std::bad_alloc();
-      }
       {
-        PngInfoScope pngInfoScope(pngRead, pngInfo);
+        // We also need the info structure. This holds all importing informations describing
+        // the image's dimensions, pixel format, palette, gamma etc.
+        ::png_info *pngInfo = ::png_create_info_struct(pngRead);
+        if(pngInfo == nullptr) {
+          throw std::bad_alloc();
+        }
+        ON_SCOPE_EXIT {
+          ::png_destroy_info_struct(pngRead, &pngInfo);
+        };
 
         // Install a custom read function. This is used to read data from the virtual
         // file. The read environment emulates a file cursor.
@@ -196,43 +154,26 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
     // Should the codec be used through the BitmapSerializer (which is very likely
     // always the case), the extension will either match or be missing.
     bool mightBePng;
-    {
-      std::size_t hintLength = extensionHint.length();
-      if(hintLength == 3) { // extension without dot possible
-        mightBePng = (
-          ((extensionHint[0] == 'p') || (extensionHint[0] == 'P')) &&
-          ((extensionHint[1] == 'n') || (extensionHint[1] == 'N')) &&
-          ((extensionHint[2] == 'g') || (extensionHint[2] == 'G'))
-        );
-      } else if(hintLength == 4) { // extension with dot possible
-        mightBePng = (
-          (extensionHint[0] == '.') &&
-          ((extensionHint[1] == 'p') || (extensionHint[1] == 'P')) &&
-          ((extensionHint[2] == 'n') || (extensionHint[2] == 'N')) &&
-          ((extensionHint[3] == 'g') || (extensionHint[3] == 'G'))
-        );
-      } else if(extensionHint.empty()) { // extension missing
-        mightBePng = true;
-      } else { // extension wrong
-        mightBePng = false;
-      }
+    if(extensionHint.empty()) {
+      mightBePng = true;
+    } else {
+      mightBePng = Helpers::DoesFileExtensionSayPng(extensionHint);
     }
 
     // If the extension indicates a PNG file (or no extension was provided),
     // check the file header to see if this is really a PNG file
     if(mightBePng) {
-      std::uint64_t fileLength = source.GetSize();
-      if(fileLength >= SmallestPossiblePngSize) {
-        std::uint8_t fileHeader[16];
-        source.ReadAt(0, 16, fileHeader);
-        return (::png_sig_cmp(fileHeader, 0, 16) == 0);
-      } else { // file is too short to be a PNG
-        return false;
-      }
+      return Helpers::CheckIfPngHeaderPresent(source);
     } else { // wrong file extension
       return false;
     }
 
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  bool PngBitmapCodec::CanSave() const {
+    return true; // We can save everything!
   }
 
   // ------------------------------------------------------------------------------------------- //

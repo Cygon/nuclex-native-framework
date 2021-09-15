@@ -28,9 +28,7 @@ License along with this library
 #include "Nuclex/Pixels/PixelFormat.h"
 #include "Nuclex/Pixels/Storage/VirtualFile.h"
 
-#include <cstdint>
-
-#include <png.h>
+#include <png.h> // LibPNG main header
 
 namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
 
@@ -47,10 +45,36 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
   /// <summary>Helper class for reading PNG files using libpng</summary>
   class Helpers {
 
+    /// <summary>Checks if the specified file extension indicates a .png file</summary>
+    /// <param name="extension">File extension (can be with or without leading dot)</param>
+    /// <returns>True if the file extension indicates a .png</returns>
+    public: static bool DoesFileExtensionSayPng(const std::string &extension);
+
     /// <summary>Checks if the specified file starts with a valid .png header</summary>
     /// <param name="source">File that will be checked for a valid .png header</param>
     /// <returns>True if a valid .png header was found, false otherwise</returns>
     public: static bool CheckIfPngHeaderPresent(const VirtualFile &source);
+
+    /// <summary>Selects the pixel format in which a .png file will be loaded</summary>
+    /// <param name="pngRead">
+    ///   PNG read structure from which the .png pixel format will be queried
+    ///   (will receive necessary adjustments if non-const reference)
+    /// </param>
+    /// <param name="pngInfo">
+    ///   PNG information structure, required by some of the LibPNG query methods
+    /// </param>
+    /// <returns>
+    ///   The pixel format that is closest/matches the .png file and if non-const,
+    ///   for which LibPNG has been configured to load the image as
+    /// </returns>
+    /// <remarks>
+    ///   LibPNG can perform some pixel format adjustments on its own. We use these to adapt
+    ///   formats that would have no representation in Nuclex.Pixels (such as 1, 2 and 4 bits
+    ///   per channel which is space-saving for storage but useless on modern graphics hardware).
+    /// </remarks>
+    public: static PixelFormat SelectPixelFormatForLoad(
+      ::png_struct &pngRead, const ::png_info &pngInfo
+    );
 
     /// <summary>Finds the supported pixel format that is closest to the PNG's</summary>
     /// <param name="pngRead">Main PNG structure storing libpng settings</param>

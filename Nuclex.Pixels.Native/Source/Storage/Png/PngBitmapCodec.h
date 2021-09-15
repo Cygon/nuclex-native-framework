@@ -106,16 +106,6 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
       float compressionEffortHint = 0.75f, float outputQualityHint = 0.95f
     ) const override;
 
-    /// <summary>
-    ///   Saves the bitmap when its native pixel format is supported by the PNG spec
-    /// </summary>
-    private: void saveWithNativePixelFormat();
-
-    /// <summary>
-    ///   Saves the bitmap if an on-the-fly conversion to a different pixel format is needed
-    /// </summary>
-    private: void saveWithUpgradedPixelFormat();
-
     /// <summary>Human-readable name of the file format this codec implements</summary>
     private: std::string name;
     /// <summary>File extensions this file format is known to use</summary>

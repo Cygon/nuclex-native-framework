@@ -25,7 +25,6 @@ License along with this library
 #include "Nuclex/Pixels/Storage/VirtualFile.h"
 #include "Nuclex/Pixels/Storage/BitmapCodec.h"
 #include "Nuclex/Pixels/Errors/FileFormatError.h"
-
 #include "Nuclex/Support/Text/StringConverter.h"
 
 // Disable things that have not yet made their way into
@@ -394,14 +393,10 @@ namespace Nuclex { namespace Pixels { namespace Storage {
 
   void BitmapSerializer::Save(
     const Bitmap &bitmap, VirtualFile &file, const std::string &extension,
-    float compressionStrengthHint /* = 0.75f */, float outputQualityHint /* = 0.95f */
+    float compressionEffortHint /* = 0.75f */, float outputQualityHint /* = 0.95f */
   ) const {
-    (void)bitmap;
-    (void)file;
-    (void)extension;
-    (void)compressionStrengthHint;
-    (void)outputQualityHint;
-    throw std::runtime_error("Not implemented yet");
+    const BitmapCodec &codec = getSavingCodecForExtension(extension);
+    codec.Save(bitmap, file, compressionEffortHint, outputQualityHint);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -409,14 +404,84 @@ namespace Nuclex { namespace Pixels { namespace Storage {
   void BitmapSerializer::Save(
     const Bitmap &bitmap, const std::string &path,
     const std::string &extension /* = std::string() */,
-    float compressionStrengthHint /* = 0.75f */, float outputQualityHint /* = 0.95f */
+    float compressionEffortHint /* = 0.75f */, float outputQualityHint /* = 0.95f */
   ) const {
-    (void)bitmap;
-    (void)path;
-    (void)extension;
-    (void)compressionStrengthHint;
-    (void)outputQualityHint;
-    throw std::runtime_error("Not implemented yet");
+
+    // Only try to pick the extension out of the specified path if the caller hasn't
+    // explicitly filled the extension parameter
+    if(extension.empty()) {
+      std::string::size_type extensionDotIndex = path.find_last_of('.');
+  #if defined(NUCLEX_PIXELS_WINDOWS)
+      std::string::size_type lastPathSeparatorIndex = path.find_last_of('\\');
+  #else
+      std::string::size_type lastPathSeparatorIndex = path.find_last_of('/');
+  #endif
+
+      // Check if the provided path contains a file extension and if so, use it to select
+      // the bitmap codec to attempt to save the image file with.
+      if(extensionDotIndex != std::string::npos) {
+        bool dotBelongsToFilename = (
+          (lastPathSeparatorIndex == std::string::npos) ||
+          (extensionDotIndex > lastPathSeparatorIndex)
+        );
+        if(dotBelongsToFilename) {
+          std::string detectedExtension = path.substr(extensionDotIndex + 1);
+          const BitmapCodec &codec = getSavingCodecForExtension(detectedExtension);
+          std::unique_ptr<VirtualFile> file = VirtualFile::OpenRealFileForWriting(path, true);
+          codec.Save(bitmap, *file.get(), compressionEffortHint, outputQualityHint);
+          return;
+        }
+      }
+
+      // No explicit file extension specified and the target path didn't have one either,
+      // so we've got no clue which image file format the caller wants us to use...
+      std::string message(u8"Could not deduce saved image file format from file extension '", 62);
+      message.append(path);
+      message.push_back(u8'\'');
+      throw Errors::FileFormatError(message);
+    }
+
+    // Extension was specified explicitly, look it up
+    {
+      const BitmapCodec &codec = getSavingCodecForExtension(extension);
+      std::unique_ptr<VirtualFile> file = VirtualFile::OpenRealFileForWriting(path, true);
+      codec.Save(bitmap, *file.get(), compressionEffortHint, outputQualityHint);
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  const BitmapCodec &BitmapSerializer::getSavingCodecForExtension(
+    const std::string &extension
+  ) const {
+    using Nuclex::Support::Text::StringConverter;
+
+    // Do a lookup for the codec responsible for the specified extension
+    std::string foldedLowercaseExtension = StringConverter::FoldedLowercaseFromUtf8(extension);
+    ExtensionCodecIndexMap::const_iterator iterator = this->codecsByExtension.find(
+      foldedLowercaseExtension
+    );
+
+    // If no registered codec is associated with the specified extension, we fail.
+    // Since this method is used when saving, we can use a tailored error message.
+    if(iterator == this->codecsByExtension.end()) {
+      std::string message(u8"No codec registered to save image file with extension '", 55);
+      message.append(extension);
+      message.push_back(u8'\'');
+      throw Errors::FileFormatError(message);
+    }
+
+    // If a codec has been registered to this file extension, it might still be that
+    // the codec is a read-only implementation of the file format, so check this.
+    const BitmapCodec &codec = *this->codecs[iterator->second].get();
+    if(!codec.CanSave()) {
+      std::string message(u8"Codec '", 7);
+      message.append(codec.GetName());
+      message.append(u8"' does not support image saving");
+      throw Errors::FileFormatError(message);
+    }
+
+    return codec;
   }
 
   // ------------------------------------------------------------------------------------------- //

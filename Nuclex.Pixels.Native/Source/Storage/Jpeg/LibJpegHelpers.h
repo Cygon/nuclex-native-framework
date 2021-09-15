@@ -28,9 +28,9 @@ License along with this library
 #include "Nuclex/Pixels/PixelFormat.h"
 #include "Nuclex/Pixels/Storage/VirtualFile.h"
 
-#include <cstdint>
+#include <cstdint> // for std::uint8_t, std::uint64_t
 
-#include <jpeglib.h>
+#include <jpeglib.h> // main jpeglib header
 
 namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
 
@@ -112,7 +112,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Data required by the libjpeg IO functions to write to virtual files</summary>
-  struct JpegWriteEnvironment : public ::jpeg_source_mgr {
+  struct JpegWriteEnvironment : public ::jpeg_destination_mgr {
 
     /// <summary>Initializes a new libjpeg write  environment</summary>
     /// <param name="file">Virtual file into which data will be written</param>

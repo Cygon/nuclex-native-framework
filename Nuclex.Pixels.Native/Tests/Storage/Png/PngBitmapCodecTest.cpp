@@ -295,7 +295,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
     {
       const InMemoryFile testPngFile(depth48TestPng, sizeof(depth48TestPng));
 
-      Bitmap existingBitmap(5, 5, PixelFormat::R8_G8_B8_A8_Unsigned);
+      Bitmap existingBitmap(5, 5, PixelFormat::R8_G8_B8_Unsigned);
       bool wasPngFile = codec.TryReload(existingBitmap, testPngFile);
       ASSERT_TRUE(wasPngFile);
 
@@ -308,30 +308,30 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
       EXPECT_EQ(g, 0U);
       EXPECT_EQ(b, 0U);
 
-      r = reinterpret_cast<std::uint8_t *>(memory.Pixels)[4];
-      g = reinterpret_cast<std::uint8_t *>(memory.Pixels)[5];
-      b = reinterpret_cast<std::uint8_t *>(memory.Pixels)[6];
+      r = reinterpret_cast<std::uint8_t *>(memory.Pixels)[3];
+      g = reinterpret_cast<std::uint8_t *>(memory.Pixels)[4];
+      b = reinterpret_cast<std::uint8_t *>(memory.Pixels)[5];
       EXPECT_EQ(r, 255U);
       EXPECT_EQ(g, 0U);
       EXPECT_EQ(b, 0U);
 
-      r = reinterpret_cast<std::uint8_t *>(memory.Pixels)[8];
-      g = reinterpret_cast<std::uint8_t *>(memory.Pixels)[9];
-      b = reinterpret_cast<std::uint8_t *>(memory.Pixels)[10];
+      r = reinterpret_cast<std::uint8_t *>(memory.Pixels)[6];
+      g = reinterpret_cast<std::uint8_t *>(memory.Pixels)[7];
+      b = reinterpret_cast<std::uint8_t *>(memory.Pixels)[8];
       EXPECT_EQ(r, 0U);
       EXPECT_EQ(g, 255U);
       EXPECT_EQ(b, 0U);
 
-      r = reinterpret_cast<std::uint8_t *>(memory.Pixels)[12];
-      g = reinterpret_cast<std::uint8_t *>(memory.Pixels)[13];
-      b = reinterpret_cast<std::uint8_t *>(memory.Pixels)[14];
+      r = reinterpret_cast<std::uint8_t *>(memory.Pixels)[9];
+      g = reinterpret_cast<std::uint8_t *>(memory.Pixels)[10];
+      b = reinterpret_cast<std::uint8_t *>(memory.Pixels)[11];
       EXPECT_EQ(r, 0U);
       EXPECT_EQ(g, 0U);
       EXPECT_EQ(b, 255U);
 
-      r = reinterpret_cast<std::uint8_t *>(memory.Pixels)[16];
-      g = reinterpret_cast<std::uint8_t *>(memory.Pixels)[17];
-      b = reinterpret_cast<std::uint8_t *>(memory.Pixels)[18];
+      r = reinterpret_cast<std::uint8_t *>(memory.Pixels)[12];
+      g = reinterpret_cast<std::uint8_t *>(memory.Pixels)[13];
+      b = reinterpret_cast<std::uint8_t *>(memory.Pixels)[14];
       EXPECT_EQ(r, 255U);
       EXPECT_EQ(g, 255U);
       EXPECT_EQ(b, 255U);

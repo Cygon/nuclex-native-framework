@@ -35,29 +35,6 @@ License along with this library
 
 #include "LibPngHelpers.h"
 
-#include <png.h> // libpng main header
-
-// png_set_filler(png_ptr, filler, PNG_FILLER_BEFORE);
-//   Can produce XRGB or RGBX output
-//
-// PNG_FORMAT_FLAG_AFIRST
-//   Can put alpha channel first or last
-//
-// png_set_bgr(png_ptr);
-//   Can produce RGB or BGR output
-//
-// png_set_gray_to_rgb(png_ptr);
-//   Can convert grayscale to RGB
-//
-// png_set_strip_16(png_ptr);
-//   Can convert 16 bit to 8 bit channels
-//
-// png_set_strip_alpha(png_ptr);
-//   Can remove the alpha channel
-//
-// png_set_rgb_to_gray_fixed(png_ptr, error_action, int red_weight, int green_weight);
-//   Can convert RGB to grayscale
-
 namespace {
 
   // ------------------------------------------------------------------------------------------- //
@@ -90,105 +67,6 @@ namespace {
   void handlePngWarning(::png_struct *png, const char *warningMessage) {
     (void)png;
     (void)warningMessage;
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
-  /// <summary>Selects the pixel format in which a .png file will be loaded</summary>
-  /// <param name="pngRead">
-  ///   PNG read structure from which the .png pixel format will be queried and which will
-  ///   receive necessary adjustments
-  /// </param>
-  /// <param name="pngInfo">
-  ///   PNG information structure, required by some of the LibPNG query methods
-  /// </param>
-  /// <returns>
-  ///   The pixel format that is closest/matches the .png file and for which LibPNG has
-  ///   been configured to load the image as
-  /// </returns>
-  /// <remarks>
-  ///   LibPNG can perform some pixel format adjustments on its own. We use these to adapt
-  ///   formats that would have no representation in Nuclex.Pixels (such as 1, 2 and 4 bits
-  ///   per channel which is space-saving for storage but useless on modern graphics hardware).
-  /// </remarks>
-  Nuclex::Pixels::PixelFormat selectPixelFormatForLoad(
-    ::png_struct &pngRead, const ::png_info &pngInfo
-  ) {
-
-    // Make sure the bit depth is at least 8 bits per pixel. Fortunately, LibPNG can
-    // help us out if the image is saved at a lower bit depth
-    ::png_byte bitDepth = ::png_get_bit_depth(&pngRead, &pngInfo);
-    if(bitDepth < 8) {
-      ::png_set_expand_gray_1_2_4_to_8(&pngRead);
-      bitDepth = 8;
-    }
-
-    // Get the actual format of the input pixels
-    ::png_byte colorType = ::png_get_color_type(&pngRead, &pngInfo);
-    ::png_byte channelCount = ::png_get_channels(&pngRead, &pngInfo);
-    switch(channelCount) {
-      case 1: {
-        // If this is a palette-base image, convert it to 24 bit RGB. There is no
-        // support for a 16 bit per channel color palette.
-        if(colorType == PNG_COLOR_TYPE_PALETTE) {
-          ::png_set_palette_to_rgb(&pngRead);
-          return Nuclex::Pixels::PixelFormat::R8_G8_B8_Unsigned;
-        } else if(bitDepth == 16) {
-          return Nuclex::Pixels::PixelFormat::R16_Unsigned_Native16;
-        } else {
-          return Nuclex::Pixels::PixelFormat::R8_Unsigned;
-        }
-        break;
-      }
-      case 2: {
-        if(colorType == PNG_COLOR_TYPE_GRAY_ALPHA) {
-          if(bitDepth == 16) {
-            return Nuclex::Pixels::PixelFormat::R16_A16_Unsigned_Native16;
-          } else {
-            return Nuclex::Pixels::PixelFormat::R8_A8_Unsigned;
-          }
-        } else {
-          throw Nuclex::Pixels::Errors::FileFormatError(u8"Unsupported pixel format");
-        }
-        break;
-      }
-      case 3: {
-        if(colorType == PNG_COLOR_TYPE_RGB) {
-          if(bitDepth == 16) {
-            ::png_set_filler(&pngRead, 0xFFFFFFFF, PNG_FILLER_AFTER);
-            return Nuclex::Pixels::PixelFormat::R16_G16_B16_A16_Unsigned_Native16;
-          } else {
-            return Nuclex::Pixels::PixelFormat::R8_G8_B8_Unsigned;
-          }
-        } else {
-          throw Nuclex::Pixels::Errors::FileFormatError(u8"Unsupported pixel format (non-RGB)");
-        }
-        break;
-      }
-      case 4: {
-        if(colorType == PNG_COLOR_TYPE_RGB) {
-          if(bitDepth == 16) {
-            ::png_set_filler(&pngRead, 0xFFFFFFFF, PNG_FILLER_AFTER);
-            return Nuclex::Pixels::PixelFormat::R16_G16_B16_A16_Unsigned_Native16;
-          } else {
-            return Nuclex::Pixels::PixelFormat::R8_G8_B8_A8_Unsigned;
-          }
-        } else if(colorType == PNG_COLOR_TYPE_RGB_ALPHA) {
-          if(bitDepth == 16) {
-            return Nuclex::Pixels::PixelFormat::R16_G16_B16_A16_Unsigned_Native16;
-          } else {
-            return Nuclex::Pixels::PixelFormat::R8_G8_B8_A8_Unsigned;
-          }
-        } else {
-          throw Nuclex::Pixels::Errors::FileFormatError(u8"Unsupported pixel format (non-RGB)");
-        }
-        break;
-      }
-      default: {
-        throw Nuclex::Pixels::Errors::FileFormatError(u8"Unsupported pixel format (>4 channels)");
-      }
-    }
-
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -272,11 +150,10 @@ namespace {
     }
 
     {
-      using Nuclex::Pixels::PixelFormats::ConvertRowFunction;
-      using Nuclex::Pixels::PixelFormats::GetPixelFormatConverter;
+      using Nuclex::Pixels::PixelFormats::PixelFormatConverter;
 
-      ConvertRowFunction *convertRow = GetPixelFormatConverter(
-        storagePixelFormat, memory.PixelFormat
+      PixelFormatConverter::ConvertRowFunction *convertRow = (
+        PixelFormatConverter::GetRowConverter(storagePixelFormat, memory.PixelFormat)
       );
 
       // Let LibPNG load the image successively row-by-row and convert each
@@ -346,25 +223,28 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
           ::png_destroy_info_struct(pngRead, &pngInfo);
         };
 
-        // Install a custom read function. This is used to read data from the virtual
-        // file. The read environment emulates a file cursor.
-        PngReadEnvironment environment(*pngRead, source);
+        {
+          // Install a custom read function. This is used to read data from the virtual
+          // file. The read environment emulates a file cursor.
+          PngReadEnvironment environment(*pngRead, source);
 
-        // Now that we're ready to actually access the PNG file,
-        // attempt to obtain the image's resolution, pixel format and so on
-        ::png_read_info(pngRead, pngInfo);
+          // Now that we're ready to actually access the PNG file,
+          // attempt to obtain the image's resolution, pixel format and so on
+          ::png_read_info(pngRead, pngInfo);
 
-        // Determine the pixel format used in the .png file (this will also configure
-        // LibPNG to perform adjustment in case the native pixel format is not supported)
-        PixelFormat storagePixelFormat = selectPixelFormatForLoad(*pngRead, *pngInfo);
-        std::size_t width = ::png_get_image_width(pngRead, pngInfo);
-        std::size_t height = ::png_get_image_height(pngRead, pngInfo);
+          // Determine the pixel format used in the .png file (this will also configure
+          // LibPNG to perform adjustment in case the native pixel format is not supported)
+          PixelFormat storagePixelFormat = Helpers::SelectPixelFormatForLoad(*pngRead, *pngInfo);
+          std::size_t width = ::png_get_image_width(pngRead, pngInfo);
+          std::size_t height = ::png_get_image_height(pngRead, pngInfo);
 
-        // Perform the actual load through the shared loading code
-        // (since we can match the pixel format used for storage, this needs no conversion)
-        Bitmap image(width, height, storagePixelFormat);
-        loadPngIntoBitmapMemoryDirect(*pngRead, *pngInfo, image.Access());
-        return std::optional<Bitmap>(std::move(image));
+          // Perform the actual load through the shared loading code
+          // (since we can match the pixel format used for storage, this needs no conversion)
+          Bitmap image(width, height, storagePixelFormat);
+          loadPngIntoBitmapMemoryDirect(*pngRead, *pngInfo, image.Access());
+          return std::optional<Bitmap>(std::move(image));
+        } // PngReadEnvironment scope
+
       } // pngInfo scope
 
     } // pngRead scope
@@ -412,39 +292,43 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
           ::png_destroy_info_struct(pngRead, &pngInfo);
         };
 
-        // Install a custom read function. This is used to read data from the virtual
-        // file. The read environment emulates a file cursor.
-        PngReadEnvironment environment(*pngRead, source);
+        {
+          // Install a custom read function. This is used to read data from the virtual
+          // file. The read environment emulates a file cursor.
+          PngReadEnvironment environment(*pngRead, source);
 
-        // Now that we're ready to actually access the PNG file,
-        // attempt to obtain the image's resolution, pixel format and so on
-        ::png_read_info(pngRead, pngInfo);
+          // Now that we're ready to actually access the PNG file,
+          // attempt to obtain the image's resolution, pixel format and so on
+          ::png_read_info(pngRead, pngInfo);
 
-        std::size_t width = ::png_get_image_width(pngRead, pngInfo);
-        std::size_t height = ::png_get_image_height(pngRead, pngInfo);
+          std::size_t width = ::png_get_image_width(pngRead, pngInfo);
+          std::size_t height = ::png_get_image_height(pngRead, pngInfo);
 
-        const BitmapMemory &memory = exactlyFittingBitmap.Access();
-        if((width != memory.Width) || (height != memory.Height)) {
-          throw Errors::WrongSizeError(
-            u8"Size of existing target Bitmap did not match the image file being loaded"
-          );
-        }
+          const BitmapMemory &memory = exactlyFittingBitmap.Access();
+          if((width != memory.Width) || (height != memory.Height)) {
+            throw Errors::WrongSizeError(
+              u8"Size of existing target Bitmap did not match the image file being loaded"
+            );
+          }
 
-        // Determine the pixel format used in the .png file (this will also configure
-        // LibPNG to perform adjustment in case the native pixel format is not supported)
-        PixelFormat storagePixelFormat = selectPixelFormatForLoad(*pngRead, *pngInfo);
+          // Determine the pixel format used in the .png file (this will also configure
+          // LibPNG to perform adjustment in case the native pixel format is not supported)
+          PixelFormat storagePixelFormat = Helpers::SelectPixelFormatForLoad(*pngRead, *pngInfo);
 
-        // Perform the actual load. If the pixel format of the provided bitmap matches
-        // the pixel format of the .png file, we can do a direct load, otherwise we will
-        // load the .png file row-by-row and convert the pixel format while copying.
-        if(memory.PixelFormat == storagePixelFormat) {
-          loadPngIntoBitmapMemoryDirect(*pngRead, *pngInfo, memory);
-        } else {
-          loadPngIntoBitmapMemoryWithConversion(
-            *pngRead, *pngInfo, storagePixelFormat, memory
-          );
-        }
+          // Perform the actual load. If the pixel format of the provided bitmap matches
+          // the pixel format of the .png file, we can do a direct load, otherwise we will
+          // load the .png file row-by-row and convert the pixel format while copying.
+          if(memory.PixelFormat == storagePixelFormat) {
+            loadPngIntoBitmapMemoryDirect(*pngRead, *pngInfo, memory);
+          } else {
+            loadPngIntoBitmapMemoryWithConversion(
+              *pngRead, *pngInfo, storagePixelFormat, memory
+            );
+          }
+        } // PngReadEnvironment scope
+
       } // pngInfo scope
+
     } // pngRead scope
 
     return true;

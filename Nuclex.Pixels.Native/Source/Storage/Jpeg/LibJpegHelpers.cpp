@@ -27,8 +27,8 @@ License along with this library
 
 #include "Nuclex/Pixels/Errors/FileFormatError.h"
 
-#include <cassert>
-#include <algorithm>
+#include <cassert> // for assert()
+#include <algorithm> // for std::
 
 namespace {
 
@@ -37,6 +37,15 @@ namespace {
   /// <summary>Does absolutely nothing with a jpeg_decompress_struct</summary>
   /// <param name="commonInfo">JPEG common structure that is not used</param>
   void doNothingWithDecompressStruct(struct ::jpeg_decompress_struct *commonInfo) {
+    // Just like the function name promises...
+    (void)commonInfo;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  /// <summary>Does absolutely nothing with a jpeg_compress_struct</summary>
+  /// <param name="commonInfo">JPEG common structure that is not used</param>
+  void doNothingWithCompressStruct(struct ::jpeg_compress_struct *commonInfo) {
     // Just like the function name promises...
     (void)commonInfo;
   }
@@ -271,7 +280,8 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
   // ------------------------------------------------------------------------------------------- //
 
   void JpegWriteEnvironment::SetupFunctionPointers(JpegWriteEnvironment &jpegWriteEnvironment) {
-    jpegWriteEnvironment.init_source = &doNothingWithDecompressStruct;
+    jpegWriteEnvironment.init_destination = &doNothingWithCompressStruct;
+    /*
     //jpegWriteEnvironment.fill_input_buffer = &readVirtualFile;
     //jpegWriteEnvironment.skip_input_data = &advanceVirtualFileCursor;
     //jpegWriteEnvironment.resync_to_restart = &throwResyncNotSupported;
@@ -279,6 +289,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
 
     jpegWriteEnvironment.next_input_byte = nullptr;
     jpegWriteEnvironment.bytes_in_buffer = 0;
+    */
   }
 
   // ------------------------------------------------------------------------------------------- //

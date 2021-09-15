@@ -30,9 +30,9 @@ License along with this library
 #include "Nuclex/Pixels/PixelFormats/PixelFormatQuery.h"
 #include "Nuclex/Pixels/PixelFormats/PixelFormatConverter.h"
 
-#include "LibPngHelpers.h"
+#include "Nuclex/Support/ScopeGuard.h"
 
-#include <png.h> // libpng main header
+#include "LibPngHelpers.h"
 
 namespace {
 
@@ -70,54 +70,6 @@ namespace {
 
   // ------------------------------------------------------------------------------------------- //
 
-  /// <summary>RAII helper class that frees a PNG struct again</summary>
-  class PngWriteScope {
-
-    /// <summary>Initializes a new png_struct deleter</summary>
-    /// <param name="pngStruct">
-    ///   PNG main structure that should be deleted on scope exit
-    /// </param>
-    public: PngWriteScope(::png_struct *pngStruct) :
-      pngStruct(pngStruct) {}
-
-    /// <summary>Frees the PNG main structure</summary>
-    public: ~PngWriteScope() {
-      ::png_destroy_write_struct(&this->pngStruct, nullptr);
-    }
-
-    /// <summary>PNG main structure that will be deleted</summary>
-    private: ::png_struct *pngStruct;
-
-  };
-
-  // ------------------------------------------------------------------------------------------- //
-
-  /// <summary>RAII helper class that frees a PNG struct again</summary>
-  class PngInfoScope {
-
-    /// <summary>Initializes a new png_struct deleter</summary>
-    /// <param name="pngStruct">PNG main structure needed for the API call</param>
-    /// <param name="pngInfo">
-    ///   PNG infomration structure that should be deleted on scope exit
-    /// </param>
-    public: PngInfoScope(const ::png_struct *pngStruct, ::png_info *pngInfo) :
-      pngStruct(pngStruct),
-      pngInfo(pngInfo) {}
-
-    /// <summary>Frees the PNG information structure</summary>
-    public: ~PngInfoScope() {
-      ::png_destroy_info_struct(this->pngStruct, &this->pngInfo);
-    }
-
-    /// <summary>PNG main structure required for the API call</summary>
-    private: const ::png_struct *pngStruct;
-    /// <summary>PNG info structure that will be deleted</summary>
-    private: ::png_info *pngInfo;
-
-  };
-
-  // ------------------------------------------------------------------------------------------- //
-
   /// <summary>Interpolates between a minimum and maximum value</summary>
   /// <typeparam name="TValue">
   ///   Type of value that will be interpolated, assumed to be  an integer
@@ -140,12 +92,6 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
 
   // ------------------------------------------------------------------------------------------- //
 
-  bool PngBitmapCodec::CanSave() const {
-    return true; // We can save everything!
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
   void PngBitmapCodec::Save(
     const Bitmap &bitmap, VirtualFile &target,
     float compressionEffortHint /* = 0.75f */, float outputQualityHint /* = 0.95f */
@@ -154,28 +100,32 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
 
     // Allocate the main LibPNG structure. It contains all pointers to user-defined
     // functions (IO, error handling and custom chunk processing, etc.)
-    ::png_struct *pngWrite = ::png_create_write_struct(
-      PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr
-    );
-    if(pngWrite == nullptr) {
-      throw std::bad_alloc();
-    }
     {
-      PngWriteScope pngWriteScope(pngWrite);
+      ::png_struct *pngWrite = ::png_create_write_struct(
+        PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr
+      );
+      if(pngWrite == nullptr) {
+        throw std::bad_alloc();
+      }
+      ON_SCOPE_EXIT {
+        ::png_destroy_write_struct(&pngWrite, nullptr);
+      };
 
       // Install a custom error handler function that simply throws a C++ exception.
       // LibPNG is one of the few C libraries designed to allow exceptions passing through
       // because it's based on setjmp()/longjmp().
       ::png_set_error_fn(pngWrite, nullptr, &handlePngError, &handlePngWarning);
 
-      // We also need the info structure. This holds all importing informations describing
-      // the image's dimensions, pixel format, palette, gamma etc.
-      ::png_info *pngInfo = ::png_create_info_struct(pngWrite);
-      if(pngInfo == nullptr) {
-        throw std::bad_alloc();
-      }
       {
-        PngInfoScope pngInfoScope(pngWrite, pngInfo);
+        // We also need the info structure. This holds all importing informations describing
+        // the image's dimensions, pixel format, palette, gamma etc.
+        ::png_info *pngInfo = ::png_create_info_struct(pngWrite);
+        if(pngInfo == nullptr) {
+          throw std::bad_alloc();
+        }
+        ON_SCOPE_EXIT {
+          ::png_destroy_info_struct(pngWrite, &pngInfo);
+        };
 
         // Install a custom read function. This is used to read data from the virtual
         // file. The read environment emulates a file cursor.
@@ -254,8 +204,8 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
         ::png_set_IHDR(
           pngWrite,
           pngInfo,
-          static_cast<::png_uint_32>(memory.Width),
-          static_cast<::png_uint_32>(memory.Height),
+          memory.Width,
+          memory.Height,
           bitDepth,
           colorType,
           PNG_INTERLACE_NONE,
@@ -342,8 +292,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
 
         } else { // Direct save impossible, need pixel format conversion
 
-          using Nuclex::Pixels::PixelFormats::ConvertRowFunction;
-          using Nuclex::Pixels::PixelFormats::GetPixelFormatConverter;
+          using Nuclex::Pixels::PixelFormats::PixelFormatConverter;
 
           // Allocate memory for 1 row (we're converting the pixel format of the image
           // row by row, this should yield good performance without wasting megabytes of memory)
@@ -353,8 +302,8 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
             rowBytes.resize(pngRowByteCount);
           }
 
-          ConvertRowFunction *convertRow = GetPixelFormatConverter(
-            memory.PixelFormat, storagePixelFormat
+          PixelFormatConverter::ConvertRowFunction *convertRow = (
+            PixelFormatConverter::GetRowConverter(memory.PixelFormat, storagePixelFormat)
           );
 
           // Convert each row of the image to the pixel format LibPNG can save and let
