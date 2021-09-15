@@ -27,6 +27,8 @@ License along with this library
 #include "PixelFormatDescription.h"
 #include "OnPixelFormat.h"
 
+#include <tuple>
+
 namespace {
 
   // ------------------------------------------------------------------------------------------- //

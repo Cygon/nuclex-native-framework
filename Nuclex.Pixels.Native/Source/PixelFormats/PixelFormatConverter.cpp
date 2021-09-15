@@ -93,7 +93,8 @@ namespace {
       ///   Returns a function that converts from the source to the target pixel format
       /// </summary>
       /// <returns>The pixel format conversion function</returns>
-      public: Nuclex::Pixels::PixelFormats::ConvertRowFunction *operator()() const {
+      public: Nuclex::Pixels::PixelFormats::PixelFormatConverter::ConvertRowFunction *operator()(
+      ) const {
         return &ConvertRow<TSourcePixelFormat, TTargetPixelFormat>;
       }
 
@@ -106,12 +107,12 @@ namespace {
     ///   Pixel format to which the returned function will be converting
     /// </param>
     /// <returns>The pixel format conversion function</returns>
-    public: Nuclex::Pixels::PixelFormats::ConvertRowFunction *operator()(
+    public: Nuclex::Pixels::PixelFormats::PixelFormatConverter::ConvertRowFunction *operator()(
       Nuclex::Pixels::PixelFormat targetPixelFormat
     ) const {
       return Nuclex::Pixels::PixelFormats::OnPixelFormat<
         GetConvertRowFunctionWithKnownSourcePixelFormat,
-        Nuclex::Pixels::PixelFormats::ConvertRowFunction *
+        Nuclex::Pixels::PixelFormats::PixelFormatConverter::ConvertRowFunction *
       >(targetPixelFormat);
     }
 
@@ -125,12 +126,85 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
 
   // ------------------------------------------------------------------------------------------- //
 
-  ConvertRowFunction *GetPixelFormatConverter(
+  PixelFormatConverter::ConvertRowFunction *PixelFormatConverter::GetRowConverter(
     PixelFormat sourcePixelFormat, PixelFormat targetPixelFormat
   ) {
     return Nuclex::Pixels::PixelFormats::OnPixelFormat<
-      GetConvertRowFunction, ConvertRowFunction *
+      GetConvertRowFunction, PixelFormatConverter::ConvertRowFunction *
     >(sourcePixelFormat, targetPixelFormat);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  Bitmap PixelFormatConverter::Convert(
+    const Bitmap &source, PixelFormat newPixelFormat
+  ) {
+    const BitmapMemory &sourceMemory = source.Access();
+
+    // Create a new bitmap with the same dimension as the source bitmap but
+    // using the new pixel format requested by the caller
+    Bitmap target(sourceMemory.Width, sourceMemory.Height, newPixelFormat);
+    const BitmapMemory &targetMemory = target.Access();
+
+    // Get row converter from source to requested target pixel format
+    ConvertRowFunction *convertRow = GetRowConverter(sourceMemory.PixelFormat, newPixelFormat);
+
+    // Perform the conversion row by row, writing the converted pixels into
+    // the target bitmap while respecting both bitmap's 'stride' value.
+    {
+      const std::uint8_t *sourceRowStart = (
+        reinterpret_cast<const std::uint8_t *>(sourceMemory.Pixels)
+      );
+      std::uint8_t *targetRowStart = (
+        reinterpret_cast<std::uint8_t *>(targetMemory.Pixels)
+      );
+      for(std::size_t rowIndex = 0; rowIndex < sourceMemory.Height; ++rowIndex) {
+        convertRow(sourceRowStart, targetRowStart, sourceMemory.Width);
+        sourceRowStart += sourceMemory.Stride;
+        targetRowStart += targetMemory.Stride;
+      }
+    }
+
+    return target;
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void PixelFormatConverter::Convert(const Bitmap &source, Bitmap &target) {
+    const BitmapMemory &sourceMemory = source.Access();
+    const BitmapMemory &targetMemory = target.Access();
+
+    bool hasDifferentDimensions = (
+      (sourceMemory.Width != targetMemory.Width) ||
+      (sourceMemory.Height != targetMemory.Height)
+    );
+    if(hasDifferentDimensions) {
+      throw std::invalid_argument(
+        u8"Provided bitmaps have different dimensions, "
+        u8"the pixel format converter supports conversions between same-sized bitmaps."
+      );
+    }
+
+    // Get row converter from source to requested target pixel format
+    ConvertRowFunction *convertRow = GetRowConverter(
+      sourceMemory.PixelFormat, targetMemory.PixelFormat
+    );
+
+    // Perform the conversion row by row, writing the converted pixels into
+    // the target bitmap while respecting both bitmap's 'stride' value.
+    {
+      const std::uint8_t *sourceRowStart = (
+        reinterpret_cast<const std::uint8_t *>(sourceMemory.Pixels)
+      );
+      std::uint8_t *targetRowStart = (
+        reinterpret_cast<std::uint8_t *>(targetMemory.Pixels)
+      );
+      for(std::size_t rowIndex = 0; rowIndex < sourceMemory.Height; ++rowIndex) {
+        convertRow(sourceRowStart, targetRowStart, sourceMemory.Width);
+        sourceRowStart += sourceMemory.Stride;
+        targetRowStart += targetMemory.Stride;
+      }
+    }
   }
 
   // ------------------------------------------------------------------------------------------- //
