@@ -21,7 +21,10 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_PIXELS_SOURCE 1
 
-#include "../Source/Platform/PosixApi.h"
+#include "../../Source/Platform/PosixApi.h"
+#if !defined(NUCLEX_PIXELS_PLATFORM_POSIXAPI_H)
+#error Your compiler went bonkers and violated the standard search rules for headers.
+#endif
 
 #include <gtest/gtest.h>
 
