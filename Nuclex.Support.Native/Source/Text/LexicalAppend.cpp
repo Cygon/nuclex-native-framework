@@ -28,7 +28,11 @@ License along with this library
 #include <algorithm> // for std::copy_n()
 
 #include "Dragon4/PrintFloat.h"
-#include "Erthink/erthink_u2a.h"
+#if defined(_MSC_VER)
+#include "Jeaiii/to_text_from_integer.h"
+#else
+#include "Jeaiii/to_text_from_integer.h"
+#endif
 #include "Ryu/ryu_parse.h"
 
 namespace {
@@ -256,7 +260,7 @@ namespace Nuclex { namespace Support { namespace Text {
   template<> void lexical_append<>(std::string &target, const std::uint8_t &from) {
     std::string::size_type length = target.length();
     target.resize(length + countDigits(from));
-    erthink::u2a(static_cast<std::uint32_t>(from), target.data() + length);
+    jeaiii::to_text_from_integer(target.data() + length, from);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -266,7 +270,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = countDigits(from);
     if(availableBytes >= requiredBytes) {
-      erthink::u2a(static_cast<std::uint32_t>(from), target);
+      jeaiii::to_text_from_integer(target, from);
     }
 
     return requiredBytes;
@@ -277,7 +281,7 @@ namespace Nuclex { namespace Support { namespace Text {
   template<> void lexical_append<>(std::string &target, const std::int8_t &from) {
     std::string::size_type length = target.length();
     target.resize(length + countDigits(from));
-    erthink::i2a(static_cast<std::int32_t>(from), target.data() + length);
+    jeaiii::to_text_from_integer(target.data() + length, from);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -287,7 +291,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = countDigits(from);
     if(availableBytes >= requiredBytes) {
-      erthink::i2a(static_cast<std::int32_t>(from), target);
+      jeaiii::to_text_from_integer(target, from);
     }
 
     return requiredBytes;
@@ -298,7 +302,7 @@ namespace Nuclex { namespace Support { namespace Text {
   template<> void lexical_append<>(std::string &target, const std::uint16_t &from) {
     std::string::size_type length = target.length();
     target.resize(length + countDigits(from));
-    erthink::u2a(static_cast<std::uint32_t>(from), target.data() + length);
+    jeaiii::to_text_from_integer(target.data() + length, from);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -308,7 +312,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = countDigits(from);
     if(availableBytes >= requiredBytes) {
-      erthink::u2a(static_cast<std::uint32_t>(from), target);
+      jeaiii::to_text_from_integer(target, from);
     }
 
     return requiredBytes;
@@ -319,7 +323,7 @@ namespace Nuclex { namespace Support { namespace Text {
   template<> void lexical_append<>(std::string &target, const std::int16_t &from) {
     std::string::size_type length = target.length();
     target.resize(length + countDigits(from));
-    erthink::i2a(static_cast<std::int32_t>(from), target.data() + length);
+    jeaiii::to_text_from_integer(target.data() + length, from);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -329,7 +333,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = countDigits(from);
     if(availableBytes >= requiredBytes) {
-      erthink::i2a(static_cast<std::int32_t>(from), target);
+      jeaiii::to_text_from_integer(target, from);
     }
 
     return requiredBytes;
@@ -341,7 +345,7 @@ namespace Nuclex { namespace Support { namespace Text {
     std::string::size_type length = target.length();
     if(from >= 1) {
       target.resize(length + BitTricks::GetLogBase10(from) + 1);
-      erthink::u2a(from, target.data() + length);
+      jeaiii::to_text_from_integer(target.data() + length, from);
     } else {
       target.push_back('0');
     }
@@ -354,7 +358,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = (from >= 1) ? (BitTricks::GetLogBase10(from) + 1) : 1;
     if(availableBytes >= requiredBytes) {
-      erthink::u2a(from, target);
+      jeaiii::to_text_from_integer(target, from);
     }
 
     return requiredBytes;
@@ -366,12 +370,12 @@ namespace Nuclex { namespace Support { namespace Text {
     std::string::size_type length = target.length();
     if(from >= 1) {
       target.resize(length + BitTricks::GetLogBase10(static_cast<std::uint32_t>(from)) + 1);
-      erthink::u2a(static_cast<std::uint32_t>(from), target.data() + length);
+      jeaiii::to_text_from_integer(target.data() + length, static_cast<std::uint32_t>(from));
     } else if(from == 0) {
       target.push_back('0');
     } else {
       target.resize(length + BitTricks::GetLogBase10(static_cast<std::uint32_t>(-from)) + 2);
-      erthink::i2a(from, target.data() + length);
+      jeaiii::to_text_from_integer(target.data() + length, from);
     }
   }
 
@@ -383,7 +387,7 @@ namespace Nuclex { namespace Support { namespace Text {
     if(from >= 1) {
       std::size_t requiredBytes = BitTricks::GetLogBase10(static_cast<std::uint32_t>(from)) + 1;
       if(availableBytes >= requiredBytes) {
-        erthink::u2a(static_cast<std::uint32_t>(from), target);
+        jeaiii::to_text_from_integer(target, static_cast<std::uint32_t>(from));
       }
       return requiredBytes;
     } else if(from == 0) {
@@ -394,7 +398,7 @@ namespace Nuclex { namespace Support { namespace Text {
     } else {
       std::size_t requiredBytes = BitTricks::GetLogBase10(static_cast<std::uint32_t>(-from)) + 2;
       if(availableBytes >= requiredBytes) {
-        erthink::i2a(from, target);
+        jeaiii::to_text_from_integer(target, from);
       }
       return requiredBytes;
     }
@@ -406,7 +410,7 @@ namespace Nuclex { namespace Support { namespace Text {
     std::string::size_type length = target.length();
     if(from >= 1) {
       target.resize(length + BitTricks::GetLogBase10(from) + 1);
-      erthink::u2a(from, target.data() + length);
+      jeaiii::to_text_from_integer(target.data() + length, from);
     } else {
       target.push_back('0');
     }
@@ -419,7 +423,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = (from >= 1) ? (BitTricks::GetLogBase10(from) + 1) : 1;
     if(availableBytes >= requiredBytes) {
-      erthink::u2a(from, target);
+      jeaiii::to_text_from_integer(target, from);
     }
 
     return requiredBytes;
@@ -431,12 +435,12 @@ namespace Nuclex { namespace Support { namespace Text {
     std::string::size_type length = target.length();
     if(from >= 1) {
       target.resize(length + BitTricks::GetLogBase10(static_cast<std::uint64_t>(from)) + 1);
-      erthink::u2a(static_cast<std::uint64_t>(from), target.data() + length);
+      jeaiii::to_text_from_integer(target.data() + length, static_cast<std::uint64_t>(from));
     } else if(from == 0) {
       target.push_back('0');
     } else {
       target.resize(length + BitTricks::GetLogBase10(static_cast<std::uint64_t>(-from)) + 2);
-      erthink::i2a(from, target.data() + length);
+      jeaiii::to_text_from_integer(target.data() + length, from);
     }
   }
 
@@ -448,7 +452,7 @@ namespace Nuclex { namespace Support { namespace Text {
     if(from >= 1) {
       std::size_t requiredBytes = BitTricks::GetLogBase10(static_cast<std::uint64_t>(from)) + 1;
       if(availableBytes >= requiredBytes) {
-        erthink::u2a(static_cast<std::uint64_t>(from), target);
+        jeaiii::to_text_from_integer(target, static_cast<std::uint64_t>(from));
       }
       return requiredBytes;
     } else if(from == 0) {
@@ -459,7 +463,7 @@ namespace Nuclex { namespace Support { namespace Text {
     } else {
       std::size_t requiredBytes = BitTricks::GetLogBase10(static_cast<std::uint64_t>(-from)) + 2;
       if(availableBytes >= requiredBytes) {
-        erthink::i2a(from, target);
+        jeaiii::to_text_from_integer(target, from);
       }
       return requiredBytes;
     }

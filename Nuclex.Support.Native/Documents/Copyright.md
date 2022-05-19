@@ -75,12 +75,23 @@ If you distribute binaries compiled from this library, you do not have to
 do anything, but an acknowledgement of the original author would be nice.
 
 
-Erthink Integer Formatter: Apache 2.0 License
----------------------------------------------
+Arturo Martin-de-Nicolas Integer Formatter: MIT License
+-------------------------------------------------------
 
-The integer formatter from the Erthink library is used to convert integral
-values into strings. It is written by Leonid Yuriev and licensed under
-the Apache 2.0 license (http://www.apache.org/licenses/LICENSE-2.0)
+The integer formatter from the itoa library is used to convert integral
+values into strings. It is written by Arturo Martin-de-Nicolas and licensed
+under MIT license (https://mit-license.org/)
+
+If you distribute binaries compiled from this library, you do not have to
+do anything, but an acknowledgement of the original author would be nice.
+
+
+James Edward Anhalt III Integer Formatter: MIT License
+------------------------------------------------------
+
+The integer formatter from the itoa library is used to convert integral
+values into strings. It is written by James Edward Anhalt III and licensed
+under MIT license (https://mit-license.org/)
 
 If you distribute binaries compiled from this library, you do not have to
 do anything, but an acknowledgement of the original author would be nice.

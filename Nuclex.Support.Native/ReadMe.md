@@ -59,9 +59,10 @@ lexical_append(scoreText, 110025);
 ```
 
 Uses [Dragon4](http://www.ryanjuckett.com/programming/printing-floating-point-numbers/),
-[Erthink](https://abf.io/erthink/erthink) and [Ryu](https://github.com/ulfjack/ryu)
-internally, which have licenses that allow this use. See Copyright.md
-in the Documents directory for more details.
+[James Edward Anhalt III itoa](https://github.com/jeaiii/itoa),
+[Arturo Martin-de-Nicolas itoa](https://github.com/amdn/itoa) and
+[Ryu](https://github.com/ulfjack/ryu) internally, which have licenses that allow this
+use. See Copyright.md in the Documents directory for more details.
 
 
 StringConverter & StringMatcher
