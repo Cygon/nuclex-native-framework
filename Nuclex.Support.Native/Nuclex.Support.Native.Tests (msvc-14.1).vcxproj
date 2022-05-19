@@ -202,13 +202,11 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\lightweightsemaphore.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentMap.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPSC.inl" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.SPSC.inl" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentSet.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\IndexedCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableCollection.h" />
@@ -216,13 +214,10 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\RingQueue.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\StackArray.h" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\Variegator.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\CanceledError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\TimeoutError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
-    <ClInclude Include="Include\Nuclex\Support\Events\ConcurrentEvent.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Event.h" />
     <ClInclude Include="Include\Nuclex\Support\Services\Checks.inl" />
@@ -237,8 +232,6 @@
     <ClInclude Include="Include\Nuclex\Support\Settings\MemorySettingsStore.h" />
     <ClInclude Include="Include\Nuclex\Support\Settings\RegistrySettingsStore.h" />
     <ClInclude Include="Include\Nuclex\Support\Settings\SettingsStore.h" />
-    <ClInclude Include="Include\Nuclex\Support\Text\CommandLine.h" />
-    <ClInclude Include="Include\Nuclex\Support\Text\CommandLineArgument.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalCast.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h" />
@@ -254,10 +247,8 @@
     <ClInclude Include="Include\Nuclex\Support\Threading\Semaphore.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h" />
     <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h" />
-    <ClInclude Include="Include\Nuclex\Support\Any.h" />
     <ClInclude Include="Include\Nuclex\Support\BitTricks.h" />
     <ClInclude Include="Include\Nuclex\Support\Config.h" />
-    <ClInclude Include="Include\Nuclex\Support\Optional.h" />
     <ClInclude Include="Include\Nuclex\Support\ScopeGuard.h" />
     <ClInclude Include="Include\Nuclex\Support\TemporaryDirectoryScope.h" />
     <ClInclude Include="Include\Nuclex\Support\TemporaryFileScope.h" />
@@ -267,10 +258,8 @@
   <ItemGroup>
     <ClCompile Include="Source\Collections\Collection.cpp" />
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp" />
-    <ClCompile Include="Source\Collections\ConcurrentMap.cpp" />
     <ClCompile Include="Source\Collections\ConcurrentQueue.cpp" />
     <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp" />
-    <ClCompile Include="Source\Collections\ConcurrentSet.cpp" />
     <ClCompile Include="Source\Collections\DynamicArray.cpp" />
     <ClCompile Include="Source\Collections\IndexedCollection.cpp" />
     <ClCompile Include="Source\Collections\ObservableCollection.cpp" />
@@ -278,8 +267,6 @@
     <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp" />
     <ClCompile Include="Source\Collections\RingQueue.cpp" />
     <ClCompile Include="Source\Collections\ShiftQueue.cpp" />
-    <ClCompile Include="Source\Collections\StackArray.cpp" />
-    <ClCompile Include="Source\Collections\Variegator.cpp" />
     <ClCompile Include="Source\Errors\CanceledError.cpp" />
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp" />
     <ClCompile Include="Source\Errors\TimeoutError.cpp" />
@@ -320,8 +307,6 @@
     <ClCompile Include="Source\Settings\MemorySettingsStore.cpp" />
     <ClCompile Include="Source\Settings\RegistrySettingsStore.cpp" />
     <ClCompile Include="Source\Settings\SettingsStore.cpp" />
-    <ClCompile Include="Source\TemporaryDirectoryScope.cpp" />
-    <ClCompile Include="Source\TemporaryFileScope.cpp" />
     <ClCompile Include="Source\Text\Amartin\itoa.cpp" />
     <ClInclude Include="Source\Text\Amartin\itoa.h" />
     <ClInclude Include="Source\Text\Amartin\itoa_impl.h" />
@@ -337,7 +322,6 @@
     <ClCompile Include="Source\Text\Jeaiii\to_chars.cpp" />
     <ClInclude Include="Source\Text\Jeaiii\to_text_from_integer.h" />
     <ClInclude Include="Source\Text\Ryu\common.h" />
-    <ClCompile Include="Source\Text\ParserHelper.cpp" />
     <ClCompile Include="Source\Text\Ryu\d2fixed.c" />
     <ClInclude Include="Source\Text\Ryu\d2fixed_full_table.h" />
     <ClCompile Include="Source\Text\Ryu\d2s.c" />
@@ -353,11 +337,10 @@
     <ClInclude Include="Source\Text\Ryu\ryu_generic_128.h" />
     <ClInclude Include="Source\Text\Ryu\ryu_parse.h" />
     <ClCompile Include="Source\Text\Ryu\s2d.c" />
-    <ClCompile Include="Source\Text\CommandLine.cpp" />
-    <ClCompile Include="Source\Text\CommandLineArgument.cpp" />
     <ClCompile Include="Source\Text\LexicalAppend.cpp" />
     <ClCompile Include="Source\Text\LexicalCast.cpp" />
     <ClCompile Include="Source\Text\Logger.cpp" />
+    <ClCompile Include="Source\Text\ParserHelper.cpp" />
     <ClCompile Include="Source\Text\RollingLogger.cpp" />
     <ClCompile Include="Source\Text\StatusObserver.cpp" />
     <ClCompile Include="Source\Text\StringConverter.cpp" />
@@ -375,11 +358,11 @@
     <ClInclude Include="Source\Threading\ThreadPoolConfig.h" />
     <ClCompile Include="Source\Threading\ThreadPoolTaskPool.cpp" />
     <ClInclude Include="Source\Threading\ThreadPoolTaskPool.h" />
-    <ClCompile Include="Source\Any.cpp" />
     <ClCompile Include="Source\BitTricks.cpp" />
     <ClCompile Include="Source\Config.cpp" />
-    <ClCompile Include="Source\Optional.cpp" />
     <ClCompile Include="Source\ScopeGuard.cpp" />
+    <ClCompile Include="Source\TemporaryDirectoryScope.cpp" />
+    <ClCompile Include="Source\TemporaryFileScope.cpp" />
     <ClCompile Include="Source\Variant.cpp" />
     <ClCompile Include="Source\VariantType.cpp" />
   </ItemGroup>
@@ -429,9 +412,7 @@
     <ClCompile Include="Tests\Threading\ThreadPoolTaskPoolTest.cpp" />
     <ClCompile Include="Tests\Threading\ThreadPoolTest.cpp" />
     <ClCompile Include="Tests\Threading\ThreadTest.cpp" />
-    <ClCompile Include="Tests\AnyTests.cpp" />
     <ClCompile Include="Tests\BitTricksTest.cpp" />
-    <ClCompile Include="Tests\OptionalTests.cpp" />
     <ClCompile Include="Tests\ScopeGuardTest.cpp" />
     <ClCompile Include="Tests\TemporaryDirectoryScopeTest.cpp" />
     <ClCompile Include="Tests\TemporaryFileScopeTest.cpp" />
