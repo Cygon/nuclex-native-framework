@@ -23,6 +23,7 @@ License along with this library
 
 #include "Nuclex/Storage/Config.h"
 
+#include <cstdint> // for std::uint8_t
 #include <cstddef> // for std::size_t
 #include <vector> // for std::vector
 #include <memory> // for std::array
