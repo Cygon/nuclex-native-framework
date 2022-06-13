@@ -218,6 +218,7 @@
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\TimeoutError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Events\ConcurrentEvent.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Event.h" />
     <ClInclude Include="Include\Nuclex\Support\Services\Checks.inl" />

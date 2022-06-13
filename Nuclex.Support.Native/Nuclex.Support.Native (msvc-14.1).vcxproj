@@ -212,6 +212,7 @@
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\TimeoutError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Events\ConcurrentEvent.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
     <ClInclude Include="Include\Nuclex\Support\Events\Event.h" />
     <ClInclude Include="Include\Nuclex\Support\Services\Checks.inl" />
@@ -265,6 +266,7 @@
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp" />
     <ClCompile Include="Source\Errors\TimeoutError.cpp" />
     <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp" />
+    <ClCompile Include="Source\Events\ConcurrentEvent.cpp" />
     <ClCompile Include="Source\Events\Delegate.cpp" />
     <ClCompile Include="Source\Events\Event.cpp" />
     <ClCompile Include="Source\Platform\LinuxFileApi.cpp" />

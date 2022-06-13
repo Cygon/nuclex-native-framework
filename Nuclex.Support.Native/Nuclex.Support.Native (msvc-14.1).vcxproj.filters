@@ -143,10 +143,13 @@
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h">
       <Filter>Include\Errors</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
+    <ClInclude Include="Include\Nuclex\Support\Events\ConcurrentEvent.h">
       <Filter>Include\Events</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h">
+      <Filter>Include\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
       <Filter>Include\Events</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Services\LazyServiceInjector.h">
@@ -297,6 +300,9 @@
     </ClCompile>
     <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp">
       <Filter>Source\Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Events\ConcurrentEvent.cpp">
+      <Filter>Source\Events</Filter>
     </ClCompile>
     <ClCompile Include="Source\Events\Delegate.cpp">
       <Filter>Source\Events</Filter>
