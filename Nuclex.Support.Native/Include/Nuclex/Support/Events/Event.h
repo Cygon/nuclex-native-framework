@@ -37,7 +37,7 @@ namespace Nuclex { namespace Support { namespace Events {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Manages a list of subscribers that receive callbacks when the event fires</summary>
-  /// <typeparam name="TResult">Type that will be returned from the method</typeparam>
+  /// <typeparam name="TResult">Type of results the callbacks will return</typeparam>
   /// <typeparam name="TArguments">Types of the arguments accepted by the callback</typeparam>
   /// <remarks>
   ///   <para>
@@ -94,6 +94,24 @@ namespace Nuclex { namespace Support { namespace Events {
   ///       }
   ///     </code>
   ///   </para>
+  ///   <para>
+  ///     Cheat sheet
+  ///   </para>
+  ///   <para>
+  ///     🛈 Optimized for granular events (many event instances w/few subscribers)<br />
+  ///     🛈 Optimized for fast broadcast performance over subscribe/unsubscribe<br />
+  ///     🛈 No allocations up to <see cref="BuiltInSubscriberCount" /> subscribers<br />
+  ///     ⚫ Can optionally collect return values from all event callbacks<br />
+  ///     ⚫ New subscribers can be added freely even during event broadcast<br />
+  ///     ⚫ Subscribers can unsubscribe themselves even from within event callback<br />
+  ///     🛇 UNDEFINED BEHAVIOR on unsubscribing any other than self from within callback<br />
+  ///     ⚫ For single-threaded use (publishers and subscribers share a single thread)<br />
+  ///     🛇 UNDEFINED BEHAVIOR when accessed from multiple threads<br />
+  ///        -> Multi-threaded broadcast is okay if no subscribe/unsubscribe happens
+  ///        (i.e. subscribe phase, then threads run, threads end, then unsubscribe phase)<br />
+  ///     🛇 Lambda expressions can not be subscribers<br />
+  ///        (adds huge runtime costs, see std::function, would have no way to unsubscribe)<br />
+  ///   </para>
   /// </remarks>
   template<typename TResult, typename... TArguments>
   class Event<TResult(TArguments...)> {
@@ -136,6 +154,8 @@ namespace Nuclex { namespace Support { namespace Events {
       }
     }
 
+    // TODO: Implement copy and move constructors + assignment operators
+
     /// <summary>Returns the current number of subscribers to the event</summary>
     /// <returns>The number of current subscribers</returns>
     public: std::size_t CountSubscribers() const {
@@ -177,119 +197,11 @@ namespace Nuclex { namespace Support { namespace Events {
     /// </param>
     /// <param name="arguments">Arguments that will be passed to the event</param>
     public: template<typename TOutputIterator>
-    void EmitAndCollect(TOutputIterator results, TArguments&&... arguments) const {
-      std::size_t knownSubscriberCount = this->subscriberCount;
-
-      const DelegateType *subscribers;
-      std::size_t index = 0;
-
-      // Is the subscriber list currently on the stack?
-      if(knownSubscriberCount <= BuiltInSubscriberCount) {
-        ProcessStackSubscribers:
-        subscribers = reinterpret_cast<const DelegateType *>(this->stackMemory);
-        while(index < knownSubscriberCount) {
-          *results = subscribers[index](std::forward<TArguments>(arguments)...);
-          ++results;
-          if(this->subscriberCount == knownSubscriberCount) {
-            ++index; // Only increment if the current callback wasn't unsubscribed
-          } else if(this->subscriberCount > knownSubscriberCount) {
-            ++index;
-            if(knownSubscriberCount > BuiltInSubscriberCount) {
-              knownSubscriberCount = this->subscriberCount;
-              goto ProcessHeapSubscribers;
-            }
-            knownSubscriberCount = this->subscriberCount;
-          } else {
-            knownSubscriberCount = this->subscriberCount;
-          }
-        }
-
-        return;
-      }
-
-      // The subscriber list is currently on the heap
-      {
-        ProcessHeapSubscribers:
-        subscribers = reinterpret_cast<const DelegateType *>(this->heapMemory.Buffer);
-        while(index < knownSubscriberCount) {
-          *results = subscribers[index](std::forward<TArguments>(arguments)...);
-          ++results;
-          if(this->subscriberCount == knownSubscriberCount) {
-            ++index; // Only increment if the current callback wasn't unsubscribed
-          } else if(this->subscriberCount < knownSubscriberCount) {
-            if(knownSubscriberCount <= BuiltInSubscriberCount) {
-              knownSubscriberCount = this->subscriberCount;
-              goto ProcessStackSubscribers;
-            }
-            knownSubscriberCount = this->subscriberCount;
-          } else {
-            ++index;
-            knownSubscriberCount = this->subscriberCount;
-            // In case more heap memory had to be allocated
-            subscribers = reinterpret_cast<const DelegateType *>(this->heapMemory.Buffer);
-          }
-        }
-
-        return;
-      }
-    }
+    void EmitAndCollect(TOutputIterator results, TArguments&&... arguments) const;
 
     /// <summary>Calls all subscribers of the event and discards their return values</summary>
     /// <param name="arguments">Arguments that will be passed to the event</param>
-    public: void Emit(TArguments... arguments) const {
-      std::size_t knownSubscriberCount = this->subscriberCount;
-
-      const DelegateType *subscribers;
-      std::size_t index = 0;
-
-      // Is the subscriber list currently on the stack?
-      if(knownSubscriberCount <= BuiltInSubscriberCount) {
-        ProcessStackSubscribers:
-        subscribers = reinterpret_cast<const DelegateType *>(this->stackMemory);
-        while(index < knownSubscriberCount) {
-          subscribers[index](std::forward<TArguments>(arguments)...);
-          if(this->subscriberCount == knownSubscriberCount) {
-            ++index; // Only increment if the current callback wasn't unsubscribed
-          } else if(this->subscriberCount > knownSubscriberCount) {
-            ++index;
-            if(knownSubscriberCount > BuiltInSubscriberCount) {
-              knownSubscriberCount = this->subscriberCount;
-              goto ProcessHeapSubscribers;
-            }
-            knownSubscriberCount = this->subscriberCount;
-          } else {
-            knownSubscriberCount = this->subscriberCount;
-          }
-        }
-
-        return;
-      }
-
-      // The subscriber list is currently on the heap
-      {
-        ProcessHeapSubscribers:
-        subscribers = reinterpret_cast<const DelegateType *>(this->heapMemory.Buffer);
-        while(index < knownSubscriberCount) {
-          subscribers[index](std::forward<TArguments>(arguments)...);
-          if(this->subscriberCount == knownSubscriberCount) {
-            ++index; // Only increment if the current callback wasn't unsubscribed
-          } else if(this->subscriberCount < knownSubscriberCount) {
-            if(knownSubscriberCount <= BuiltInSubscriberCount) {
-              knownSubscriberCount = this->subscriberCount;
-              goto ProcessStackSubscribers;
-            }
-            knownSubscriberCount = this->subscriberCount;
-          } else {
-            ++index;
-            knownSubscriberCount = this->subscriberCount;
-            // In case more heap memory had to be allocated
-            subscribers = reinterpret_cast<const DelegateType *>(this->heapMemory.Buffer);
-          }
-        }
-
-        return;
-      }
-    }
+    public: void Emit(TArguments... arguments) const;
 
     /// <summary>Subscribes the specified free function to the event</summary>
     /// <typeparam name="TMethod">Free function that will be subscribed</typeparam>
@@ -375,46 +287,7 @@ namespace Nuclex { namespace Support { namespace Events {
     /// <summary>Unsubscribes the specified delegate from the event</summary>
     /// <param name="delegate">Delegate that will be unsubscribed</param>
     /// <returns>True if the callback was found and unsubscribed, false otherwise</returns>
-    public: bool Unsubscribe(const DelegateType &delegate) {
-      if(this->subscriberCount <= BuiltInSubscriberCount) {
-        DelegateType *subscribers = reinterpret_cast<DelegateType *>(this->stackMemory);
-        for(std::size_t index = 0; index < this->subscriberCount; ++index) {
-          if(subscribers[index] == delegate) {
-            std::size_t lastSubscriberIndex = this->subscriberCount - 1;
-            subscribers[index] = subscribers[lastSubscriberIndex];
-            --this->subscriberCount;
-            return true;
-          }
-        }
-      } else {
-        DelegateType *subscribers = reinterpret_cast<DelegateType *>(this->heapMemory.Buffer);
-        std::size_t lastSubscriberIndex = this->subscriberCount;
-        if(lastSubscriberIndex > 0) {
-          --lastSubscriberIndex;
-
-          // Tiny optimization. Often the removed event is the last one registered
-          if(subscribers[lastSubscriberIndex] == delegate) {
-            --this->subscriberCount;
-            if(this->subscriberCount <= BuiltInSubscriberCount) {
-              convertFromHeapToStackAllocated();
-            }
-            return true;
-          }
-          for(std::size_t index = 0; index < lastSubscriberIndex; ++index) {
-            if(subscribers[index] == delegate) {
-              subscribers[index] = subscribers[lastSubscriberIndex];
-              --this->subscriberCount;
-              if(this->subscriberCount <= BuiltInSubscriberCount) {
-                convertFromHeapToStackAllocated();
-              }
-              return true;
-            }
-          }
-        }
-      }
-
-      return false;
-    }
+    public: bool Unsubscribe(const DelegateType &delegate);
 
     /// <summary>Switches the event from stack-stored subscribers to heap-stored</summary>
     /// <remarks>
@@ -464,7 +337,7 @@ namespace Nuclex { namespace Support { namespace Events {
     ///   mandatory (because the subscriberCount is the decision variable for the event to
     ///   know whether to assume heap storage or stack storage).
     /// </remarks>
-    private: void convertFromHeapToStackAllocated() {
+    private: void convertFromHeapToStackAllocation() {
       std::uint8_t *oldBuffer = this->heapMemory.Buffer;
 
       std::copy_n(
@@ -495,6 +368,171 @@ namespace Nuclex { namespace Support { namespace Events {
     };
 
   };
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TResult, typename... TArguments>
+  template<typename TOutputIterator>
+  void Event<TResult(TArguments...)>::EmitAndCollect(
+    TOutputIterator results, TArguments&&... arguments
+  ) const {
+    std::size_t knownSubscriberCount = this->subscriberCount;
+
+    const DelegateType *subscribers;
+    std::size_t index = 0;
+
+    // Is the subscriber list currently on the stack?
+    if(knownSubscriberCount <= BuiltInSubscriberCount) {
+ProcessStackSubscribers:
+      subscribers = reinterpret_cast<const DelegateType *>(this->stackMemory);
+      while(index < knownSubscriberCount) {
+        *results = subscribers[index](std::forward<TArguments>(arguments)...);
+        ++results;
+        if(this->subscriberCount == knownSubscriberCount) {
+          ++index; // Only increment if the current callback wasn't unsubscribed
+        } else if(this->subscriberCount > knownSubscriberCount) {
+          ++index;
+          if(knownSubscriberCount > BuiltInSubscriberCount) {
+            knownSubscriberCount = this->subscriberCount;
+            goto ProcessHeapSubscribers;
+          }
+          knownSubscriberCount = this->subscriberCount;
+        } else {
+          knownSubscriberCount = this->subscriberCount;
+        }
+      }
+
+      return;
+    }
+
+    // The subscriber list is currently on the heap
+    {
+ProcessHeapSubscribers:
+      subscribers = reinterpret_cast<const DelegateType *>(this->heapMemory.Buffer);
+      while(index < knownSubscriberCount) {
+        *results = subscribers[index](std::forward<TArguments>(arguments)...);
+        ++results;
+        if(this->subscriberCount == knownSubscriberCount) {
+          ++index; // Only increment if the current callback wasn't unsubscribed
+        } else if(this->subscriberCount < knownSubscriberCount) {
+          if(knownSubscriberCount <= BuiltInSubscriberCount) {
+            knownSubscriberCount = this->subscriberCount;
+            goto ProcessStackSubscribers;
+          }
+          knownSubscriberCount = this->subscriberCount;
+        } else {
+          ++index;
+          knownSubscriberCount = this->subscriberCount;
+          // In case more heap memory had to be allocated
+          subscribers = reinterpret_cast<const DelegateType *>(this->heapMemory.Buffer);
+        }
+      }
+
+      return;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TResult, typename... TArguments>
+  void Event<TResult(TArguments...)>::Emit(TArguments... arguments) const {
+    std::size_t knownSubscriberCount = this->subscriberCount;
+
+    const DelegateType *subscribers;
+    std::size_t index = 0;
+
+    // Is the subscriber list currently on the stack?
+    if(knownSubscriberCount <= BuiltInSubscriberCount) {
+ProcessStackSubscribers:
+      subscribers = reinterpret_cast<const DelegateType *>(this->stackMemory);
+      while(index < knownSubscriberCount) {
+        subscribers[index](std::forward<TArguments>(arguments)...);
+        if(this->subscriberCount == knownSubscriberCount) {
+          ++index; // Only increment if the current callback wasn't unsubscribed
+        } else if(this->subscriberCount > knownSubscriberCount) {
+          ++index;
+          if(knownSubscriberCount > BuiltInSubscriberCount) {
+            knownSubscriberCount = this->subscriberCount;
+            goto ProcessHeapSubscribers;
+          }
+          knownSubscriberCount = this->subscriberCount;
+        } else {
+          knownSubscriberCount = this->subscriberCount;
+        }
+      }
+
+      return;
+    }
+
+    // The subscriber list is currently on the heap
+    {
+ProcessHeapSubscribers:
+      subscribers = reinterpret_cast<const DelegateType *>(this->heapMemory.Buffer);
+      while(index < knownSubscriberCount) {
+        subscribers[index](std::forward<TArguments>(arguments)...);
+        if(this->subscriberCount == knownSubscriberCount) {
+          ++index; // Only increment if the current callback wasn't unsubscribed
+        } else if(this->subscriberCount < knownSubscriberCount) {
+          if(knownSubscriberCount <= BuiltInSubscriberCount) {
+            knownSubscriberCount = this->subscriberCount;
+            goto ProcessStackSubscribers;
+          }
+          knownSubscriberCount = this->subscriberCount;
+        } else {
+          ++index;
+          knownSubscriberCount = this->subscriberCount;
+          // In case more heap memory had to be allocated
+          subscribers = reinterpret_cast<const DelegateType *>(this->heapMemory.Buffer);
+        }
+      }
+
+      return;
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<typename TResult, typename... TArguments>
+  bool Event<TResult(TArguments...)>::Unsubscribe(const DelegateType &delegate) {
+    if(this->subscriberCount <= BuiltInSubscriberCount) {
+      DelegateType *subscribers = reinterpret_cast<DelegateType *>(this->stackMemory);
+      for(std::size_t index = 0; index < this->subscriberCount; ++index) {
+        if(subscribers[index] == delegate) {
+          std::size_t lastSubscriberIndex = this->subscriberCount - 1;
+          subscribers[index] = subscribers[lastSubscriberIndex];
+          --this->subscriberCount;
+          return true;
+        }
+      }
+    } else {
+      DelegateType *subscribers = reinterpret_cast<DelegateType *>(this->heapMemory.Buffer);
+      std::size_t lastSubscriberIndex = this->subscriberCount;
+      if(lastSubscriberIndex > 0) {
+        --lastSubscriberIndex;
+
+        // Tiny optimization. Often the removed event is the last one registered
+        if(subscribers[lastSubscriberIndex] == delegate) {
+          --this->subscriberCount;
+          if(this->subscriberCount <= BuiltInSubscriberCount) {
+            convertFromHeapToStackAllocation();
+          }
+          return true;
+        }
+        for(std::size_t index = 0; index < lastSubscriberIndex; ++index) {
+          if(subscribers[index] == delegate) {
+            subscribers[index] = subscribers[lastSubscriberIndex];
+            --this->subscriberCount;
+            if(this->subscriberCount <= BuiltInSubscriberCount) {
+              convertFromHeapToStackAllocation();
+            }
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  }
 
   // ------------------------------------------------------------------------------------------- //
 
