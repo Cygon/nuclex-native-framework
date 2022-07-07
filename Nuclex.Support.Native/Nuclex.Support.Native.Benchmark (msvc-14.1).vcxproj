@@ -1,0 +1,388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{b289c32c-49dd-48db-8b41-c1d223b7ef51}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>NuclexSupportNative</RootNamespace>
+    <ProjectName>Nuclex.Support.Native.Benchmark (msvc-14.1)</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Platform)'=='Win32'">
+    <SanePlatform>x86</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <SanePlatform>amd64</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)'=='ARM'">
+    <SanePlatform>armhf</SanePlatform>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-benchmark\</IntDir>
+    <TargetName>Nuclex.Support.Native.Benchmark</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-benchmark\</IntDir>
+    <TargetName>Nuclex.Support.Native.Benchmark</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-benchmark\</IntDir>
+    <TargetName>Nuclex.Support.Native.Benchmark</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)-benchmark\</IntDir>
+    <TargetName>Nuclex.Support.Native.Benchmark</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\celero\build\include\</AdditionalIncludeDirectories>
+      <StringPooling>true</StringPooling>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>celero.lib;lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\celero\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\celero\build\include\</AdditionalIncludeDirectories>
+      <StringPooling>true</StringPooling>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>celero.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\celero\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\celero\build\include\</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>celero.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\celero\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\celero\build\include\</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>celero.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\celero\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Benchmarks\Events\BoostSignalsBenchmark.cpp" />
+    <ClCompile Include="Benchmarks\Events\EventBenchmark.cpp" />
+    <ClCompile Include="Benchmarks\Events\LSignalBenchmark.cpp" />
+    <ClCompile Include="Benchmarks\Events\NanoSignalSlotBenchmark.cpp" />
+    <ClCompile Include="Benchmarks\Text\AmdnItoaBenchmark.cpp" />
+    <ClCompile Include="Benchmarks\Text\IntegerToStringBenchmark.cpp" />
+    <ClCompile Include="Benchmarks\Text\JeaiiiItoaBenchmark.cpp" />
+    <ClCompile Include="Benchmarks\Text\JeaiiiLutItoaBenchmark.cpp" />
+    <ClCompile Include="Benchmarks\Text\NumberFormatterBenchmark.cpp" />
+    <ClCompile Include="Benchmarks\BenchmarkMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\blockingconcurrentqueue.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\concurrentqueue.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\lightweightsemaphore.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPSC.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.SPSC.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\IndexedCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableDynamicArray.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\RingQueue.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h" />
+    <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Errors\TimeoutError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
+    <ClInclude Include="Include\Nuclex\Support\Events\ConcurrentEvent.h" />
+    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h" />
+    <ClInclude Include="Include\Nuclex\Support\Events\Event.h" />
+    <ClInclude Include="Include\Nuclex\Support\Services\Checks.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignatureDetector.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ConstructorSignature.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\IntegerSequence.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\LazyServiceInjector.h" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceContainer.h" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceFactory.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Services\ServiceProvider.h" />
+    <ClInclude Include="Include\Nuclex\Support\Settings\IniSettingsStore.h" />
+    <ClInclude Include="Include\Nuclex\Support\Settings\MemorySettingsStore.h" />
+    <ClInclude Include="Include\Nuclex\Support\Settings\RegistrySettingsStore.h" />
+    <ClInclude Include="Include\Nuclex\Support\Settings\SettingsStore.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\LexicalCast.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\Logger.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\ParserHelper.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\StringMatcher.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\UnicodeHelper.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Latch.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Gate.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Process.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Semaphore.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\Thread.h" />
+    <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h" />
+    <ClInclude Include="Include\Nuclex\Support\BitTricks.h" />
+    <ClInclude Include="Include\Nuclex\Support\Config.h" />
+    <ClInclude Include="Include\Nuclex\Support\ScopeGuard.h" />
+    <ClInclude Include="Include\Nuclex\Support\TemporaryDirectoryScope.h" />
+    <ClInclude Include="Include\Nuclex\Support\TemporaryFileScope.h" />
+    <ClInclude Include="Include\Nuclex\Support\Variant.h" />
+    <ClInclude Include="Include\Nuclex\Support\VariantType.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Collections\Collection.cpp" />
+    <ClCompile Include="Source\Collections\ConcurrentCollection.cpp" />
+    <ClCompile Include="Source\Collections\ConcurrentQueue.cpp" />
+    <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp" />
+    <ClCompile Include="Source\Collections\DynamicArray.cpp" />
+    <ClCompile Include="Source\Collections\IndexedCollection.cpp" />
+    <ClCompile Include="Source\Collections\ObservableCollection.cpp" />
+    <ClCompile Include="Source\Collections\ObservableDynamicArray.cpp" />
+    <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp" />
+    <ClCompile Include="Source\Collections\RingQueue.cpp" />
+    <ClCompile Include="Source\Collections\ShiftQueue.cpp" />
+    <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp" />
+    <ClCompile Include="Source\Errors\TimeoutError.cpp" />
+    <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp" />
+    <ClCompile Include="Source\Events\ConcurrentEvent.cpp" />
+    <ClCompile Include="Source\Events\Delegate.cpp" />
+    <ClCompile Include="Source\Events\Event.cpp" />
+    <ClCompile Include="Source\Platform\LinuxFileApi.cpp" />
+    <ClInclude Include="Source\Platform\LinuxFileApi.h" />
+    <ClCompile Include="Source\Platform\PosixApi.cpp" />
+    <ClInclude Include="Source\Platform\PosixApi.h" />
+    <ClCompile Include="Source\Platform\PosixFileApi.cpp" />
+    <ClInclude Include="Source\Platform\PosixFileApi.h" />
+    <ClCompile Include="Source\Platform\PosixPathApi.cpp" />
+    <ClInclude Include="Source\Platform\PosixPathApi.h" />
+    <ClCompile Include="Source\Platform\PosixProcessApi.cpp" />
+    <ClInclude Include="Source\Platform\PosixProcessApi.h" />
+    <ClCompile Include="Source\Platform\PosixTimeApi.cpp" />
+    <ClInclude Include="Source\Platform\PosixTimeApi.h" />
+    <ClCompile Include="Source\Platform\WindowsApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsApi.h" />
+    <ClCompile Include="Source\Platform\WindowsFileApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsFileApi.h" />
+    <ClCompile Include="Source\Platform\WindowsPathApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsPathApi.h" />
+    <ClCompile Include="Source\Platform\WindowsProcessApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsProcessApi.h" />
+    <ClCompile Include="Source\Platform\WindowsRegistryApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsRegistryApi.h" />
+    <ClCompile Include="Source\Services\LazyServiceInjector.cpp" />
+    <ClCompile Include="Source\Services\ServiceContainer.cpp" />
+    <ClCompile Include="Source\Services\ServiceProvider.cpp" />
+    <ClCompile Include="Source\Settings\IniDocumentModel.FileParser.cpp" />
+    <ClInclude Include="Source\Settings\IniDocumentModel.FileParser.h" />
+    <ClCompile Include="Source\Settings\IniDocumentModel.cpp" />
+    <ClInclude Include="Source\Settings\IniDocumentModel.h" />
+    <ClCompile Include="Source\Settings\IniSettingsStore.cpp" />
+    <ClCompile Include="Source\Settings\MemorySettingsStore.cpp" />
+    <ClCompile Include="Source\Settings\RegistrySettingsStore.cpp" />
+    <ClCompile Include="Source\Settings\SettingsStore.cpp" />
+    <ClInclude Include="Source\Text\DragonBox-1.1.2\dragonbox.h" />
+    <ClInclude Include="Source\Text\Ryu\common.h" />
+    <ClCompile Include="Source\Text\Ryu\d2fixed.c" />
+    <ClInclude Include="Source\Text\Ryu\d2fixed_full_table.h" />
+    <ClCompile Include="Source\Text\Ryu\d2s.c" />
+    <ClInclude Include="Source\Text\Ryu\d2s_full_table.h" />
+    <ClInclude Include="Source\Text\Ryu\d2s_intrinsics.h" />
+    <ClInclude Include="Source\Text\Ryu\d2s_small_table.h" />
+    <ClInclude Include="Source\Text\Ryu\digit_table.h" />
+    <ClCompile Include="Source\Text\Ryu\f2s.c" />
+    <ClInclude Include="Source\Text\Ryu\f2s_full_table.h" />
+    <ClInclude Include="Source\Text\Ryu\generic_128.h" />
+    <ClCompile Include="Source\Text\Ryu\generic_128.c" />
+    <ClInclude Include="Source\Text\Ryu\ryu.h" />
+    <ClInclude Include="Source\Text\Ryu\ryu_generic_128.h" />
+    <ClInclude Include="Source\Text\Ryu\ryu_parse.h" />
+    <ClCompile Include="Source\Text\Ryu\s2d.c" />
+    <ClCompile Include="Source\Text\LexicalAppend.cpp" />
+    <ClCompile Include="Source\Text\LexicalCast.cpp" />
+    <ClCompile Include="Source\Text\Logger.cpp" />
+    <ClCompile Include="Source\Text\NumberFormatter-dragonbox.cpp" />
+    <ClCompile Include="Source\Text\NumberFormatter-jeaiii.cpp" />
+    <ClCompile Include="Source\Text\NumberFormatter.cpp" />
+    <ClInclude Include="Source\Text\NumberFormatter.h" />
+    <ClCompile Include="Source\Text\ParserHelper.cpp" />
+    <ClCompile Include="Source\Text\RollingLogger.cpp" />
+    <ClCompile Include="Source\Text\StatusObserver.cpp" />
+    <ClCompile Include="Source\Text\StringConverter.cpp" />
+    <ClCompile Include="Source\Text\StringMatcher.cpp" />
+    <ClCompile Include="Source\Text\UnicodeHelper.cpp" />
+    <ClCompile Include="Source\Threading\Latch.cpp" />
+    <ClCompile Include="Source\Threading\Gate.cpp" />
+    <ClCompile Include="Source\Threading\Process.Linux.cpp" />
+    <ClCompile Include="Source\Threading\Process.Windows.cpp" />
+    <ClCompile Include="Source\Threading\Semaphore.cpp" />
+    <ClCompile Include="Source\Threading\Thread.cpp" />
+    <ClCompile Include="Source\Threading\ThreadPool.Linux.cpp" />
+    <ClCompile Include="Source\Threading\ThreadPool.Windows.cpp" />
+    <ClCompile Include="Source\Threading\ThreadPoolConfig.cpp" />
+    <ClInclude Include="Source\Threading\ThreadPoolConfig.h" />
+    <ClCompile Include="Source\Threading\ThreadPoolTaskPool.cpp" />
+    <ClInclude Include="Source\Threading\ThreadPoolTaskPool.h" />
+    <ClCompile Include="Source\BitTricks.cpp" />
+    <ClCompile Include="Source\Config.cpp" />
+    <ClCompile Include="Source\ScopeGuard.cpp" />
+    <ClCompile Include="Source\TemporaryDirectoryScope.cpp" />
+    <ClCompile Include="Source\TemporaryFileScope.cpp" />
+    <ClCompile Include="Source\Variant.cpp" />
+    <ClCompile Include="Source\VariantType.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Documents\Copyright.md" />
+    <None Include="Documents\Adam Morrison - Fast Concurrent queues for x86 Processors.pdf" />
+    <None Include="Documents\David Gay - Correctly Rounded Binary-Decimal and Decimal-Binary Conversions.pdf" />
+    <Text Include="Documents\EventBenchmark.md" />
+    <None Include="Documents\Florian Loitsch - Printing Floating-Point Numbers Quickly and Accurately with Integers.pdf" />
+    <None Include="Documents\Hakan Sundell - Fast and Lock-Free Concurrent Priority Queues.pdf" />
+    <None Include="Documents\Marc Andrysco - Printing Floating-Point Numbers, An Always Correct Method.pdf" />
+    <None Include="Documents\Ulf Adams - Ryu Fast Float to String Conversion.pdf" />
+    <None Include="ReadMe.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Nuclex.Support.Native.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
