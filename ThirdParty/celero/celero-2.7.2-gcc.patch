@@ -1,0 +1,11 @@
+diff -r -u -N -w build-original/include/celero/TestFixture.h build/include/celero/TestFixture.h
+--- build-original/include/celero/TestFixture.h	2021-02-27 15:13:37.000000000 +0100
++++ build/include/celero/TestFixture.h	2022-06-14 23:46:26.963123600 +0200
+@@ -27,6 +27,7 @@
+ #include <limits>
+ #include <string>
+ #include <vector>
++#include <memory> // for std::shared_ptr
+ 
+ // This must be included last.
+ #include <celero/ThreadLocal.h>
