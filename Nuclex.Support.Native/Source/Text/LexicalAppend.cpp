@@ -24,16 +24,21 @@ License along with this library
 #include "Nuclex/Support/Text/LexicalAppend.h"
 #include "Nuclex/Support/BitTricks.h"
 
+#include "./NumberFormatter.h"
+
 #include <limits> // for std::numeric_limits
 #include <algorithm> // for std::copy_n()
 
-#include "Dragon4/PrintFloat.h"
-#if defined(_MSC_VER)
-#include "Jeaiii/to_text_from_integer.h"
-#else
-#include "Jeaiii/to_text_from_integer.h"
-#endif
 #include "Ryu/ryu_parse.h"
+
+// TODO lexical_append() with std::string could resize within NumberFormatter
+//
+// The NumberFormatter already figures out the number of digits that need to be appended
+// ahead of time, so the call to BitTricks::GetLogBase10() is completely redundant.
+//
+// Unclear if it's worth the effort, as the call is just one machine code instruction
+// followed by a multiply and shift.
+//
 
 namespace {
 
@@ -260,7 +265,7 @@ namespace Nuclex { namespace Support { namespace Text {
   template<> void lexical_append<>(std::string &target, const std::uint8_t &from) {
     std::string::size_type length = target.length();
     target.resize(length + countDigits(from));
-    jeaiii::to_text_from_integer(target.data() + length, from);
+    FormatInteger(target.data() + length, from);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -270,7 +275,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = countDigits(from);
     if(availableBytes >= requiredBytes) {
-      jeaiii::to_text_from_integer(target, from);
+      FormatInteger(target, from);
     }
 
     return requiredBytes;
@@ -281,7 +286,7 @@ namespace Nuclex { namespace Support { namespace Text {
   template<> void lexical_append<>(std::string &target, const std::int8_t &from) {
     std::string::size_type length = target.length();
     target.resize(length + countDigits(from));
-    jeaiii::to_text_from_integer(target.data() + length, from);
+    FormatInteger(target.data() + length, from);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -291,7 +296,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = countDigits(from);
     if(availableBytes >= requiredBytes) {
-      jeaiii::to_text_from_integer(target, from);
+      FormatInteger(target, from);
     }
 
     return requiredBytes;
@@ -302,7 +307,7 @@ namespace Nuclex { namespace Support { namespace Text {
   template<> void lexical_append<>(std::string &target, const std::uint16_t &from) {
     std::string::size_type length = target.length();
     target.resize(length + countDigits(from));
-    jeaiii::to_text_from_integer(target.data() + length, from);
+    FormatInteger(target.data() + length, from);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -312,7 +317,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = countDigits(from);
     if(availableBytes >= requiredBytes) {
-      jeaiii::to_text_from_integer(target, from);
+      FormatInteger(target, from);
     }
 
     return requiredBytes;
@@ -323,7 +328,7 @@ namespace Nuclex { namespace Support { namespace Text {
   template<> void lexical_append<>(std::string &target, const std::int16_t &from) {
     std::string::size_type length = target.length();
     target.resize(length + countDigits(from));
-    jeaiii::to_text_from_integer(target.data() + length, from);
+    FormatInteger(target.data() + length, from);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -333,7 +338,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = countDigits(from);
     if(availableBytes >= requiredBytes) {
-      jeaiii::to_text_from_integer(target, from);
+      FormatInteger(target, from);
     }
 
     return requiredBytes;
@@ -345,7 +350,7 @@ namespace Nuclex { namespace Support { namespace Text {
     std::string::size_type length = target.length();
     if(from >= 1) {
       target.resize(length + BitTricks::GetLogBase10(from) + 1);
-      jeaiii::to_text_from_integer(target.data() + length, from);
+      FormatInteger(target.data() + length, from);
     } else {
       target.push_back('0');
     }
@@ -358,7 +363,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = (from >= 1) ? (BitTricks::GetLogBase10(from) + 1) : 1;
     if(availableBytes >= requiredBytes) {
-      jeaiii::to_text_from_integer(target, from);
+      FormatInteger(target, from);
     }
 
     return requiredBytes;
@@ -370,12 +375,12 @@ namespace Nuclex { namespace Support { namespace Text {
     std::string::size_type length = target.length();
     if(from >= 1) {
       target.resize(length + BitTricks::GetLogBase10(static_cast<std::uint32_t>(from)) + 1);
-      jeaiii::to_text_from_integer(target.data() + length, static_cast<std::uint32_t>(from));
+      FormatInteger(target.data() + length, static_cast<std::uint32_t>(from));
     } else if(from == 0) {
       target.push_back('0');
     } else {
       target.resize(length + BitTricks::GetLogBase10(static_cast<std::uint32_t>(-from)) + 2);
-      jeaiii::to_text_from_integer(target.data() + length, from);
+      FormatInteger(target.data() + length, from);
     }
   }
 
@@ -387,7 +392,7 @@ namespace Nuclex { namespace Support { namespace Text {
     if(from >= 1) {
       std::size_t requiredBytes = BitTricks::GetLogBase10(static_cast<std::uint32_t>(from)) + 1;
       if(availableBytes >= requiredBytes) {
-        jeaiii::to_text_from_integer(target, static_cast<std::uint32_t>(from));
+        FormatInteger(target, static_cast<std::uint32_t>(from));
       }
       return requiredBytes;
     } else if(from == 0) {
@@ -398,7 +403,7 @@ namespace Nuclex { namespace Support { namespace Text {
     } else {
       std::size_t requiredBytes = BitTricks::GetLogBase10(static_cast<std::uint32_t>(-from)) + 2;
       if(availableBytes >= requiredBytes) {
-        jeaiii::to_text_from_integer(target, from);
+        FormatInteger(target, from);
       }
       return requiredBytes;
     }
@@ -410,7 +415,7 @@ namespace Nuclex { namespace Support { namespace Text {
     std::string::size_type length = target.length();
     if(from >= 1) {
       target.resize(length + BitTricks::GetLogBase10(from) + 1);
-      jeaiii::to_text_from_integer(target.data() + length, from);
+      FormatInteger(target.data() + length, from);
     } else {
       target.push_back('0');
     }
@@ -423,7 +428,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ) {
     std::size_t requiredBytes = (from >= 1) ? (BitTricks::GetLogBase10(from) + 1) : 1;
     if(availableBytes >= requiredBytes) {
-      jeaiii::to_text_from_integer(target, from);
+      FormatInteger(target, from);
     }
 
     return requiredBytes;
@@ -435,12 +440,12 @@ namespace Nuclex { namespace Support { namespace Text {
     std::string::size_type length = target.length();
     if(from >= 1) {
       target.resize(length + BitTricks::GetLogBase10(static_cast<std::uint64_t>(from)) + 1);
-      jeaiii::to_text_from_integer(target.data() + length, static_cast<std::uint64_t>(from));
+      FormatInteger(target.data() + length, static_cast<std::uint64_t>(from));
     } else if(from == 0) {
       target.push_back('0');
     } else {
       target.resize(length + BitTricks::GetLogBase10(static_cast<std::uint64_t>(-from)) + 2);
-      jeaiii::to_text_from_integer(target.data() + length, from);
+      FormatInteger(target.data() + length, from);
     }
   }
 
@@ -452,7 +457,7 @@ namespace Nuclex { namespace Support { namespace Text {
     if(from >= 1) {
       std::size_t requiredBytes = BitTricks::GetLogBase10(static_cast<std::uint64_t>(from)) + 1;
       if(availableBytes >= requiredBytes) {
-        jeaiii::to_text_from_integer(target, static_cast<std::uint64_t>(from));
+        FormatInteger(target, static_cast<std::uint64_t>(from));
       }
       return requiredBytes;
     } else if(from == 0) {
@@ -463,7 +468,7 @@ namespace Nuclex { namespace Support { namespace Text {
     } else {
       std::size_t requiredBytes = BitTricks::GetLogBase10(static_cast<std::uint64_t>(-from)) + 2;
       if(availableBytes >= requiredBytes) {
-        jeaiii::to_text_from_integer(target, from);
+        FormatInteger(target, from);
       }
       return requiredBytes;
     }
@@ -473,14 +478,10 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> void lexical_append<>(std::string &target, const float &from) {
     std::string::size_type length = target.length();
+    target.resize(length + 48U);
 
-    target.resize(length + 64U);
-
-    tU32 actualLength = ::PrintFloat32(
-      target.data() + length, 64U, from, PrintFloatFormat_Positional, -1
-    );
-
-    target.resize(length + static_cast<std::string::size_type>(actualLength));
+    char *end = FormatFloat(target.data() + length, from);
+    target.resize(end - target.data());
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -488,16 +489,14 @@ namespace Nuclex { namespace Support { namespace Text {
   template<> std::size_t lexical_append<>(
     char *target, std::size_t availableBytes, const float &from
   ) {
-    if(availableBytes >= 64U) {
-      tU32 actualLength = ::PrintFloat32(
-        target, static_cast<tU32>(availableBytes), from, PrintFloatFormat_Positional, -1
-      );
-      return static_cast<std::size_t>(actualLength);
+    if(availableBytes >= 48U) {
+      char *end = FormatFloat(target, from);
+      return static_cast<std::size_t>(end - target);
     } else {
-      char characters[64];
-      std::size_t actualLength = static_cast<std::size_t>(
-        ::PrintFloat32(characters, sizeof(characters), from, PrintFloatFormat_Positional, -1)
-      );
+      char characters[48];
+      char *end = FormatFloat(characters, from);
+
+      std::size_t actualLength = static_cast<std::size_t>(end - characters);
       if(availableBytes >= actualLength) {
         std::copy_n(characters, actualLength, target);
       }
@@ -511,14 +510,10 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> void lexical_append<>(std::string &target, const double &from) {
     std::string::size_type length = target.length();
+    target.resize(length + 325U);
 
-    target.resize(length + 256U);
-
-    tU32 actualLength = ::PrintFloat64(
-      target.data() + length, 256U, from, PrintFloatFormat_Positional, -1
-    );
-
-    target.resize(length + static_cast<std::string::size_type>(actualLength));
+    char *end = FormatFloat(target.data() + length, from);
+    target.resize(end - target.data());
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -526,16 +521,14 @@ namespace Nuclex { namespace Support { namespace Text {
   template<> std::size_t lexical_append<>(
     char *target, std::size_t availableBytes, const double &from
   ) {
-    if(availableBytes >= 256U) {
-      tU32 actualLength = ::PrintFloat64(
-        target, static_cast<tU32>(availableBytes), from, PrintFloatFormat_Positional, -1
-      );
-      return static_cast<std::size_t>(actualLength);
+    if(availableBytes >= 325U) {
+      char *end = FormatFloat(target, from);
+      return static_cast<std::size_t>(end - target);
     } else {
-      char characters[256];
-      std::size_t actualLength = static_cast<std::size_t>(
-        ::PrintFloat64(characters, sizeof(characters), from, PrintFloatFormat_Positional, -1)
-      );
+      char characters[325];
+      char *end = FormatFloat(characters, from);
+
+      std::size_t actualLength = static_cast<std::size_t>(end - characters);
       if(availableBytes >= actualLength) {
         std::copy_n(characters, actualLength, target);
       }

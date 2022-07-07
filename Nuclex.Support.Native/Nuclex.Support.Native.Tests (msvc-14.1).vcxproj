@@ -107,7 +107,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\build\googletest\include\</AdditionalIncludeDirectories>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -127,7 +127,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\build\googletest\include\</AdditionalIncludeDirectories>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -148,7 +148,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\build\googletest\include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
@@ -176,7 +176,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\Include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\gtest\build\googletest\include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
@@ -214,7 +214,6 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\RingQueue.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h" />
-    <ClInclude Include="Include\Nuclex\Support\Errors\CanceledError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\TimeoutError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
@@ -268,7 +267,6 @@
     <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp" />
     <ClCompile Include="Source\Collections\RingQueue.cpp" />
     <ClCompile Include="Source\Collections\ShiftQueue.cpp" />
-    <ClCompile Include="Source\Errors\CanceledError.cpp" />
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp" />
     <ClCompile Include="Source\Errors\TimeoutError.cpp" />
     <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp" />
@@ -308,20 +306,7 @@
     <ClCompile Include="Source\Settings\MemorySettingsStore.cpp" />
     <ClCompile Include="Source\Settings\RegistrySettingsStore.cpp" />
     <ClCompile Include="Source\Settings\SettingsStore.cpp" />
-    <ClCompile Include="Source\Text\Amartin\itoa.cpp" />
-    <ClInclude Include="Source\Text\Amartin\itoa.h" />
-    <ClInclude Include="Source\Text\Amartin\itoa_impl.h" />
-    <ClCompile Include="Source\Text\Dragon4\Dragon4.cpp" />
-    <ClInclude Include="Source\Text\Dragon4\Dragon4.h" />
-    <ClInclude Include="Source\Text\Dragon4\Math.h" />
-    <ClCompile Include="Source\Text\Dragon4\PrintFloat.cpp" />
-    <ClInclude Include="Source\Text\Dragon4\PrintFloat.h" />
-    <ClInclude Include="Source\Text\Dragon4\Standard.h" />
-    <ClCompile Include="Source\Text\Dragon4\Math.cpp" />
-    <ClInclude Include="Source\Text\Jeaiii\int_to_chars_jeaiii.h" />
-    <ClCompile Include="Source\Text\Jeaiii\itoa_jeaiii.cpp" />
-    <ClCompile Include="Source\Text\Jeaiii\to_chars.cpp" />
-    <ClInclude Include="Source\Text\Jeaiii\to_text_from_integer.h" />
+    <ClInclude Include="Source\Text\DragonBox-1.1.2\dragonbox.h" />
     <ClInclude Include="Source\Text\Ryu\common.h" />
     <ClCompile Include="Source\Text\Ryu\d2fixed.c" />
     <ClInclude Include="Source\Text\Ryu\d2fixed_full_table.h" />
@@ -341,6 +326,10 @@
     <ClCompile Include="Source\Text\LexicalAppend.cpp" />
     <ClCompile Include="Source\Text\LexicalCast.cpp" />
     <ClCompile Include="Source\Text\Logger.cpp" />
+    <ClCompile Include="Source\Text\NumberFormatter-dragonbox.cpp" />
+    <ClCompile Include="Source\Text\NumberFormatter-jeaiii.cpp" />
+    <ClCompile Include="Source\Text\NumberFormatter.cpp" />
+    <ClInclude Include="Source\Text\NumberFormatter.h" />
     <ClCompile Include="Source\Text\ParserHelper.cpp" />
     <ClCompile Include="Source\Text\RollingLogger.cpp" />
     <ClCompile Include="Source\Text\StatusObserver.cpp" />

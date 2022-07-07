@@ -22,14 +22,8 @@ License along with this library
 #define NUCLEX_SUPPORT_SOURCE 1
 
 #include "Nuclex/Support/Text/LexicalCast.h"
-
-#include "Dragon4/PrintFloat.h"
-#if defined(_MSC_VER)
-#include "Jeaiii/to_text_from_integer.h"
-#else
-#include "Jeaiii/to_text_from_integer.h"
-#endif
-#include "Ryu/ryu_parse.h"
+#include "./NumberFormatter.h"
+#include "./Ryu/ryu_parse.h"
 
 #include <limits> // for std::numeric_limits
 
@@ -57,6 +51,11 @@ License along with this library
 //   o Alway outputs exact number
 //   o No control over exponential notation
 //
+// DragonBox https://github.com/jk-jeon/dragonbox
+//   o Always outputs exact number
+//   o Fastest formatter around as of 2022
+//   o Outputs two integers (value and exponent)
+//
 
 // Goal: print integral values accurately and fast
 //   https://stackoverflow.com/questions/7890194/
@@ -70,7 +69,7 @@ License along with this library
 // Vitaut https://github.com/fmtlib/fmt
 //   o Fastest
 //
-// Erthink https://github.com/leo-yuriev/erthink
+// Erthink https://github.com/leo-yuriev/erthink (defunct)
 //   o Faster
 //   o Handles signed and 64 bit integers
 //   x Author has become a Putin/Dugin fascist
@@ -79,8 +78,8 @@ License along with this library
 //   o Fastest...est (better than Vitaut even)
 //   o Handles signed and 64 bit integers
 //
-// Amartin https://github.com/miloyip/itoa-benchmark/blob/master/src/
-//   o Fastest ever, apparently
+// Amartin https://github.com/amdn/itoa
+//   o Fastest ever, apparently (benchmark says no :o)
 //   o Handles signed and 64 bit integers
 //   x Doesn't compile w/MSVC missing uint128_t
 //
@@ -151,7 +150,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> std::string lexical_cast<>(const std::uint8_t &from) {
     char characters[4];
-    const char *end = jeaiii::to_text_from_integer(characters, from);
+    const char *end = FormatInteger(characters, from);
     return std::string(static_cast<const char *>(characters), end);
   }
 
@@ -175,7 +174,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> std::string lexical_cast<>(const std::int8_t &from) {
     char characters[5];
-    const char *end = jeaiii::to_text_from_integer(characters, from);
+    const char *end = FormatInteger(characters, from);
     return std::string(static_cast<const char *>(characters), end);
   }
 
@@ -199,7 +198,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> std::string lexical_cast<>(const std::uint16_t &from) {
     char characters[6];
-    const char *end = jeaiii::to_text_from_integer(characters, from);
+    const char *end = FormatInteger(characters, from);
     return std::string(static_cast<const char *>(characters), end);
   }
 
@@ -223,7 +222,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> std::string lexical_cast<>(const std::int16_t &from) {
     char characters[7];
-    const char *end = jeaiii::to_text_from_integer(characters, from);
+    const char *end = FormatInteger(characters, from);
     return std::string(static_cast<const char *>(characters), end);
   }
 
@@ -247,7 +246,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> std::string lexical_cast<>(const std::uint32_t &from) {
     char characters[11];
-    const char *end = jeaiii::to_text_from_integer(characters, from);
+    const char *end = FormatInteger(characters, from);
     return std::string(static_cast<const char *>(characters), end);
   }
 
@@ -271,7 +270,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> std::string lexical_cast<>(const std::int32_t &from) {
     char characters[12];
-    const char *end = jeaiii::to_text_from_integer(characters, from);
+    const char *end = FormatInteger(characters, from);
     return std::string(static_cast<const char *>(characters), end);
   }
 
@@ -295,7 +294,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> std::string lexical_cast<>(const std::uint64_t &from) {
     char characters[21];
-    const char *end = jeaiii::to_text_from_integer(characters, from);
+    const char *end = FormatInteger(characters, from);
     return std::string(static_cast<const char *>(characters), end);
   }
 
@@ -319,7 +318,7 @@ namespace Nuclex { namespace Support { namespace Text {
 
   template<> std::string lexical_cast<>(const std::int64_t &from) {
     char characters[21];
-    const char *end = jeaiii::to_text_from_integer(characters, from);
+    const char *end = FormatInteger(characters, from);
     return std::string(static_cast<const char *>(characters), end);
   }
 
@@ -342,12 +341,9 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   template<> std::string lexical_cast<>(const float &from) {
-    char characters[64];
-    tU32 length = ::PrintFloat32(
-      characters, sizeof(characters), from, PrintFloatFormat_Positional, -1
-    );
-
-    return std::string(static_cast<const char *>(characters), static_cast<std::size_t>(length));
+    char characters[48];
+    char *end = FormatFloat(characters, from);
+    return std::string(characters, end);
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -381,12 +377,9 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   template<> std::string lexical_cast<>(const double &from) {
-    char characters[256];
-    tU32 length = ::PrintFloat64(
-      characters, sizeof(characters), from, PrintFloatFormat_Positional, -1
-    );
-
-    return std::string(static_cast<const char *>(characters), static_cast<std::size_t>(length));
+    char characters[325];
+    char *end = FormatFloat(characters, from);
+    return std::string(characters, end);
   }
 
   // ------------------------------------------------------------------------------------------- //

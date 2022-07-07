@@ -310,9 +310,9 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalCastTest, FloatToStringDecimalsAreOptional) {
+  TEST(LexicalCastTest, FloatToStringDecimalsAreMandatory) {
     std::string text = lexical_cast<std::string>(1.0f);
-    EXPECT_EQ(text, "1");
+    EXPECT_EQ(text, "1.0");
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -372,9 +372,9 @@ namespace Nuclex { namespace Support { namespace Text {
 
   // ------------------------------------------------------------------------------------------- //
 
-  TEST(LexicalCastTest, DoubleToStringDecimalsAreOptional) {
+  TEST(LexicalCastTest, DoubleToStringDecimalsAreMandatory) {
     std::string text = lexical_cast<std::string>(1.0);
-    EXPECT_EQ(text, "1");
+    EXPECT_EQ(text, "1.0");
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -411,7 +411,10 @@ namespace Nuclex { namespace Support { namespace Text {
     // This is the number of decimals that unambiguously selects the correct float (especially
     // for round-trip parsing) and where adding more decimals would not actually change
     // the resulting double-precision floating point value when it is parsed back in.
-    EXPECT_EQ(text, "3.141592653589793");
+    double parsedPI = lexical_cast<double>(text);
+    EXPECT_DOUBLE_EQ(parsedPI, PI);
+    EXPECT_EQ(text.find(u8"141592653589793"), 2U);
+    //EXPECT_EQ(text, "3.141592653589793");
   }
 
   // ------------------------------------------------------------------------------------------- //

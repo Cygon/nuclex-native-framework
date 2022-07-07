@@ -1,22 +1,25 @@
 Nuclex.Support.Native
 =====================
 
-This library contains general-purpose supporting code with a focus
-on small but well-designed pieces you can use throughout other projects
-to make you life easier.
+This library aims to be your trusty toolbox of supporting code for
+problems that come up in any type project. It consists of carefully
+chosen and well-designed pieces that aid you in dealing with UTF-8
+strings, application settings storage, threading and initialization.
 
 There are unit tests for the whole library, so everything is verifiably
 working on all platforms tested (Linux, Windows, Raspberry).
 
 **Text**
-* Locale-independent string/number conversion
-* Conversion between std::string and std::wstring
+* Iterate over, read and write UTF-8 and UTF-16
 * Case-insensitive UTF-8 string comparison
 * UTF-8 wildcard matching
+* Locale-independent string/number conversion
+* Conversion between std::string and std::wstring
 
 **Settings**
 * Retrieve and store application settings in the registry (Windows-only)
 * Retrieve and store application settings in .ini files
+* Retrieve and store application settings in memory
 
 **Threading**
 * Thread pool for micro tasks with std::future
@@ -58,9 +61,8 @@ std::string scoreText = u8"Current score: ";
 lexical_append(scoreText, 110025);
 ```
 
-Uses [Dragon4](http://www.ryanjuckett.com/programming/printing-floating-point-numbers/),
-[James Edward Anhalt III itoa](https://github.com/jeaiii/itoa),
-[Arturo Martin-de-Nicolas itoa](https://github.com/amdn/itoa) and
+Uses [DragonBox](https://github.com/jk-jeon/dragonbox/),
+[James Edward Anhalt III itoa](https://github.com/jeaiii/itoa) and
 [Ryu](https://github.com/ulfjack/ryu) internally, which have licenses that allow this
 use. See Copyright.md in the Documents directory for more details.
 
@@ -68,7 +70,7 @@ use. See Copyright.md in the Documents directory for more details.
 StringConverter & StringMatcher
 -------------------------------
 
-Useful helper methods for strings, such as conversion between UTF-8,
+Useful helper methods for unicode strings, such as conversion between UTF-8,
 UTF-16 and UTF-32. Can also convert between "wide char" strings and UTF-8.
 Wide chars are the bad side of unicode that Windows programmers have to deal
 with, often coming from `TEXT()` macros that expand to `L"my string"`,
@@ -116,6 +118,9 @@ ingredients[u8"Rødløg"] = 2;
 int onionCount = ingredients.at(u8"RØDLØG"); // Different case, still a match
 ```
 
+Hashing uses the fast murmur32 (32 bit platforms) and
+murmur64 (on 64 bit platforms) algorithm for string hashing.
+
 
 Application Settings Storage
 ----------------------------
@@ -144,11 +149,11 @@ std::optional<std::uint32_t> resolutionX = (
 
 // ...or provide a default value right away via .value_or():
 std::uint32_t resolutionY = (
-  settings.Retrieve<std::uint32_t>(u8"Video", u8"ResolutionX").value_or(1080)
+  settings.Retrieve<std::uint32_t>(u8"Video", u8"ResolutionY").value_or(1080)
 );
 
-// There's a shared base class for all implementations that you pass to
-// any methods dealing with settings:
+// There's a shared base class for all implementations, so you can write
+// methods that work on either of the three settings container types:
 SettingsStore &abstractSettings = settings;
 
 // Storing properties is just as simple and everything, including
@@ -331,10 +336,10 @@ clock time.
 int main() {
   Semaphore sem(0);
 
-  // Let one current of future thread through
+  // Let one current or future thread through
   sem.Post();
 
-  // Wait until the semaphore is posed (incremented)
+  // Wait until the semaphore is posted (incremented)
   sem.WaitAndDecrement();
 }
 ```
@@ -343,8 +348,8 @@ int main() {
 Child Processes
 ---------------
 
-This class makes it easy to spawn child process and to capture the output they
-send to stdout and stderr.
+This class makes it easy to spawn child processes and to capture the output
+they send to stdout and stderr.
 
 Creating child processes correctly is a rather complicated task that differs
 a lot between Windows and Linux. This wrapper provides a sane, portable way to

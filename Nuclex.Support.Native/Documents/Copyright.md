@@ -51,10 +51,10 @@ Markus Ewald and licensed under the terms of the IBM Common Public License
 Nuclex.Support.Native also embeds additional libraries, belonging to their
 respective owners and used according to their respective licenses:
 
-  * The Dragon 4 floating point formatter under the ZLib license
-  * The Erthink integer formatter unter the Apache 2.0 license
-  * The Ryu floating point formatter under the Apache 2.0 license
-  * Multi-threaded queues under the Boost Software license
+  * The James Edward Anhalt III integer formatter under the MIT license
+  * Junekey Jeon's DragonBox float formatter under the Apache 2.0 license
+  * Ulf Adams' float parser from the Ryu library under the Apache 2.0 license
+  * Cameron Desrochers' Multi-threaded queues under the Boost Software license
 
 
 Third-Party Code
@@ -64,41 +64,30 @@ This library also embeds carefully selected third-party code which falls
 under its own licenses, listed below
 
 
-Dragon 4 String Formatter: ZLib License
----------------------------------------
-
-The Dragon 4 String Formatter is used to accurately convert floating-point
-values into strings. It is written by Ryan Juckett and licensed under
-the ZLib license (https://www.zlib.net/zlib_license.html)
-
-If you distribute binaries compiled from this library, you do not have to
-do anything, but an acknowledgement of the original author would be nice.
-
-
-Arturo Martin-de-Nicolas Integer Formatter: MIT License
--------------------------------------------------------
-
-The integer formatter from the itoa library is used to convert integral
-values into strings. It is written by Arturo Martin-de-Nicolas and licensed
-under MIT license (https://mit-license.org/)
-
-If you distribute binaries compiled from this library, you do not have to
-do anything, but an acknowledgement of the original author would be nice.
-
-
 James Edward Anhalt III Integer Formatter: MIT License
 ------------------------------------------------------
 
-The integer formatter from the itoa library is used to convert integral
-values into strings. It is written by James Edward Anhalt III and licensed
+A modified version of James Edward Anhalt III.'s integer printing algorithm
+is used to convert integral values into strings. The original code is licensed
 under MIT license (https://mit-license.org/)
+
+If you distribute binaries compiled from this library, you do not have to
+do anything, but an acknowledgement of the original author would be nice.
+
+
+DragonBox: Apache 2.0 License
+-----------------------------
+
+Uses code from Junekey Jeon's DragonBox reference implementation to convert
+floating point values into string independent of the system locale. Licensed
+under the Apache 2.0 license (http://www.apache.org/licenses/LICENSE-2.0)
 
 If you distribute binaries compiled from this library, you do not have to
 do anything, but an acknowledgement of the original author would be nice.
 
 
 Ryu String to Float Parser: Apache 2.0 License
----------------------------------------------=
+----------------------------------------------
 
 Code from the Ryu library is used to convert strings to floating point values
 independent of the system locale. It is written by Ulf Adams and licensed under

@@ -670,16 +670,16 @@ namespace Nuclex { namespace Support { namespace Text {
     std::string resultString(u8"Value equals ");
 
     lexical_append(resultString, float(0.0f));
-    EXPECT_EQ(resultString.length(), 14U);
-    EXPECT_EQ(resultString, u8"Value equals 0");
+    EXPECT_EQ(resultString.length(), 16U);
+    EXPECT_EQ(resultString, u8"Value equals 0.0");
 
     lexical_append(resultString, float(123.456f));
-    EXPECT_EQ(resultString.length(), 21U);
-    EXPECT_EQ(resultString, u8"Value equals 0123.456");
+    EXPECT_EQ(resultString.length(), 23U);
+    EXPECT_EQ(resultString, u8"Value equals 0.0123.456");
 
     lexical_append(resultString, float(-123.456f));
-    EXPECT_EQ(resultString.length(), 29U);
-    EXPECT_EQ(resultString, u8"Value equals 0123.456-123.456");
+    EXPECT_EQ(resultString.length(), 31U);
+    EXPECT_EQ(resultString, u8"Value equals 0.0123.456-123.456");
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -689,11 +689,13 @@ namespace Nuclex { namespace Support { namespace Text {
 
     {
       characters[0] = 126;
-      characters[2] = 127;
-      EXPECT_EQ(lexical_append(characters + 1, 1U, float(0.0f)), 1U);
+      characters[4] = 127;
+      EXPECT_EQ(lexical_append(characters + 1, 3U, float(0.0f)), 3U);
       EXPECT_EQ(characters[0], 126);
       EXPECT_EQ(characters[1], '0');
-      EXPECT_EQ(characters[2], 127);
+      EXPECT_EQ(characters[2], '.');
+      EXPECT_EQ(characters[3], '0');
+      EXPECT_EQ(characters[4], 127);
     }
 
     {
@@ -728,9 +730,9 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalAppendTest, ReturnsNeededByteCountForFloat) {
-    char characters[1] = { 0 };
+    char characters[3] = { 0 };
 
-    EXPECT_EQ(lexical_append(characters, 1U, float(0.0f)), 1U);
+    EXPECT_EQ(lexical_append(characters, 1U, float(0.0f)), 3U);
     EXPECT_EQ(lexical_append(characters, 1U, float(123.456f)), 7U);
     EXPECT_EQ(lexical_append(characters, 1U, float(-123.456f)), 8U);
   }
@@ -752,16 +754,16 @@ namespace Nuclex { namespace Support { namespace Text {
     std::string resultString(u8"Value equals ");
 
     lexical_append(resultString, double(0.0));
-    EXPECT_EQ(resultString.length(), 14U);
-    EXPECT_EQ(resultString, u8"Value equals 0");
+    EXPECT_EQ(resultString.length(), 16U);
+    EXPECT_EQ(resultString, u8"Value equals 0.0");
 
     lexical_append(resultString, double(12345.06789));
-    EXPECT_EQ(resultString.length(), 25U);
-    EXPECT_EQ(resultString, u8"Value equals 012345.06789");
+    EXPECT_EQ(resultString.length(), 27U);
+    EXPECT_EQ(resultString, u8"Value equals 0.012345.06789");
 
     lexical_append(resultString, double(-12345.06789));
-    EXPECT_EQ(resultString.length(), 37U);
-    EXPECT_EQ(resultString, u8"Value equals 012345.06789-12345.06789");
+    EXPECT_EQ(resultString.length(), 39U);
+    EXPECT_EQ(resultString, u8"Value equals 0.012345.06789-12345.06789");
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -771,11 +773,13 @@ namespace Nuclex { namespace Support { namespace Text {
 
     {
       characters[0] = 122;
-      characters[2] = 123;
-      EXPECT_EQ(lexical_append(characters + 1, 1U, double(0.0)), 1U);
+      characters[4] = 123;
+      EXPECT_EQ(lexical_append(characters + 1, 3U, double(0.0)), 3U);
       EXPECT_EQ(characters[0], 122);
       EXPECT_EQ(characters[1], '0');
-      EXPECT_EQ(characters[2], 123);
+      EXPECT_EQ(characters[2], '.');
+      EXPECT_EQ(characters[3], '0');
+      EXPECT_EQ(characters[4], 123);
     }
 
     {
@@ -811,11 +815,11 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalAppendTest, ReturnsNeededByteCountForDouble) {
-    char characters[1] = { 0 };
+    char characters[3] = { 0 };
 
-    EXPECT_EQ(lexical_append(characters, 1U, double(0.0)), 1U);
-    EXPECT_EQ(lexical_append(characters, 1U, double(12345.06789)), 11U);
-    EXPECT_EQ(lexical_append(characters, 1U, double(-12345.06789)), 12U);
+    EXPECT_EQ(lexical_append(characters, 3U, double(0.0)), 3U);
+    EXPECT_EQ(lexical_append(characters, 3U, double(12345.06789)), 11U);
+    EXPECT_EQ(lexical_append(characters, 3U, double(-12345.06789)), 12U);
   }
 
   // ------------------------------------------------------------------------------------------- //

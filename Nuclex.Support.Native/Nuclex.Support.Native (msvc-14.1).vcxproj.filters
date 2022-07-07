@@ -60,14 +60,8 @@
     <Filter Include="Source\Text">
       <UniqueIdentifier>{f20ce72c-f037-4bfc-8e47-a38db78850de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Text\Amartin">
-      <UniqueIdentifier>{7ef2f8ba-9549-4753-8af1-d9aea9f79456}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Text\Dragon4">
-      <UniqueIdentifier>{a269f932-f334-49f2-b999-0fef78045fdd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Text\Jeaiii">
-      <UniqueIdentifier>{da6efe7d-076f-4fe6-a801-fc5d99a700e1}</UniqueIdentifier>
+    <Filter Include="Source\Text\DragonBox-1.1.2">
+      <UniqueIdentifier>{823678f3-8cdc-419f-a34a-7b7cddff31a6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Text\Ryu">
       <UniqueIdentifier>{6d6734f5-932c-4dcd-bb67-6a9b69db0f2e}</UniqueIdentifier>
@@ -130,9 +124,6 @@
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h">
       <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Errors\CanceledError.h">
-      <Filter>Include\Errors</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
       <Filter>Include\Errors</Filter>
@@ -289,9 +280,6 @@
     <ClCompile Include="Source\Collections\ShiftQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Errors\CanceledError.cpp">
-      <Filter>Source\Errors</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
@@ -309,12 +297,6 @@
     </ClCompile>
     <ClCompile Include="Source\Events\Event.cpp">
       <Filter>Source\Events</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\PosixApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\PosixApi.cpp">
-      <Filter>Source\Platform</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platform\LinuxFileApi.cpp">
       <Filter>Source\Platform</Filter>
@@ -415,47 +397,8 @@
     <ClCompile Include="Source\Settings\SettingsStore.cpp">
       <Filter>Source\Settings</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Text\Amartin\itoa.cpp">
-      <Filter>Source\Text\Amartin</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Text\Amartin\itoa.h">
-      <Filter>Source\Text\Amartin</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Text\Amartin\itoa_impl.h">
-      <Filter>Source\Text\Amartin</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Text\Dragon4\Dragon4.cpp">
-      <Filter>Source\Text\Dragon4</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Dragon4\Math.cpp">
-      <Filter>Source\Text\Dragon4</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Dragon4\PrintFloat.cpp">
-      <Filter>Source\Text\Dragon4</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Text\Dragon4\Dragon4.h">
-      <Filter>Source\Text\Dragon4</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Text\Dragon4\Math.h">
-      <Filter>Source\Text\Dragon4</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Text\Dragon4\PrintFloat.h">
-      <Filter>Source\Text\Dragon4</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Text\Dragon4\Standard.h">
-      <Filter>Source\Text\Dragon4</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Text\Jeaiii\int_to_chars_jeaiii.h">
-      <Filter>Source\Text\Jeaiii</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Text\Jeaiii\itoa_jeaiii.cpp">
-      <Filter>Source\Text\Jeaiii</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\Jeaiii\to_chars.cpp">
-      <Filter>Source\Text\Jeaiii</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Text\Jeaiii\to_text_from_integer.h">
-      <Filter>Source\Text\Jeaiii</Filter>
+    <ClInclude Include="Source\Text\DragonBox-1.1.2\dragonbox.h">
+      <Filter>Source\Text\DragonBox-1.1.2</Filter>
     </ClInclude>
     <ClCompile Include="Source\Text\Ryu\d2fixed.c">
       <Filter>Source\Text\Ryu</Filter>
@@ -514,6 +457,18 @@
     <ClCompile Include="Source\Text\Logger.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Text\NumberFormatter-dragonbox.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\NumberFormatter-jeaiii.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\NumberFormatter.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Text\NumberFormatter.h">
+      <Filter>Source\Text</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Text\ParserHelper.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
