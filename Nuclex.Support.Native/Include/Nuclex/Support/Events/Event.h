@@ -42,8 +42,9 @@ namespace Nuclex { namespace Support { namespace Events {
   /// <remarks>
   ///   <para>
   ///     This is the signal part of a standard signal/slot implementation. The name has been
-  ///     chosen because std::signal already defines the term 'signal' for something entirely
-  ///     different and the term 'event' is the second most common term for this kind of system.
+  ///     chosen because <code>std::signal</code> already defines the term 'signal' for
+  ///     an entirely thing and the term 'event' is the second most common term for this kind
+  ///     of system.
   ///   </para>
   ///   <para>
   ///     The design makes a few assumptions on the usage patterns it optimizes for. It assumes
@@ -111,6 +112,10 @@ namespace Nuclex { namespace Support { namespace Events {
   ///        (i.e. subscribe phase, then threads run, threads end, then unsubscribe phase)<br />
   ///     🛇 Lambda expressions can not be subscribers<br />
   ///        (adds huge runtime costs, see std::function, would have no way to unsubscribe)<br />
+  ///   </para>
+  ///   <para>
+  ///     If these restrictions are too much, consider <see cref="ConcurrentEvent" />, in which
+  ///     basically anything goes for a small price in performance.
   ///   </para>
   /// </remarks>
   template<typename TResult, typename... TArguments>

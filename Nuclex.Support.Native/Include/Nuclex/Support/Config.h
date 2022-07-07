@@ -161,4 +161,14 @@ License along with this library
 
 // --------------------------------------------------------------------------------------------- //
 
+#if defined(_MSC_VER)
+  #define NUCLEX_SUPPORT_CPU_YIELD _mm_pause()
+#elif defined(__arm__)
+  #define NUCLEX_SUPPORT_CPU_YIELD asm volatile("yield")
+#else
+  #define NUCLEX_SUPPORT_CPU_YIELD __builtin_ia32_pause()
+#endif
+
+// --------------------------------------------------------------------------------------------- //
+
 #endif // NUCLEX_SUPPORT_CONFIG_H

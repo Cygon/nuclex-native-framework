@@ -23,7 +23,6 @@ License along with this library
 
 #include "Nuclex/Support/Config.h"
 #include "Nuclex/Support/Events/Delegate.h"
-#include "Nuclex/Support/ScopeGuard.h"
 #include "Nuclex/Support/BitTricks.h"
 
 #include <cstddef> // for std::size_t
@@ -53,24 +52,23 @@ namespace Nuclex { namespace Support { namespace Events {
   ///     the concurrent event attempts the same while allowing free-threaded use.
   ///   </para>
   ///   <para>
-  ///     Like the single-threaded event, it assumes granular use, meaning you create many
-  ///     individual events rather than one big multi-purpose notification. It also assumes that
-  ///     events typically have only a small number of subscribers and that firing will happen
-  ///     vastly more often than subscription/unsubscription.
+  ///     Like the single-threaded event, it is optimized towards granular use, meaning you
+  ///     create many individual events rather than one big multi-purpose notification. It also
+  ///     assumes that events typically have none or only a small number of subscribers and
+  ///     is optimized for firing over subscription/unsubscription.
   ///   </para>
   ///   <para>
   ///     This concurrent event implementation can be freely used from any thread, including
   ///     simultaneous firing, subscription and unsubscription without any synchronization on
-  ///     the side the user of the event. Depending on your platform and C++ standard library,
-  ///     firing could be wait-free, but likely will use a spinlock around a piece of code
-  ///     covering just a few CPU cyles (two instructions ideally).
+  ///     the side of the user of the event. Firing uses a micro-spinlock around a piece of code
+  ///     covering just a few CPU cyles (two instructions ideally), so waits are highly unlikely
+  ///     and should be resolved in just a few cycles if they happen.
   ///   </para>
   ///   <para>
-  ///     A concurrent event should be equivalent in size to 1 shared_ptr on its own.
+  ///     A concurrent event should be equivalent in size to 3 pointers on its own.
   ///     It does not allocate any memory upon construction or firing, but will allocate
-  ///     a single memory block each time callbacks are subscribed or unsubscribed. Said memory
-  ///     block is the size of the std::shared_ptr reference count + two pointers + two more
-  ///     pointers per subscriber (overall typically 64 bytes + 16 bytes per subscriber).
+  ///     a memory block each time the number of subscribers passes a power of two.
+  ///     Said memory block is the size of 4 pointers + two more pointers per subscriber.
   ///   </para>
   ///   <para>
   ///     Usage example:
@@ -102,6 +100,20 @@ namespace Nuclex { namespace Support { namespace Events {
   ///         test.Emit(123, u8"Hello");
   ///       }
   ///     </code>
+  ///   </para>
+  ///   <para>
+  ///     Cheat sheet
+  ///   </para>
+  ///   <para>
+  ///     🛈 Optimized for granular events (many event instances w/few subscribers)<br />
+  ///     🛈 Optimized for fast broadcast performance over subscribe/unsubscribe<br />
+  ///     🛈 Two allocations per power of two reached by the subscriber count<br />
+  ///     ⚫ Can optionally collect return values from all event callbacks<br />
+  ///     ⚫ New subscribers can be added freely even during event broadcast<br />
+  ///     ⚫ Subscribers can freely unsubscribe anyone from within event callback<br />
+  ///     ⚫ For free-threaded use (anything allowed, any number of times simultaneously)<br />
+  ///     🛇 Lambda expressions can not be subscribers<br />
+  ///        (adds huge runtime costs, see std::function, would have no way to unsubscribe)<br />
   ///   </para>
   /// </remarks>
   template<typename TResult, typename... TArguments>
@@ -264,8 +276,7 @@ namespace Nuclex { namespace Support { namespace Events {
       public: BroadcastQueue(std::size_t capacity, std::size_t count) noexcept :
         ReferenceCount(1),
         Capacity(capacity),
-        Count(count),
-        Callbacks(/* leave undefined! */) {}
+        Count(count) {}
 
       /// <summary>Frees all memory owned by the broadcast queue</summary>
       public: ~BroadcastQueue() = default;
@@ -283,6 +294,53 @@ namespace Nuclex { namespace Support { namespace Events {
 
     #pragma endregion // struct BroadcastQueue
 
+    #pragma region class ReleaseBroadcastQueueScope
+
+    /// <summary>Decrements a queue's reference counter upon scope exit</summary>
+    class ReleaseBroadcastQueueScope {
+
+      /// <summary>Initializes a new broadcase queue reference releasing scope</summary>
+      /// <param name="self">Event to which the broadcast queue belongs (for recycling)</param>
+      /// <param name="queueToRelease">
+      ///   Queue that will be released and recycled in case the last reference is dropped
+      /// </param>
+      public: ReleaseBroadcastQueueScope(
+        const ConcurrentEvent &self, BroadcastQueue *queueToRelease
+      ) :
+        self(self),
+        queueToRelease(queueToRelease) {}
+
+      /// <summary>Decrements the queue's reference counter and possibly recycles it</summary>
+      public: ~ReleaseBroadcastQueueScope() {
+
+        // The spinlock does not need to be acquired here. If the queue is still assigned as
+        // the active subscriber list, the reference counter will not reach 0. Otherwise,
+        // it was already replaced by another thread, so we don't even need to check.
+        std::size_t totalReferences = this->queueToRelease->ReferenceCount.fetch_sub(
+          1, std::memory_order::memory_order_release
+        );
+
+        // Did we just release the last reference to the queue?
+        if(unlikely(totalReferences == 1)) {
+          BroadcastQueue *recycledQueue = this->self.recyclableSubscribers.exchange(
+            this->queueToRelease
+          );
+          if(likely(recycledQueue != nullptr)) {
+            freeBroadcastQueue(recycledQueue);
+          }
+        }
+
+      }
+
+      /// <summary>Event that wants to decrement the queue's reference counter</summary>
+      private: const ConcurrentEvent &self;
+      /// <summary>Queue whose reference counter will be decremented on scope exit</summary>
+      private: BroadcastQueue *queueToRelease;
+
+    };
+
+    #pragma endregion // class ReleaseBroadcastQueueScope
+
     /// <summary>
     ///   Allocates a new broadcast queue for the specified number of subscribers
     /// </summary>
@@ -299,7 +357,7 @@ namespace Nuclex { namespace Support { namespace Events {
       );
 
       std::size_t capacity;
-      if(subscriberCount < 4) {
+      if(subscriberCount < 5) {
         capacity = 4;
       } else {
         capacity = BitTricks::GetUpperPowerOfTwo(subscriberCount);
@@ -328,7 +386,24 @@ namespace Nuclex { namespace Support { namespace Events {
 
     /// <summary>Acquires the spinlock to access the subscriber queues</summary>
     /// <remarks>
-    ///   See https://rigtorp.se/spinlock/
+    ///   <para>
+    ///     Why are we implementing a manual spinlock here? It's essentially a rip-off of
+    ///     what std::atomic<std::shared_ptr>> does, acquire a spinlock for a very short period
+    ///     (2 or 3 machine instructions) to make grabbing a reference and incrementing
+    ///     its reference counter an atomic operation. Even under very high contention,
+    ///     it will only loop a bunch of times.
+    ///   </para>
+    ///   <para>
+    ///     If we relied std::shared_ptr, that would mean it has to acquire the spinlock often,
+    ///     even in situations where we can reason that one of the following must be true:
+    ///     * either the reference counter is not being decremented down to zero
+    ///     * or the object the reference counter is decremented for is abandoned.
+    ///     In short, in our special case, we can achieve correctness while doing fewer steps
+    ///     than a full std::shared_ptr would have to, avoiding a few spinlock accesses!
+    ///   </para>
+    ///   <para>
+    ///     For general spinlock implementation notes, see https://rigtorp.se/spinlock/
+    ///   </para>
     /// </remarks>
     private: inline void acquireSpinLock() const noexcept {
       for(;;) {
@@ -342,11 +417,7 @@ namespace Nuclex { namespace Support { namespace Events {
         while(this->spinLock.load(std::memory_order::memory_order_relaxed)) {
           // Issue X86 PAUSE or ARM YIELD instruction to reduce contention
           // between hyper-threads
-#if defined(_MSC_VER) // MSVC
-          _mm_pause();
-#else // GCC and clang
-          __builtin_ia32_pause();
-#endif
+          NUCLEX_SUPPORT_CPU_YIELD;
         }
 
       } // for(;;)
@@ -358,12 +429,6 @@ namespace Nuclex { namespace Support { namespace Events {
     }
 
     /// <summary>Micro-spinlock to synchronize access to the subscriber list + refcount</summary>
-    /// <remarks>
-    ///   Yes, this is used for a busy loop, just like modern mutex implementations (for
-    ///   a few thousand cycles at least) and std::atomic&lt;std::shared_ptr&lt;&gt;&gt;.
-    ///   We use it as a micro-spinlock only guarding 2-5 instructions, so contention should
-    ///   be really low.
-    /// </remarks>
     public: mutable std::atomic<bool> spinLock;
     /// <summary>Stores the current subscribers to the event</summary>
     public: std::atomic<BroadcastQueue *> subscribers;
@@ -383,7 +448,7 @@ namespace Nuclex { namespace Support { namespace Events {
   ConcurrentEvent<TResult(TArguments...)>::~ConcurrentEvent() {
 
     // Don't care about the spinlock, if the event is being destroyed, nobody is accessing
-    // it anymore (and if it was, it'll be a race between a thread and the destructor of
+    // it anymore (and if it was, it'll be a race between that thread and the destructor of
     // the class that owns the event, this humble destructor can do little about that anyway)
 
     BroadcastQueue *currentQueue = this->subscribers.load(
@@ -434,7 +499,7 @@ namespace Nuclex { namespace Support { namespace Events {
     // without touching anything else (anticipated zero-subscriber case)
     acquireSpinLock();
     BroadcastQueue *currentQueue = this->subscribers.load(
-      std::memory_order::memory_order_consume
+      std::memory_order::memory_order_consume // if carries dependency
     );
     if(likely(currentQueue == nullptr)) {
       releaseSpinLock();
@@ -447,30 +512,18 @@ namespace Nuclex { namespace Support { namespace Events {
     // There are subscribers, so the event needs to be fired and we have incremented
     // the queue's reference counter, requiring us to decrement it again
     {
-      // The spinlock does not need to be acquired here. If the queue is still assigned as
-      // the active subscriber list, the reference counter will not reach 0. Otherwise,
-      // it was already replaced by another thread, so we don't even need to check.
-      ON_SCOPE_EXIT {
-        std::size_t totalReferences = currentQueue->ReferenceCount.fetch_sub(
-          1, std::memory_order::memory_order_release
-        );
-        if(unlikely(totalReferences == 1)) { // We just released the last reference
-          currentQueue = this->recyclableSubscribers.exchange(currentQueue);
-          if(likely(currentQueue != nullptr)) {
-            freeBroadcastQueue(currentQueue);
-          }
-        }
-      };
+      ReleaseBroadcastQueueScope releaseActiveQueue(*this, currentQueue);
 
       // Actually fire the event by calling all the subscribers
       std::size_t subscriberCount = currentQueue->Count;
       results.reserve(subscriberCount);
       for(std::size_t index = 0; index < subscriberCount; ++index) {
         results.push_back(currentQueue->Callbacks[index](std::forward<TArguments>(arguments)...));
-        // We don't need to worry about queue edits within the callsbacks because
+        // We don't need to worry about queue edits within the callbacks because
         // it will result in a new broadcast queue being placed while we happily
-        // continue working with the copy in our std::shared_ptr.
+        // continue working with the immutable copy we hold a reference to.
       }
+
       return results;
     }
   }
@@ -487,7 +540,7 @@ namespace Nuclex { namespace Support { namespace Events {
     // without touching anything else (anticipated zero-subscriber case)
     acquireSpinLock();
     BroadcastQueue *currentQueue = this->subscribers.load(
-      std::memory_order::memory_order_consume
+      std::memory_order::memory_order_consume // if carries dependency
     );
     if(likely(currentQueue == nullptr)) {
       releaseSpinLock();
@@ -500,28 +553,15 @@ namespace Nuclex { namespace Support { namespace Events {
     // There are subscribers, so the event needs to be fired and we have incremented
     // the queue's reference counter, requiring us to decrement it again
     {
-      ON_SCOPE_EXIT {
-        // The spinlock does not need to be acquired here. If the queue is still assigned as
-        // the active subscriber list, the reference counter will not reach 0. Otherwise,
-        // it was already replaced by another thread, so we don't even need to check.
-        std::size_t totalReferences = currentQueue->ReferenceCount.fetch_sub(
-          1, std::memory_order::memory_order_release
-        );
-        if(unlikely(totalReferences == 1)) { // We just released the last reference
-          currentQueue = this->recyclableSubscribers.exchange(currentQueue);
-          if(likely(currentQueue != nullptr)) {
-            freeBroadcastQueue(currentQueue);
-          }
-        }
-      };
+      ReleaseBroadcastQueueScope releaseActiveQueue(*this, currentQueue);
 
       // Actually fire the event by calling all the subscribers
       std::size_t subscriberCount = currentQueue->Count;
       for(std::size_t index = 0; index < subscriberCount; ++index) {
         *results = currentQueue->Callbacks[index](std::forward<TArguments>(arguments)...);
-        // We don't need to worry about queue edits within the callsbacks because
+        // We don't need to worry about queue edits within the callbacks because
         // it will result in a new broadcast queue being placed while we happily
-        // continue working with the copy in our std::shared_ptr.
+        // continue working with the immutable copy we hold a reference to.
         ++results;
       }
     }
@@ -536,7 +576,7 @@ namespace Nuclex { namespace Support { namespace Events {
     // Get a hold of the current queue.
     acquireSpinLock();
     BroadcastQueue *currentQueue = this->subscribers.load(
-      std::memory_order::memory_order_consume
+      std::memory_order::memory_order_consume // if carries dependency
     );
     if(likely(currentQueue == nullptr)) {
       releaseSpinLock();
@@ -549,28 +589,15 @@ namespace Nuclex { namespace Support { namespace Events {
     // There are subscribers, so the event needs to be fired and we have incremented
     // the queue's reference counter, requiring us to decrement it again
     {
-      ON_SCOPE_EXIT {
-        // The spinlock does not need to be acquired here. If the queue is still assigned as
-        // the active subscriber list, the reference counter will not reach 0. Otherwise,
-        // it was already replaced by another thread, so we don't even need to check.
-        std::size_t totalReferences = currentQueue->ReferenceCount.fetch_sub(
-          1, std::memory_order::memory_order_release
-        );
-        if(unlikely(totalReferences == 1)) { // We just released the last reference
-          currentQueue = this->recyclableSubscribers.exchange(currentQueue);
-          if(likely(currentQueue != nullptr)) {
-            freeBroadcastQueue(currentQueue);
-          }
-        }
-      };
+      ReleaseBroadcastQueueScope releaseActiveQueue(*this, currentQueue);
 
       // Actually fire the event by calling all the subscribers
       std::size_t subscriberCount = currentQueue->Count;
       for(std::size_t index = 0; index < subscriberCount; ++index) {
         currentQueue->Callbacks[index](std::forward<TArguments>(arguments)...);
-        // We don't need to worry about queue edits within the callsbacks because
+        // We don't need to worry about queue edits within the callbacks because
         // it will result in a new broadcast queue being placed while we happily
-        // continue working with the copy in our std::shared_ptr.
+        // continue working with the immutable copy we hold a reference to.
       }
     }
 
@@ -590,7 +617,7 @@ namespace Nuclex { namespace Support { namespace Events {
       // Get a hold of the current queue.
       acquireSpinLock();
       BroadcastQueue *currentQueue = this->subscribers.load(
-        std::memory_order::memory_order_consume
+        std::memory_order::memory_order_consume // if carries dependency
       );
       if(likely(currentQueue == nullptr)) {
         releaseSpinLock();
@@ -600,6 +627,8 @@ namespace Nuclex { namespace Support { namespace Events {
         newQueue = this->recyclableSubscribers.exchange(nullptr);
         if(unlikely(newQueue == nullptr)) {
           newQueue = allocateBroadcastQueue(1);
+        } else {
+          newQueue->Count = 1;
         }
 
         newQueue->Callbacks[0] = delegate;
@@ -607,20 +636,7 @@ namespace Nuclex { namespace Support { namespace Events {
         currentQueue->ReferenceCount.fetch_add(1, std::memory_order::memory_order_release);
         releaseSpinLock();
 
-        ON_SCOPE_EXIT {
-          // The spinlock does not need to be acquired here. If the queue is still assigned as
-          // the active subscriber list, the reference counter will not reach 0. Otherwise,
-          // it was already replaced by another thread, so we don't even need to check.
-          std::size_t totalReferences = currentQueue->ReferenceCount.fetch_sub(
-            1, std::memory_order::memory_order_release
-          );
-          if(unlikely(totalReferences == 1)) { // We just released the last reference
-            currentQueue = this->recyclableSubscribers.exchange(currentQueue);
-            if(likely(currentQueue != nullptr)) {
-              freeBroadcastQueue(currentQueue);
-            }
-          }
-        };
+        ReleaseBroadcastQueueScope releaseActiveQueue(*this, currentQueue);
 
         // Obtain a new queue to fill the subscribers into, either by re-=using the event's
         // previous queue or by creating a new one
@@ -637,7 +653,7 @@ namespace Nuclex { namespace Support { namespace Events {
         }
 
         // This section is at-risk of leaking memory if it throws. I don't think a memcpy()
-        // equivalent call can throw, but if I'm mistaking, we need another scope guard here.
+        // equivalent call can throw, but if I'm mistaken, we need another scope guard here.
         std::copy_n(currentQueue->Callbacks, subscriberCount, newQueue->Callbacks);
         newQueue->Callbacks[subscriberCount] = delegate;
       } // else block, also decrements active queue's reference count upon scope xit
@@ -692,7 +708,7 @@ namespace Nuclex { namespace Support { namespace Events {
       // Get a hold of the current queue.
       acquireSpinLock();
       BroadcastQueue *currentQueue = this->subscribers.load(
-        std::memory_order::memory_order_consume
+        std::memory_order::memory_order_consume // if carries dependency
       );
       if(unlikely(currentQueue == nullptr)) {
         releaseSpinLock();
@@ -703,20 +719,7 @@ namespace Nuclex { namespace Support { namespace Events {
         currentQueue->ReferenceCount.fetch_add(1, std::memory_order::memory_order_release);
         releaseSpinLock();
 
-        ON_SCOPE_EXIT {
-          // The spinlock does not need to be acquired here. If the queue is still assigned as
-          // the active subscriber list, the reference counter will not reach 0. Otherwise,
-          // it was already replaced by another thread, so we don't even need to check.
-          std::size_t totalReferences = currentQueue->ReferenceCount.fetch_sub(
-            1, std::memory_order::memory_order_release
-          );
-          if(unlikely(totalReferences == 1)) { // We just released the last reference
-            currentQueue = this->recyclableSubscribers.exchange(currentQueue);
-            if(likely(currentQueue != nullptr)) {
-              freeBroadcastQueue(currentQueue);
-            }
-          }
-        };
+        ReleaseBroadcastQueueScope releaseActiveQueue(*this, currentQueue);
 
         BroadcastQueue *newQueue;
 
@@ -742,7 +745,7 @@ namespace Nuclex { namespace Support { namespace Events {
               std::copy_n(currentQueue->Callbacks, index, newQueue->Callbacks);
               std::copy_n(
                 currentQueue->Callbacks + index + 1,
-                currentSubscriberCount - index,
+                currentSubscriberCount - index - 1,
                 newQueue->Callbacks + index
               );
             }

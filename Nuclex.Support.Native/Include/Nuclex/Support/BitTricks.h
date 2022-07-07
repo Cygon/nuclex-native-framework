@@ -143,7 +143,7 @@ namespace Nuclex { namespace Support {
     /// <returns>The next random number after the seed value</returns>
     /// <remarks>
     ///   This is a blazingly fast method of generating random numbers, but the entropy
-    ///   is not very high. It's useful if one need to generate kilobytes or megabytes of
+    ///   is not very high. It's useful if one needs to generate kilobytes or megabytes of
     ///   semi-random data. Don't even think about using this with cryptographic algorithms!
     /// </remarks>
     public: NUCLEX_SUPPORT_API static constexpr std::uint32_t XorShiftRandom(std::uint32_t seed);
@@ -153,7 +153,7 @@ namespace Nuclex { namespace Support {
     /// <returns>The next random number after the seed value</returns>
     /// <remarks>
     ///   This is a blazingly fast method of generating random numbers, but the entropy
-    ///   is not very high. It's useful if one need to generate kilobytes or megabytes of
+    ///   is not very high. It's useful if one needs to generate kilobytes or megabytes of
     ///   semi-random data. Don't even think about using this with cryptographic algorithms!
     /// </remarks>
     public: NUCLEX_SUPPORT_API static constexpr std::uint64_t XorShiftRandom(std::uint64_t seed);
@@ -212,8 +212,8 @@ namespace Nuclex { namespace Support {
     // https://www.chessprogramming.org/BitScan#Bitscan_reverse
     // https://stackoverflow.com/questions/2589096/
     static const unsigned char deBruijnBitPosition[32] = {
-      31, 22, 30, 21, 18, 10, 29, 2, 20, 17, 15, 13, 9, 6, 28, 1,
-      23, 19, 11, 3, 16, 14, 7, 24, 12, 4, 8, 25, 5, 26, 27, 0
+      31, 22, 30, 21, 18, 10, 29,  2, 20, 17, 15, 13, 9,  6, 28, 1,
+      23, 19, 11,  3, 16, 14,  7, 24, 12,  4,  8, 25, 5, 26, 27, 0
     };
 
     value |= value >> 1;
@@ -239,10 +239,10 @@ namespace Nuclex { namespace Support {
 #else
     // https://stackoverflow.com/questions/21888140/
     static const unsigned char deBruijnBitPosition[64] = {
-      63, 16, 62, 7, 15, 36, 61, 3, 6, 14, 22, 26, 35, 47, 60, 2,
-      9, 5, 28, 11, 13, 21, 42, 19, 25, 31, 34, 40, 46, 52, 59, 1,
-      17, 8, 37, 4, 23, 27, 48, 10, 29, 12, 43, 20, 32, 41, 53, 18,
-      38, 24, 49, 30, 44, 33, 54, 39, 50, 45, 55, 51, 56, 57, 58, 0
+      63, 16, 62,  7, 15, 36, 61,  3,  6, 14, 22, 26, 35, 47, 60,  2,
+       9,  5, 28, 11, 13, 21, 42, 19, 25, 31, 34, 40, 46, 52, 59,  1,
+      17,  8, 37,  4, 23, 27, 48, 10, 29, 12, 43, 20, 32, 41, 53, 18,
+      38, 24, 49, 30, 44, 33, 54, 39, 50, 45, 55, 51, 56, 57, 58,  0
     };
 
     value |= value >> 1;
@@ -317,8 +317,8 @@ namespace Nuclex { namespace Support {
 #else
     // http://graphics.stanford.edu/~seander/bithacks.html#IntegerLogDeBruijn
     static const unsigned char deBruijnBitPosition[32] = {
-      0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
-      8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
+      0,  9,  1, 10, 13, 21,  2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
+      8, 12, 20, 28, 15, 17, 24,  7, 19, 27, 23,  6, 26,  5, 4, 31
     };
 
     value |= value >> 1;
@@ -344,10 +344,10 @@ namespace Nuclex { namespace Support {
 #else
     // https://stackoverflow.com/questions/21888140/
     static const unsigned char deBruijnBitPosition[64] = {
-      0, 47, 1, 56, 48, 27, 2, 60, 57, 49, 41, 37, 28, 16, 3, 61,
-      54, 58, 35, 52, 50, 42, 21, 44, 38, 32, 29, 23, 17, 11, 4, 62,
+       0, 47,  1, 56, 48, 27,  2, 60, 57, 49, 41, 37, 28, 16,  3, 61,
+      54, 58, 35, 52, 50, 42, 21, 44, 38, 32, 29, 23, 17, 11,  4, 62,
       46, 55, 26, 59, 40, 36, 15, 53, 34, 51, 20, 43, 31, 22, 10, 45,
-      25, 39, 14, 33, 19, 30, 9, 24, 13, 18, 8, 12, 7, 6, 5, 63
+      25, 39, 14, 33, 19, 30,  9, 24, 13, 18,  8, 12,  7,  6,  5, 63
     };
 
     value |= value >> 1;
@@ -365,7 +365,10 @@ namespace Nuclex { namespace Support {
 
   inline unsigned char BitTricks::GetLogBase10(std::uint32_t value) {
     static const std::uint32_t powersOfTen[10] = {
-      1U, 10U, 100U, 1000U, 10000U, 100000U, 1000000U, 10000000U, 100000000U, 1000000000U,
+                  1U,         10U,         100U,
+              1'000U,     10'000U,     100'000U,
+          1'000'000U, 10'000'000U, 100'000'000U,
+      1'000'000'000U
     };
 
     // http://graphics.stanford.edu/~seander/bithacks.html#IntegerLog10
@@ -377,10 +380,13 @@ namespace Nuclex { namespace Support {
 
   inline unsigned char BitTricks::GetLogBase10(std::uint64_t value) {
     static const std::uint64_t powersOfTen[20] = {
-      1ULL, 10ULL, 100ULL, 1000ULL, 10000ULL, 100000ULL, 1000000ULL, 10000000ULL,
-      100000000ULL, 1000000000ULL, 10000000000ULL, 100000000000ULL, 1000000000000ULL,
-      10000000000000ULL, 100000000000000ULL, 1000000000000000ULL, 10000000000000000ULL,
-      100000000000000000ULL, 1000000000000000000ULL, 10000000000000000000ULL
+                              1ULL,                         10ULL,                     100ULL,
+                          1'000ULL,                     10'000ULL,                 100'000ULL,
+                      1'000'000ULL,                 10'000'000ULL,             100'000'000ULL,
+                  1'000'000'000ULL,             10'000'000'000ULL,         100'000'000'000ULL,
+              1'000'000'000'000ULL,         10'000'000'000'000ULL,     100'000'000'000'000ULL,
+          1'000'000'000'000'000ULL,     10'000'000'000'000'000ULL, 100'000'000'000'000'000ULL,
+      1'000'000'000'000'000'000ULL, 10'000'000'000'000'000'000ULL
     };
 
     // http://graphics.stanford.edu/~seander/bithacks.html#IntegerLog10
