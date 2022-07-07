@@ -24,9 +24,48 @@ License along with this library
 #include "Nuclex/Support/Text/ParserHelper.h"
 #include "Nuclex/Support/Text/UnicodeHelper.h"
 
+#include <cstdlib> // for std::strtoul(), std::strtoull(), std::strtol(), std::strtoll()
+
 namespace {
 
   // ------------------------------------------------------------------------------------------- //
+
+#if defined(NUCLEX_SUPPORT_CUSTOM_PARSENUMBER)
+  /// <summary>Skips over an integer in textual form</summary>
+  /// <param name="start">Pointer to the start of the text, will be updated</param>
+  /// <param name="end">Pointer one past the last character of the text</param>
+  /// <returns>
+  ///   True if <paramref cref="start" /> has skipped a valid integer,
+  ///   false if not valid integer was found (and <paramref cref="start" /> contains junk)
+  /// </returns>
+  bool skipInteger(
+    const std::uint8_t *&start, const std::uint8_t *end
+  ) {
+
+    // An optional plus or minus sign can follow
+    if((*start == u8'+') || (*start == u8'-')) {
+      ++start;
+      if(start == end) { // ...but not only the plus/minus sign!
+        return false;
+      }
+    }
+
+    // If we now get a digit, we can already deliver an integer!
+    if(std::isdigit(*start)) {
+      ++start;
+    }
+    while(start != end) {
+      if(!std::isdigit(*start)) {
+        break;
+      }
+      ++start;
+    }
+
+    return true;
+
+  }
+#endif // defined(NUCLEX_SUPPORT_CUSTOM_PARSENUMBER)
+
   // ------------------------------------------------------------------------------------------- //
 
 } // anonymous namespace
@@ -50,6 +89,81 @@ namespace Nuclex { namespace Support { namespace Text {
       }
     }
   }
+
+  // ------------------------------------------------------------------------------------------- //
+#if defined(NUCLEX_SUPPORT_CUSTOM_PARSENUMBER)
+
+  template<>
+  std::optional<std::uint32_t> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  ) {
+    const std::uint8_t *firstNonSpace = start;
+
+    // Skip whitespaces at the beginning if there are any
+    SkipWhitespace(firstNonSpace, end);
+    if(firstNonSpace == end) {
+      return false;
+    }
+
+    // Now look for an integer
+    const std::uint8_t *current = firstNonSpace;
+    if(skipInteger(current)) {
+      start = current;
+      if(*firstNonSpace == '-') {
+        return static_cast<std::uint32_t>(std::strtoll(firstNonSpace, end, 10));
+      } else {
+        return static_cast<std::uint32_t>(std::strtoul(firstNonSpace, end, 10));
+      }
+    } else {
+      return std::optional<std::uint32_t>();
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<>
+  std::optional<std::int32_t> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  ) {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<>
+  std::optional<std::uint64_t> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  ) {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<>
+  std::optional<std::int64_t> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  ) {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<>
+  std::optional<float> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  ) {
+    throw u8"Not implemented yet";
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<>
+  std::optional<double> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  ) {
+    throw u8"Not implemented yet";
+  }
+#endif // defined(NUCLEX_SUPPORT_CUSTOM_PARSENUMBER)
 
   // ------------------------------------------------------------------------------------------- //
 

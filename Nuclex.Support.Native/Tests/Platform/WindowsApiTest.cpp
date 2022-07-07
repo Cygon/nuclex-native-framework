@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "../Source/Platform/WindowsApi.h"
+#include "../../Source/Platform/WindowsApi.h"
 
 #include <gtest/gtest.h>
 

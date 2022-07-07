@@ -86,11 +86,11 @@ namespace Nuclex { namespace Support { namespace Settings {
         std::size_t readByteCount = Platform::LinuxFileApi::Read(
           fileDescriptor, contents.data() + offset, 4096
         );
-        offset += readByteCount;
         if(readByteCount == 0) { // 0 bytes are only returned at the end of the file
           contents.resize(offset); // drop the 4k we added for appending
           break;
         } else { // 1 or more bytes returned, increase buffer for another round
+          offset += readByteCount;
           contents.resize(offset + 4096); // extend so that 4k bytes are vailable again
         }
       }
@@ -105,11 +105,11 @@ namespace Nuclex { namespace Support { namespace Settings {
         std::size_t readByteCount = Platform::WindowsFileApi::Read(
           fileHandle, contents.data() + offset, 4096
         );
-        offset += readByteCount;
         if(readByteCount == 0) { // 0 bytes are only returned at the end of the file
           contents.resize(offset);
           break;
         } else { // 1 or more bytes returned, increase buffer for another round
+          offset += readByteCount;
           contents.resize(offset + 4096); // extend so that 4k bytes are vailable again
         }
       }
@@ -124,11 +124,11 @@ namespace Nuclex { namespace Support { namespace Settings {
         std::size_t readByteCount = Platform::PosixFileApi::Read(
           file, contents.data() + offset, 4096
         );
-        offset += readByteCount;
         if(readByteCount == 0) { // 0 bytes are only returned at the end of the file
           contents.resize(offset);
           break;
         } else { // 1 or more bytes returned, increase buffer for another round
+          offset += readByteCount;
           contents.resize(offset + 4096); // extend so that 4k bytes are vailable again
         }
       }

@@ -21,7 +21,7 @@ License along with this library
 // If the library is compiled as a DLL, this ensures symbols are exported
 #define NUCLEX_SUPPORT_SOURCE 1
 
-#include "../Source/Platform/WindowsProcessApi.h"
+#include "../../Source/Platform/WindowsProcessApi.h"
 
 #if defined(NUCLEX_SUPPORT_WINDOWS)
 

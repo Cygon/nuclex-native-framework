@@ -55,12 +55,17 @@ namespace {
       return std::wstring();
     }
 
+    // https://docs.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=cmd
+    // https://docs.microsoft.com/en-us/dotnet/standard/io/file-path-formats#example-ways-to-refer-to-the-same-file
+    //
     // Valid inputs
     //   - file.txt                      -> \\?\file.txt
     //   - D:/dir/file.txt               -> \\?\D:\dir\file.txt
     //   - \\Server\share\file.txt       -> \\?\UNC\Server\share\file.txt
-    //   - \\?\D:\file.txt               -> \\?\D:\file.txt
+    //   - \\?\D:\file.txt               -> (keep)
     //   - \\?\UNC\Server\share\file.txt -> (keep)
+    //   - \\.\D:\file.txt               -> (keep) // because the user may have their reasons
+    //   - \\.\UNC\Server\file.txt       -> (keep) // because the user may have their reasons
 /*
     std::string::size_type length = utf8Path.length();
     if(length >= 3) {

@@ -58,9 +58,9 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(ParserHelperTest, CanSkipWhitespaces) {
-    const char text[] = u8"\t Hellø Ünicøde Wórld ";
-    const std::uint8_t *start = reinterpret_cast<const std::uint8_t *>(text);
-    const std::uint8_t *end = start + sizeof(text);
+    std::string text(u8"\t Hellø Ünicøde Wórld ");
+    const std::uint8_t *start = reinterpret_cast<const std::uint8_t *>(text.c_str());
+    const std::uint8_t *end = start + text.length();
 
     // Beginning w/multiple whitespaces
     {

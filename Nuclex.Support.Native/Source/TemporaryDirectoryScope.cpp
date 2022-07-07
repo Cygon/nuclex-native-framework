@@ -262,7 +262,9 @@ namespace Nuclex { namespace Support {
       assert((result != FALSE) && u8"Temporary directory scope file is deleted successfully");
     }
 #else
-    int result = ::nftw(this->path.c_str(), removeFileOrDirectoryCallback, 64, FTW_DEPTH | FTW_PHYS);
+    int result = ::nftw(
+      this->path.c_str(), removeFileOrDirectoryCallback, 64, FTW_DEPTH | FTW_PHYS
+    );
     if(unlikely(result != 0)) {
       int errorNumber = errno;
 

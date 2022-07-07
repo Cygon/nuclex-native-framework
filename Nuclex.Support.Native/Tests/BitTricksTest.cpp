@@ -199,6 +199,24 @@ namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(BitTricksTest, LogBase2Of32BitsValueIsCorrect) {
+    std::mt19937 randomNumberGenerator;
+    std::uniform_int_distribution<std::uint32_t> randomNumberDistribution32;
+
+    for(std::size_t index = 0; index < 1'000; ++index) {
+      std::uint32_t randomValue = static_cast<std::uint32_t>(
+        randomNumberDistribution32(randomNumberGenerator)
+      );
+
+      EXPECT_EQ(
+        static_cast<std::uint32_t>(std::log2(static_cast<double>(randomValue))),
+        BitTricks::GetLogBase2(randomValue)
+      );
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   TEST(BitTricksTest, CanGetLogBase2Of64BitsValue) {
     for(std::size_t index = 0; index < 64; ++index) {
       if(index >= 1) {
@@ -210,6 +228,24 @@ namespace Nuclex { namespace Support {
       EXPECT_EQ(
         index,
         BitTricks::GetLogBase2(std::uint64_t(1ULL << index))
+      );
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(BitTricksTest, LogBase2Of64BitsValueIsCorrect) {
+    std::mt19937_64 randomNumberGenerator;
+    std::uniform_int_distribution<std::uint64_t> randomNumberDistribution64;
+
+    for(std::size_t index = 0; index < 1'000; ++index) {
+      std::uint64_t randomValue = static_cast<std::uint64_t>(
+        randomNumberDistribution64(randomNumberGenerator)
+      );
+
+      EXPECT_EQ(
+        static_cast<std::uint64_t>(std::log2(static_cast<double>(randomValue))),
+        BitTricks::GetLogBase2(randomValue)
       );
     }
   }
@@ -230,6 +266,24 @@ namespace Nuclex { namespace Support {
 
   // ------------------------------------------------------------------------------------------- //
 
+  TEST(BitTricksTest, LogBase10Of32BitsValueIsCorrect) {
+    std::mt19937 randomNumberGenerator;
+    std::uniform_int_distribution<std::uint32_t> randomNumberDistribution32;
+
+    for(std::size_t index = 0; index < 1'000; ++index) {
+      std::uint32_t randomValue = static_cast<std::uint32_t>(
+        randomNumberDistribution32(randomNumberGenerator)
+      );
+
+      EXPECT_EQ(
+        static_cast<std::uint32_t>(std::log10(static_cast<double>(randomValue))),
+        BitTricks::GetLogBase10(randomValue)
+      );
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
   TEST(BitTricksTest, CanGetLogBase10Of64BitsValue) {
     EXPECT_EQ(0U, BitTricks::GetLogBase10(std::uint64_t(1)));
 
@@ -239,6 +293,24 @@ namespace Nuclex { namespace Support {
 
       EXPECT_EQ(log10 - 1, BitTricks::GetLogBase10(nextLower));
       EXPECT_EQ(log10, BitTricks::GetLogBase10(nextHigher));
+    }
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  TEST(BitTricksTest, LogBase10Of64BitsValueIsCorrect) {
+    std::mt19937_64 randomNumberGenerator;
+    std::uniform_int_distribution<std::uint64_t> randomNumberDistribution64;
+
+    for(std::size_t index = 0; index < 1'000; ++index) {
+      std::uint64_t randomValue = static_cast<std::uint64_t>(
+        randomNumberDistribution64(randomNumberGenerator)
+      );
+
+      EXPECT_EQ(
+        static_cast<std::uint64_t>(std::log10(static_cast<double>(randomValue))),
+        BitTricks::GetLogBase10(randomValue)
+      );
     }
   }
 

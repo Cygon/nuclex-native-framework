@@ -37,7 +37,7 @@ namespace Nuclex { namespace Support {
   ///   Whatever you do, only use this to interface with scripting languages or where
   ///   it really makes sense. C++ is not a dynamically typed language and a template-based
   ///   design is always a better choice. If you need to design interfaces that pass
-  ///   changing types to internal implementations, consider
+  ///   platform-dependent types to internal implementations, consider
   ///   the <see cref="std::any" /> class instead.
   /// </remarks>
   class NUCLEX_SUPPORT_TYPE Variant {

@@ -103,6 +103,7 @@ namespace Nuclex { namespace Support { namespace Events {
   TEST(ConcurrentEventTest, ConcurrentEventsCanBeCreated) {
     EXPECT_NO_THROW(
       ConcurrentEvent<void(int something)> test;
+      (void)test;
     );
   }
 

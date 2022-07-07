@@ -43,9 +43,11 @@ namespace Nuclex { namespace Support { namespace Services {
   const std::any &ServiceContainer::Get(const std::type_info &serviceType) const {
     ServiceMap::const_iterator iterator = this->services.find(&serviceType);
     if(iterator == this->services.end()) {
-      std::string message(u8"Service of type '");
+      std::string message;
+      message.reserve(17 + 32 + 13);
+      message.append(u8"Service of type '", 17);
       message.append(serviceType.name());
-      message.append(u8"' not present");
+      message.append(u8"' not present", 13);
       throw std::logic_error(message);
     }
 
@@ -68,9 +70,11 @@ namespace Nuclex { namespace Support { namespace Services {
   void ServiceContainer::Add(const std::type_info &serviceType, const std::any &service) {
     ServiceMap::const_iterator iterator = this->services.find(&serviceType);
     if(iterator != this->services.end()) {
-      std::string message(u8"Service type '");
+      std::string message;
+      message.reserve(14 + 32 + 15);
+      message.append(u8"Service type '", 14);
       message.append(serviceType.name());
-      message.append(u8"' already added");
+      message.append(u8"' already added", 15);
       throw std::logic_error(message);
     }
 

@@ -34,7 +34,7 @@ License along with this library
 
 // IDEA: Provide second constructor with unique_ptr that transfers memory ownership
 //   This could, perhaps, save on a few allocations
-//   Downside is that ther parse would have to support two different allocation models
+//   Downside is that the parser would have to support two different allocation models
 
 namespace Nuclex { namespace Support { namespace Settings {
 

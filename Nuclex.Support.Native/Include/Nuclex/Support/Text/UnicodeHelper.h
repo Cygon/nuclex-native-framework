@@ -395,7 +395,7 @@ namespace Nuclex { namespace Support { namespace Text {
       }
     }
 
-    // Invalid character encountered oder ran out of input
+    // Invalid character encountered or ran out of input
     return char32_t(-1);
   }
 

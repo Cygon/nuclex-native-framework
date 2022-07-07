@@ -36,6 +36,15 @@ License along with this library
 
 #include <cassert> // for assert()
 
+// IDEA: Use Unicode symbols rather than writing the severity
+//
+// 🛈 for information
+// ⚠ for warning (this is way too small with my font?)
+// ⛔ for errors
+//
+// These all look inconsistent, non-proportional and hard to distinguish.
+// Idea canned for now.
+
 namespace {
 
   // ------------------------------------------------------------------------------------------- //
