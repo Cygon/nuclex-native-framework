@@ -18,15 +18,31 @@ for buildMode in Debug Release; do
 
 	# Let CMake build a Makefile or a Ninja build script
 	if [ $# -ge 1 ] && [ $1 == "ninja" ]; then
-		cmake -B obj/cmake-$buildMode -DCMAKE_BUILD_TYPE=$buildMode -GNinja
+		cmake \
+			-B obj/cmake-$buildMode \
+			-D CMAKE_BUILD_TYPE=$buildMode \
+			-D BUILD_UNIT_TESTS=ON \
+			-D BUILD_BENCHMARK=ON \
+			-D BENCHMARK_THIRD_PARTY_LIBRARIES=OFF \
+			-GNinja
 	else
-		cmake -B obj/cmake-$buildMode -DCMAKE_BUILD_TYPE=$buildMode
+		cmake \
+			-B obj/cmake-$buildMode \
+			-D CMAKE_BUILD_TYPE=$buildMode \
+			-D BUILD_UNIT_TESTS=ON \
+			-D BUILD_BENCHMARK=ON \
+			-D BENCHMARK_THIRD_PARTY_LIBRARIES=OFF
 	fi
 
 	# Compile the binary
-	cmake --build obj/cmake-$buildMode --config $buildMode --parallel $processorCount
+	cmake \
+		--build obj/cmake-$buildMode \
+		--config $buildMode \
+		--parallel $processorCount
 
 	# Put build artifacts in ./bin/linux-gcc9.2-amd64-release/ or similar
-	cmake --install obj/cmake-$buildMode --config $buildMode
+	cmake \
+		--install obj/cmake-$buildMode \
+		--config $buildMode
 
 done

@@ -22,15 +22,32 @@ FOR %%m IN (Debug Release) DO (
 	REM a 64-bit build.
 	REM
 	IF "%1"=="ninja" (
-		cmake -B obj\cmake-%%m -DCMAKE_BUILD_TYPE=%%m -GNinja
+		cmake ^
+			-B obj\cmake-%%m ^
+			-D CMAKE_BUILD_TYPE=%%m ^
+			-D BUILD_UNIT_TESTS=ON ^
+			-D BUILD_BENCHMARK=ON ^
+			-D BENCHMARK_THIRD_PARTY_LIBRARIES=OFF ^
+			-GNinja
 	) ELSE (
-		cmake -B obj\cmake-%%m -DCMAKE_BUILD_TYPE=%%m -DCMAKE_GENERATOR_PLATFORM=x64
+		cmake ^
+			-B obj\cmake-%%m ^
+			-D CMAKE_BUILD_TYPE=%%m ^
+			-D CMAKE_GENERATOR_PLATFORM=x64 ^
+			-D BUILD_UNIT_TESTS=ON ^
+			-D BUILD_BENCHMARK=ON ^
+			-D BENCHMARK_THIRD_PARTY_LIBRARIES=OFF
 	)
 
 	REM Compile the binary
-	cmake --build obj\cmake-%%m --config %%m --parallel %processorCount%
+	cmake ^
+		--build obj\cmake-%%m ^
+		--config %%m ^
+		--parallel %processorCount%
 
 	REM Put build artifacts in ./bin/windows-msvc14.1-amd64-release/ or similar
-	cmake --install obj\cmake-%%m --config %%m
+	cmake ^
+		--install obj\cmake-%%m ^
+		--config %%m
 
 )
