@@ -69,39 +69,50 @@
     <Filter Include="Source\Threading">
       <UniqueIdentifier>{c3c71559-2291-4f45-8938-c3cf232c87c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tests">
-      <UniqueIdentifier>{6bba9bc0-cf59-4753-8206-8b3ee0c353d1}</UniqueIdentifier>
+    <Filter Include="Benchmark">
+      <UniqueIdentifier>{01f77932-4baa-465e-bd7b-bcef0e3d21a5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tests\Collections">
-      <UniqueIdentifier>{dfcecd36-6a9a-4984-9d82-dbb40469135e}</UniqueIdentifier>
+    <Filter Include="Benchmark\Events">
+      <UniqueIdentifier>{41770c00-5f61-477c-8c52-468257b084b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tests\Events">
-      <UniqueIdentifier>{8d3a2c7c-0eac-4fd9-93e8-cf42d1a55f7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tests\Services">
-      <UniqueIdentifier>{0284c8eb-686e-418f-a221-c574bc42ea8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tests\Settings">
-      <UniqueIdentifier>{ed2b2723-dbc9-4e61-ab6a-a8e94062406b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tests\Text">
-      <UniqueIdentifier>{e379eb40-5772-47b9-96be-58023afd7cd0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tests\Threading">
-      <UniqueIdentifier>{2781deb4-4664-4b67-a3ae-7d695e2ed2fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tests\Threading\Posix">
-      <UniqueIdentifier>{3fb52f4d-b40a-42d2-987e-587fef746165}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tests\Threading\Windows">
-      <UniqueIdentifier>{6892e1f6-d6ad-4ee8-b79f-22b0fe04f30d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tests\Platform">
-      <UniqueIdentifier>{58263473-d1ad-4d79-8851-ed0abea806d6}</UniqueIdentifier>
+    <Filter Include="Benchmark\Text">
+      <UniqueIdentifier>{7a44a823-dc62-4c62-90c0-80cd15deed96}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Platform">
-      <UniqueIdentifier>{41337d1c-187d-4d7b-8eea-9eb521d00b08}</UniqueIdentifier>
+      <UniqueIdentifier>{4ba97360-63bc-4b0c-9b62-77b6d23382a0}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Benchmarks\Text\AmdnItoaBenchmark.cpp">
+      <Filter>Benchmark\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Benchmarks\Text\IntegerToStringBenchmark.cpp">
+      <Filter>Benchmark\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Benchmarks\Text\JeaiiiItoaBenchmark.cpp">
+      <Filter>Benchmark\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Benchmarks\Text\JeaiiiLutItoaBenchmark.cpp">
+      <Filter>Benchmark\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Benchmarks\Text\NumberFormatterBenchmark.cpp">
+      <Filter>Benchmark\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Benchmarks\Events\BoostSignalsBenchmark.cpp">
+      <Filter>Benchmark\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Benchmarks\Events\EventBenchmark.cpp">
+      <Filter>Benchmark\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Benchmarks\Events\LSignalBenchmark.cpp">
+      <Filter>Benchmark\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Benchmarks\Events\NanoSignalSlotBenchmark.cpp">
+      <Filter>Benchmark\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Benchmarks\BenchmarkMain.cpp">
+      <Filter>Benchmark</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\blockingconcurrentqueue.h">
@@ -119,9 +130,6 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentMap.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
@@ -135,9 +143,6 @@
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentSet.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
@@ -159,12 +164,6 @@
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\StackArray.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\Variegator.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\CanceledError.h">
@@ -224,12 +223,6 @@
     <ClInclude Include="Include\Nuclex\Support\Settings\SettingsStore.h">
       <Filter>Include\Settings</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\CommandLine.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\CommandLineArgument.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
@@ -278,16 +271,10 @@
     <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h">
       <Filter>Include\Threading</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Any.h">
-      <Filter>Include</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\BitTricks.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Config.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Optional.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\ScopeGuard.h">
@@ -313,16 +300,10 @@
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\ConcurrentMap.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Collections\ConcurrentSet.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\DynamicArray.cpp">
@@ -346,12 +327,6 @@
     <ClCompile Include="Source\Collections\ShiftQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\StackArray.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Collections\Variegator.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Errors\CanceledError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
@@ -372,12 +347,6 @@
     </ClCompile>
     <ClCompile Include="Source\Events\Event.cpp">
       <Filter>Source\Events</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Platform\PosixApi.h">
-      <Filter>Source\Platform</Filter>
-    </ClInclude>
-    <ClCompile Include="Source\Platform\PosixApi.cpp">
-      <Filter>Source\Platform</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platform\LinuxFileApi.cpp">
       <Filter>Source\Platform</Filter>
@@ -529,12 +498,6 @@
     <ClInclude Include="Source\Text\Ryu\ryu_parse.h">
       <Filter>Source\Text\Ryu</Filter>
     </ClInclude>
-    <ClCompile Include="Source\Text\CommandLine.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\CommandLineArgument.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Text\LexicalAppend.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
@@ -613,16 +576,10 @@
     <ClInclude Include="Source\Threading\ThreadPoolTaskPool.h">
       <Filter>Source\Threading</Filter>
     </ClInclude>
-    <ClCompile Include="Source\Any.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\BitTricks.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Config.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Optional.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\ScopeGuard.cpp">
@@ -639,167 +596,6 @@
     </ClCompile>
     <ClCompile Include="Source\VariantType.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Tests\Collections\BufferTest.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClInclude Include="Tests\Collections\BufferTest.h">
-      <Filter>Tests\Collections</Filter>
-    </ClInclude>
-    <ClCompile Include="Tests\Collections\ConcurrentBufferTest.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClInclude Include="Tests\Collections\ConcurrentBufferTest.h">
-      <Filter>Tests\Collections</Filter>
-    </ClInclude>
-    <ClCompile Include="Tests\Collections\ConcurrentQueueTest.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Collections\ConcurrentRingBufferTest_MPMC.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Collections\ConcurrentRingBufferTest_MPSC.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Collections\ConcurrentRingBufferTest_SPSC.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Collections\DynamicArrayTest.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Collections\RingQueueDeathTest.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Collections\RingQueueTest.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Collections\ShiftQueueTest.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Collections\ShiftQueueDeathTest.cpp">
-      <Filter>Tests\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Events\ConcurrentEventTests.cpp">
-      <Filter>Tests\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Events\DelegateTests.cpp">
-      <Filter>Tests\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Events\EventTests.cpp">
-      <Filter>Tests\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Platform\PosixApiTest.cpp">
-      <Filter>Tests\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Platform\PosixFileApiTest.cpp">
-      <Filter>Tests\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Platform\PosixProcessApiTest.cpp">
-      <Filter>Tests\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Platform\PosixTimeApiTest.cpp">
-      <Filter>Tests\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Platform\WindowsApiTest.cpp">
-      <Filter>Tests\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Platform\WindowsPathApiTest.cpp">
-      <Filter>Tests\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Platform\WindowsProcessApiTest.cpp">
-      <Filter>Tests\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Platform\WindowsRegistryApiTest.cpp">
-      <Filter>Tests\Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Services\LazyServiceInjectorTest.cpp">
-      <Filter>Tests\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Services\ServiceContainerTest.cpp">
-      <Filter>Tests\Services</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Settings\IniDocumentModelTest.cpp">
-      <Filter>Tests\Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Settings\IniSettingsStoreTest.cpp">
-      <Filter>Tests\Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Settings\MemorySettingsStoreTest.cpp">
-      <Filter>Tests\Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Settings\RegistrySettingsStoreTest.cpp">
-      <Filter>Tests\Settings</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\LexicalCastTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\LexicalAppendTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\ParserHelperTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\QuantityFormatterTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\RollingLoggerTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\StringConverterTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\StringMatcherTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Text\UnicodeHelperTest.cpp">
-      <Filter>Tests\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\LatchTest.cpp">
-      <Filter>Tests\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\GateTest.cpp">
-      <Filter>Tests\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\ProcessTest.cpp">
-      <Filter>Tests\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\SemaphoreBenchmark.cpp">
-      <Filter>Tests\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\SemaphoreTest.cpp">
-      <Filter>Tests\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\ThreadPoolTaskPoolTest.cpp">
-      <Filter>Tests\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\ThreadPoolTest.cpp">
-      <Filter>Tests\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\Threading\ThreadTest.cpp">
-      <Filter>Tests\Threading</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\AnyTests.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\BitTricksTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\OptionalTests.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\ScopeGuardTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\TemporaryDirectoryScopeTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\TemporaryFileScopeTest.cpp">
-      <Filter>Tests</Filter>
-    </ClCompile>
-    <ClCompile Include="Tests\VariantTests.cpp">
-      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

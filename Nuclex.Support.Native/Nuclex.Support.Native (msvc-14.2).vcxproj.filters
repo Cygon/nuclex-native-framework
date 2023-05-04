@@ -18,7 +18,7 @@
       <UniqueIdentifier>{bb7bb4c9-39c3-4ac7-b033-c752c0cec4d7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Collections\MoodyCamel">
-      <UniqueIdentifier>{c5c67ac2-62c5-4276-b1d8-45cc243b372d}</UniqueIdentifier>
+      <UniqueIdentifier>{b3440a33-c01d-4515-be3d-2d530e22b226}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Errors">
       <UniqueIdentifier>{0efb8298-425d-438c-ac9c-e1aba6120891}</UniqueIdentifier>
@@ -30,7 +30,7 @@
       <UniqueIdentifier>{a35a1321-4e93-4a53-bc8a-e98ab6a1e528}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Settings">
-      <UniqueIdentifier>{79905ad7-8778-4f73-8bc1-5c0f7973b1b0}</UniqueIdentifier>
+      <UniqueIdentifier>{ec970cff-00fc-4d8a-8e4a-1b4587ec855d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Text">
       <UniqueIdentifier>{3ae3b2e0-1fd9-477a-9fc9-1eb06bd74a6b}</UniqueIdentifier>
@@ -55,13 +55,10 @@
       <UniqueIdentifier>{8776ca34-6ac1-43ca-9e2f-723d4bc5843b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Settings">
-      <UniqueIdentifier>{4820b6d0-4bd4-4837-9152-c4201b241226}</UniqueIdentifier>
+      <UniqueIdentifier>{1c7a2606-a660-4cff-abaa-ce94ce1d187b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Text">
       <UniqueIdentifier>{f20ce72c-f037-4bfc-8e47-a38db78850de}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Text\DragonBox-1.1.2">
-      <UniqueIdentifier>{823678f3-8cdc-419f-a34a-7b7cddff31a6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Text\Ryu">
       <UniqueIdentifier>{6d6734f5-932c-4dcd-bb67-6a9b69db0f2e}</UniqueIdentifier>
@@ -69,50 +66,12 @@
     <Filter Include="Source\Threading">
       <UniqueIdentifier>{c3c71559-2291-4f45-8938-c3cf232c87c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Benchmark">
-      <UniqueIdentifier>{01f77932-4baa-465e-bd7b-bcef0e3d21a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Benchmark\Events">
-      <UniqueIdentifier>{41770c00-5f61-477c-8c52-468257b084b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Benchmark\Text">
-      <UniqueIdentifier>{7a44a823-dc62-4c62-90c0-80cd15deed96}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Platform">
-      <UniqueIdentifier>{4ba97360-63bc-4b0c-9b62-77b6d23382a0}</UniqueIdentifier>
+      <UniqueIdentifier>{41337d1c-187d-4d7b-8eea-9eb521d00b08}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Benchmarks\Text\AmdnItoaBenchmark.cpp">
-      <Filter>Benchmark\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Benchmarks\Text\IntegerToStringBenchmark.cpp">
-      <Filter>Benchmark\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Benchmarks\Text\JeaiiiItoaBenchmark.cpp">
-      <Filter>Benchmark\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Benchmarks\Text\JeaiiiLutItoaBenchmark.cpp">
-      <Filter>Benchmark\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Benchmarks\Text\NumberFormatterBenchmark.cpp">
-      <Filter>Benchmark\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Benchmarks\Events\BoostSignalsBenchmark.cpp">
-      <Filter>Benchmark\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Benchmarks\Events\EventBenchmark.cpp">
-      <Filter>Benchmark\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Benchmarks\Events\LSignalBenchmark.cpp">
-      <Filter>Benchmark\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Benchmarks\Events\NanoSignalSlotBenchmark.cpp">
-      <Filter>Benchmark\Events</Filter>
-    </ClCompile>
-    <ClCompile Include="Benchmarks\BenchmarkMain.cpp">
-      <Filter>Benchmark</Filter>
-    </ClCompile>
+    <Filter Include="Source\Text\DragonBox-1.1.2">
+      <UniqueIdentifier>{823678f3-8cdc-419f-a34a-7b7cddff31a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\blockingconcurrentqueue.h">
@@ -130,9 +89,6 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentMap.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
@@ -146,9 +102,6 @@
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentSet.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
@@ -170,12 +123,6 @@
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\StackArray.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\Variegator.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\CanceledError.h">
@@ -235,12 +182,6 @@
     <ClInclude Include="Include\Nuclex\Support\Settings\SettingsStore.h">
       <Filter>Include\Settings</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\CommandLine.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Text\CommandLineArgument.h">
-      <Filter>Include\Text</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
@@ -289,16 +230,10 @@
     <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h">
       <Filter>Include\Threading</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Any.h">
-      <Filter>Include</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\BitTricks.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Config.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Optional.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\ScopeGuard.h">
@@ -324,16 +259,10 @@
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\ConcurrentMap.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Collections\ConcurrentSet.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\DynamicArray.cpp">
@@ -357,12 +286,6 @@
     <ClCompile Include="Source\Collections\ShiftQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\StackArray.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Collections\Variegator.cpp">
-      <Filter>Source\Collections</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Errors\CanceledError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
@@ -383,6 +306,12 @@
     </ClCompile>
     <ClCompile Include="Source\Events\Event.cpp">
       <Filter>Source\Events</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\PosixApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\PosixApi.cpp">
+      <Filter>Source\Platform</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platform\LinuxFileApi.cpp">
       <Filter>Source\Platform</Filter>
@@ -534,12 +463,6 @@
     <ClInclude Include="Source\Text\Ryu\ryu_parse.h">
       <Filter>Source\Text\Ryu</Filter>
     </ClInclude>
-    <ClCompile Include="Source\Text\CommandLine.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Text\CommandLineArgument.cpp">
-      <Filter>Source\Text</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Text\LexicalAppend.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
@@ -618,16 +541,10 @@
     <ClInclude Include="Source\Threading\ThreadPoolTaskPool.h">
       <Filter>Source\Threading</Filter>
     </ClInclude>
-    <ClCompile Include="Source\Any.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\BitTricks.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Config.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Optional.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\ScopeGuard.cpp">
