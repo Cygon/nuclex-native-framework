@@ -82,6 +82,8 @@ namespace {
     const Nuclex::Pixels::BitmapMemory &memory
   ) {
 
+    (void)pngInfo; // unused, but still passed because I may want to check settings
+
     // Finally, build an array of row addresses for libpng and use it to load
     // the whole image in one call. This minimizes the number of method calls and
     // should be the most efficient method to get the pixels into the Bitmap.
