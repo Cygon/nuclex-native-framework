@@ -171,6 +171,11 @@ namespace {
           }
           return Nuclex::Pixels::PixelFormat::R8_G8_B8_Unsigned;
         } else if(bitDepth == 16) {
+          if constexpr(!std::is_const<TPngReadStruct>::value) {
+            if constexpr(NUCLEX_PIXELS_LITTLE_ENDIAN) {
+              ::png_set_swap(&pngRead);
+            }
+          }
           return Nuclex::Pixels::PixelFormat::R16_Unsigned_Native16;
         } else {
           return Nuclex::Pixels::PixelFormat::R8_Unsigned;
@@ -180,6 +185,11 @@ namespace {
       case 2: {
         if(colorType == PNG_COLOR_TYPE_GRAY_ALPHA) {
           if(bitDepth == 16) {
+            if constexpr(!std::is_const<TPngReadStruct>::value) {
+              if constexpr(NUCLEX_PIXELS_LITTLE_ENDIAN) {
+                ::png_set_swap(&pngRead);
+              }
+            }
             return Nuclex::Pixels::PixelFormat::R16_A16_Unsigned_Native16;
           } else {
             return Nuclex::Pixels::PixelFormat::R8_A8_Unsigned;
@@ -194,6 +204,9 @@ namespace {
           if(bitDepth == 16) {
             if constexpr(!std::is_const<TPngReadStruct>::value) {
               ::png_set_filler(&pngRead, 0xFFFFFFFF, PNG_FILLER_AFTER);
+              if constexpr(NUCLEX_PIXELS_LITTLE_ENDIAN) {
+                ::png_set_swap(&pngRead);
+              }
             }
             return Nuclex::Pixels::PixelFormat::R16_G16_B16_A16_Unsigned_Native16;
           } else {
@@ -209,6 +222,9 @@ namespace {
           if(bitDepth == 16) {
             if constexpr(!std::is_const<TPngReadStruct>::value) {
               ::png_set_filler(&pngRead, 0xFFFFFFFF, PNG_FILLER_AFTER);
+              if constexpr(NUCLEX_PIXELS_LITTLE_ENDIAN) {
+                ::png_set_swap(&pngRead);
+              }
             }
             return Nuclex::Pixels::PixelFormat::R16_G16_B16_A16_Unsigned_Native16;
           } else {
@@ -216,6 +232,11 @@ namespace {
           }
         } else if(colorType == PNG_COLOR_TYPE_RGB_ALPHA) {
           if(bitDepth == 16) {
+            if constexpr(!std::is_const<TPngReadStruct>::value) {
+              if constexpr(NUCLEX_PIXELS_LITTLE_ENDIAN) {
+                ::png_set_swap(&pngRead);
+              }
+            }
             return Nuclex::Pixels::PixelFormat::R16_G16_B16_A16_Unsigned_Native16;
           } else {
             return Nuclex::Pixels::PixelFormat::R8_G8_B8_A8_Unsigned;
