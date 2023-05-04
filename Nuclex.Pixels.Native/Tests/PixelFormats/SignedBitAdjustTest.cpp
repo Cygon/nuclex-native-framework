@@ -191,15 +191,13 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(SignedBitAdjustTest, SignedBitsToDoubleConversionWorks) {
-    const float MaximumError = 0.000001f;
-
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(0)), 0.0);
 
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(1)), 1.0 / 7.0);
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(2)), 2.0 / 7.0);
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(3)), 3.0 / 7.0);
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(4)), 4.0 / 7.0);
-    EXPECT_NEAR((doubleFromBits<0, 4, std::size_t>(5)), 5.0 / 7.0, MaximumError);
+    EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(5)), 5.0 / 7.0);
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(6)), 6.0 / 7.0);
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(7)), 7.0 / 7.0);
 
@@ -207,7 +205,7 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(14)), -2.0 / 7.0);
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(13)), -3.0 / 7.0);
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(12)), -4.0 / 7.0);
-    EXPECT_NEAR((doubleFromBits<0, 4, std::size_t>(11)), -5.0 / 7.0, MaximumError);
+    EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(11)), -5.0 / 7.0);
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(10)), -6.0 / 7.0);
     EXPECT_EQ((doubleFromBits<0, 4, std::size_t>(9)), -7.0 / 7.0);
 

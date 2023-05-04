@@ -101,46 +101,44 @@ namespace Nuclex { namespace Pixels { namespace ColorModels {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(RgbPixelIteratorTest, ChannelValuesCorrectForR8G8B8A8) {
-    const float MaximumError = 0.000001f;
-
     Bitmap testBitmap = Bitmap::InExistingMemory(
       BitmapMemory { 5, 5, 20, PixelFormat::R8_G8_B8_A8_Unsigned, ExampleBitmapPixels }
     );
     RgbPixelIterator iterator(testBitmap.Access());
 
     RgbColor color = *iterator;
-    EXPECT_NEAR(color.Red, 0.0f, MaximumError);
-    EXPECT_NEAR(color.Green, 0.0f, MaximumError);
-    EXPECT_NEAR(color.Blue, 0.0f, MaximumError);
-    EXPECT_NEAR(color.Alpha, 1.0f, MaximumError);
+    EXPECT_EQ(color.Red, 0.0f);
+    EXPECT_EQ(color.Green, 0.0f);
+    EXPECT_EQ(color.Blue, 0.0f);
+    EXPECT_EQ(color.Alpha, 1.0f);
     iterator += Lines(1);
 
     color = *iterator;
-    EXPECT_NEAR(color.Red, 0.2f, MaximumError);
-    EXPECT_NEAR(color.Green, 0.2f, MaximumError);
-    EXPECT_NEAR(color.Blue, 0.2f, MaximumError);
-    EXPECT_NEAR(color.Alpha, 1.0f, MaximumError);
+    EXPECT_EQ(color.Red, 0.2f);
+    EXPECT_EQ(color.Green, 0.2f);
+    EXPECT_EQ(color.Blue, 0.2f);
+    EXPECT_EQ(color.Alpha, 1.0f);
     iterator += Lines(1);
 
     color = *iterator;
-    EXPECT_NEAR(color.Red, 0.4f, MaximumError);
-    EXPECT_NEAR(color.Green, 0.4f, MaximumError);
-    EXPECT_NEAR(color.Blue, 0.4f, MaximumError);
-    EXPECT_NEAR(color.Alpha, 1.0f, MaximumError);
+    EXPECT_EQ(color.Red, 0.4f);
+    EXPECT_EQ(color.Green, 0.4f);
+    EXPECT_EQ(color.Blue, 0.4f);
+    EXPECT_EQ(color.Alpha, 1.0f);
     iterator += Lines(1);
 
     color = *iterator;
-    EXPECT_NEAR(color.Red, 0.6f, MaximumError);
-    EXPECT_NEAR(color.Green, 0.6f, MaximumError);
-    EXPECT_NEAR(color.Blue, 0.6f, MaximumError);
-    EXPECT_NEAR(color.Alpha, 1.0f, MaximumError);
+    EXPECT_EQ(color.Red, 0.6f);
+    EXPECT_EQ(color.Green, 0.6f);
+    EXPECT_EQ(color.Blue, 0.6f);
+    EXPECT_EQ(color.Alpha, 1.0f);
     iterator += Lines(1);
 
     color = *iterator;
-    EXPECT_NEAR(color.Red, 0.8f, MaximumError);
-    EXPECT_NEAR(color.Green, 0.8f, MaximumError);
-    EXPECT_NEAR(color.Blue, 0.8f, MaximumError);
-    EXPECT_NEAR(color.Alpha, 1.0f, MaximumError);
+    EXPECT_EQ(color.Red, 0.8f);
+    EXPECT_EQ(color.Green, 0.8f);
+    EXPECT_EQ(color.Blue, 0.8f);
+    EXPECT_EQ(color.Alpha, 1.0f);
   }
 
   // ------------------------------------------------------------------------------------------- //
