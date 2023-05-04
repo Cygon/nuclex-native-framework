@@ -28,7 +28,7 @@ License along with this library
 #include "Nuclex/Support/Text/StringConverter.h"
 
 // Disable things that have not yet made their way into
-// the GitHub repository. If you want these, use the Subversion repo
+// the GitHub repository. If you want these, use the Subversion repo!
 #undef NUCLEX_PIXELS_HAVE_LIBTIFF
 #undef NUCLEX_PIXELS_HAVE_OPENEXR
 #undef NUCLEX_PIXELS_HAVE_LIBWEBP

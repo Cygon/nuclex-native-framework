@@ -204,10 +204,10 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
         ::png_set_IHDR(
           pngWrite,
           pngInfo,
-          memory.Width,
-          memory.Height,
-          bitDepth,
-          colorType,
+          static_cast<::png_uint_32>(memory.Width),
+          static_cast<::png_uint_32>(memory.Height),
+          static_cast<int>(bitDepth),
+          static_cast<int>(colorType),
           PNG_INTERLACE_NONE,
           PNG_COMPRESSION_TYPE_DEFAULT,
           PNG_FILTER_TYPE_DEFAULT
@@ -256,19 +256,15 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
         // Let LibPNG write the image informations to the file.
         ::png_write_info(pngWrite, pngInfo);
 
+        if constexpr(NUCLEX_PIXELS_LITTLE_ENDIAN) {
+          if(bitDepth >= 9) {
+            ::png_set_swap(pngWrite);
+          }
+        }
+
         // Can we save the image directly from the bitmap's data?
         // We can only do this if the bitmap's pixel format is natively supported by LibPNG.
         if(storagePixelFormat == memory.PixelFormat) {
-
-          // Obtain the number of bytes per row libpng thinks it requires. Since we're
-          // providing the row start adresses to libpng ourselves, we only use this for
-          // a safety check so we know the Bitmap's memory can hold what libpng writes.
-          {
-            std::size_t bytesPerRow = ::png_get_rowbytes(pngWrite, pngInfo);
-            if(bytesPerRow > static_cast<std::size_t>(std::abs(memory.Stride))) {
-              throw std::runtime_error(u8"libpng row size unexpectedly large, wrong pixel format?");
-            }
-          }
 
           // Finally, build an array of row addresses for libpng and use it to load
           // the whole image in one call. This minimizes the number of method calls and
@@ -285,7 +281,7 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Png {
               }
             }
 
-            // Load entire bitmap. Error handling via assigned error handler (-> exceptions)
+            // Save entire bitmap. Error handling via assigned error handler (-> exceptions)
             ::png_write_image(pngWrite, &rowAddresses[0]);
             //::png_write_rows(pngWrite, &rowAddresses[0], memory.Height);
           }

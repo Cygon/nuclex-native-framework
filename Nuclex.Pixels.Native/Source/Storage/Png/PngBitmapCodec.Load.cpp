@@ -82,20 +82,6 @@ namespace {
     const Nuclex::Pixels::BitmapMemory &memory
   ) {
 
-    // Obtain the number of bytes per row libpng thinks it requires. Since we're
-    // providing the row start adresses to libpng ourselves, we only use this for
-    // a safety check so we know the Bitmap's memory can hold what libpng writes.
-    {
-      std::size_t bytesPerRow = ::png_get_rowbytes(&pngRead, &pngInfo);
-      if(bytesPerRow > static_cast<std::size_t>(std::abs(memory.Stride))) {
-        throw Nuclex::Pixels::Errors::FileFormatError(
-          u8"libpng row size unexpectedly large, wrong pixel format?"
-        );
-      }
-
-      //assert()
-    }
-
     // Finally, build an array of row addresses for libpng and use it to load
     // the whole image in one call. This minimizes the number of method calls and
     // should be the most efficient method to get the pixels into the Bitmap.
@@ -112,7 +98,7 @@ namespace {
       }
 
       // Load entire bitmap. Error handling via assigned error handler (-> exceptions)
-      ::png_read_image(&pngRead, &rowAddresses[0]);
+      ::png_read_image(&pngRead, rowAddresses.data());
     }
 
   }
