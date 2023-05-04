@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Documents">
+      <UniqueIdentifier>{a48e7b1d-7c11-4443-877c-3aabe0e1d9db}</UniqueIdentifier>
+      <Extensions>md;txt;pdf</Extensions>
+    </Filter>
     <Filter Include="Include">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>
@@ -14,42 +18,65 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Documents">
-      <UniqueIdentifier>{42dfb8e3-ec12-4748-8fd2-96f6e7817f4a}</UniqueIdentifier>
-      <Extensions>md;txt;pdf</Extensions>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{0f807086-11df-477d-97f3-8bdfce8e2a49}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\ColorModels">
-      <UniqueIdentifier>{18e2ad77-9f3f-4af8-ba11-a73a723fe16b}</UniqueIdentifier>
+      <UniqueIdentifier>{21892bc7-e0c4-4971-b782-cbc39e68db49}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Errors">
-      <UniqueIdentifier>{5019b844-f142-415a-a6d8-f084a8b92b7e}</UniqueIdentifier>
+      <UniqueIdentifier>{4c5b0fb8-3a16-46a9-81c1-2960cfb0c520}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\PixelFormats">
-      <UniqueIdentifier>{185ea877-e8e8-4bb5-9705-705116f627c9}</UniqueIdentifier>
+      <UniqueIdentifier>{17eb3706-632f-49e9-9f30-1dbd3b260b1b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Include\Storage">
-      <UniqueIdentifier>{b2f8a800-3479-41a8-9d14-3867642aecab}</UniqueIdentifier>
+      <UniqueIdentifier>{8fed40eb-51ff-4f59-a79c-dbef9599dd24}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\ColorModels">
-      <UniqueIdentifier>{861e6a02-abbe-4406-a3e1-d4d8bc5b7e5d}</UniqueIdentifier>
+      <UniqueIdentifier>{f9f4af52-e221-4f4b-9051-d6da93253934}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Errors">
-      <UniqueIdentifier>{ebd44850-e0f1-49dc-a0ea-0242c047049a}</UniqueIdentifier>
+      <UniqueIdentifier>{2a1738bc-65ca-4bba-b584-c3ee14bb5fc6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\PixelFormats">
-      <UniqueIdentifier>{49d107a1-931d-4f3c-a66b-56c4188d629e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Storage">
-      <UniqueIdentifier>{5050f200-1586-438a-9007-f045bb28c626}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Storage\Jpeg">
-      <UniqueIdentifier>{5f5a3e11-8268-45cb-992e-6d307e91cb92}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Storage\Png">
-      <UniqueIdentifier>{ccf2d327-2ff5-4442-ab16-b3b2e40d1bba}</UniqueIdentifier>
+      <UniqueIdentifier>{0953e29d-473f-40f9-844d-8c53fe5e682b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Platform">
-      <UniqueIdentifier>{ebeea2ea-b77a-408e-a9d7-20efd151ecf0}</UniqueIdentifier>
+      <UniqueIdentifier>{b3669dbd-84d1-4899-8969-c801bd26124f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage">
+      <UniqueIdentifier>{1ed5650d-68d6-4aa8-b278-77317bdd2519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Jpeg">
+      <UniqueIdentifier>{08e65e04-60ac-4a17-952e-928f5ee0a0a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Png">
+      <UniqueIdentifier>{11d3554c-0287-4cdb-a867-b09abfdb2b71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Storage\Tiff">
+      <UniqueIdentifier>{c14f5dd7-b73d-494a-b519-edbf8200af8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\ColorModels">
+      <UniqueIdentifier>{d13b6e74-84ec-406b-8ba2-522276742dbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Platform">
+      <UniqueIdentifier>{3a5f19b5-534a-4622-afdc-5f9dfe76e820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\PixelFormats">
+      <UniqueIdentifier>{663e2260-31ca-4063-85ec-d186f0ffbaaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Storage">
+      <UniqueIdentifier>{ec5e4634-bf72-45be-a634-5c180a0a2f2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Storage\Jpeg">
+      <UniqueIdentifier>{17d678ab-45da-460c-bf38-bcd2ed449011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Storage\Png">
+      <UniqueIdentifier>{00abe823-e150-4f80-8605-7e1b159febe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests\Storage\Tiff">
+      <UniqueIdentifier>{296457e5-04ed-437d-a225-7feaea9dc991}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +319,12 @@
     <ClInclude Include="Source\Storage\Jpeg\JpegBitmapCodec.h">
       <Filter>Source\Storage\Jpeg</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Storage\Jpeg\JpegBitmapCodec.Load.cpp">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Storage\Jpeg\JpegBitmapCodec.Save.cpp">
+      <Filter>Source\Storage\Jpeg</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Storage\Jpeg\LibJpegHelpers.cpp">
       <Filter>Source\Storage\Jpeg</Filter>
     </ClCompile>
@@ -316,6 +349,21 @@
     <ClCompile Include="Source\Storage\Png\PngBitmapCodec.Save.cpp">
       <Filter>Source\Storage\Png</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Storage\Tiff\LibTiffHelpers.cpp">
+      <Filter>Source\Storage\Tiff</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Storage\Tiff\LibTiffHelpers.h">
+      <Filter>Source\Storage\Tiff</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Storage\Tiff\TiffBitmapCodec.cpp">
+      <Filter>Source\Storage\Tiff</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Storage\Tiff\TiffBitmapCodec.h">
+      <Filter>Source\Storage\Tiff</Filter>
+    </ClInclude>
+    <ClInclude Include="Tests\Storage\Tiff\ExampleTiffs.h">
+      <Filter>Tests\Storage\Tiff</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Storage\BitmapCodec.cpp">
       <Filter>Source\Storage</Filter>
     </ClCompile>
@@ -360,6 +408,101 @@
     </ClCompile>
     <ClCompile Include="Source\UInt128.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Tests\ColorModels\ColorModelConverterTest.cpp">
+      <Filter>Tests\ColorModels</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelFormats\BitAdjustTest.cpp">
+      <Filter>Tests\PixelFormats</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelFormats\BitMaskTest.cpp">
+      <Filter>Tests\PixelFormats</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelFormats\BitShiftTest.cpp">
+      <Filter>Tests\PixelFormats</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelFormats\ChannelHelpersTest.cpp">
+      <Filter>Tests\PixelFormats</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelFormats\EndianFlipTest.cpp">
+      <Filter>Tests\PixelFormats</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelFormats\PixelFormatConverterTest.cpp">
+      <Filter>Tests\PixelFormats</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelFormats\PixelFormatQueryTest.cpp">
+      <Filter>Tests\PixelFormats</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelFormats\SignedBitAdjustTest.cpp">
+      <Filter>Tests\PixelFormats</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelFormats\UnsignedBitAdjustTest.cpp">
+      <Filter>Tests\PixelFormats</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\PosixApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\PosixFileApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Platform\WindowsApiTest.cpp">
+      <Filter>Tests\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\Jpeg\ExampleJpegs.cpp">
+      <Filter>Tests\Storage\Jpeg</Filter>
+    </ClCompile>
+    <ClInclude Include="Tests\Storage\Jpeg\ExampleJpegs.h">
+      <Filter>Tests\Storage\Jpeg</Filter>
+    </ClInclude>
+    <ClCompile Include="Tests\Storage\Jpeg\JpegBitmapCodecTest.cpp">
+      <Filter>Tests\Storage\Jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\Png\ExamplePngs.cpp">
+      <Filter>Tests\Storage\Png</Filter>
+    </ClCompile>
+    <ClInclude Include="Tests\Storage\Png\ExamplePngs.h">
+      <Filter>Tests\Storage\Png</Filter>
+    </ClInclude>
+    <ClCompile Include="Tests\Storage\Png\PngBitmapCodecTest.cpp">
+      <Filter>Tests\Storage\Png</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\Tiff\ExampleTiffs.cpp">
+      <Filter>Tests\Storage\Tiff</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\Tiff\TiffBitmapCodecTest.cpp">
+      <Filter>Tests\Storage\Tiff</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\BitmapSerializerTest.cpp">
+      <Filter>Tests\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Storage\VirtualFileTest.cpp">
+      <Filter>Tests\Storage</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\BitmapTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\HalfTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelFormatTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelIteratorDeathTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\PixelIteratorTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\RectangleTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\SizeTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\UInt128Test.cpp">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

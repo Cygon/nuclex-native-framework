@@ -29,7 +29,6 @@ License along with this library
 
 // Disable things that have not yet made their way into
 // the GitHub repository. If you want these, use the Subversion repo!
-#undef NUCLEX_PIXELS_HAVE_LIBTIFF
 #undef NUCLEX_PIXELS_HAVE_OPENEXR
 #undef NUCLEX_PIXELS_HAVE_LIBWEBP
 #undef NUCLEX_PIXELS_HAVE_LIBAVIF

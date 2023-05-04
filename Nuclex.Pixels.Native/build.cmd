@@ -27,12 +27,8 @@ FOR %%m IN (Debug Release) DO (
 		cmake ^
 			-B obj\cmake-%%m ^
 			-D CMAKE_BUILD_TYPE=%%m ^
-			-D WANT_JPEGXL=ON ^
-			-D WANT_AVIF=ON ^
-			-D WANT_WEBP=ON ^
 			-D WANT_TIFF=ON ^
 			-D WANT_JPG=ON ^
-			-D WANT_EXR=ON ^
 			-D WANT_PNG=ON ^
 			-GNinja
 	) ELSE (
@@ -40,12 +36,8 @@ FOR %%m IN (Debug Release) DO (
 			-B obj\cmake-%%m ^
 			-D CMAKE_BUILD_TYPE=%%m ^
 			-D CMAKE_GENERATOR_PLATFORM=x64 ^
-			-D WANT_JPEGXL=ON ^
-			-D WANT_AVIF=ON ^
-			-D WANT_WEBP=ON ^
 			-D WANT_TIFF=ON ^
 			-D WANT_JPG=ON ^
-			-D WANT_EXR=ON ^
 			-D WANT_PNG=ON ^
 			-D BUILD_UNIT_TESTS=ON ^
 			-D BUILD_BENCHMARK=ON

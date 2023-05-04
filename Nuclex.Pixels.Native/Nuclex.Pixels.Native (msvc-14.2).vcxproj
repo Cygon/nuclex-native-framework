@@ -23,33 +23,33 @@
     <ProjectGuid>{CA9FCD14-7F37-421D-B150-A837BD8ADC76}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>NuclexPixelsNative</RootNamespace>
-    <ProjectName>Nuclex.Pixels.Native (msvc-14.1)</ProjectName>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>Nuclex.Pixels.Native (msvc-14.2)</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -80,34 +80,34 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
-    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</IntDir>
+    <OutDir>bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</IntDir>
     <TargetName>Nuclex.Pixels.Native</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
-    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</IntDir>
+    <OutDir>bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</IntDir>
     <TargetName>Nuclex.Pixels.Native</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
-    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</IntDir>
+    <OutDir>bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</IntDir>
     <TargetName>Nuclex.Pixels.Native</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</OutDir>
-    <IntDir>obj\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</IntDir>
+    <OutDir>bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</OutDir>
+    <IntDir>obj\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</IntDir>
     <TargetName>Nuclex.Pixels.Native</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_OPENEXR;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;NUCLEX_PIXELS_HAVE_LIBTIFF;NUCLEX_PIXELS_HAVE_LIBWEBP;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\config\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Imath\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Iex\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Half\;$(ProjectDir)..\ThirdParty\openexr\Include\;$(ProjectDir)..\ThirdParty\openexr\Include\config;$(ProjectDir)..\ThirdParty\libjpeg\Include\;$(ProjectDir)..\ThirdParty\libpng\Include\;$(ProjectDir)..\ThirdParty\libtiff\Include\;$(ProjectDir)..\ThirdParty\libwebp\Include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;NUCLEX_PIXELS_HAVE_LIBTIFF;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\libjpeg\build\;$(ProjectDir)..\ThirdParty\libpng\build\;$(ProjectDir)..\ThirdParty\libtiff\build\</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -118,16 +118,16 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>Nuclex.Pixels.Native.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\openexr\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\ilmbase\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libtiff\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libwebp\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclex.Support.Native.lib;openexr.lib;ilmbase.lib;jpeg.lib;png.lib;tiff.lib;webp.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libtiff\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;jpeg.lib;png.lib;tiff.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_OPENEXR;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;NUCLEX_PIXELS_HAVE_LIBTIFF;NUCLEX_PIXELS_HAVE_LIBWEBP;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\config\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Imath\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Iex\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Half\;$(ProjectDir)..\ThirdParty\openexr\Include\;$(ProjectDir)..\ThirdParty\openexr\Include\config;$(ProjectDir)..\ThirdParty\libjpeg\Include\;$(ProjectDir)..\ThirdParty\libpng\Include\;$(ProjectDir)..\ThirdParty\libtiff\Include\;$(ProjectDir)..\ThirdParty\libwebp\Include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;NUCLEX_PIXELS_HAVE_LIBTIFF;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\libjpeg\build\;$(ProjectDir)..\ThirdParty\libpng\build\;$(ProjectDir)..\ThirdParty\libtiff\build\</AdditionalIncludeDirectories>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -137,8 +137,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ModuleDefinitionFile>Nuclex.Pixels.Native.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\openexr\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\ilmbase\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libtiff\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libwebp\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclex.Support.Native.lib;openexr.lib;ilmbase.lib;jpeg.lib;png.lib;tiff.lib;webp.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libtiff\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;jpeg.lib;png.lib;tiff.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,8 +147,8 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_OPENEXR;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;NUCLEX_PIXELS_HAVE_LIBTIFF;NUCLEX_PIXELS_HAVE_LIBWEBP;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\config\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Imath\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Iex\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Half\;$(ProjectDir)..\ThirdParty\openexr\Include\;$(ProjectDir)..\ThirdParty\openexr\Include\config;$(ProjectDir)..\ThirdParty\libjpeg\Include\;$(ProjectDir)..\ThirdParty\libpng\Include\;$(ProjectDir)..\ThirdParty\libtiff\Include\;$(ProjectDir)..\ThirdParty\libwebp\Include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;NUCLEX_PIXELS_HAVE_LIBTIFF;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\libjpeg\build\;$(ProjectDir)..\ThirdParty\libpng\build\;$(ProjectDir)..\ThirdParty\libtiff\build\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
@@ -164,8 +164,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Nuclex.Pixels.Native.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\openexr\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\ilmbase\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libtiff\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libwebp\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclex.Support.Native.lib;openexr.lib;ilmbase.lib;jpeg.lib;png.lib;tiff.lib;webp.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libtiff\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;jpeg.lib;png.lib;tiff.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -174,8 +174,8 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_OPENEXR;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;NUCLEX_PIXELS_HAVE_LIBTIFF;NUCLEX_PIXELS_HAVE_LIBWEBP;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\;$(ProjectDir)..\ThirdParty\ilmbase\Include\config\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Imath\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Iex\;$(ProjectDir)..\ThirdParty\ilmbase\Include\Half\;$(ProjectDir)..\ThirdParty\openexr\Include\;$(ProjectDir)..\ThirdParty\openexr\Include\config;$(ProjectDir)..\ThirdParty\libjpeg\Include\;$(ProjectDir)..\ThirdParty\libpng\Include\;$(ProjectDir)..\ThirdParty\libtiff\Include\;$(ProjectDir)..\ThirdParty\libwebp\Include\</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NUCLEX_PIXELS_HAVE_LIBJPEG;NUCLEX_PIXELS_HAVE_LIBPNG;NUCLEX_PIXELS_HAVE_LIBTIFF;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\Nuclex.Support.Native\Include\;$(ProjectDir)..\ThirdParty\libjpeg\build\;$(ProjectDir)..\ThirdParty\libpng\build\;$(ProjectDir)..\ThirdParty\libtiff\build\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <StringPooling>true</StringPooling>
@@ -190,8 +190,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Nuclex.Pixels.Native.def</ModuleDefinitionFile>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\openexr\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\ilmbase\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libtiff\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libwebp\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Nuclex.Support.Native.lib;openexr.lib;ilmbase.lib;jpeg.lib;png.lib;tiff.lib;webp.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\Nuclex.Support.Native\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libjpeg\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libpng\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\libtiff\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\;$(ProjectDir)..\ThirdParty\zlib\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Nuclex.Support.Native.lib;jpeg.lib;png.lib;tiff.lib;zlib.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -276,6 +276,8 @@
     <ClInclude Include="Source\Platform\WindowsFileApi.h" />
     <ClCompile Include="Source\Storage\Jpeg\JpegBitmapCodec.cpp" />
     <ClInclude Include="Source\Storage\Jpeg\JpegBitmapCodec.h" />
+    <ClCompile Include="Source\Storage\Jpeg\JpegBitmapCodec.Load.cpp" />
+    <ClCompile Include="Source\Storage\Jpeg\JpegBitmapCodec.Save.cpp" />
     <ClCompile Include="Source\Storage\Jpeg\LibJpegHelpers.cpp" />
     <ClInclude Include="Source\Storage\Jpeg\LibJpegHelpers.h" />
     <ClCompile Include="Source\Storage\Png\LibPngHelpers.cpp" />
@@ -284,6 +286,10 @@
     <ClInclude Include="Source\Storage\Png\PngBitmapCodec.h" />
     <ClCompile Include="Source\Storage\Png\PngBitmapCodec.Load.cpp" />
     <ClCompile Include="Source\Storage\Png\PngBitmapCodec.Save.cpp" />
+    <ClCompile Include="Source\Storage\Tiff\LibTiffHelpers.cpp" />
+    <ClInclude Include="Source\Storage\Tiff\LibTiffHelpers.h" />
+    <ClCompile Include="Source\Storage\Tiff\TiffBitmapCodec.cpp" />
+    <ClInclude Include="Source\Storage\Tiff\TiffBitmapCodec.h" />
     <ClCompile Include="Source\Storage\BitmapCodec.cpp" />
     <ClCompile Include="Source\Storage\BitmapSerializer.cpp" />
     <ClCompile Include="Source\Storage\RealFile.cpp" />
@@ -306,28 +312,28 @@
   <ItemGroup>
     <CustomBuild Include="Nuclex.Support.Native.ref">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying %(Filename) into target directory...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying %(Filename) into target directory...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying %(Filename) into target directory...</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">COPY "$(ProjectDir)..\%(Filename)\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\Nuclex.Support.Native.dll" "$(TargetDir)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying %(Filename) into target directory...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</TreatOutputAsContent>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</TreatOutputAsContent>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</TreatOutputAsContent>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(TargetDir)Nuclex.Support.Native.dll</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.1-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)..\%(Filename)\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\%(Filename).dll</AdditionalInputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
       <TreatOutputAsContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</TreatOutputAsContent>
     </CustomBuild>

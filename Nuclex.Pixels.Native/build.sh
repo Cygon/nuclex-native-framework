@@ -23,12 +23,8 @@ for buildMode in Debug Release; do
 		cmake \
 			-B obj/cmake-$buildMode \
 			-D CMAKE_BUILD_TYPE=$buildMode \
-			-D WANT_JPEGXL=OFF \
-			-D WANT_AVIF=OFF \
-			-D WANT_WEBP=ON \
 			-D WANT_TIFF=ON \
 			-D WANT_JPG=ON \
-			-D WANT_EXR=ON \
 			-D WANT_PNG=ON \
 			-D BUILD_UNIT_TESTS=ON \
 			-D BUILD_BENCHMARK=ON \
@@ -37,12 +33,8 @@ for buildMode in Debug Release; do
 		cmake \
 			-B obj/cmake-$buildMode \
 			-D CMAKE_BUILD_TYPE=$buildMode \
-			-D WANT_JPEGXL=OFF \
-			-D WANT_AVIF=OFF \
-			-D WANT_WEBP=ON \
 			-D WANT_TIFF=ON \
 			-D WANT_JPG=ON \
-			-D WANT_EXR=ON \
 			-D WANT_PNG=ON \
 			-D BUILD_UNIT_TESTS=ON \
 			-D BUILD_BENCHMARK=ON
