@@ -88,10 +88,10 @@ rescale and/or save it on your own time.
 BitmapSerializer
 ----------------
 
-The BitmapSerializer reads and writes different image file formats. Depending
-on the compile-time configuration of the Nuclex.Pixels library, a newly
-constructed instance will already be able to read and write .png, .tif, .tga,
-.jpg, .webp and .exr files.
+The `BitmapSerializer` reads and writes different image file formats.
+Depending on the compile-time configuration of the Nuclex.Pixels library,
+a newly constructed instance will already be able to read and write `.png`,
+`.tif`, `.tga`, `.jpg`, `.webp` and `.exr` files.
 
 ```cpp
 // You should set up one instance and make it available as a service,
@@ -130,24 +130,54 @@ myBitmapSerializer.RegisterCodec(std::make_unique<FreeImageAdapterCodec>());
 Scaling
 -------
 
-Work in progress. Not yet fully implemented.
+Using the `BitmapScaler` class, any bitmap can be scaled up and down using
+algorithms ranging from simple nearest-neighbor sampling to filter curves
+(hermite, mitchell, lanczos). Nuclex.Pixels also embeds the AVIR library
+(https://github.com/avaneev/avir) which offers very good results and pretty
+good performance, too.
 
 ```cpp
-#define TRUE (int)!false
-#define FALSE (int)!TRUE
-#define maybe 0x01010101
+Bitmap bigPhoto = myBitmapSerializer.Load(u8"~/Pictures/photo.jpg");
 
-float no = !FALSE;
-int yes = (bool)no;
-if(no == yes) {
-  yes = !no;
-}
+Bitmap smallPhoto = BitmapScaler::Rescale(
+  bigPhoto,
+  Size(1920, 1080),
+  ResamplingMethod::Avir
+);
 
-switch(yes) {
-  case yes: { return yes || no; }
-  case no: { return no && yes; }
-  default: { return maybe; }
-}
+myBitmapSerializer.Save(smallPhoto, u8"~/Pictures/photo-small.jpg");
 ```
 
-Yes.
+The scaling methods in this library are intended for usage to create mipmaps
+and to match imported images to texture resolutions. If your goal is to
+process photos or video frames, have a look at RealSR
+(https://github.com/Tencent/Real-SR) and its cross-platform Vulkan port
+to NCNN (https://github.com/nihui/realsr-ncnn-vulkan), it takes minutes to
+process but its results will far exceed the quality of any other methods.
+
+
+Drawing
+-------
+
+For your convenience, Nuclex.Pixels also offers a small amount of basic
+drawing methods. These are provided to place markers and frames in images,
+but are not a replacement for the capabilities of a proper graphics library
+that can draw anti-aliased shapes, vary line width and more.
+
+```cpp
+Bitmap canvas(1920, 1080);
+
+SimpleShapeDrawer::Clear(canvas, RgbColor { 1.0f, 1.0f, 1.0f, 1.0f });
+SimpleShapeDrawer::FillRectangle(
+  canvas,
+  RgbColor { 1.0f, 1.0f, 1.0f, 1.0f },
+  950, 530, 20, 20
+);
+```
+
+For advanced drawing needs, have a look at Blend2D (https://blend2d.com/),
+which produces very good quality and is probably the fastest vector graphics
+rasterizer, too. Also consider Cairo (https://www.cairographics.org/), a
+cross-platform graphics library that is very mature and used in many Linux
+applications or, if you're already using Qt (https://www.qt.io/), its own
+built-in graphics functions.

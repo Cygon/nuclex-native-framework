@@ -14,6 +14,7 @@ that implement their own image processing on top of this library.
 It has been created with the motivation to avoid the problems plaguing the many
 other libraries
 
+
 Features
 --------
 
@@ -46,3 +47,14 @@ Features
 * Drawing
    * Very basic drawing routines to mark spots in images for debugging
      Pixel, Line, Rectangle, FilledRectangle, Ellipse, FilledEllipse, done.
+   * Or nothing at all. Use https://github.com/blend2d/blend2d
+
+
+Idea: Rounding Unit Tests
+-------------------------
+
+Write a runtime pixel format converter, `SlowReferencePixelFormatConverter` which
+will be tested to make sure rounding intervals sit perfectly within the numeric
+range of the target format.
+
+So it needs to do proper rounding.

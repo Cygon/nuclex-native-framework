@@ -11,7 +11,9 @@ FOR %%m IN (Debug Release) DO (
 	REM enter each and every source file into your CMakeLists.txt. See the
 	REM documentation on file(GLOB_RECURSE ...) for that turd.
 	REM
-	IF EXIST obj\cmake-%%m rd /s /q obj\cmake-%%m
+	IF "%1"=="full" (
+		IF EXIST obj\cmake-%%m rd /s /q obj\cmake-%%m
+	)
 
 	REM Let CMake build a Makefile (that's the default)
 	REM
@@ -22,15 +24,42 @@ FOR %%m IN (Debug Release) DO (
 	REM a 64-bit build.
 	REM
 	IF "%1"=="ninja" (
-		cmake -B obj\cmake-%%m -DCMAKE_BUILD_TYPE=%%m -GNinja
+		cmake ^
+			-B obj\cmake-%%m ^
+			-D CMAKE_BUILD_TYPE=%%m ^
+			-D WANT_JPEGXL=ON ^
+			-D WANT_AVIF=ON ^
+			-D WANT_WEBP=ON ^
+			-D WANT_TIFF=ON ^
+			-D WANT_JPG=ON ^
+			-D WANT_EXR=ON ^
+			-D WANT_PNG=ON ^
+			-GNinja
 	) ELSE (
-		cmake -B obj\cmake-%%m -DCMAKE_BUILD_TYPE=%%m -DCMAKE_GENERATOR_PLATFORM=x64
+		cmake ^
+			-B obj\cmake-%%m ^
+			-D CMAKE_BUILD_TYPE=%%m ^
+			-D CMAKE_GENERATOR_PLATFORM=x64 ^
+			-D WANT_JPEGXL=ON ^
+			-D WANT_AVIF=ON ^
+			-D WANT_WEBP=ON ^
+			-D WANT_TIFF=ON ^
+			-D WANT_JPG=ON ^
+			-D WANT_EXR=ON ^
+			-D WANT_PNG=ON ^
+			-D BUILD_UNIT_TESTS=ON ^
+			-D BUILD_BENCHMARK=ON
 	)
 
 	REM Compile the binary
-	cmake --build obj\cmake-%%m --config %%m --parallel %processorCount%
+	cmake ^
+		--build obj\cmake-%%m ^
+		--config %%m ^
+		--parallel %processorCount%
 
 	REM Put build artifacts in ./bin/windows-msvc14.1-amd64-release/ or similar
-	cmake --install obj\cmake-%%m --config %%m
+	cmake ^
+		--install obj\cmake-%%m ^
+		--config %%m
 
 )

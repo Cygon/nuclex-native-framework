@@ -9,10 +9,23 @@ project(
 	DESCRIPTION "Bitmap loading, pixel format conversion and scaling library"
 )
 
-# Contains compiler options, compiler tag for output directory, etc.
-include("../BuildSystem/cmake/cplusplus.cmake")
-
-set(BUILD_DOCS OFF CACHE BOOL "Whether to generate documentation via Doxygen")
+option(
+	BUILD_DOCS
+	"Whether to generate documentation via Doxygen"
+	OFF
+)
+option(
+	BUILD_UNIT_TESTS
+	"Whether to build the unit test executable. This will require an extra \
+	compilation of the entire source tree as well as the GoogleTest library."
+	OFF
+)
+option(
+	BUILD_BENCHMARK
+	"Whether to build the benchmark executable. This will require an extra \
+	compilation of the entire source tree as well as the Celero library."
+	OFF
+)
 
 # JPEG-XL depends on AVIF and WEBP.
 set(WANT_JPEGXL OFF CACHE BOOL "Whether to integrate JPEG-XL image loading and saving")
@@ -26,13 +39,13 @@ set(WANT_PNG ON CACHE BOOL "Whether to integrate PNG image loading and saving")
 
 # -------------------------------------------------------------------------------------------------
 
-# Include threading library (on Linux/Posix pthreads must be linked)
-find_package(Threads REQUIRED)
+# Contains compiler options, compiler tag for output directory, etc.
+include("../BuildSystem/cmake/cplusplus.cmake")
 
-# Use CMake's own package for locating Doxygen on the system
-if(BUILD_DOCS)
-	find_package(Doxygen)
-endif()
+# The Unix build pipeline doesn't automatically include threading, so search for
+# the pthreads library in order to link against it later on.
+#   https://en.wikipedia.org/wiki/Pthreads
+find_package(Threads REQUIRED)
 
 # Add Nuclex.Support.Native as a sub-project, we link it for utility methods.
 if(NOT (TARGET NuclexSupportNative))
@@ -47,46 +60,83 @@ if(NOT (TARGET GoogleTest))
 	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
 endif()
 
+message(STATUS "Enabled options for Nuclex.Pixels.Native:")
+message(STATUS "  ⚫ Build core library")
+
+if(BUILD_UNIT_TESTS)
+	message(STATUS "  ⚫ Build unit tests")
+
+	# Add GoogleTest as a sub-project so we can link our unit test executable
+	if(NOT (TARGET GoogleTest))
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
+	endif()
+endif()
+
+if(BUILD_BENCHMARK)
+	message(STATUS "  ⚫ Build benchmark")
+
+	# Add Celero as a sub-project so we can link our benchmark executable
+	if(NOT (TARGET Celero))
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/celero ${CMAKE_BINARY_DIR}/celero)
+	endif()
+endif()
+
 # Libraries to load and save each image format
 if(WANT_JPEGXL)
+	message(STATUS "  ⚫ Support JPEG-XL")
 	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/jpeg-xl ${CMAKE_BINARY_DIR}/jpeg-xl)
 endif()
 if(WANT_AVIF)
+	message(STATUS "  ⚫ Support AVIF")
 	# LibAVIF may have already been referenced by JPEG-XL to borrow its compression code
 	if(NOT (TARGET LibAVIF))
 		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/av1f ${CMAKE_BINARY_DIR}/av1f)
 	endif()
 endif()
 if(WANT_WEBP)
+	message(STATUS "  ⚫ Support WebP")
 	# LibWebP may have already been referenced by JPEG-XL to borrow its compression code
 	if(NOT (TARGET LibWebP))
 		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libwebp ${CMAKE_BINARY_DIR}/libwebp)
 	endif()
 endif()
-if(WANT_TIFF)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libtiff ${CMAKE_BINARY_DIR}/libtiff)
-endif()
 if(WANT_JPG)
+	message(STATUS "  ⚫ Support JPEG")
 	# LibJPEG may have already been referenced by LibTIFF to borrow its compression code
 	if(NOT (TARGET LibJPEG))
-		add_subdirectory(${PROJECT_SOURCE_DIR}/../libjpeg ${CMAKE_BINARY_DIR}/libjpeg)
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libjpeg ${CMAKE_BINARY_DIR}/libjpeg)
 	endif()
 endif()
+if(WANT_TIFF)
+	message(STATUS "  ⚫ Support TIFF")
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libtiff ${CMAKE_BINARY_DIR}/libtiff)
+endif()
 if(WANT_EXR)
+	message(STATUS "  ⚫ Support EXR")
 	# OpenEXR may have already been referenced by LibTIFF to borrow its compression code
 	if(NOT (TARGET OpenEXR))
 		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/openexr ${CMAKE_BINARY_DIR}/openexr)
 	endif()
 endif()
 if(WANT_PNG)
+	message(STATUS "  ⚫ Support PNG")
 	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libpng ${CMAKE_BINARY_DIR}/libpng)
+endif()
+
+# Use CMake's own package for locating Doxygen on the system
+if(BUILD_DOCS)
+	find_package(Doxygen)
 endif()
 
 # -------------------------------------------------------------------------------------------------
 
-# All source files are in the Source/ directory.
-# All (public) headers are in the Include/ directory.
-# All unit test source file are in the Tests/ directory.
+# Project structure
+#
+#   ProjectName/
+#     Source/                   All source files, using deeper directories as needed
+#     Include/ProjectName/      All public headers, using deeper directories as needed
+#     Tests/                    All unit tests, using deeper directories as needed
+#     Benchmarks/               All benchmark files, using deeper directories as needed
 #
 # CMake documentation:
 #   |  Note: We do not recommend using GLOB to collect a list of
@@ -113,6 +163,11 @@ file(
 	GLOB_RECURSE unittestFiles
 	CONFIGURE_DEPENDS
 	"Tests/*.cpp"
+)
+file(
+	GLOB_RECURSE benchmarkFiles
+	CONFIGURE_DEPENDS
+	"Benchmarks/*.cpp"
 )
 
 # -------------------------------------------------------------------------------------------------
@@ -167,7 +222,7 @@ endfunction()
 # Shared library that can be linked to other projects
 add_library(NuclexPixelsNative SHARED)
 
-# Enable compiler warnings only if this library is compiles on its own.
+# Enable compiler warnings only if this library is compiled on its own.
 # If it's used as a sub-project, the including project's developers aren't
 # interested in seeing warnings from a project they're not maintaining.
 if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexPixelsNative")
@@ -210,60 +265,124 @@ endif()
 
 # -------------------------------------------------------------------------------------------------
 
-# Executable that runs the unit tests (main() supplied by Googletest)
-add_executable(NuclexPixelsNativeTests)
+if(BUILD_UNIT_TESTS)
 
-# Enable compiler warnings only if this library is compiles on its own.
-# If it's used as a sub-project, the including project's developers aren't
-# interested in seeing warnings from a project they're not maintaining.
-if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexPixelsNative")
-	enable_target_compiler_warnings(NuclexPixelsNativeTests)
-else()
-	disable_target_compiler_warnings(NuclexPixelsNativeTests)
-endif()
+	# Executable that runs the unit tests (main() supplied by GoogleTest)
+	add_executable(NuclexPixelsNativeTests)
 
-# Let the code know it's not being compiled into a shared library
-# (this disables visibility/exports, thus allowing the compiler detect
-# additional unused code and warn about it)
-target_compile_definitions(
-	NuclexPixelsNativeTests
-	PRIVATE NUCLEX_PIXELS_EXECUTABLE
-)
+	# Enable compiler warnings only if this library is compiles on its own.
+	# If it's used as a sub-project, the including project's developers aren't
+	# interested in seeing warnings from a project they're not maintaining.
+	if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexPixelsNative")
+		enable_target_compiler_warnings(NuclexPixelsNativeTests)
+	else()
+		disable_target_compiler_warnings(NuclexPixelsNativeTests)
+	endif()
 
-# Add directory with public headers to include path
-target_include_directories(
-	NuclexPixelsNativeTests
-	PUBLIC "Include"
-)
-
-# Add public headers and sources (normal + unit tests) to compilation list
-# (headers, too, in case CMake is used to generate an IDE project)
-target_sources(
-	NuclexPixelsNativeTests
-	PRIVATE ${headerFiles}
-	PRIVATE ${sourceFiles}
-	PRIVATE ${unittestFiles}
-)
-
-# Link GoogleTest and the main() function supplied by GoogleTest
-# Also link against PThreads
-target_link_libraries(
-	NuclexPixelsNativeTests
-	PRIVATE GoogleTest::Static
-	PRIVATE GoogleTest::Main
-	PRIVATE Threads::Threads
-	PUBLIC NuclexSupportNative
-)
-
-add_third_party_libraries(NuclexPixelsNativeTests)
-
-# On Windows, we want the executable to be named Nuclex.Pixels.Native.Tests.exe
-if(WIN32)
-	set_target_properties(
+	# Let the code know it's not being compiled into a shared library
+	# (this disables visibility/exports, thus allowing the compiler detect
+	# additional unused code and warn about it)
+	target_compile_definitions(
 		NuclexPixelsNativeTests
-		PROPERTIES OUTPUT_NAME "Nuclex.Pixels.Native.Tests"
+		PRIVATE NUCLEX_PIXELS_EXECUTABLE
 	)
-endif()
+
+	# Add directory with public headers to include path
+	target_include_directories(
+		NuclexPixelsNativeTests
+		PUBLIC "Include"
+	)
+
+	# Add public headers and sources (normal + unit tests) to compilation list
+	# (headers, too, in case CMake is used to generate an IDE project)
+	target_sources(
+		NuclexPixelsNativeTests
+		PRIVATE ${headerFiles}
+		PRIVATE ${sourceFiles}
+		PRIVATE ${unittestFiles}
+	)
+
+	# Link GoogleTest and the main() function supplied by GoogleTest
+	# Also link against PThreads
+	target_link_libraries(
+		NuclexPixelsNativeTests
+		PRIVATE GoogleTest::Static
+		PRIVATE GoogleTest::Main
+		PRIVATE Threads::Threads
+		PUBLIC NuclexSupportNative
+	)
+
+	add_third_party_libraries(NuclexPixelsNativeTests)
+
+	# On Windows, we want the executable to be named Nuclex.Pixels.Native.Tests.exe
+	if(WIN32)
+		set_target_properties(
+			NuclexPixelsNativeTests
+			PROPERTIES OUTPUT_NAME "Nuclex.Pixels.Native.Tests"
+		)
+	endif()
+
+endif() # if BUILD_UNIT_TESTS enabled
+
+# -------------------------------------------------------------------------------------------------
+
+if(BUILD_BENCHMARK)
+
+	# Executable that runs the benchmark (main() supplied by Celero)
+	add_executable(NuclexPixelsNativeBenchmark)
+
+	# Enable compiler warnings only if this library is compiled on its own.
+	# If it's used as a sub-project, the including project's developers aren't
+	# interested in seeing warnings from a project they're not maintaining.
+	if(${CMAKE_PROJECT_NAME} STREQUAL "NuclexPixelsNative")
+		enable_target_compiler_warnings(NuclexPixelsNativeBenchmark)
+	else()
+		disable_target_compiler_warnings(NuclexPixelsNativeBenchmark)
+	endif()
+
+	# Let the code know it's not being compiled into a shared library
+	# (this disables visibility/exports, thus allowing the compiler detect
+	# additional unused code and warn about it)
+	target_compile_definitions(
+		NuclexPixelsNativeBenchmark
+		PRIVATE NUCLEX_PIXELS_EXECUTABLE
+	)
+
+	# Add directory with public headers to include path
+	target_include_directories(
+		NuclexPixelsNativeBenchmark
+		PUBLIC "Include"
+	)
+
+	# Add public headers and sources (normal + benchmark) to compilation list
+	# (headers, too, in case CMake is used to generate an IDE project)
+	target_sources(
+		NuclexPixelsNativeBenchmark
+		PRIVATE ${headerFiles}
+		PRIVATE ${sourceFiles}
+		PRIVATE ${benchmarkFiles}
+	)
+
+	# Link Celero
+	# Also link against PThreads
+	target_link_libraries(
+		NuclexPixelsNativeBenchmark
+		PRIVATE Celero
+		PRIVATE Threads::Threads
+		PUBLIC NuclexSupportNative
+	)
+
+	add_third_party_libraries(NuclexPixelsNativeBenchmark)
+
+	# On Windows, we want the executable to be named Nuclex.Pixels.Native.Benchmark.exe
+	if(WIN32)
+		set_target_properties(
+			NuclexPixelsNativeBenchmark
+			PROPERTIES OUTPUT_NAME "Nuclex.Pixels.Native.Benchmark"
+		)
+	endif()
+
+endif() # if BUILD_BENCHMARK enabled
 
 # -------------------------------------------------------------------------------------------------
 
@@ -288,13 +407,26 @@ install(
 )
 
 # Install unit tests in same location as shared library.
-install(
-	TARGETS NuclexPixelsNativeTests
-	RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
-)
+if(BUILD_UNIT_TESTS)
+	install(
+		TARGETS NuclexPixelsNativeTests
+		RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
+	)
 
-# Install .pdb files on Windows platforms for the unit tests, too.
-install_debug_symbols(NuclexPixelsNativeTests)
+	# Install .pdb files on Windows platforms for the unit tests, too.
+	install_debug_symbols(NuclexPixelsNativeTests)
+endif()
+
+# Install benchmarks in same location as shared library.
+if(BUILD_BENCHMARK)
+	install(
+		TARGETS NuclexPixelsNativeBenchmark
+		RUNTIME DESTINATION ${PROJECT_SOURCE_DIR}/bin/${NUCLEX_COMPILER_TAG}
+	)
+
+	# Install .pdb files on Windows platforms for the benchmark, too.
+	install_debug_symbols(NuclexPixelsNativeBenchmark)
+endif()
 
 # -------------------------------------------------------------------------------------------------
 
