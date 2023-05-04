@@ -35,7 +35,7 @@ License along with this library
 #define PREPARE_NUMBER_OF_MAGNITUDE(number, magnitude) \
   temp = ( \
     (std::uint64_t(1) << (32 + magnitude / 5 * magnitude * 53 / 16)) / \
-    std::uint32_t(1e##magnitude) + 1 + magnitude/6 - magnitude/8 \
+    std::uint32_t(1e##magnitude) + 1 + magnitude / 6 - magnitude / 8 \
   ), \
   temp *= number, \
   temp >>= magnitude / 5 * magnitude * 53 / 16, \

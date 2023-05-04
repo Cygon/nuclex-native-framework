@@ -91,9 +91,9 @@ namespace {
   // ------------------------------------------------------------------------------------------- //
 
   /// <summary>Factors the jeaiii algorithm uses to prepare a number for printing</summary>
-  const std::uint32_t factors[] = {
+  const std::uint64_t factors[] = {
                 0, // magnitude 1e-1 (invalid)
-                0, // magnitude 1e0 (invalid) (4'294'967'297)
+    4'294'967'297, // magnitude 1e0
       429'496'730, // magnitude 1e1
        42'949'673, // magnitude 1e2
         4'294'968, // magnitude 1e3
@@ -110,7 +110,7 @@ namespace {
   /// <summary>Bit shifts the jeaiii algorithm uses to prepare a number for printing</summary>
   const int shift[] = {
      0, // magnitude 1e-1 (invalid)
-     0, // magnitude 1e0 (invalid)
+     0, // magnitude 1e0
      0, // magnitude 1e1
      0, // magnitude 1e2
      0, // magnitude 1e3
@@ -127,7 +127,7 @@ namespace {
   /// <summary>Bias added to numbers by jeaiii algorithm</summary>
   const std::uint32_t bias[] = {
     0, // magnitude 1e-1 (invalid)
-    0, // magnitude 1e0 (invalid)
+    0, // magnitude 1e0
     0, // magnitude 1e1
     0, // magnitude 1e2
     0, // magnitude 1e3
@@ -210,13 +210,13 @@ namespace {
     // Calculate the remaining digits behind the decimal point
     magnitude -= decimalPointPosition;
 
-    // Decimal point position indices *after* which digit the decimal point is to be placed,
-    // so if it is zero we've got an odd number of digits before, otherwise an even number.
+    // Is there an odd number of digits before the decimal point? Logic is inverse
+    // because of the -1 offset on the decimal point posiiton.
     if((decimalPointPosition & 1) == 0) {
       char pendingDigit;
 
-      // Append the digits before the decimal point. We know it's an even number,
-      // so we can skip the single digit check and don't need to store a half.
+      // Append the digits before the decimal point. We know it's an odd number,
+      // so once we get within 2 chars of the decimal point, we have to keep one on hold.
       for(;;) {
         WRITE_TWO_DIGITS(buffer);
         if(decimalPointPosition < 2) { // Are less than 3 remaining?
@@ -258,9 +258,9 @@ namespace {
         buffer += 2;
       }
 
-    } else { // Number of digits before decimal point is even
+    } else { // Even number of digits before decimal point
 
-      // Append the digits before the decimal point. We know it's an even number,
+      // Append all digits before the decimal point. We know it's an even number,
       // so we can skip the single digit check and don't need to store a half.
       for(;;) {
         WRITE_TWO_DIGITS(buffer);
