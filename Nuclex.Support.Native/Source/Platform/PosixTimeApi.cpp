@@ -25,6 +25,8 @@ License along with this library
 
 #if !defined(NUCLEX_SUPPORT_WINDOWS)
 
+#include <pthread.h> // for ::pthread_condattr_...()
+
 namespace {
 
   // ------------------------------------------------------------------------------------------- //

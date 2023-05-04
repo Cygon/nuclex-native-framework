@@ -30,6 +30,8 @@ License along with this library
 #include <cassert> // for assert()
 #include <chrono> // for std::chrono::microseconds, std::chrono::milliseconds
 
+#include <sys/time.h> // for ::timespec
+
 namespace Nuclex { namespace Support { namespace Platform {
 
   // ------------------------------------------------------------------------------------------- //

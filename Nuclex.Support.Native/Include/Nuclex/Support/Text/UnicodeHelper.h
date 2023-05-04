@@ -215,13 +215,13 @@ namespace Nuclex { namespace Support { namespace Text {
     ///   <para>
     ///     Folded lowercase is a special variant of lowercase that will result in a string of
     ///     equal or shorter length when encoded to UTF-8 or UTF-16. It is not intended for
-    ///     display and some mappings may lead to incorrect lowercase character for such.
+    ///     display and some mappings may lead to incorrect lowercase characters for such.
     ///   </para>
     ///   <para>
     ///     Comparing the case-folded translations of two strings will produce the result of
     ///     a case-insensitive comparison. This makes case folding very useful for case
     ///     insensitive comparison logic and associative containers which can store
-    ///     pre-case-folded strings for their indexes of they need to be case insensitive.
+    ///     pre-case-folded strings for their indexes if they need to be case insensitive.
     ///   </para>
     ///   <para>
     ///     Warning: really, don't use this for displayed strings. It may even replace

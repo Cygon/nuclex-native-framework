@@ -417,7 +417,11 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalAppendTest, ReturnsNeededByteCountForUInt32) {
+#if defined(__GNUC__) // GCC 11+ emits a spurious stringop-overflow warning otherwise
+    char characters[2] = { 0 };
+#else
     char characters[1] = { 0 };
+#endif
 
     EXPECT_EQ(lexical_append(characters, 1U, std::uint32_t(0)), 1U);
 
@@ -494,7 +498,11 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalAppendTest, ReturnsNeededByteCountForInt32) {
+#if defined(__GNUC__) // GCC 11+ emits a spurious stringop-overflow warning otherwise
+    char characters[2] = { 0 };
+#else
     char characters[1] = { 0 };
+#endif
 
     EXPECT_EQ(lexical_append(characters, 1U, std::int32_t(0)), 1U);
 
@@ -566,7 +574,11 @@ namespace Nuclex { namespace Support { namespace Text {
   // ------------------------------------------------------------------------------------------- //
 
   TEST(LexicalAppendTest, ReturnsNeededByteCountForUInt64) {
+#if defined(__GNUC__) // GCC 11+ emits a spurious stringop-overflow warning here
+    char characters[2] = { 0 };
+#else
     char characters[1] = { 0 };
+#endif
 
     EXPECT_EQ(lexical_append(characters, 1U, std::uint64_t(0)), 1U);
 

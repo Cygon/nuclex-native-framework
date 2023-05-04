@@ -23,15 +23,16 @@ License along with this library
 
 #include "./NumberFormatter.h"
 
-// Uses a magic formula to turn a 32 bit number into a specific 64 bit number.
+// Prepares an integral number or the specified decimal megnitude for printing.
+//
+// This uses a magic formula to turn a 32 bit number into a specific 64 bit number.
 //
 // I think the main thing this formula accomplishes is that the actual number sits at
 // the upper end of a 32 bit integer. Thus, when you cast it to a 64 bit integer and
-// multiply it by 100, you end up with the next two digits in the upper 32 bits of
+// multiply it by 100, you end up with the next two digits in the high 32 bits of
 // your 64 bit integer where they're easy to grab.
 //
-// Magnitude is 1 for 100, 2 for 1'000, 3 for 10'000 and so on
-//
+// Magnitude is in blocks of 2, so 1 means 100, 2 means 1'000, 3 means 10'000 and so on.
 #define PREPARE_NUMBER_OF_MAGNITUDE(number, magnitude) \
   temp = ( \
     (std::uint64_t(1) << (32 + magnitude / 5 * magnitude * 53 / 16)) / \
@@ -41,20 +42,18 @@ License along with this library
   temp >>= magnitude / 5 * magnitude * 53 / 16, \
   temp += magnitude / 6 * 4
 
-// Brings the next two digits of the prepeared number into the upper 32 bits
+// Brings the next two digits of a prepared number into the high 32 bits
 // so they can be extracted by the WRITE_ONE_DIGIT and WRITE_TWO_DIGITS macros
 #define READY_NEXT_TWO_DIGITS() \
   temp = std::uint64_t(100) * static_cast<std::uint32_t>(temp)
 
 // Appends the next two highest digits in the prepared number to the char buffer
-// Also adjusts the number such that the next two digits are ready for extraction.
 #define WRITE_TWO_DIGITS(bufferPointer) \
   *reinterpret_cast<TwoChars *>(bufferPointer) = ( \
     *reinterpret_cast<const TwoChars *>(&Nuclex::Support::Text::Radix100[(temp >> 31) & 0xFE]) \
   )
 
 // Appends the next highest digit in the prepared number to the char buffer
-// Thus doesn't adjust the number because it is always used on the very last digit.
 #define WRITE_ONE_DIGIT(bufferPointer) \
   *reinterpret_cast<char *>(bufferPointer) = ( \
     u8'0' + static_cast<char>(std::uint64_t(10) * std::uint32_t(temp) >> 32) \
