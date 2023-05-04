@@ -146,7 +146,7 @@ namespace Nuclex { namespace Support {
     /// <param name="contents">A string to which the file's contents will be appended</param>
     public: NUCLEX_SUPPORT_API void ReadFile(const std::string &name, std::string &contents) const;
 
-    /// <summary>The full path to the temporary file</summary>
+    /// <summary>The full path to the temporary directory</summary>
     private: std::string path;
 
   };

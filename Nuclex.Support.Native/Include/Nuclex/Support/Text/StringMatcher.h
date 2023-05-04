@@ -81,8 +81,8 @@ namespace Nuclex { namespace Support { namespace Text {
     /// <remarks>
     ///   Wildcards refer to the simple placeholder symbols employed by many shells,
     ///   where a '?' acts as a stand-in for one UTF-8 character and a '*' acts as
-    ///   a stand-in for zero or more UTF-8 characters. For example &quot;*l?o&quot;
-    ///   would match &quot;Hello&quot; but not &quot;low&quot;.
+    ///   a stand-in for zero or more UTF-8 characters. For example &quot;*l?o*&quot;
+    ///   would match &quot;Hello&quot; and &quot;lion&quot; but not &quot;glow&quot;.
     /// </remarks>
     public: NUCLEX_SUPPORT_API static bool FitsWildcard(
       const std::string &text, const std::string &wildcard, bool caseSensitive = false
@@ -97,12 +97,14 @@ namespace Nuclex { namespace Support { namespace Text {
   ///   You can use this to construct a case-insensitive <code>std::unordered_map</code>.
   /// </remarks>
   struct NUCLEX_SUPPORT_TYPE CaseInsensitiveUtf8Hash {
+
     /// <summary>Calculates a case-insensitive hash of an UTF-8 string</summary>
     /// <param name="text">UTF-8 string of which a hash value will be calculated</param>
     /// <returns>The case-insensitive hash value of the provided string</returns>
     public: NUCLEX_SUPPORT_API std::size_t operator()(
       const std::string &text
     ) const noexcept;
+
   };
 
   // ------------------------------------------------------------------------------------------- //
@@ -112,6 +114,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///   You can use this to construct a case-insensitive <code>std::unordered_map</code>.
   /// </remarks>
   struct NUCLEX_SUPPORT_TYPE CaseInsensitiveUtf8EqualTo {
+
     /// <summary>Checks if two UTF-8 strings are equal, ignoring case</summary>
     /// <param name="left">First UTF-8 string to compare</param>
     /// <param name="right">Other UTF-8 string to compare</param>
@@ -119,6 +122,7 @@ namespace Nuclex { namespace Support { namespace Text {
     public: NUCLEX_SUPPORT_API bool operator()(
       const std::string &left, const std::string &right
     ) const noexcept;
+
   };
 
   // ------------------------------------------------------------------------------------------- //
@@ -128,6 +132,7 @@ namespace Nuclex { namespace Support { namespace Text {
   ///   You can use this to construct a case-insensitive <code>std::map</code>.
   /// </remarks>
   struct NUCLEX_SUPPORT_TYPE CaseInsensitiveUtf8Less {
+
     /// <summary>Checks if the first UTF-8 string is 'less' than the second</summary>
     /// <param name="left">First UTF-8 string to compare</param>
     /// <param name="right">Other UTF-8 string to compare</param>
@@ -135,6 +140,7 @@ namespace Nuclex { namespace Support { namespace Text {
     public: NUCLEX_SUPPORT_API bool operator()(
       const std::string &left, const std::string &right
     ) const noexcept;
+
   };
 
   // ------------------------------------------------------------------------------------------- //

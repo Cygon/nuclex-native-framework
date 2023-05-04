@@ -46,8 +46,8 @@ namespace Nuclex { namespace Support {
   ///       void test() {
   ///         TemporaryFileScope tempFile(u8"xyz"); // file with custom prefix
   ///
-  ///         // Write something into the file. Overloads are provided for a buffer + length
-  ///         // pair as well as for std::vector<std::uint8_t>.
+  ///         // Write something into the file. Overloads are also provided for
+  ///         // a buffer + length pair as well as for std::vector<std::uint8_t>.
   ///         tempFile.SetFileContents(u8"Hello World!");
   ///
   ///         // ...do something that requires an actual file....

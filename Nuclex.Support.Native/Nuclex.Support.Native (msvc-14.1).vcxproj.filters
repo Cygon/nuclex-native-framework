@@ -60,9 +60,6 @@
     <Filter Include="Source\Text">
       <UniqueIdentifier>{f20ce72c-f037-4bfc-8e47-a38db78850de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Text\DragonBox-1.1.2">
-      <UniqueIdentifier>{823678f3-8cdc-419f-a34a-7b7cddff31a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Text\Ryu">
       <UniqueIdentifier>{6d6734f5-932c-4dcd-bb67-6a9b69db0f2e}</UniqueIdentifier>
     </Filter>
@@ -71,6 +68,9 @@
     </Filter>
     <Filter Include="Source\Platform">
       <UniqueIdentifier>{41337d1c-187d-4d7b-8eea-9eb521d00b08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Text\DragonBox-1.1.2">
+      <UniqueIdentifier>{823678f3-8cdc-419f-a34a-7b7cddff31a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +89,9 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentMap.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
@@ -102,6 +105,9 @@
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentSet.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
@@ -125,6 +131,15 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\StackArray.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Collections\Variegator.h">
+      <Filter>Include\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Errors\CanceledError.h">
+      <Filter>Include\Errors</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h">
       <Filter>Include\Errors</Filter>
     </ClInclude>
@@ -137,10 +152,10 @@
     <ClInclude Include="Include\Nuclex\Support\Events\ConcurrentEvent.h">
       <Filter>Include\Events</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h">
+    <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
       <Filter>Include\Events</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Events\Event.h">
+    <ClInclude Include="Include\Nuclex\Support\Events\Delegate.h">
       <Filter>Include\Events</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Services\LazyServiceInjector.h">
@@ -179,6 +194,12 @@
     <ClInclude Include="Include\Nuclex\Support\Settings\SettingsStore.h">
       <Filter>Include\Settings</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\CommandLine.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\CommandLineArgument.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalAppend.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
@@ -189,6 +210,9 @@
       <Filter>Include\Text</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\ParserHelper.h">
+      <Filter>Include\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Text\QuantityFormatter.h">
       <Filter>Include\Text</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h">
@@ -224,10 +248,16 @@
     <ClInclude Include="Include\Nuclex\Support\Threading\ThreadPool.h">
       <Filter>Include\Threading</Filter>
     </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Any.h">
+      <Filter>Include</Filter>
+    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\BitTricks.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Config.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Nuclex\Support\Optional.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\ScopeGuard.h">
@@ -253,10 +283,16 @@
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Collections\ConcurrentMap.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\ConcurrentSet.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\DynamicArray.cpp">
@@ -280,6 +316,15 @@
     <ClCompile Include="Source\Collections\ShiftQueue.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Collections\StackArray.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collections\Variegator.cpp">
+      <Filter>Source\Collections</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Errors\CanceledError.cpp">
+      <Filter>Source\Errors</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp">
       <Filter>Source\Errors</Filter>
     </ClCompile>
@@ -297,6 +342,12 @@
     </ClCompile>
     <ClCompile Include="Source\Events\Event.cpp">
       <Filter>Source\Events</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\PosixApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\PosixApi.cpp">
+      <Filter>Source\Platform</Filter>
     </ClCompile>
     <ClCompile Include="Source\Platform\LinuxFileApi.cpp">
       <Filter>Source\Platform</Filter>
@@ -448,6 +499,12 @@
     <ClInclude Include="Source\Text\Ryu\ryu_parse.h">
       <Filter>Source\Text\Ryu</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Text\CommandLine.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\CommandLineArgument.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Text\LexicalAppend.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
@@ -470,6 +527,9 @@
       <Filter>Source\Text</Filter>
     </ClInclude>
     <ClCompile Include="Source\Text\ParserHelper.cpp">
+      <Filter>Source\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Text\QuantityFormatter.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
     <ClCompile Include="Source\Text\RollingLogger.cpp">
@@ -523,10 +583,16 @@
     <ClInclude Include="Source\Threading\ThreadPoolTaskPool.h">
       <Filter>Source\Threading</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Any.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
     <ClCompile Include="Source\BitTricks.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Config.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Optional.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\ScopeGuard.cpp">

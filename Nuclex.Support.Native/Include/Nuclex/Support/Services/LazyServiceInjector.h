@@ -289,7 +289,9 @@ namespace Nuclex { namespace Support { namespace Services {
     > ServiceFactoryMap;
 
     /// <summary>Map of services permanently stored in the container</summary>
-    private: typedef std::map<const std::type_info *, std::any> ServiceInstanceMap;
+    private: typedef std::map<
+      const std::type_info *, std::any, TypeInfoComparer
+    > ServiceInstanceMap;
 
     // These are both mutable. Reasoning: the service injector acts as if all services
     // already existed, so while services may get constructed as a result of requesting

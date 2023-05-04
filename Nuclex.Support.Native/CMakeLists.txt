@@ -76,7 +76,6 @@ if(BUILD_DOCS)
 	find_package(Doxygen)
 endif()
 
-
 # -------------------------------------------------------------------------------------------------
 
 # Project structure
@@ -97,26 +96,22 @@ endif()
 # I'm not going to manually maintain a list of source files. Rebuilds
 # where files are added, removed or renamed need to be from scratch.
 #
-
 file(
 	GLOB_RECURSE sourceFiles
 	CONFIGURE_DEPENDS
 	"Source/*.cpp"
 	"Source/*.c"
 )
-
 file(
 	GLOB_RECURSE headerFiles
 	CONFIGURE_DEPENDS
 	"Include/Nuclex/Support/*.h"
 )
-
 file(
 	GLOB_RECURSE unittestFiles
 	CONFIGURE_DEPENDS
 	"Tests/*.cpp"
 )
-
 file(
 	GLOB_RECURSE benchmarkFiles
 	CONFIGURE_DEPENDS
@@ -169,7 +164,7 @@ endif()
 
 if(BUILD_UNIT_TESTS)
 
-	# Executable that runs the unit tests (main() supplied by Googletest)
+	# Executable that runs the unit tests (main() supplied by GoogleTest)
 	add_executable(NuclexSupportNativeTests)
 
 	# Enable compiler warnings only if this library is compiles on its own.
@@ -227,7 +222,7 @@ endif() # if BUILD_UNIT_TESTS enabled
 
 if(BUILD_BENCHMARK)
 
-	# Executable that runs the unit tests (main() supplied by Googletest)
+	# Executable that runs the benchmark (main() supplied by Celero)
 	add_executable(NuclexSupportNativeBenchmark)
 
 	# Enable compiler warnings only if this library is compiles on its own.
@@ -264,7 +259,7 @@ if(BUILD_BENCHMARK)
 		PUBLIC "Include"
 	)
 
-	# Add public headers and sources (normal + unit tests) to compilation list
+	# Add public headers and sources (normal + benchmark) to compilation list
 	# (headers, too, in case CMake is used to generate an IDE project)
 	target_sources(
 		NuclexSupportNativeBenchmark
@@ -281,7 +276,7 @@ if(BUILD_BENCHMARK)
 		PRIVATE Threads::Threads
 	)
 
-	# On Windows, we want the executable to be named Nuclex.Support.Native.Tests.exe
+	# On Windows, we want the executable to be named Nuclex.Support.Native.Benchmark.exe
 	if(WIN32)
 		set_target_properties(
 			NuclexSupportNativeBenchmark
@@ -332,7 +327,6 @@ if(BUILD_BENCHMARK)
 	# Install .pdb files on Windows platforms for the unit tests, too.
 	install_debug_symbols(NuclexSupportNativeBenchmark)
 endif()
-
 
 # -------------------------------------------------------------------------------------------------
 

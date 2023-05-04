@@ -35,8 +35,8 @@ namespace Nuclex { namespace Support { namespace Text {
   /// <remarks>
   ///   <para>
   ///     For generic character classification, also see the cctype header in C++ which
-  ///     provides several methods to classify ASCII characters. Since all bytes in ASCII
-  ///     range remain unqiue in UTF-8 (all 2, 3 and 4 byte sequences have the highest bit
+  ///     provides several methods to classify ASCII characters. Since all bytes in the ASCII
+  ///     range remain unique in UTF-8 (all 2, 3 and 4 byte sequences have the highest bit
   ///     set), even if you feed each byte of an UTF-8 string to, say, ::isdigit(), it will
   ///     correctly identify all numbers.
   ///   </para>
@@ -63,6 +63,13 @@ namespace Nuclex { namespace Support { namespace Text {
     ///   UTF-8 byte or single-byte character that will be checked for being a whitespace
     /// </param>
     /// <returns>True if the character was a whitespace, false otherwise</returns>
+    /// <remarks>
+    ///   This will obviously only cover whitespace variants in the ASCII range, but may
+    ///   be sufficient if you're parsing a structured format such as XML, JSON or .ini
+    ///   where either the specification limits the allowed whitespace variants outside of
+    ///   strings/data or in cases where you're providing the input files yourself rather
+    ///   than parsing data from the web or another application.
+    /// </remarks>
     public: NUCLEX_SUPPORT_API static constexpr bool IsWhitespace(
       char8_t utf8Character
     );
@@ -86,24 +93,44 @@ namespace Nuclex { namespace Support { namespace Text {
       const char8_t *&start, const char8_t *end
     );
 
+    /// <summary>Checks if an UTF-8 string is either blank or contains only whitespace</summary
+    public: NUCLEX_SUPPORT_API static bool IsBlankOrEmpty(const std::string &text);
+
+#if defined(NUCLEX_SUPPORT_CUSTOM_PARSENUMBER)
+    /// <summary>Attempts to parse the specified numeric type from the provided text</summary>
+    /// <typeparam name="TScalar">
+    ///   Type that will be parsed from the text. Must be either a 32 bit integer,
+    ///   64 bit integer, float or double. Other types are not supported.
+    /// </typeparam>
+    /// <param name="start">
+    ///   Pointer to the start of the textual data. Will be updated to the next byte
+    ///   after the numeric type if parsing succeeds.
+    /// </param>
+    /// <param name="end">Byte at which the text ends</param>
+    /// <returns>The parsed numeric type or an empty std::optional instance</returns>
+    public: template<typename TScalar>
+    inline static std::optional<TScalar> ParseNumber(
+      const std::uint8_t *&start, const std::uint8_t *end
+    );
+#endif
   };
 
   // ------------------------------------------------------------------------------------------- //
 
-  inline constexpr bool ParserHelper::IsWhitespace(std::uint8_t utf8Byte) {
+  inline constexpr bool ParserHelper::IsWhitespace(char8_t utf8Character) {
     return (
       (
-        (utf8Byte >= std::uint8_t(0x09)) && // (see below)
-        (utf8Byte < std::uint8_t(0x0e))
+        (utf8Character >= std::uint8_t(0x09)) && // (see below)
+        (utf8Character < std::uint8_t(0x0e))
       ) ||
-      (utf8Byte == std::uint8_t(0x20)) // space
+      (utf8Character == std::uint8_t(0x20)) // space
     );
     // Covered via range:
-    // (utf8Byte == std::uint8_t(0x09)) || // tab
-    // (utf8Byte == std::uint8_t(0x0a)) || // line feed
-    // (utf8Byte == std::uint8_t(0x0b)) || // line tabulation
-    // (utf8Byte == std::uint8_t(0x0c)) || // form feed
-    // (utf8Byte == std::uint8_t(0x0d)) || // carriage return
+    // (utf8Character == std::uint8_t(0x09)) || // tab
+    // (utf8Character == std::uint8_t(0x0a)) || // line feed
+    // (utf8Character == std::uint8_t(0x0b)) || // line tabulation
+    // (utf8Character == std::uint8_t(0x0c)) || // form feed
+    // (utf8Character == std::uint8_t(0x0d)) || // carriage return
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -159,6 +186,59 @@ namespace Nuclex { namespace Support { namespace Text {
       }
     }
   }
+
+  // ------------------------------------------------------------------------------------------- //
+#if defined(NUCLEX_SUPPORT_CUSTOM_PARSENUMBER)
+
+  template<typename TScalar>
+  inline std::optional<TScalar> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  ) {
+    static_assert(
+      (
+        std::is_same<TScalar, std::uint32_t>::value ||
+        std::is_same<TScalar, std::int32_t>::value ||
+        std::is_same<TScalar, std::uint64_t>::value ||
+        std::is_same<TScalar, std::int64_t>::value ||
+        std::is_same<TScalar, float>::value ||
+        std::is_same<TScalar, double>::value
+      ) &&
+      u8"Only 32/64 bit unsigned/signed integers, floats and doubles are supported"
+    );
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  template<>
+  NUCLEX_SUPPORT_API std::optional<std::uint32_t> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  );
+
+  template<>
+  NUCLEX_SUPPORT_API std::optional<std::int32_t> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  );
+
+  template<>
+  NUCLEX_SUPPORT_API std::optional<std::uint64_t> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  );
+
+  template<>
+  NUCLEX_SUPPORT_API std::optional<std::int64_t> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  );
+
+  template<>
+  NUCLEX_SUPPORT_API std::optional<float> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  );
+
+  template<>
+  NUCLEX_SUPPORT_API std::optional<double> ParserHelper::ParseNumber(
+    const std::uint8_t *&start, const std::uint8_t *end
+  );
+#endif // defined(NUCLEX_SUPPORT_CUSTOM_PARSENUMBER)
 
   // ------------------------------------------------------------------------------------------- //
 

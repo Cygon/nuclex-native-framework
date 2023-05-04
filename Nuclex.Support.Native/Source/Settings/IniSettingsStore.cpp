@@ -91,7 +91,7 @@ namespace Nuclex { namespace Support { namespace Settings {
           break;
         } else { // 1 or more bytes returned, increase buffer for another round
           offset += readByteCount;
-          contents.resize(offset + 4096); // extend so that 4k bytes are vailable again
+          contents.resize(offset + 4096); // extend so that 4k bytes are available again
         }
       }
     }
@@ -110,7 +110,7 @@ namespace Nuclex { namespace Support { namespace Settings {
           break;
         } else { // 1 or more bytes returned, increase buffer for another round
           offset += readByteCount;
-          contents.resize(offset + 4096); // extend so that 4k bytes are vailable again
+          contents.resize(offset + 4096); // extend so that 4k bytes are available again
         }
       }
     }
@@ -129,7 +129,7 @@ namespace Nuclex { namespace Support { namespace Settings {
           break;
         } else { // 1 or more bytes returned, increase buffer for another round
           offset += readByteCount;
-          contents.resize(offset + 4096); // extend so that 4k bytes are vailable again
+          contents.resize(offset + 4096); // extend so that 4k bytes are available again
         }
       }
     }

@@ -2,9 +2,9 @@ Nuclex.Support.Native
 =====================
 
 This library aims to be your trusty toolbox of supporting code for
-problems that come up in any type project. It consists of carefully
+problems that come up in any type of project. It consists of carefully
 chosen and well-designed pieces that aid you in dealing with UTF-8
-strings, application settings storage, threading and initialization.
+strings, settings storage, threading, signalling and service management.
 
 There are unit tests for the whole library, so everything is verifiably
 working on all platforms tested (Linux, Windows, Raspberry).

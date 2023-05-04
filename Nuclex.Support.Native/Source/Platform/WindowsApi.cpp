@@ -77,9 +77,8 @@ namespace Nuclex { namespace Support { namespace Platform {
     std::wstring buffer(256, L'\0');
     for(;;) {
 
-      // Try to obtain the error number. The return value of strerror_r() is different
-      // between GNU and Posix. There's no reliable error return, so we reset errno for
-      // the current thread and check it again after calling strerror_r()
+      // Try to obtain the error message relating to the POSIX error number. In order to be
+      // unicode-safe, we have to use Microsoft's UTF-16 methods.
       errno = 0;
       int lookupErrorNumber = ::_wcserror_s(buffer.data(), buffer.length(), errorNumber);
       if(lookupErrorNumber == 0) {

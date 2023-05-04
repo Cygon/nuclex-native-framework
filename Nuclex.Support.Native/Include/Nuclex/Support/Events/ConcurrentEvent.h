@@ -378,19 +378,18 @@ namespace Nuclex { namespace Support { namespace Events {
     /// <param name="queue">Queue whose memory will be freed</param>
     private: static void freeBroadcastQueue(BroadcastQueue *queue) noexcept {
       queue->~BroadcastQueue();
-      //static_assert(std::is_trivially_constructible<BroadcastQueue>::value);
-      //static_assert(std::is_trivially_constructible<DelegateType>::value);
+      //static_assert(std::is_trivially_destructible<BroadcastQueue>::value);
+      //static_assert(std::is_trivially_destructible<DelegateType>::value);
       delete[] reinterpret_cast<const std::uint8_t *>(queue);
     }
-
 
     /// <summary>Acquires the spinlock to access the subscriber queues</summary>
     /// <remarks>
     ///   <para>
     ///     Why are we implementing a manual spinlock here? It's essentially a rip-off of
-    ///     what std::atomic<std::shared_ptr>> does, acquire a spinlock for a very short period
-    ///     (2 or 3 machine instructions) to make grabbing a reference and incrementing
-    ///     its reference counter an atomic operation. Even under very high contention,
+    ///     what std::atomic<std::shared_ptr>> does: acquire a spinlock for a very short period
+    ///     (2 or 3 machine instructions) to make grabbing the pointer and incrementing
+    ///     the reference counter an atomic operation. Even under very high contention,
     ///     it will only loop a bunch of times.
     ///   </para>
     ///   <para>
@@ -713,12 +712,12 @@ namespace Nuclex { namespace Support { namespace Events {
       if(unlikely(currentQueue == nullptr)) {
         releaseSpinLock();
         return false; // No queue -> no subscribers -> subscriber not found -> exit!
+      } else {
+        currentQueue->ReferenceCount.fetch_add(1, std::memory_order::memory_order_release);
+        releaseSpinLock();
       }
 
       { // A queue is present, increment its reference count so it isn't deleted
-        currentQueue->ReferenceCount.fetch_add(1, std::memory_order::memory_order_release);
-        releaseSpinLock();
-
         ReleaseBroadcastQueueScope releaseActiveQueue(*this, currentQueue);
 
         BroadcastQueue *newQueue;

@@ -188,11 +188,17 @@ namespace Nuclex { namespace Support { namespace Text {
     /// </remarks>
     public: NUCLEX_SUPPORT_API std::vector<std::string> GetLines() const;
 
+#if 0 // Convenient, but usually people want to save additional information to the file...
+    /// <summary>Saves the current contents of the log into a file</summary>
+    /// <param name="path">Path of the file to which the log will be written</param>
+    public: NUCLEX_SUPPORT_API void SaveToFile(const std::string &path) const;
+#endif
+
     /// <summary>Called each time a new line is added to the rolling log</summary>
     /// <param name="line">The full contents of the line</paran>
     /// <remarks>
     ///   You can override this method if you wish to live-print log lines to console
-    ///   window or terminal of some kind.
+    ///   windows or terminals of some kind.
     /// </remarks>
     protected: NUCLEX_SUPPORT_API virtual void OnLineAdded(const std::string &line) {
       (void)line;
