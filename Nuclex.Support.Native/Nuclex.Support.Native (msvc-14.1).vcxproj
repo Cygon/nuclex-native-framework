@@ -208,6 +208,7 @@
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableIndexedCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\RingQueue.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ShiftQueue.h" />
+    <ClInclude Include="Include\Nuclex\Support\Errors\CanceledError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\EmptyDelegateCallError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\TimeoutError.h" />
     <ClInclude Include="Include\Nuclex\Support\Errors\UnresolvedDependencyError.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="Include\Nuclex\Support\Text\LexicalCast.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\Logger.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\ParserHelper.h" />
+    <ClInclude Include="Include\Nuclex\Support\Text\QuantityFormatter.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\RollingLogger.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StatusObserver.h" />
     <ClInclude Include="Include\Nuclex\Support\Text\StringConverter.h" />
@@ -261,6 +263,7 @@
     <ClCompile Include="Source\Collections\ObservableIndexedCollection.cpp" />
     <ClCompile Include="Source\Collections\RingQueue.cpp" />
     <ClCompile Include="Source\Collections\ShiftQueue.cpp" />
+    <ClCompile Include="Source\Errors\CanceledError.cpp" />
     <ClCompile Include="Source\Errors\EmptyDelegateCallError.cpp" />
     <ClCompile Include="Source\Errors\TimeoutError.cpp" />
     <ClCompile Include="Source\Errors\UnresolvedDependencyError.cpp" />
@@ -325,6 +328,7 @@
     <ClCompile Include="Source\Text\NumberFormatter.cpp" />
     <ClInclude Include="Source\Text\NumberFormatter.h" />
     <ClCompile Include="Source\Text\ParserHelper.cpp" />
+    <ClCompile Include="Source\Text\QuantityFormatter.cpp" />
     <ClCompile Include="Source\Text\RollingLogger.cpp" />
     <ClCompile Include="Source\Text\StatusObserver.cpp" />
     <ClCompile Include="Source\Text\StringConverter.cpp" />
