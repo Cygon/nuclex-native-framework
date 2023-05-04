@@ -83,6 +83,9 @@ namespace Nuclex { namespace Support { namespace Text {
       char32_t codePoint
     );
 
+    /// <summary>Checks if an UTF-8 string is either blank or contains only whitespace</summary
+    public: NUCLEX_SUPPORT_API static bool IsBlankOrEmpty(const std::string &text);
+
     /// <summary>
     ///   Moves <paramref cref="start" /> ahead until the first non-whitespace UTF-8
     ///   character or until hitting <paramref cref="end" />
@@ -92,9 +95,6 @@ namespace Nuclex { namespace Support { namespace Text {
     public: NUCLEX_SUPPORT_API static void SkipWhitespace(
       const char8_t *&start, const char8_t *end
     );
-
-    /// <summary>Checks if an UTF-8 string is either blank or contains only whitespace</summary
-    public: NUCLEX_SUPPORT_API static bool IsBlankOrEmpty(const std::string &text);
 
 #if defined(NUCLEX_SUPPORT_CUSTOM_PARSENUMBER)
     /// <summary>Attempts to parse the specified numeric type from the provided text</summary>
