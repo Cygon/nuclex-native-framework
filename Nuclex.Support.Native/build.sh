@@ -10,9 +10,11 @@ for buildMode in Debug Release; do
 	# enter each and every source file into your CMakeLists.txt. See the
 	# documentation on file(GLOB_RECURSE ...) for that turd.
 	#
-	if [ -d obj ]; then
-		if [ -d obj/cmake-$buildMode ]; then
-			rm -rf obj/cmake-$buildMode
+	if [ $# -ge 1 ] && [ $1 == "full" ]; then
+		if [ -d obj ]; then
+			if [ -d obj/cmake-$buildMode ]; then
+				rm -rf obj/cmake-$buildMode
+			fi
 		fi
 	fi
 

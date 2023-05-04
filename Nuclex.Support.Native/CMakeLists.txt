@@ -14,27 +14,25 @@ option(
 	"Whether to generate documentation via Doxygen"
 	OFF
 )
-
 option(
-  BUILD_UNIT_TESTS
-  "Whether to build the unit test executable. This will require an extra \
-  compilation of the entire source tree as well as the GoogleTest library."
-  OFF
+	BUILD_UNIT_TESTS
+	"Whether to build the unit test executable. This will require an extra \
+	compilation of the entire source tree as well as the GoogleTest library."
+	OFF
 )
 option(
-  BUILD_BENCHMARK
-  "Whether to build the benchmark executable. This will require an extra \
-  compilation of the entire source tree as well as the Celero library."
-  OFF
+	BUILD_BENCHMARK
+	"Whether to build the benchmark executable. This will require an extra \
+	compilation of the entire source tree as well as the Celero library."
+	OFF
 )
-
 option(
-  BENCHMARK_THIRD_PARTY_LIBRARIES
-  "Whether to include third-party libraries in the benchmarks. If you enable \
-  this option, you need to manually place the extra libraries into your \
-  source tree (easiest done by just enabling and checking the missing files \
-  in the compiler output)."
-  OFF
+	BENCHMARK_THIRD_PARTY_LIBRARIES
+	"Whether to include third-party libraries in the benchmarks. If you enable \
+	this option, you need to manually place the extra libraries into your \
+	source tree (easiest done by just enabling and checking the missing files \
+	in the compiler output)."
+	OFF
 )
 
 # -------------------------------------------------------------------------------------------------
@@ -248,9 +246,14 @@ if(BUILD_BENCHMARK)
 			PRIVATE HAVE_BOOST_SIGNALS
 			PRIVATE HAVE_LSIGNAL
 			PRIVATE HAVE_NANO_SIGNALS
-			PRIVATE HAVE_AMDN_ITOA
 			PRIVATE HAVE_JEAIII_ITOA
 		)
+		if(NOT WIN32)
+			target_compile_definitions(
+				NuclexSupportNativeBenchmark
+				PRIVATE HAVE_AMDN_ITOA
+			)
+		endif()
 	endif()
 
 	# Add directory with public headers to include path
@@ -427,6 +430,6 @@ else()
 endif()
 
 message(STATUS \"Imported Nuclex.Support.Native targets with binaries in '\${CMAKE_CURRENT_LIST_DIR}'\")"
-)
+) # end of a long file() statement
 
 # -------------------------------------------------------------------------------------------------

@@ -11,7 +11,9 @@ FOR %%m IN (Debug Release) DO (
 	REM enter each and every source file into your CMakeLists.txt. See the
 	REM documentation on file(GLOB_RECURSE ...) for that turd.
 	REM
-	IF EXIST obj\cmake-%%m rd /s /q obj\cmake-%%m
+	IF "%1"=="full" (
+		IF EXIST obj\cmake-%%m rd /s /q obj\cmake-%%m
+	)
 
 	REM Let CMake build a Makefile (that's the default)
 	REM
