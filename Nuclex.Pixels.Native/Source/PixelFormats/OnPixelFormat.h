@@ -76,8 +76,7 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
   ///    </example>
   /// </remarks>
   template<
-    template<PixelFormat> typename TFunctor,
-    typename TResult, typename... TArguments
+    template<PixelFormat> typename TFunctor, typename TResult, typename... TArguments
   >
   TResult OnPixelFormat(PixelFormat pixelFormat, TArguments... arguments) {
     switch(pixelFormat) {

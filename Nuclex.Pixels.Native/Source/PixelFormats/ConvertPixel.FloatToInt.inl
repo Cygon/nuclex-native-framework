@@ -43,6 +43,9 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
     const PixelTypeFromFormat<TSourcePixelFormat> *sourcePixel,
     PixelTypeFromFormat<TTargetPixelFormat> *targetPixel
   ) {
+    (void)sourcePixel; // MSVC fantasizes a constellation where no channels exist
+    (void)targetPixel; // then warns that these two parameters aren't used...
+
     // TODO: Float->Int converter currently does not support signed integer formats
     static_assert(
       !IsSignedFormat<TTargetPixelFormat> && u8"Signed pixel formats not implemented yet"

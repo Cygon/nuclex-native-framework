@@ -221,21 +221,6 @@ namespace Nuclex { namespace Pixels {
 
   // ------------------------------------------------------------------------------------------- //
 
-  void Bitmap::ReinterpretPixelFormat(PixelFormat newPixelFormat) {
-    std::size_t currentBitsPerPixel = CountBitsPerPixel(this->memory.PixelFormat);
-    std::size_t newBitsPerPixel = CountBitsPerPixel(newPixelFormat);
-    if(newBitsPerPixel != currentBitsPerPixel) {
-      throw Errors::PixelFormatError(
-        u8"Cannot reinterpret as a pixel format with different bits per pixel"
-      );
-    }
-
-    // It's that simple :)
-    this->memory.PixelFormat = newPixelFormat;
-  }
-
-  // ------------------------------------------------------------------------------------------- //
-
   const Bitmap Bitmap::GetView(
     std::size_t x, std::size_t y, std::size_t width, std::size_t height
   ) const {
@@ -253,6 +238,21 @@ namespace Nuclex { namespace Pixels {
     // Assumption: allocation-free Bitmap constructor will not throw.
     ++this->buffer->OwnerCount;
     return Bitmap(this->buffer, viewMemory);
+  }
+
+  // ------------------------------------------------------------------------------------------- //
+
+  void Bitmap::ReinterpretPixelFormat(PixelFormat newPixelFormat) {
+    std::size_t currentBitsPerPixel = CountBitsPerPixel(this->memory.PixelFormat);
+    std::size_t newBitsPerPixel = CountBitsPerPixel(newPixelFormat);
+    if(newBitsPerPixel != currentBitsPerPixel) {
+      throw Errors::PixelFormatError(
+        u8"Cannot reinterpret as a pixel format with different bits per pixel"
+      );
+    }
+
+    // It's that simple :)
+    this->memory.PixelFormat = newPixelFormat;
   }
 
   // ------------------------------------------------------------------------------------------- //

@@ -166,9 +166,9 @@ namespace {
     /// <summary>Returns whether the pixel format requires endian-flipping</summary>
     /// <returns>True if the pixel format required endian-flipping</returns>
     public: bool operator()() const {
-      typedef Nuclex::Pixels::PixelFormats::PixelFormatDescription<TPixelFormat> Description;
-      return false;
+      //typedef Nuclex::Pixels::PixelFormats::PixelFormatDescription<TPixelFormat> Description;
       //return (Description::EndianFlip != nuclex::Pixels::PixelFormats::EndianFlipMode::None);
+      return false; // TODO: Actually determine whether endian flipping is needed.
     }
   };
 

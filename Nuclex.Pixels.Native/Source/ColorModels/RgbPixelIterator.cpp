@@ -25,7 +25,6 @@ License along with this library
 #include "../PixelFormats/ConvertPixel.h"
 #include "../PixelFormats/OnPixelFormat.h"
 #include "Nuclex/Pixels/UInt128.h"
-//#include "Nuclex/Pixels/Conversion/PixelFormatConverter.h"
 
 #include <stdexcept> // for std::runtime_error
 #include <utility> // for std::pair

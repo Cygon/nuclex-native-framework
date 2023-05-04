@@ -126,8 +126,8 @@ namespace Nuclex { namespace Pixels { namespace Storage { namespace Jpeg {
       };
 
       const BitmapMemory &memory = bitmap.Access();
-      commonInfo.image_width = memory.Width;
-      commonInfo.image_height = memory.Height;
+      commonInfo.image_width = static_cast<::JDIMENSION>(memory.Width);
+      commonInfo.image_height = static_cast<::JDIMENSION>(memory.Height);
       commonInfo.input_components = 3;
       commonInfo.in_color_space = JCS_RGB;
 

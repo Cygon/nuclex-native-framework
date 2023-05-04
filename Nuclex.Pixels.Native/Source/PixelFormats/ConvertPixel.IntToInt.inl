@@ -50,6 +50,9 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
       u8"Signed pixel formats not implemented yet, results will be wrong"
     );
 
+    (void)sourcePixel; // MSVC fantasizes a constellation where no channels exist
+    (void)targetPixel; // then warns that these two parameters aren't used...
+
     // Convert the red channel and assign it to the target pixel
     if constexpr(NeedConvertChannel1<TSourcePixelFormat, TTargetPixelFormat>) {
       *targetPixel = static_cast<PixelTypeFromFormat<TTargetPixelFormat>>(

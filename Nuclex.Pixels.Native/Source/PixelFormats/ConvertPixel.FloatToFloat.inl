@@ -43,6 +43,8 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
     const PixelTypeFromFormat<TSourcePixelFormat> *sourcePixel,
     PixelTypeFromFormat<TTargetPixelFormat> *targetPixel
   ) {
+    (void)sourcePixel; // MSVC fantasizes a constellation where no channels exist
+    (void)targetPixel; // then warns that these two parameters aren't used...
 
     // Convert the red color channel, if one is present
     if constexpr(NeedConvertChannel1<TSourcePixelFormat, TTargetPixelFormat>) {

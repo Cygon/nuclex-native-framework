@@ -64,6 +64,10 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
   /// </remarks>
   template<int ShiftOffset>
   NUCLEX_PIXELS_ALWAYS_INLINE constexpr uint16_t BitShift(uint16_t integer) {
+#if defined(_MSC_VER) // MSVC invents warnings here for things that aren't really there
+#pragma warning(push)
+#pragma warning(disable:4554) // check operator precedence for possible error
+#endif
     if constexpr((ShiftOffset <= -16) || (ShiftOffset >= 16)) {
       (void)integer;
       return 0;
@@ -74,6 +78,9 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
     } else {
       return integer;
     }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -88,6 +95,10 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
   /// </remarks>
   template<int ShiftOffset>
   NUCLEX_PIXELS_ALWAYS_INLINE constexpr uint32_t BitShift(uint32_t integer) {
+#if defined(_MSC_VER) // MSVC invents warnings here for things that aren't really there
+#pragma warning(push)
+#pragma warning(disable:4554) // check operator precedence for possible error
+#endif
     if constexpr((ShiftOffset <= -32) || (ShiftOffset >= 32)) {
       (void)integer;
       return 0;
@@ -98,6 +109,9 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
     } else {
       return integer;
     }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -112,6 +126,10 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
   /// </remarks>
   template<int ShiftOffset>
   NUCLEX_PIXELS_ALWAYS_INLINE constexpr uint64_t BitShift(uint64_t integer) {
+#if defined(_MSC_VER) // MSVC invents warnings here for things that aren't really there
+#pragma warning(push)
+#pragma warning(disable:4554) // check operator precedence for possible error
+#endif
     if constexpr((ShiftOffset <= -64) || (ShiftOffset >= 64)) {
       (void)integer;
       return 0;
@@ -122,6 +140,9 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
     } else {
       return integer;
     }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
   }
 
   // ------------------------------------------------------------------------------------------- //

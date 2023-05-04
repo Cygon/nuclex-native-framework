@@ -43,6 +43,8 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
     const PixelTypeFromFormat<TSourcePixelFormat> *sourcePixel,
     PixelTypeFromFormat<TTargetPixelFormat> *targetPixel
   ) {
+    (void)sourcePixel; // MSVC fantasizes a constellation where no channels exist
+    (void)targetPixel; // then warns that these two parameters aren't used...
 
     // TODO: Int->Float converter currently does not support signed integer formats
     static_assert(
@@ -69,6 +71,11 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
         PixelFormatDescription<TSourcePixelFormat>::Channel1::BitCount
       >;
 
+#if defined(_MSC_VER) // MSVC invents warnings here that don't apply.
+#pragma warning(push)
+#pragma warning(disable:4244) // conversion from 'int' to 'float', possible loss of data
+#endif
+
       // Floating point accuracy depends on how large the value is. At 1<<12 accuracy
       // it reaches an ULP of 0.5 (meaning it can only represent numbers in steps of 0.5),
       // at 1<<13 the ULP is 1. We can only use the more efficient method up to here.
@@ -94,6 +101,9 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
           )
         );
       }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
     }
 
     if constexpr(NeedConvertChannel2<TSourcePixelFormat, TTargetPixelFormat>) {
@@ -115,6 +125,11 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
         PixelFormatDescription<TSourcePixelFormat>::Channel2::LowestBitIndex,
         PixelFormatDescription<TSourcePixelFormat>::Channel2::BitCount
       >;
+
+#if defined(_MSC_VER) // MSVC invents warnings here that don't apply.
+#pragma warning(push)
+#pragma warning(disable:4244) // conversion from 'int' to 'float', possible loss of data
+#endif
 
       // Floating point accuracy depends on how large the value is. At 1<<12 accuracy
       // reaches an ULP of 0.5 (meaning it canonly represent numbers in steps of 0.5),
@@ -141,6 +156,10 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
           )
         );
       }
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
     }
 
     // Optimization idea (hard to implement)
@@ -168,6 +187,11 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
         PixelFormatDescription<TSourcePixelFormat>::Channel3::BitCount
       >;
 
+#if defined(_MSC_VER) // MSVC invents warnings here that don't apply.
+#pragma warning(push)
+#pragma warning(disable:4244) // conversion from 'int' to 'float', possible loss of data
+#endif
+
       // Floating point accuracy depends on how large the value is. At 1<<12 accuracy
       // reaches an ULP of 0.5 (meaning it canonly represent numbers in steps of 0.5),
       // at 1<<13 the ULP is 1. We can only use the more efficient method up to here.
@@ -193,6 +217,9 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
           )
         );
       }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
     }
 
     if constexpr(NeedConvertChannel4<TSourcePixelFormat, TTargetPixelFormat>) {
@@ -214,6 +241,11 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
         PixelFormatDescription<TSourcePixelFormat>::Channel4::LowestBitIndex,
         PixelFormatDescription<TSourcePixelFormat>::Channel4::BitCount
       >;
+
+#if defined(_MSC_VER) // MSVC invents warnings here that don't apply.
+#pragma warning(push)
+#pragma warning(disable:4244) // conversion from 'int' to 'float', possible loss of data
+#endif
 
       // Floating point accuracy depends on how large the value is. At 1<<12 accuracy
       // reaches an ULP of 0.5 (meaning it canonly represent numbers in steps of 0.5),
@@ -240,6 +272,9 @@ namespace Nuclex { namespace Pixels { namespace PixelFormats {
           )
         );
       }
+#if defined(_MSC_VER)
+#pragma warning(pop)
+#endif
     } else if constexpr(HasAlphaChannel<TTargetPixelFormat>) {
       typedef ChannelFloatType<
         PixelFormatDescription<TTargetPixelFormat>::Channel4::BitCount
