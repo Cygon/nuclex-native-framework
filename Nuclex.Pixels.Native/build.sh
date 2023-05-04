@@ -27,7 +27,7 @@ for buildMode in Debug Release; do
 			-D WANT_JPG=ON \
 			-D WANT_PNG=ON \
 			-D BUILD_UNIT_TESTS=ON \
-			-D BUILD_BENCHMARK=ON \
+			-D BUILD_BENCHMARK=OFF \
 			-GNinja
 	else
 		cmake \
@@ -37,7 +37,7 @@ for buildMode in Debug Release; do
 			-D WANT_JPG=ON \
 			-D WANT_PNG=ON \
 			-D BUILD_UNIT_TESTS=ON \
-			-D BUILD_BENCHMARK=ON
+			-D BUILD_BENCHMARK=OFF
 	fi
 
 	# Compile the binary

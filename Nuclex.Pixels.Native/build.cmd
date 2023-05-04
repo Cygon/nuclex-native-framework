@@ -30,6 +30,8 @@ FOR %%m IN (Debug Release) DO (
 			-D WANT_TIFF=ON ^
 			-D WANT_JPG=ON ^
 			-D WANT_PNG=ON ^
+			-D BUILD_UNIT_TESTS=ON ^
+			-D BUILD_BENCHMARK=OFF
 			-GNinja
 	) ELSE (
 		cmake ^
@@ -40,7 +42,7 @@ FOR %%m IN (Debug Release) DO (
 			-D WANT_JPG=ON ^
 			-D WANT_PNG=ON ^
 			-D BUILD_UNIT_TESTS=ON ^
-			-D BUILD_BENCHMARK=ON
+			-D BUILD_BENCHMARK=OFF
 	)
 
 	REM Compile the binary
