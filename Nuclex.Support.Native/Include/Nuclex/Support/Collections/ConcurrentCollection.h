@@ -84,12 +84,7 @@ namespace Nuclex { namespace Support { namespace Collections {
   >
   class ConcurrentCollection {
 
-    /*
-    /// <summary>Initializes a concurrent collection</summary>
-    public: ConcurrentCollection() {}
-    */
-
-    /// <summary>Destroys the concurrent queue</summary>
+    /// <summary>Destroys the concurrent collection</summary>
     public: virtual ~ConcurrentCollection() = default;
 
     /// <summary>Tries to append an element to the collection in a thread-safe manner</summary>
@@ -104,8 +99,8 @@ namespace Nuclex { namespace Support { namespace Collections {
     /// <returns>True if the element was appended, false if there was no space left</returns>
     public: virtual bool TryAppend(TElement &&element) = 0;
 
-    /// <summary>Tries to take an element from the queue</summary>
-    /// <param name="element">Will receive the element taken from the queue</param>
+    /// <summary>Tries to take an element from the collection</summary>
+    /// <param name="element">Will receive the element taken from the collection</param>
     /// <returns>
     ///   True if an element was taken from the collection, false if the collection was empty
     /// </returns>
@@ -113,12 +108,12 @@ namespace Nuclex { namespace Support { namespace Collections {
 
     /// <summary>Counts the numebr of elements current in the collection</summary>
     /// <returns>
-    ///   The approximate number of elements that have been in the collection during the call
+    ///   The approximate number of elements that had been in the collection during the call
     /// </returns>
     public: virtual std::size_t Count() const = 0;
 
     /// <summary>Checks if the collection is empty</summary>
-    /// <returns>True if the collection was probably empty during the call</returns>
+    /// <returns>True if the collection had been empty during the call</returns>
     public: virtual bool IsEmpty() const = 0;
 
   };

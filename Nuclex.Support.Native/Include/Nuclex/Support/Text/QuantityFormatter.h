@@ -54,7 +54,7 @@ namespace Nuclex { namespace Support { namespace Text {
     /// </param>
     /// <remarks>
     ///   This is a simple helper with no localization. While the strings generated
-    ///   should be universally, they will use English terms for the units.
+    ///   should be universally understood, they will use English terms for the units.
     /// </remarks>
     public: NUCLEX_SUPPORT_API static std::string stringFromDuration(
       std::chrono::seconds duration, bool useSimpleFormat = true

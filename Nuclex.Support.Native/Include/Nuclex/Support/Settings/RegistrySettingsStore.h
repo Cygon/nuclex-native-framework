@@ -118,11 +118,11 @@ namespace Nuclex { namespace Support { namespace Settings {
     ///     Paths are encoded as UTF-8 with forward slashes.
     ///   </para>
     ///   <para>
-    ///     By using the <paramref name="writable" /> argument, access flags can be passed
-    ///     to the Windows registry API that may allow reading from some keys that would
-    ///     otherwise require administrative privileges to access. If you set this parameter
-    ///     to 'false', it's a good idea to declare the registry settings store as const to
-    ///     hide all methods that aren't allowed on the read-only key anyway.
+    ///     By setting the <paramref name="writable" /> argument to 'false', access flags
+    ///     are passed to the Windows registry API that may allow reading from some keys
+    ///     that would otherwise require administrative privileges to access. If you set
+    ///     this parameter to 'false', it's a good idea to declare the registry settings
+    ///     store as const to ensure you won't access any of the write methods.
     ///   </para>
     /// </remarks>
     public: NUCLEX_SUPPORT_API RegistrySettingsStore(

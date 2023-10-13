@@ -100,7 +100,7 @@ do anything, but an acknowledgement of the original author would be nice.
 MoodyCamel Lock-Free Unbounded Concurrent Queue
 -----------------------------------------------
 
-The unbounded concurrent queue code directly forwards to an implementation
+The Linux thread pool code internally uses the unbounded concurrent queue code
 by Cameron Desrochers, included in a subdirectory. It is license under
 the Boost Software License (https://www.boost.org/users/license.html)
 
