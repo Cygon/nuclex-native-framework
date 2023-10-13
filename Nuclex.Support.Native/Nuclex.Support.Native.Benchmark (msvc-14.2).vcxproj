@@ -209,16 +209,10 @@
     <ClCompile Include="Benchmarks\BenchmarkMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\blockingconcurrentqueue.h" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\concurrentqueue.h" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\lightweightsemaphore.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.h" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPSC.inl" />
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.SPSC.inl" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentMap.h" />
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentSet.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\IndexedCollection.h" />
     <ClInclude Include="Include\Nuclex\Support\Collections\ObservableCollection.h" />
@@ -272,8 +266,8 @@
   <ItemGroup>
     <ClCompile Include="Source\Collections\Collection.cpp" />
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp" />
-    <ClCompile Include="Source\Collections\ConcurrentQueue.cpp" />
-    <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp" />
+    <ClCompile Include="Source\Collections\ConcurrentMap.cpp" />
+    <ClCompile Include="Source\Collections\ConcurrentSet.cpp" />
     <ClCompile Include="Source\Collections\DynamicArray.cpp" />
     <ClCompile Include="Source\Collections\IndexedCollection.cpp" />
     <ClCompile Include="Source\Collections\ObservableCollection.cpp" />
@@ -352,8 +346,12 @@
     <ClCompile Include="Source\Text\StringConverter.cpp" />
     <ClCompile Include="Source\Text\StringMatcher.cpp" />
     <ClCompile Include="Source\Text\UnicodeHelper.cpp" />
+    <ClInclude Include="Source\Threading\cameron314-concurrentqueue-1.0.4\concurrentqueue.h" />
+    <ClInclude Include="Source\Threading\cameron314-concurrentqueue-1.0.4\lightweightsemaphore.h" />
     <ClCompile Include="Source\Threading\Latch.cpp" />
     <ClCompile Include="Source\Threading\Gate.cpp" />
+    <ClCompile Include="Source\Threading\MoodyCamelQueue.cpp" />
+    <ClInclude Include="Source\Threading\MoodyCamelQueue.h" />
     <ClCompile Include="Source\Threading\Process.Linux.cpp" />
     <ClCompile Include="Source\Threading\Process.Windows.cpp" />
     <ClCompile Include="Source\Threading\Semaphore.cpp" />

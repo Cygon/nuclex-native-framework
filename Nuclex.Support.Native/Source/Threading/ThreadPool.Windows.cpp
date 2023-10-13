@@ -27,7 +27,7 @@ License along with this library
 
 #include "Nuclex/Support/ScopeGuard.h" // for ScopeGuard
 #include "Nuclex/Support/Threading/Latch.h" // for Latch
-#include "Nuclex/Support/Collections/MoodyCamel/concurrentqueue.h"
+#include "./cameron314-concurrentqueue-1.0.4//concurrentqueue.h"
 
 #include "ThreadPoolTaskPool.h" // thread pool settings + task pool
 #include "../Platform/WindowsApi.h" // error handling helpers

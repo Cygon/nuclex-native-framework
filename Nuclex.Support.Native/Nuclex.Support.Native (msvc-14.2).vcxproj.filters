@@ -17,9 +17,6 @@
     <Filter Include="Include\Collections">
       <UniqueIdentifier>{bb7bb4c9-39c3-4ac7-b033-c752c0cec4d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Collections\MoodyCamel">
-      <UniqueIdentifier>{b3440a33-c01d-4515-be3d-2d530e22b226}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Include\Errors">
       <UniqueIdentifier>{0efb8298-425d-438c-ac9c-e1aba6120891}</UniqueIdentifier>
     </Filter>
@@ -72,36 +69,21 @@
     <Filter Include="Source\Text\DragonBox-1.1.2">
       <UniqueIdentifier>{823678f3-8cdc-419f-a34a-7b7cddff31a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Threading\cameron314-concurrentqueue-1.0.4">
+      <UniqueIdentifier>{2edfecf9-78a3-43e9-9539-c5e2daee37c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\blockingconcurrentqueue.h">
-      <Filter>Include\Collections\MoodyCamel</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\concurrentqueue.h">
-      <Filter>Include\Collections\MoodyCamel</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\MoodyCamel\lightweightsemaphore.h">
-      <Filter>Include\Collections\MoodyCamel</Filter>
-    </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\Collection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentCollection.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentQueue.h">
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentMap.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.h">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPSC.inl">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.SPSC.inl">
-      <Filter>Include\Collections</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentRingBuffer.MPMC.inl">
+    <ClInclude Include="Include\Nuclex\Support\Collections\ConcurrentSet.h">
       <Filter>Include\Collections</Filter>
     </ClInclude>
     <ClInclude Include="Include\Nuclex\Support\Collections\DynamicArray.h">
@@ -259,10 +241,10 @@
     <ClCompile Include="Source\Collections\ConcurrentCollection.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\ConcurrentQueue.cpp">
+    <ClCompile Include="Source\Collections\ConcurrentMap.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collections\ConcurrentRingBuffer.cpp">
+    <ClCompile Include="Source\Collections\ConcurrentSet.cpp">
       <Filter>Source\Collections</Filter>
     </ClCompile>
     <ClCompile Include="Source\Collections\DynamicArray.cpp">
@@ -505,12 +487,24 @@
     <ClCompile Include="Source\Text\UnicodeHelper.cpp">
       <Filter>Source\Text</Filter>
     </ClCompile>
+    <ClInclude Include="Source\Threading\cameron314-concurrentqueue-1.0.4\concurrentqueue.h">
+      <Filter>Source\Threading\cameron314-concurrentqueue-1.0.4</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Threading\cameron314-concurrentqueue-1.0.4\lightweightsemaphore.h">
+      <Filter>Source\Threading\cameron314-concurrentqueue-1.0.4</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Threading\Latch.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Source\Threading\Gate.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Threading\MoodyCamelQueue.cpp">
+      <Filter>Source\Threading</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Threading\MoodyCamelQueue.h">
+      <Filter>Source\Threading</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Threading\Process.Linux.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>

@@ -22,7 +22,7 @@ License along with this library
 #define NUCLEX_SUPPORT_THREADING_THREADPOOLTASKPOOL_H
 
 #include "Nuclex/Support/Config.h"
-#include "Nuclex/Support/Collections/MoodyCamel/concurrentqueue.h"
+#include "./MoodyCamelQueue.h"
 
 #include "ThreadPoolConfig.h"
 
