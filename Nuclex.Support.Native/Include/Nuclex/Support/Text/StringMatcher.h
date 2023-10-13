@@ -25,6 +25,7 @@ License along with this library
 
 #include <string> // for std::string
 #include <functional> //for std::hash, std::equal_to, std::less
+#include <cstdint> // for std::uint32_t, std::uint64_t
 
 namespace Nuclex { namespace Support { namespace Text {
 

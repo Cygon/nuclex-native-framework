@@ -26,6 +26,7 @@ License along with this library
 
 #include <algorithm> // for std::copy_n()
 #include <vector> // for std::vector
+#include <cstdint> // for std::uint8_t
 
 namespace Nuclex { namespace Support { namespace Events {
 

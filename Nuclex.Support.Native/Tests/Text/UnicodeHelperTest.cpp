@@ -23,6 +23,8 @@ License along with this library
 
 #include "Nuclex/Support/Text/UnicodeHelper.h"
 
+#include <cstdint> // for std::uint8_t
+
 #include <gtest/gtest.h>
 
 namespace Nuclex { namespace Support { namespace Text {

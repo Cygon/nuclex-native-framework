@@ -25,6 +25,7 @@ License along with this library
 #include "Nuclex/Support/Text/StringConverter.h" // UTF-8 and wide char conversion
 
 #include <string> // for std::string
+#include <cstdint> // for std::uint8_t
 
 namespace Nuclex { namespace Support { namespace Text {
 
