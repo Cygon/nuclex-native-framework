@@ -1,22 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.421
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34031.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Support.Native (msvc-14.1)", "Nuclex.Support.Native\Nuclex.Support.Native (msvc-14.1).vcxproj", "{5852FC75-7B04-4CD5-9CCB-981A73A3821E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Support.Native (msvc-14.2)", "Nuclex.Support.Native\Nuclex.Support.Native (msvc-14.2).vcxproj", "{5852FC75-7B04-4CD5-9CCB-981A73A3821E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Support.Native.Tests (msvc-14.1)", "Nuclex.Support.Native\Nuclex.Support.Native.Tests (msvc-14.1).vcxproj", "{156EFA80-1456-4C90-B5C8-2CA1D8A2A07F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Support.Native.Benchmark (msvc-14.2)", "Nuclex.Support.Native\Nuclex.Support.Native.Benchmark (msvc-14.2).vcxproj", "{B289C32C-49DD-48DB-8B41-C1D223B7EF51}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Pixels.Native (msvc-14.1)", "Nuclex.Pixels.Native\Nuclex.Pixels.Native (msvc-14.1).vcxproj", "{CA9FCD14-7F37-421D-B150-A837BD8ADC76}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Support.Native.Tests (msvc-14.2)", "Nuclex.Support.Native\Nuclex.Support.Native.Tests (msvc-14.2).vcxproj", "{156EFA80-1456-4C90-B5C8-2CA1D8A2A07F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Pixels.Native.Tests (msvc-14.1)", "Nuclex.Pixels.Native\Nuclex.Pixels.Native.Test (msvc-14.1).vcxproj", "{D56885BF-C49D-4C6F-8F2A-25A043047197}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Storage.Native (msvc-14.1)", "Nuclex.Storage.Native\Nuclex.Storage.Native (msvc-14.1).vcxproj", "{8E38DDD9-4B96-A36B-1B3A-19192B3E2F32}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Pixels.Native (msvc-14.2)", "Nuclex.Pixels.Native\Nuclex.Pixels.Native (msvc-14.2).vcxproj", "{CA9FCD14-7F37-421D-B150-A837BD8ADC76}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5852FC75-7B04-4CD5-9CCB-981A73A3821E} = {5852FC75-7B04-4CD5-9CCB-981A73A3821E}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Storage.Native.Tests (msvc-14.1)", "Nuclex.Storage.Native\Nuclex.Storage.Native.Tests (msvc-14.1).vcxproj", "{305B4ED9-CAF4-4609-9146-9312B9C90CCA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Nuclex.Pixels.Native.Tests (msvc-14.2)", "Nuclex.Pixels.Native\Nuclex.Pixels.Native.Test (msvc-14.2).vcxproj", "{D56885BF-C49D-4C6F-8F2A-25A043047197}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5852FC75-7B04-4CD5-9CCB-981A73A3821E} = {5852FC75-7B04-4CD5-9CCB-981A73A3821E}
 	EndProjectSection
@@ -37,6 +35,14 @@ Global
 		{5852FC75-7B04-4CD5-9CCB-981A73A3821E}.Release|x64.Build.0 = Release|x64
 		{5852FC75-7B04-4CD5-9CCB-981A73A3821E}.Release|x86.ActiveCfg = Release|Win32
 		{5852FC75-7B04-4CD5-9CCB-981A73A3821E}.Release|x86.Build.0 = Release|Win32
+		{B289C32C-49DD-48DB-8B41-C1D223B7EF51}.Debug|x64.ActiveCfg = Debug|x64
+		{B289C32C-49DD-48DB-8B41-C1D223B7EF51}.Debug|x64.Build.0 = Debug|x64
+		{B289C32C-49DD-48DB-8B41-C1D223B7EF51}.Debug|x86.ActiveCfg = Debug|Win32
+		{B289C32C-49DD-48DB-8B41-C1D223B7EF51}.Debug|x86.Build.0 = Debug|Win32
+		{B289C32C-49DD-48DB-8B41-C1D223B7EF51}.Release|x64.ActiveCfg = Release|x64
+		{B289C32C-49DD-48DB-8B41-C1D223B7EF51}.Release|x64.Build.0 = Release|x64
+		{B289C32C-49DD-48DB-8B41-C1D223B7EF51}.Release|x86.ActiveCfg = Release|Win32
+		{B289C32C-49DD-48DB-8B41-C1D223B7EF51}.Release|x86.Build.0 = Release|Win32
 		{156EFA80-1456-4C90-B5C8-2CA1D8A2A07F}.Debug|x64.ActiveCfg = Debug|x64
 		{156EFA80-1456-4C90-B5C8-2CA1D8A2A07F}.Debug|x64.Build.0 = Debug|x64
 		{156EFA80-1456-4C90-B5C8-2CA1D8A2A07F}.Debug|x86.ActiveCfg = Debug|Win32
@@ -61,22 +67,6 @@ Global
 		{D56885BF-C49D-4C6F-8F2A-25A043047197}.Release|x64.Build.0 = Release|x64
 		{D56885BF-C49D-4C6F-8F2A-25A043047197}.Release|x86.ActiveCfg = Release|Win32
 		{D56885BF-C49D-4C6F-8F2A-25A043047197}.Release|x86.Build.0 = Release|Win32
-		{8E38DDD9-4B96-A36B-1B3A-19192B3E2F32}.Debug|x64.ActiveCfg = Debug|x64
-		{8E38DDD9-4B96-A36B-1B3A-19192B3E2F32}.Debug|x64.Build.0 = Debug|x64
-		{8E38DDD9-4B96-A36B-1B3A-19192B3E2F32}.Debug|x86.ActiveCfg = Debug|Win32
-		{8E38DDD9-4B96-A36B-1B3A-19192B3E2F32}.Debug|x86.Build.0 = Debug|Win32
-		{8E38DDD9-4B96-A36B-1B3A-19192B3E2F32}.Release|x64.ActiveCfg = Release|x64
-		{8E38DDD9-4B96-A36B-1B3A-19192B3E2F32}.Release|x64.Build.0 = Release|x64
-		{8E38DDD9-4B96-A36B-1B3A-19192B3E2F32}.Release|x86.ActiveCfg = Release|Win32
-		{8E38DDD9-4B96-A36B-1B3A-19192B3E2F32}.Release|x86.Build.0 = Release|Win32
-		{305B4ED9-CAF4-4609-9146-9312B9C90CCA}.Debug|x64.ActiveCfg = Debug|x64
-		{305B4ED9-CAF4-4609-9146-9312B9C90CCA}.Debug|x64.Build.0 = Debug|x64
-		{305B4ED9-CAF4-4609-9146-9312B9C90CCA}.Debug|x86.ActiveCfg = Debug|Win32
-		{305B4ED9-CAF4-4609-9146-9312B9C90CCA}.Debug|x86.Build.0 = Debug|Win32
-		{305B4ED9-CAF4-4609-9146-9312B9C90CCA}.Release|x64.ActiveCfg = Release|x64
-		{305B4ED9-CAF4-4609-9146-9312B9C90CCA}.Release|x64.Build.0 = Release|x64
-		{305B4ED9-CAF4-4609-9146-9312B9C90CCA}.Release|x86.ActiveCfg = Release|Win32
-		{305B4ED9-CAF4-4609-9146-9312B9C90CCA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
