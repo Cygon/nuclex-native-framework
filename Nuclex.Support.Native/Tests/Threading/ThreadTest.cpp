@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -105,7 +105,12 @@ namespace Nuclex { namespace Support { namespace Threading {
     }
 
     // If you run this on a system with more than 64 CPUs, the test will fail.
-    EXPECT_EQ(ownAffinity, allCpusAffinity);
+    // Either the exact flags for the present CPU cores or a (-1) for all cores is okay.
+    if(ownAffinity == std::uint64_t(-1)) {
+      EXPECT_EQ(ownAffinity, std::uint64_t(-1));
+    } else {
+      EXPECT_EQ(ownAffinity, allCpusAffinity);
+    }
 
   }
 
@@ -137,7 +142,12 @@ namespace Nuclex { namespace Support { namespace Threading {
     }
 
     // If you run this on a system with more than 64 CPUs, the test will fail.
-    EXPECT_EQ(newThreadAffinity, allCpusAffinity);
+    // Either the exact flags for the present CPU cores or a (-1) for all cores is okay.
+    if(newThreadAffinity == std::uint64_t(-1)) {
+      EXPECT_EQ(newThreadAffinity, std::uint64_t(-1));
+    } else {
+      EXPECT_EQ(newThreadAffinity, allCpusAffinity);
+    }
 
   }
 

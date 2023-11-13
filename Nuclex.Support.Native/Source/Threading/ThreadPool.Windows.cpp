@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -23,7 +23,7 @@ License along with this library
 
 #include "Nuclex/Support/Threading/ThreadPool.h"
 
-#if defined(NUCLEX_SUPPORT_WINDOWS)
+#if defined(NUCLEX_SUPPORT_WINDOWS) && defined(NUCLEX_SUPPORT_USE_MICROSOFT_THREADPOOL)
 
 #include "Nuclex/Support/ScopeGuard.h" // for ScopeGuard
 #include "Nuclex/Support/Threading/Latch.h" // for Latch
@@ -373,4 +373,4 @@ namespace Nuclex { namespace Support { namespace Threading {
 
 }}} // namespace Nuclex::Support::Threading
 
-#endif // defined(NUCLEX_SUPPORT_WINDOWS)
+#endif // defined(NUCLEX_SUPPORT_WINDOWS) && defined(NUCLEX_SUPPORT_USE_MICROSOFT_THREADPOOL)

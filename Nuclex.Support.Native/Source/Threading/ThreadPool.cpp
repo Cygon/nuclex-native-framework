@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -23,27 +23,37 @@ License along with this library
 
 #include "Nuclex/Support/Threading/ThreadPool.h"
 
-#if defined(NUCLEX_SUPPORT_LINUX)
+#if defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)
+#if !(defined(NUCLEX_SUPPORT_WINDOWS) && defined(NUCLEX_SUPPORT_USE_MICROSOFT_THREADPOOL))
 
 #include "Nuclex/Support/ScopeGuard.h" // for ScopeGuard
 #include "Nuclex/Support/Threading/Gate.h" // for Gate
 #include "Nuclex/Support/Threading/Semaphore.h" // for Semaphore
-#include "./MoodyCamelQueue.h" // for ConcurrentQueue
 
 #include "ThreadPoolTaskPool.h" // thread pool settings + task pool
-#include "../Platform/PosixTimeApi.h" // error handling helpers, time helpers
 
 #include <cassert> // for assert()
 #include <atomic> // for std::atomic
 #include <thread> // for std::thread
 
+#if defined(NUCLEX_SUPPORT_LINUX)
+#include "../Platform/PosixTimeApi.h" // error handling helpers, time helpers
 #include <sys/sysinfo.h> // for ::get_nprocs()
+#elif defined(NUCLEX_SUPPORT_WINDOWS)
+#include "../Platform/WindowsApi.h" // error handling helpers
+#endif
 
-// There is no OS-provided thread pool on Linux systems
+// There is no OS-provided thread pool on Linux systems and the thread pool provided
+// through the Windows API performs poorly and has gaping design issues (mostly related
+// to waiting for tasks to complete on shutdown / accurately counting canceled tasks
+// leaving the queue).
 //
 // Thus, an entire stand-alone thread pool is implemented as a private implementation
-// invisible to the header. Which makes this file quite a bit larger than the Windows
-// counterpart which relies on an already existing implementation shipped with the OS.
+// invisible to the header.
+//
+// There also is an implementation using aforementioned Windows API thread pool
+// (supporting both the legacy variant and the modern variant), but it suffers from
+// sporadic barfs during shutdown.
 //
 
 namespace Nuclex { namespace Support { namespace Threading {
@@ -424,17 +434,33 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 
   std::size_t ThreadPool::GetDefaultMinimumThreadCount() {
+#if defined(NUCLEX_SUPPORT_LINUX)
     return ThreadPoolConfig::GuessDefaultMinimumThreadCount(
       static_cast<std::size_t>(::get_nprocs())
     );
+#elif defined(NUCLEX_SUPPORT_WINDOWS)
+    ::SYSTEM_INFO systemInformation = {0};
+    ::GetSystemInfo(&systemInformation);
+    return ThreadPoolConfig::GuessDefaultMinimumThreadCount(
+      static_cast<std::size_t>(systemInformation.dwNumberOfProcessors)
+    );
+#endif
   }
 
   // ------------------------------------------------------------------------------------------- //
 
   std::size_t ThreadPool::GetDefaultMaximumThreadCount() {
+#if defined(NUCLEX_SUPPORT_LINUX)
     return ThreadPoolConfig::GuessDefaultMaximumThreadCount(
       static_cast<std::size_t>(::get_nprocs())
     );
+#elif defined(NUCLEX_SUPPORT_WINDOWS)
+    ::SYSTEM_INFO systemInformation = {0};
+    ::GetSystemInfo(&systemInformation);
+    return ThreadPoolConfig::GuessDefaultMaximumThreadCount(
+      static_cast<std::size_t>(systemInformation.dwNumberOfProcessors)
+    );
+#endif
   }
 
   // ------------------------------------------------------------------------------------------- //
@@ -528,4 +554,5 @@ namespace Nuclex { namespace Support { namespace Threading {
 
 }}} // namespace Nuclex::Support::Threading
 
-#endif // defined(NUCLEX_SUPPORT_LINUX)
+#endif // !(defined(NUCLEX_SUPPORT_WINDOWS) && defined(NUCLEX_SUPPORT_USE_MICROSOFT_THREADPOOL))
+#endif // defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)

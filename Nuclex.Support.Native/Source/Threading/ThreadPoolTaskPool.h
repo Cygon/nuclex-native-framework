@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -22,9 +22,13 @@ License along with this library
 #define NUCLEX_SUPPORT_THREADING_THREADPOOLTASKPOOL_H
 
 #include "Nuclex/Support/Config.h"
-#include "./MoodyCamelQueue.h"
-
 #include "ThreadPoolConfig.h"
+
+// Boost-licensed MoodyCamel queue.
+// This is a lock-free, unbounded queue that works on Windows and Linux.
+// Its performance is at the top end of such queues. The header does a lot of stuff,
+// involving many other headers and preprocessor constants, so we include it last.
+#include "./cameron314-concurrentqueue-1.0.4/concurrentqueue.h"
 
 namespace Nuclex { namespace Support { namespace Threading {
 

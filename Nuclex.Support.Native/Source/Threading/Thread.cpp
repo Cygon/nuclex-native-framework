@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -76,8 +76,8 @@ namespace {
     // as little damage as possible
     std::uint64_t allCpusAffinity = 0;
     {
-      // Count CPUs in CPU group 0 only so we don't risk an INVALID_ARGUMENT. This of course
-      // assumes that the thread is running on group 0.
+      // Count CPUs in CPU group 0 only so we don't risk an INVALID_ARGUMENT.
+      // This of course assumes that the thread is running on group 0.
       DWORD cpuCount = ::GetActiveProcessorCount(0);
       for(std::size_t index = 0; index < cpuCount; ++index) {
         allCpusAffinity |= (std::uint64_t(1) << index);
@@ -198,7 +198,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   void Thread::Sleep(std::chrono::microseconds time) {
 #if defined(NUCLEX_SUPPORT_WINDOWS)
     std::int64_t microseconds = time.count();
-    if(microseconds > 0) {
+    if(microseconds >= 0) {
       microseconds += std::int64_t(500); // To round to nearest mllisecond
       ::Sleep(static_cast<DWORD>(microseconds / std::int64_t(1000)));
     }
@@ -216,9 +216,9 @@ namespace Nuclex { namespace Support { namespace Threading {
 
       // Calculate the future point in time by adding the requested number of microseconds
       {
-        const std::size_t NanosecondsPerMicrosecond = 1000; // 1,000 ns = 1 μs
-        const std::size_t MicrosecondsPerSecond = 1000000; // 1,000,000 μs = 1 s
-        const std::size_t NanosecondsPerSecond = 1000000000; // 1,000,000,000 ns = 1 s
+        const std::size_t NanosecondsPerMicrosecond = 1'000; // 1,000 ns = 1 μs
+        const std::size_t MicrosecondsPerSecond = 1'000'000; // 1,000,000 μs = 1 s
+        const std::size_t NanosecondsPerSecond = 1'000'000'000; // 1,000,000,000 ns = 1 s
 
         // timespec has seconds and nanoseconds, so divide the milliseconds into full seconds
         // and remainder milliseconds to deal with this
