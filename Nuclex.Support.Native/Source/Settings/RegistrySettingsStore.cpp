@@ -34,6 +34,7 @@ License along with this library
 
 #include <cassert> // for assert()
 #include <stdexcept> // for std::logic_error
+#include <memory> // for std::unique_ptr
 
 // TODO: This file has become too long.
 //       Split the registry read/write methods into an API wrapper
