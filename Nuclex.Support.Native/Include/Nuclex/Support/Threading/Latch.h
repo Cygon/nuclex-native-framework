@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -38,7 +38,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   ///   </para>
   ///   <para>
   ///     This behavior is useful if you need to wait for a series of tasks to finish or
-  ///     a set of resources to complete a process before shutting down.
+  ///     resources used by several threads to become available.
   ///   </para>
   /// </remarks>
   class NUCLEX_SUPPORT_TYPE Latch {
@@ -99,10 +99,8 @@ namespace Nuclex { namespace Support { namespace Threading {
     /// <summary>Accesses the platform dependent implementation data container</summary>
     /// <returns>A reference to the platform dependent implementation data</returns>
     private: PlatformDependentImplementationData &getImplementationData();
-#if defined(NUCLEX_SUPPORT_LINUX)
-    alignas(8) unsigned char implementationDataBuffer[16];
-#elif defined(NUCLEX_SUPPORT_WINDOWS)
-    unsigned char implementationDataBuffer[sizeof(std::size_t) * 12]; // matches HANDLE size
+#if defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)
+    alignas(8) unsigned char implementationDataBuffer[sizeof(std::size_t) * 2];
 #else // Posix
     unsigned char implementationDataBuffer[96];
 #endif

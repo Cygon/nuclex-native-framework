@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -116,7 +116,7 @@ namespace Nuclex { namespace Support { namespace Platform {
       }
 
       Platform::WindowsApi::ThrowExceptionForSystemError(
-        u8"Could not check process exit code", lastErrorCode
+        u8"Could not check if file exists via GetFileAttributesW()", lastErrorCode
       );
     }
 

@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -338,7 +338,7 @@ namespace Nuclex { namespace Support { namespace Platform {
           break; // end reached
         } else if(result != ERROR_SUCCESS) {
           Platform::WindowsApi::ThrowExceptionForSystemError(
-            u8"Could not query name of subkey from registry key", result
+            u8"Could not query name of registry value", result
           );
         }
 
@@ -365,7 +365,7 @@ namespace Nuclex { namespace Support { namespace Platform {
   ) {
     ::HKEY subKeyHandle;
     {
-      // Flags to tell the "security accounts manager" the access level we need
+      // Flags to tell the "security accounts manager" what access level we need
       ::REGSAM desiredAccessLevel = KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS;
       if(writable) {
         desiredAccessLevel |= (KEY_SET_VALUE | KEY_CREATE_SUB_KEY);

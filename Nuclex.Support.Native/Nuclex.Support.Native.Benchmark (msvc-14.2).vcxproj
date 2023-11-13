@@ -106,7 +106,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;_DEBUG;_WINDOWS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\celero\build\include\</AdditionalIncludeDirectories>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -117,7 +117,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>celero.lib;lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>celero.lib;synchronization.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\celero\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
     </Link>
@@ -126,7 +126,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;_DEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;_DEBUG;_WINDOWS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\celero\build\include\</AdditionalIncludeDirectories>
       <StringPooling>true</StringPooling>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -136,7 +136,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>celero.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>celero.lib;synchronization.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\celero\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
     </Link>
@@ -147,7 +147,7 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;NDEBUG;_WINDOWS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\celero\build\include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
@@ -163,7 +163,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>celero.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>celero.lib;synchronization.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\celero\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -175,7 +175,7 @@
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NUCLEX_SUPPORT_EXECUTABLE;CELERO_STATIC;NDEBUG;_WINDOWS;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)Include\;$(ProjectDir)..\ThirdParty\celero\build\include\</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
@@ -190,7 +190,7 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>celero.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>celero.lib;synchronization.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)..\ThirdParty\celero\bin\windows-msvc14.2-$(SanePlatform)-$(Configuration)\</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Nuclex.Support.Native.def</ModuleDefinitionFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -284,6 +284,8 @@
     <ClCompile Include="Source\Events\Event.cpp" />
     <ClCompile Include="Source\Platform\LinuxFileApi.cpp" />
     <ClInclude Include="Source\Platform\LinuxFileApi.h" />
+    <ClCompile Include="Source\Platform\LinuxFutexApi.cpp" />
+    <ClInclude Include="Source\Platform\LinuxFutexApi.h" />
     <ClCompile Include="Source\Platform\PosixApi.cpp" />
     <ClInclude Include="Source\Platform\PosixApi.h" />
     <ClCompile Include="Source\Platform\PosixFileApi.cpp" />
@@ -304,6 +306,8 @@
     <ClInclude Include="Source\Platform\WindowsProcessApi.h" />
     <ClCompile Include="Source\Platform\WindowsRegistryApi.cpp" />
     <ClInclude Include="Source\Platform\WindowsRegistryApi.h" />
+    <ClCompile Include="Source\Platform\WindowsSyncApi.cpp" />
+    <ClInclude Include="Source\Platform\WindowsSyncApi.h" />
     <ClCompile Include="Source\Services\LazyServiceInjector.cpp" />
     <ClCompile Include="Source\Services\ServiceContainer.cpp" />
     <ClCompile Include="Source\Services\ServiceProvider.cpp" />
@@ -350,13 +354,11 @@
     <ClInclude Include="Source\Threading\cameron314-concurrentqueue-1.0.4\lightweightsemaphore.h" />
     <ClCompile Include="Source\Threading\Latch.cpp" />
     <ClCompile Include="Source\Threading\Gate.cpp" />
-    <ClCompile Include="Source\Threading\MoodyCamelQueue.cpp" />
-    <ClInclude Include="Source\Threading\MoodyCamelQueue.h" />
     <ClCompile Include="Source\Threading\Process.Linux.cpp" />
     <ClCompile Include="Source\Threading\Process.Windows.cpp" />
     <ClCompile Include="Source\Threading\Semaphore.cpp" />
     <ClCompile Include="Source\Threading\Thread.cpp" />
-    <ClCompile Include="Source\Threading\ThreadPool.Linux.cpp" />
+    <ClCompile Include="Source\Threading\ThreadPool.cpp" />
     <ClCompile Include="Source\Threading\ThreadPool.Windows.cpp" />
     <ClCompile Include="Source\Threading\ThreadPoolConfig.cpp" />
     <ClInclude Include="Source\Threading\ThreadPoolConfig.h" />

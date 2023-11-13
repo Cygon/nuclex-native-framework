@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -25,17 +25,16 @@ License along with this library
 
 #if defined(NUCLEX_SUPPORT_LINUX) // Directly use futex via kernel syscalls
 #include "../Platform/PosixTimeApi.h" // for PosixTimeApi::GetTimePlus()
-#include <linux/futex.h> // for futex constants
-#include <unistd.h> // for ::syscall()
-#include <limits.h> // for INT_MAX
-#include <sys/syscall.h> // for ::SYS_futex
+#include "../Platform/LinuxFutexApi.h" // for LinuxFutexApi::PrivateFutexWait() and more
 #elif defined(NUCLEX_SUPPORT_WINDOWS) // Use standard win32 threading primitives
 #include "../Platform/WindowsApi.h" // for ::CreateEventW(), ::CloseHandle() and more
+#include "../Platform/WindowsSyncApi.h" // for ::WaitOnAddress(), ::WakeByAddressAll()
 #else // Posix: use a pthreads conditional variable to emulate a gate
 #include "../Platform/PosixTimeApi.h" // for PosixTimeApi::GetTimePlus()
 #include <ctime> // for ::clock_gettime()
-#include <atomic> // for std::atomic
 #endif
+
+#include <atomic> // for std::atomic
 
 #if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS)
   // Just some safety checks to make sure pthread_condattr_setclock() is available.
@@ -72,8 +71,8 @@ namespace Nuclex { namespace Support { namespace Threading {
     /// <summary>Stores the current state of the futex</summary>
     public: volatile std::uint32_t FutexWord;
 #elif defined(NUCLEX_SUPPORT_WINDOWS)
-    /// <summary>Handle of the event used to pass or block threads</summary>
-    public: HANDLE EventHandle;
+    /// <summary>Stores the current state of the wait varable</summary>
+    public: volatile std::uint32_t WaitWord;
 #else // Posix
     /// <summary>Whether the gate is currently open</summary>
     public: std::atomic<bool> IsOpen;
@@ -97,20 +96,7 @@ namespace Nuclex { namespace Support { namespace Threading {
   Gate::PlatformDependentImplementationData::PlatformDependentImplementationData(
     bool initiallyOpen
   ) :
-    EventHandle(INVALID_HANDLE_VALUE) {
-
-    // Create the Win32 event we'll use for this
-    this->EventHandle = ::CreateEventW(nullptr, TRUE, initiallyOpen ? TRUE : FALSE, nullptr);
-    bool eventCreationFailed = (
-      (this->EventHandle == 0) || (this->EventHandle == INVALID_HANDLE_VALUE)
-    );
-    if(unlikely(eventCreationFailed)) {
-      DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
-        u8"Could not create thread synchronication event for gate", lastErrorCode
-      );
-    }
-  }
+    WaitWord(initiallyOpen ? 1 : 0) {}
 #endif
   // ------------------------------------------------------------------------------------------- //
 #if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS) // -> Posix
@@ -142,17 +128,9 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_LINUX)
+#if defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)
   Gate::PlatformDependentImplementationData::~PlatformDependentImplementationData() {
     // Nothing to do. If threads are waiting, they're now waiting on dead memory.
-  }
-#endif
-  // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_WINDOWS)
-  Gate::PlatformDependentImplementationData::~PlatformDependentImplementationData() {
-    BOOL result = ::CloseHandle(this->EventHandle);
-    NUCLEX_SUPPORT_NDEBUG_UNUSED(result);
-    assert((result != FALSE) && u8"Synchronization event is closed successfully");
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
@@ -177,7 +155,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // likely crash or at least malfunction.
     assert(
       (sizeof(this->implementationDataBuffer) >= sizeof(PlatformDependentImplementationData)) &&
-      u8"Private implementation data for Nuclex::Support::Threading::Process fits in buffer"
+      u8"Private implementation data for Nuclex::Support::Threading::Gate fits in buffer"
     );
     new(this->implementationDataBuffer) PlatformDependentImplementationData(initiallyOpen);
   }
@@ -201,21 +179,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     //
     // This will signal other threads sitting in the Gate::Wait() method to
     // re-check the gate's status and resume running
-    long result = ::syscall(
-      SYS_futex, // syscall id
-      static_cast<volatile std::uint32_t *>(&impl.FutexWord), // futex word being accessed
-      static_cast<int>(FUTEX_PRIVATE_FLAG | FUTEX_WAKE), // process-private futex wakeup
-      static_cast<int>(INT_MAX), // wake up all waiters
-      static_cast<struct ::timespec *>(nullptr), // timeout -> ignored
-      static_cast<std::uint32_t *>(nullptr), // second futex word -> ignored
-      static_cast<int>(0) // second futex word value -> ignored
-    );
-    if(unlikely(result == -1)) {
-      int errorNumber = errno;
-      Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
-        u8"Could not wake up threads waiting on futex", errorNumber
-      );
-    }
+    Platform::LinuxFutexApi::PrivateFutexWakeAll(impl.FutexWord);
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
@@ -223,13 +187,17 @@ namespace Nuclex { namespace Support { namespace Threading {
   void Gate::Open() {
     PlatformDependentImplementationData &impl = getImplementationData();
 
-    DWORD result = ::SetEvent(impl.EventHandle);
-    if(unlikely(result == FALSE)) {
-      DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
-        u8"Could not set synchronization event to signaled state", lastErrorCode
-      );
-    }
+    // Simply set the atomic variable to 1 to indicate the gate is open
+    impl.WaitWord = 1; // std::atomic_store(...);
+    std::atomic_thread_fence(std::memory_order::memory_order_release);
+
+    // WakeByAddressAll() (Windows 8+)
+    // https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-wakebyaddressall
+    //
+    // This will signal other threads sitting in the Latch::Wait() method to re-check
+    // the gate's state and resume running
+    //
+    Platform::WindowsSyncApi::WakeByAddressAll(impl.WaitWord);
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
@@ -278,13 +246,9 @@ namespace Nuclex { namespace Support { namespace Threading {
   void Gate::Close() {
     PlatformDependentImplementationData &impl = getImplementationData();
 
-    DWORD result = ::ResetEvent(impl.EventHandle);
-    if(unlikely(result == FALSE)) {
-      DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
-        u8"Could not set synchronization event to non-signaled state", lastErrorCode
-      );
-    }
+    // Simply set the atomic variable to 1 to indicate the gate is open
+    impl.WaitWord = 0; // std::atomic_store(...);
+    std::atomic_thread_fence(std::memory_order::memory_order_release);
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
@@ -315,7 +279,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // a race condition because the futex syscall will do the check again atomically,
     // but checking once in userspace may allow us to avoid the syscall().
     std::uint32_t safeFutexWord = __atomic_load_n(&impl.FutexWord, __ATOMIC_CONSUME);
-    if(safeFutexWord == 1) {
+    if(safeFutexWord != 0) {
       return; // Gate was open
     }
 
@@ -327,23 +291,14 @@ namespace Nuclex { namespace Support { namespace Threading {
       //
       // This sends the thread to sleep for as long as the futex word has the expected value.
       // Checking and entering sleep is one atomic operation, avoiding a race condition.
-      long result = ::syscall(
-        SYS_futex, // syscall id
-        static_cast<const volatile std::uint32_t *>(&impl.FutexWord), // futex word being accessed
-        static_cast<int>(FUTEX_PRIVATE_FLAG | FUTEX_WAIT), // process-private futex wakeup
-        static_cast<int>(0), // wait while futex word is 0 (== gate closed)
-        static_cast<struct ::timespec *>(nullptr), // timeout -> infinite
-        static_cast<std::uint32_t *>(nullptr), // second futex word -> ignored
-        static_cast<int>(0) // second futex word value -> ignored
+      Platform::LinuxFutexApi::WaitResult result = Platform::LinuxFutexApi::PrivateFutexWait(
+        impl.FutexWord,
+        0 // wait while futex word is 0 (== gate closed)
       );
-      if(unlikely(result == -1)) {
-        int errorNumber = errno;
-        if(likely(errorNumber == EAGAIN)) { // Value was not 0, so gate is now open
-          return;
-        } else if(errorNumber != EINTR) {
-          Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
-            u8"Could not sleep on gate status via futex wait", errorNumber
-          );
+      if(likely(result != Platform::LinuxFutexApi::Interrupted)) {
+        safeFutexWord = __atomic_load_n(&impl.FutexWord, __ATOMIC_CONSUME);
+        if(likely(safeFutexWord != 0)) {
+          return; // Gate now open
         }
       }
 
@@ -355,15 +310,34 @@ namespace Nuclex { namespace Support { namespace Threading {
   void Gate::Wait() const {
     const PlatformDependentImplementationData &impl = getImplementationData();
 
-    DWORD result = ::WaitForSingleObject(impl.EventHandle, INFINITE);
-    if(likely(result == WAIT_OBJECT_0)) {
-      return;
+    // Do a single check for whether the gate is currently open. This is not
+    // a race condition because WaitOnAddress() call will do the check again atomically,
+    // but checking once in userspace may allow us to avoid the kernel mode call.
+    std::uint32_t safeWaitValue = impl.WaitWord; // std::atomic_load<std::uint32_t>(...);
+    if(safeWaitValue != 0) {
+      return; // Gate was open
     }
 
-    DWORD lastErrorCode = ::GetLastError();
-    Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
-      u8"Error waiting for sychronization event via WaitForSingleObject()", lastErrorCode
-    );
+    // Be ready to check multiple times in case of spurious wakeups
+    for(;;) {
+
+      // WaitOnAddress (Windows 8+)
+      // https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitonaddress
+      //
+      // This sends the thread to sleep for as long as the wait value has the expected value.
+      // Checking and entering sleep is one atomic operation, avoiding a race condition.
+      Platform::WindowsSyncApi::WaitResult result = Platform::WindowsSyncApi::WaitOnAddress(
+        static_cast<const volatile std::uint32_t &>(impl.WaitWord),
+        static_cast<std::uint32_t>(0) // wait while wait variable is 0 (== gate closed)
+      );
+      if(likely(result == Platform::WindowsSyncApi::WaitResult::ValueChanged)) {
+        safeWaitValue = impl.WaitWord; // std::atomic_load(...);
+        if(likely(safeWaitValue != 0)) {
+          return; // Value was not 0, so gate is now open
+        }
+      }
+
+    }
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
@@ -409,7 +383,7 @@ namespace Nuclex { namespace Support { namespace Threading {
     // a race condition because the futex syscall will do the check again atomically,
     // but checking once in userspace may allow us to avoid the syscall().
     std::uint32_t safeFutexWord = __atomic_load_n(&impl.FutexWord, __ATOMIC_CONSUME);
-    if(safeFutexWord == 1) {
+    if(safeFutexWord != 0) {
       return true; // Gate was open
     }
 
@@ -450,28 +424,18 @@ namespace Nuclex { namespace Support { namespace Threading {
       //
       // This sends the thread to sleep for as long as the futex word has the expected value.
       // Checking and entering sleep is one atomic operation, avoiding a race condition.
-      long result = ::syscall(
-        SYS_futex, // syscall id
-        static_cast<const volatile std::uint32_t *>(&impl.FutexWord), // futex word being accessed
-        static_cast<int>(FUTEX_PRIVATE_FLAG | FUTEX_WAIT), // process-private futex wakeup
-        static_cast<int>(0), // wait while futex word is 0 (== gate closed)
-        static_cast<struct ::timespec *>(&timeout), // timeout after which to fail
-        static_cast<std::uint32_t *>(nullptr), // second futex word -> ignored
-        static_cast<int>(0) // second futex word value -> ignored
+      Platform::LinuxFutexApi::WaitResult result = Platform::LinuxFutexApi::PrivateFutexWait(
+        impl.FutexWord,
+        0, // wait while futex word is 0 (== gate closed)
+        timeout // timeout after which to fail
       );
-      if(unlikely(result == -1)) {
-        int errorNumber = errno;
-        if(likely(errorNumber == EAGAIN)) { // Value was not 0, so gate is now open
-          return true;
-        } else if(likely(errorNumber == ETIMEDOUT)) { // Timeout, wait failed
-          return false;
-        } else if(unlikely(errorNumber != EINTR)) {
-          Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
-            u8"Could not sleep on gate status via futex wait", errorNumber
-          );
+      if(likely(result == Platform::LinuxFutexApi::WaitResult::ValueChanged)) {
+        safeFutexWord = __atomic_load_n(&impl.FutexWord, __ATOMIC_CONSUME);
+        if(safeFutexWord != 0) {
+          return true; // Gate now open
         }
-      } else { // result did not indicate an error, so the futex word has changed!
-        break;
+      } else if(unlikely(result == Platform::LinuxFutexApi::WaitResult::TimedOut)) {
+        return false; // Patience has been exceeded
       }
 
       // Calculate the new relative timeout. If this is some kind of spurious
@@ -489,18 +453,60 @@ namespace Nuclex { namespace Support { namespace Threading {
   bool Gate::WaitFor(const std::chrono::microseconds &patience) const {
     const PlatformDependentImplementationData &impl = getImplementationData();
 
-    DWORD milliseconds = static_cast<DWORD>((patience.count() + 500) / 1000);
-    DWORD result = ::WaitForSingleObject(impl.EventHandle, milliseconds);
-    if(likely(result == WAIT_OBJECT_0)) {
-      return true;
-    } else if(result == WAIT_TIMEOUT) {
-      return false;
+    // Do a single check for whether the gate is currently open. This is not
+    // a race condition because WaitOnAddress() will do the check again atomically,
+    // but checking once in userspace may allow us to avoid the kernel mode call.
+    std::uint32_t safeWaitValue = impl.WaitWord; // std::atomic_load<std::uint32_t>(...);
+    if(safeWaitValue != 0) {
+      return true; // Gate was open
     }
 
-    DWORD lastErrorCode = ::GetLastError();
-    Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
-      u8"Error waiting for sychronization event via WaitForSingleObject()", lastErrorCode
+    // Query the tick counter, but don't do anything with it yet (the wait time is
+    // relative, so unless we get a spurious wait, the tick counter isn't even needed)
+    std::chrono::milliseconds startTickCount(::GetTickCount64());
+    std::chrono::milliseconds patienceTickCount = (
+      std::chrono::duration_cast<std::chrono::milliseconds>(patience)
     );
+    std::chrono::milliseconds remainingTickCount = patienceTickCount;
+
+    // Check the wait value and wait on it until it changes. Normally, this loops exactly
+    // once, but spurious wake-ups may still happen and require us to wait again
+    for(;;) {
+
+      // WaitOnAddress (Windows 8+)
+      // https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitonaddress
+      //
+      // This sends the thread to sleep for as long as the wait value has the expected value.
+      // Checking and entering sleep is one atomic operation, avoiding a race condition.
+      Platform::WindowsSyncApi::WaitResult result = Platform::WindowsSyncApi::WaitOnAddress(
+        static_cast<const volatile std::uint32_t &>(impl.WaitWord),
+        static_cast<std::uint32_t>(0), // wait while wait variable is 0 (== gate closed)
+        remainingTickCount
+      );
+      if(likely(result != Platform::WindowsSyncApi::WaitResult::TimedOut)) {
+        safeWaitValue = impl.WaitWord; // std::atomic_load(...);
+        if(likely(safeWaitValue != 0)) { // Value was not 0, so gate is now open
+          break;
+        }
+      }
+
+      // Calculate the new relative timeout. If this is some kind of spurious
+      // wake-up, but the value does indeed change while we're here, that's not
+      // a problem since the WaitOnAddress() call will re-check the wait value.
+      {
+        std::chrono::milliseconds elapsedTickCount = (
+          std::chrono::milliseconds(::GetTickCount64()) - startTickCount
+        );
+        if(elapsedTickCount >= patienceTickCount) {
+          return false; // timeout expired
+        } else {
+          remainingTickCount = patienceTickCount - elapsedTickCount;
+        }
+      }
+
+    }
+
+    return true; // wait noticed a change to the wait variable and gate was open
   }
 #endif
   // ------------------------------------------------------------------------------------------- //

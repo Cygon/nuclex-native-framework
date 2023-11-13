@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -25,20 +25,17 @@ License along with this library
 
 #if defined(NUCLEX_SUPPORT_LINUX) // Directly use futex via kernel syscalls
 #include "../Platform/PosixTimeApi.h" // for PosixTimeApi::GetRemainingTimeout()
-#include <linux/futex.h> // for futex constants
-#include <unistd.h> // for ::syscall()
-#include <limits.h> // for INT_MAX
-#include <sys/syscall.h> // for ::SYS_futex
-#include <ctime> // for ::clock_gettime()
+#include "../Platform/LinuxFutexApi.h" // for LinuxFutexApi::PrivateFutexWait() and more
 #include <atomic> // for std::atomic
 #elif defined(NUCLEX_SUPPORT_WINDOWS) // Use standard win32 threading primitives
 #include "../Platform/WindowsApi.h" // for ::CreateEventW(), ::CloseHandle() and more
+#include "../Platform/WindowsSyncApi.h" // for ::WaitOnAddress(), ::WakeByAddressAll()
 #else // Posix: use a pthreads conditional variable to emulate a semaphore
 #include "../Platform/PosixTimeApi.h" // for PosixTimeApi::GetTimePlus()
 #include <ctime> // for ::clock_gettime()
-#include <atomic> // for std::atomic
 #endif
 
+#include <atomic> // for std::atomic
 #include <cassert> // for assert()
 
 #if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS)
@@ -93,19 +90,17 @@ namespace Nuclex { namespace Support { namespace Threading {
 #if defined(NUCLEX_SUPPORT_LINUX)
     /// <summary>Switches between 0 (no waiters) and 1 (has waiters)</summary>
     public: volatile std::uint32_t FutexWord;
-    /// <summary>Available tickets, negative for each thread waiting for a ticket</summary>
-    public: std::atomic<std::size_t> AdmitCounter;
 #elif defined(NUCLEX_SUPPORT_WINDOWS)
-    /// <summary>Handle of the semaphore used to pass or block threads</summary>
-    public: ::HANDLE SemaphoreHandle;
+    /// <summary>Switches between 0 (no waiters) and 1 (has waiters)</summary>
+    public: volatile std::uint32_t WaitWord;
 #else // Posix
-    /// <summary>How many threads the semaphore will admit</summary>
-    public: std::atomic<std::size_t> AdmitCounter;
     /// <summary>Conditional variable used to signal waiting threads</summary>
     public: mutable ::pthread_cond_t Condition;
     /// <summary>Mutex required to ensure threads never miss the signal</summary>
     public: mutable ::pthread_mutex_t Mutex;
 #endif
+    /// <summary>Available tickets, negative for each thread waiting for a ticket</summary>
+    public: std::atomic<std::size_t> AdmitCounter;
 
   };
 
@@ -122,27 +117,8 @@ namespace Nuclex { namespace Support { namespace Threading {
   Semaphore::PlatformDependentImplementationData::PlatformDependentImplementationData(
     std::size_t initialCount
   ) :
-    SemaphoreHandle(INVALID_HANDLE_VALUE) {
-
-    // Figure out what the maximum number of threads passing through the semaphore
-    // should be. We don't want a limit, but we also don't want to trigger some
-    // undocumented special case code for the largest possible value...
-    LONG maximumCount = std::numeric_limits<LONG>::max() - 10;
-
-    // Create the Win32 event we'll use for this
-    this->SemaphoreHandle = ::CreateSemaphoreW(
-      nullptr, static_cast<LONG>(initialCount), maximumCount, nullptr
-    );
-    bool semaphoreCreationFailed = (
-      (this->SemaphoreHandle == 0) || (this->SemaphoreHandle == INVALID_HANDLE_VALUE)
-    );
-    if(unlikely(semaphoreCreationFailed)) {
-      DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
-        u8"Could not create semaphore for thread synchronization", lastErrorCode
-      );
-    }
-  }
+    WaitWord(0),
+    AdmitCounter(initialCount) {}
 #endif
   // ------------------------------------------------------------------------------------------- //
 #if !defined(NUCLEX_SUPPORT_LINUX) && !defined(NUCLEX_SUPPORT_WINDOWS) // -> Posix
@@ -175,17 +151,9 @@ namespace Nuclex { namespace Support { namespace Threading {
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_LINUX)
+#if defined(NUCLEX_SUPPORT_LINUX) || defined(NUCLEX_SUPPORT_WINDOWS)
   Semaphore::PlatformDependentImplementationData::~PlatformDependentImplementationData() {
     // Nothing to do. If threads are waiting, they're now waiting on dead memory.
-  }
-#endif
-  // ------------------------------------------------------------------------------------------- //
-#if defined(NUCLEX_SUPPORT_WINDOWS)
-  Semaphore::PlatformDependentImplementationData::~PlatformDependentImplementationData() {
-    BOOL result = ::CloseHandle(this->SemaphoreHandle);
-    NUCLEX_SUPPORT_NDEBUG_UNUSED(result);
-    assert((result != FALSE) && u8"Semaphore is closed successfully");
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
@@ -258,21 +226,7 @@ namespace Nuclex { namespace Support { namespace Threading {
       // This will signal other threads sitting in the Semaphore::WaitAndDecrement() method to
       // re-check the semaphore's status and resume running
       //
-      long result = ::syscall(
-        SYS_futex, // syscall id
-        static_cast<volatile std::uint32_t *>(&impl.FutexWord), // futex word being accessed
-        static_cast<int>(FUTEX_WAKE_PRIVATE), // process-private futex wakeup
-        static_cast<int>(count), // wake up as many waiting threads as may be needed
-        static_cast<struct ::timespec *>(nullptr), // timeout -> ignored
-        static_cast<std::uint32_t *>(nullptr), // second futex word -> ignored
-        static_cast<int>(0) // second futex word value -> ignored
-      );
-      if(unlikely(result == -1)) {
-        int errorNumber = errno;
-        Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
-          u8"Could not wake up threads waiting on futex", errorNumber
-        );
-      }
+      Platform::LinuxFutexApi::PrivateFutexWakeAll(impl.FutexWord);
 
     } // if(previousAdmitCounter < 0)
   }
@@ -282,13 +236,42 @@ namespace Nuclex { namespace Support { namespace Threading {
   void Semaphore::Post(std::size_t count /* = 1 */) {
     PlatformDependentImplementationData &impl = getImplementationData();
 
-    BOOL result = ::ReleaseSemaphore(impl.SemaphoreHandle, static_cast<LONG>(count), nullptr);
-    if(result == FALSE) {
-      DWORD lastErrorCode = ::GetLastError();
-      Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
-        u8"Could not increment semaphore", lastErrorCode
-      );
-    }
+    // Increment the semaphore admit counter so for each posted ticket,
+    // a thread will be able to pass through the semaphore.
+    std::size_t previousAdmitCounter = impl.AdmitCounter.fetch_add(
+      count, std::memory_order_release // CHECK: Should this be consume?
+    );
+
+    // If there were no admits left at the time of this call, then there
+    // may be waiting threads that need to be woken.
+    if(previousAdmitCounter == 0) { // If there was no work available before
+
+      // Now here's a little race condition:
+      // - Some thread may have checked the admit counter before our increment
+      //   (and found it was 0, so plans to go to sleep)
+      // - Now we increment the admit counter and try to wake threads
+      //   (but none are waiting)
+      // - Finally, the earlier thread reaches the futex call and waits.
+      //   (even though there's work available and the waking is already done)
+      //
+      // That's why our futex word is 1 if there's work available. Changing it
+      // will wake *all* threads, and that sucks, so we take care to only toggle
+      // it if the situation actually changes.
+      //
+      if(count > 0) { // check needed? nobody would post 0 tickets...
+        impl.WaitWord = 1; // 1 -> tickets available
+        std::atomic_thread_fence(std::memory_order::memory_order_release);
+      }
+
+      // WakeByAddressAll() (Windows 8+)
+      // https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-wakebyaddressall
+      //
+      // This will signal other threads sitting in the Latch::Wait() method to re-check
+      // the latch counter and resume running
+      //
+      Platform::WindowsSyncApi::WakeByAddressAll(impl.WaitWord);
+
+    } // if(previousAdmitCounter < 0)
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
@@ -368,7 +351,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         }
       }
 
-      // Now we're safe. The futex word has been set of 0 (threads are waiting) while
+      // Now we're safe. The futex word has been set to 0 (threads are waiting) while
       // the admit ticket counter was zero, so if any work is posted between here and
       // our futex syscall, it's no problem since the syscall does atomically check
       // that the futex word is still 0 or otherwise return EAGAIN.
@@ -378,23 +361,10 @@ namespace Nuclex { namespace Support { namespace Threading {
       //
       // This sends the thread to sleep for as long as the futex word has the expected value.
       // Checking and entering sleep is one atomic operation, avoiding a race condition.
-      long result = ::syscall(
-        SYS_futex, // syscall id
-        static_cast<const volatile std::uint32_t *>(&impl.FutexWord), // futex word being accessed
-        static_cast<int>(FUTEX_WAIT_PRIVATE), // process-private futex wakeup
-        static_cast<int>(0), // wait while futex word is 0 (== threads are waiting, no tickets)
-        static_cast<struct ::timespec *>(nullptr), // timeout -> infinite
-        static_cast<std::uint32_t *>(nullptr), // second futex word -> ignored
-        static_cast<int>(0) // second futex word value -> ignored
+      Platform::LinuxFutexApi::PrivateFutexWait(
+        impl.FutexWord,
+        0 // wait while futex word is 0 (== threads are waiting, no tickets)
       );
-      if(unlikely(result == -1)) {
-        int errorNumber = errno;
-        if(unlikely((errorNumber != EAGAIN) && (errorNumber != EINTR))) {
-          Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
-            u8"Could not sleep on semaphore via futex wait", errorNumber
-          );
-        }
-      }
 
       // At this point the thread has woken up because of either
       // - a signal (EINTR)
@@ -411,17 +381,75 @@ namespace Nuclex { namespace Support { namespace Threading {
   // ------------------------------------------------------------------------------------------- //
 #if defined(NUCLEX_SUPPORT_WINDOWS)
   void Semaphore::WaitThenDecrement() {
-    const PlatformDependentImplementationData &impl = getImplementationData();
+    PlatformDependentImplementationData &impl = getImplementationData();
 
-    DWORD result = ::WaitForSingleObject(impl.SemaphoreHandle, INFINITE);
-    if(likely(result == WAIT_OBJECT_0)) {
-      return;
-    }
+    // Loop until we can snatch an available ticket
+    std::size_t initialAdmitCounter = impl.AdmitCounter.load(std::memory_order_consume);
+    for(;;) {
 
-    DWORD lastErrorCode = ::GetLastError();
-    Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
-      u8"Error waiting for semaphore via WaitForSingleObject()", lastErrorCode
-    );
+      // Load the ticket counter. If there are tickets available, try to snatch
+      // one ticket and, if obtained, return control to the caller. Should no
+      // tickets be available (or they got used up while we were trying to snatch
+      // one), we will attempt to sleep on the futex word.
+      std::size_t safeAdmitCounter = initialAdmitCounter;
+      while(safeAdmitCounter > 0) {
+        bool success = impl.AdmitCounter.compare_exchange_weak(
+          safeAdmitCounter, safeAdmitCounter - 1, std::memory_order_release
+        );
+        if(success) {
+          return; // We snatched a ticket!
+        }
+      }
+
+      // If we observed some other thread snatching the last ticket and need to go
+      // to sleep, switch the futex word to the contested state.
+      //
+      // At this point, we're in a race with the Post() method which may just now
+      // have incremented the ticket counter and be trying to pre-empt us by
+      // setting the futex word to 1 (meaning tickets are available).
+      //
+      // Thus we need to do some double-checking here.
+      //
+      if(initialAdmitCounter > 0) {
+        impl.WaitWord = 0; // 0 -> threads waiting
+        std::atomic_thread_fence(std::memory_order::memory_order_release);
+
+        initialAdmitCounter = impl.AdmitCounter.load(std::memory_order_consume);
+        if(unlikely(initialAdmitCounter > 0)) {
+          impl.WaitWord = 1; // 1 -> tickets available
+          std::atomic_thread_fence(std::memory_order::memory_order_release);
+          continue;
+        }
+      }
+
+      // Now we're safe. The futex word has been set to 0 (threads are waiting) while
+      // the admit ticket counter was zero, so if any work is posted between here and
+      // WaitOnAddress(), it's no problem since WaitOnAddress() does atomically check
+      // that the wait value is still 0 or otherwise return.
+
+      // WaitOnAddress (Windows 8+)
+      // https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitonaddress
+      //
+      // This sends the thread to sleep for as long as the wait value has the expected value.
+      // Checking and entering sleep is one atomic operation, avoiding a race condition.
+      Platform::WindowsSyncApi::WaitResult result = Platform::WindowsSyncApi::WaitOnAddress(
+        static_cast<const volatile std::uint32_t &>(impl.WaitWord),
+        static_cast<std::uint32_t>(0) // wait while wait variable is 0 (== gate closed)
+      );
+      if(likely(result == Platform::WindowsSyncApi::WaitResult::ValueChanged)) {
+
+        // At this point the thread has woken up because of either
+        // - a signal (EINTR)
+        // - the futex word changed (EAGAIN)
+        // - an explicit wake from the Post() method
+        //
+        // In all cases, we recheck the ticket counter and try to either obtain
+        // a ticket or go back to sleep using the same method as before.
+        initialAdmitCounter = impl.AdmitCounter.load(std::memory_order_consume);
+
+      }
+
+    } // for(;;)
   }
 #endif
   // ------------------------------------------------------------------------------------------- //
@@ -513,7 +541,7 @@ namespace Nuclex { namespace Support { namespace Threading {
         }
       }
 
-      // Now we're safe. The futex word has been set of 0 (threads are waiting) while
+      // Now we're safe. The futex word has been set to 0 (threads are waiting) while
       // the admit ticket counter was zero, so if any work is posted between here and
       // our futex syscall, it's no problem since the syscall does atomically check
       // that the futex word is still 0 or otherwise return EAGAIN.
@@ -538,31 +566,19 @@ namespace Nuclex { namespace Support { namespace Threading {
       //
       // This sends the thread to sleep for as long as the futex word has the expected value.
       // Checking and entering sleep is one atomic operation, avoiding a race condition.
-      long result = ::syscall(
-        SYS_futex, // syscall id
-        static_cast<const volatile std::uint32_t *>(&impl.FutexWord), // futex word being accessed
-        static_cast<int>(FUTEX_WAIT_PRIVATE), // process-private futex wakeup
-        static_cast<int>(0), // wait while futex word is 0 (== threads are waiting, no tickets)
-        static_cast<struct ::timespec *>(&timeout), // timeout after which to fail
-        static_cast<std::uint32_t *>(nullptr), // second futex word -> ignored
-        static_cast<int>(0) // second futex word value -> ignored
+      Platform::LinuxFutexApi::WaitResult result = Platform::LinuxFutexApi::PrivateFutexWait(
+        impl.FutexWord,
+        0, // wait while futex word is 0 (== threads are waiting, no tickets)
+        timeout
       );
-      if(unlikely(result == -1)) {
-        int errorNumber = errno;
-        if(unlikely(errorNumber == ETIMEDOUT)) {
-          return false; // Timeout elapsed, so it's time to give the bad news to the caller
-        }
-        if(unlikely((errorNumber != EAGAIN) && (errorNumber != EINTR))) {
-          Nuclex::Support::Platform::PosixApi::ThrowExceptionForSystemError(
-            u8"Could not sleep on semaphore via futex wait", errorNumber
-          );
-        }
+      if(unlikely(result == Platform::LinuxFutexApi::WaitResult::TimedOut)) {
+        return false;
       }
 
       // At this point the thread has woken up because of either
       // - a signal (EINTR)
       // - the futex word changed (EAGAIN)
-      // - an explicit wake from the Post() method (result == 0)
+      // - an explicit wake from the Post() method
       //
       // In all cases, we recheck the ticket counter and try to either obtain
       // a ticket or go back to sleep using the same method as before.
@@ -576,18 +592,97 @@ namespace Nuclex { namespace Support { namespace Threading {
   bool Semaphore::WaitForThenDecrement(const std::chrono::microseconds &patience)  {
     PlatformDependentImplementationData &impl = getImplementationData();
 
-    DWORD milliseconds = static_cast<DWORD>((patience.count() + 500) / 1000);
-    DWORD result = ::WaitForSingleObject(impl.SemaphoreHandle, milliseconds);
-    if(likely(result == WAIT_OBJECT_0)) {
-      return true;
-    } else if(result == WAIT_TIMEOUT) {
-      return false;
-    }
-
-    DWORD lastErrorCode = ::GetLastError();
-    Nuclex::Support::Platform::WindowsApi::ThrowExceptionForSystemError(
-      u8"Error waiting for semaphore via WaitForSingleObject()", lastErrorCode
+    // Query the tick counter, but don't do anything with it yet (the wait time is
+    // relative, so unless we get a spurious wait, the tick counter isn't even needed)
+    std::chrono::milliseconds startTickCount(::GetTickCount64());
+    std::chrono::milliseconds patienceTickCount = (
+      std::chrono::duration_cast<std::chrono::milliseconds>(patience)
     );
+    std::chrono::milliseconds remainingTickCount = patienceTickCount;
+
+    // Loop until we can either snatch an available ticket or until
+    // the caller-specified timeout is up
+    std::size_t initialAdmitCounter = impl.AdmitCounter.load(std::memory_order_consume);
+    for(;;) {
+
+      // Load the ticket counter. If there are tickets available, try to snatch
+      // one ticket and, if obtained, return control to the caller. Should no
+      // tickets be available (or they got used up while we were trying to snatch
+      // one), we will attempt to sleep on the futex word.
+      std::size_t safeAdmitCounter = initialAdmitCounter;
+      while(safeAdmitCounter > 0) {
+        bool success = impl.AdmitCounter.compare_exchange_weak(
+          safeAdmitCounter, safeAdmitCounter - 1, std::memory_order_release
+        );
+        if(success) {
+          return true; // We snatched a ticket!
+        }
+      }
+
+      // If we observed some other thread snatching the last ticket and need to go
+      // to sleep, switch the futex word to the contested state.
+      //
+      // At this point, we're in a race with the Post() method which may just now
+      // have incremented the ticket counter and be trying to pre-empt us by
+      // setting the futex word to 1 (meaning tickets are available).
+      //
+      // Thus we need to do some double-checking here.
+      //
+      if(initialAdmitCounter > 0) {
+        impl.WaitWord = 0; // 0 -> threads waiting
+        std::atomic_thread_fence(std::memory_order::memory_order_release);
+
+        initialAdmitCounter = impl.AdmitCounter.load(std::memory_order_consume);
+        if(unlikely(initialAdmitCounter > 0)) {
+          impl.WaitWord = 1; // 1 -> tickets available
+          std::atomic_thread_fence(std::memory_order::memory_order_release);
+          continue;
+        }
+      }
+
+      // Now we're safe. The wait value has been set to 0 (threads are waiting) while
+      // the admit ticket counter was zero, so if any work is posted between here and
+      // WaitOnAddres(), it's no problem since WaitOnAddress() does atomically check
+      // that the wait value is still 0 or otherwise return.
+
+      // Calculate the new relative timeout. If this is some kind of spurious
+      // wake-up, but the value does indeed change while we're here, that's not
+      // a problem since the WaitOnAddress() call will re-check the wait value.
+      {
+        std::chrono::milliseconds elapsedTickCount = (
+          std::chrono::milliseconds(::GetTickCount64()) - startTickCount
+        );
+        if(elapsedTickCount >= patienceTickCount) {
+          return false; // timeout expired
+        } else {
+          remainingTickCount = patienceTickCount - elapsedTickCount;
+        }
+      }
+
+      // WaitOnAddress (Windows 8+)
+      // https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitonaddress
+      //
+      // This sends the thread to sleep for as long as the wait value has the expected value.
+      // Checking and entering sleep is one atomic operation, avoiding a race condition.
+      Platform::WindowsSyncApi::WaitResult result = Platform::WindowsSyncApi::WaitOnAddress(
+        static_cast<const volatile std::uint32_t &>(impl.WaitWord),
+        static_cast<std::uint32_t>(0), // wait while wait variable is 0 (== gate closed)
+        remainingTickCount
+      );
+      if(unlikely(result == Platform::WindowsSyncApi::WaitResult::TimedOut)) {
+        return false;
+      }
+
+      // At this point the thread has woken up because of either
+      // - a signal (EINTR)
+      // - the futex word changed (EAGAIN)
+      // - an explicit wake from the Post() method (result == 0)
+      //
+      // In all cases, we recheck the ticket counter and try to either obtain
+      // a ticket or go back to sleep using the same method as before.
+      initialAdmitCounter = impl.AdmitCounter.load(std::memory_order_consume);
+
+    } // for(;;)
   }
 #endif
   // ------------------------------------------------------------------------------------------- //

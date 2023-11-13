@@ -331,6 +331,12 @@
     <ClInclude Include="Source\Platform\LinuxFileApi.h">
       <Filter>Source\Platform</Filter>
     </ClInclude>
+    <ClCompile Include="Source\Platform\LinuxFutexApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\LinuxFutexApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
     <ClCompile Include="Source\Platform\PosixApi.cpp">
       <Filter>Source\Platform</Filter>
     </ClCompile>
@@ -389,6 +395,12 @@
       <Filter>Source\Platform</Filter>
     </ClCompile>
     <ClInclude Include="Source\Platform\WindowsRegistryApi.h">
+      <Filter>Source\Platform</Filter>
+    </ClInclude>
+    <ClCompile Include="Source\Platform\WindowsSyncApi.cpp">
+      <Filter>Source\Platform</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\Platform\WindowsSyncApi.h">
       <Filter>Source\Platform</Filter>
     </ClInclude>
     <ClCompile Include="Source\Services\LazyServiceInjector.cpp">
@@ -529,12 +541,6 @@
     <ClCompile Include="Source\Threading\Gate.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Threading\MoodyCamelQueue.cpp">
-      <Filter>Source\Threading</Filter>
-    </ClCompile>
-    <ClInclude Include="Source\Threading\MoodyCamelQueue.h">
-      <Filter>Source\Threading</Filter>
-    </ClInclude>
     <ClCompile Include="Source\Threading\Process.Linux.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
@@ -547,7 +553,7 @@
     <ClCompile Include="Source\Threading\Thread.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Threading\ThreadPool.Linux.cpp">
+    <ClCompile Include="Source\Threading\ThreadPool.cpp">
       <Filter>Source\Threading</Filter>
     </ClCompile>
     <ClCompile Include="Source\Threading\ThreadPool.Windows.cpp">
@@ -696,9 +702,6 @@
     <ClCompile Include="Tests\Threading\GateTest.cpp">
       <Filter>Tests\Threading</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Threading\MoodyCamelQueueTest.cpp">
-      <Filter>Tests\Threading</Filter>
-    </ClCompile>
     <ClCompile Include="Tests\Threading\ProcessTest.cpp">
       <Filter>Tests\Threading</Filter>
     </ClCompile>
@@ -734,6 +737,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Nuclex.Support.Native.def">
+      <Filter>Resources</Filter>
+    </None>
     <None Include="Documents\David Gay - Correctly Rounded Binary-Decimal and Decimal-Binary Conversions.pdf">
       <Filter>Documents</Filter>
     </None>
@@ -759,8 +765,5 @@
       <Filter>Documents</Filter>
     </None>
     <None Include="ReadMe.md" />
-    <None Include="Nuclex.Support.Native.def">
-      <Filter>Resources</Filter>
-    </None>
   </ItemGroup>
 </Project>
