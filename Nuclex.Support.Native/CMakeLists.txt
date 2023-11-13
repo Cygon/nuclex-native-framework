@@ -154,7 +154,7 @@ target_link_libraries(
 if(WIN32)
 	target_link_libraries(
 		NuclexSupportNative
-		PRIVATE sychronization.lib
+		PRIVATE synchronization.lib
 	)
 	set_target_properties(
 		NuclexSupportNative
@@ -214,7 +214,7 @@ if(BUILD_UNIT_TESTS)
 	if(WIN32)
 		target_link_libraries(
 			NuclexSupportNativeTests
-			PRIVATE sychronization.lib
+			PRIVATE synchronization.lib
 		)
 		set_target_properties(
 			NuclexSupportNativeTests
@@ -291,7 +291,7 @@ if(BUILD_BENCHMARK)
 	if(WIN32)
 		target_link_libraries(
 			NuclexSupportNativeBenchmark
-			PRIVATE sychronization.lib
+			PRIVATE synchronization.lib
 		)
 		set_target_properties(
 			NuclexSupportNativeBenchmark
