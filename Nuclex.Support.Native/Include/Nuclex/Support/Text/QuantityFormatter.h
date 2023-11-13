@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -54,7 +54,7 @@ namespace Nuclex { namespace Support { namespace Text {
     /// </param>
     /// <remarks>
     ///   This is a simple helper with no localization. While the strings generated
-    ///   should be universally understood, they will use English terms for the units.
+    ///   should be universally, they will use English terms for the units.
     /// </remarks>
     public: NUCLEX_SUPPORT_API static std::string stringFromDuration(
       std::chrono::seconds duration, bool useSimpleFormat = true

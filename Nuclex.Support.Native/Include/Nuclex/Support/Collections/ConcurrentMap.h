@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -47,6 +47,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     /// </returns>
     public: virtual bool TryInsert(const TKey &key, const TValue &value) = 0;
 
+#if 0 // if the outcome is uncertain, move semantics mean the object is necessarily toast.
     /// <summary>Tries to move-insert an element into the map in a thread-safe manner</summary>
     /// <param name="key">Key under which the value can be looked up later</param>
     /// <param name="value">Value that will be move-inserted under its key in the map</param>
@@ -55,6 +56,7 @@ namespace Nuclex { namespace Support { namespace Collections {
     ///   false if the key already existed or there was no space left
     /// </returns>
     public: virtual bool TryInsert(const TKey &key, TValue &&value) = 0;
+#endif
 
     /// <summary>Tries to take an element from the map (removing it)</summary>
     /// <param name="key">Key of the element that will be taken from the map</param>

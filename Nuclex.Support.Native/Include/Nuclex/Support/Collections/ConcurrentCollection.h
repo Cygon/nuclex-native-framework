@@ -1,7 +1,7 @@
 #pragma region CPL License
 /*
 Nuclex Native Framework
-Copyright (C) 2002-2021 Nuclex Development Labs
+Copyright (C) 2002-2023 Nuclex Development Labs
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the IBM Common Public License as
@@ -25,14 +25,14 @@ License along with this library
 
 #include <cstddef> // for std::size_t
 
-// Known implementations besides this one for reference:
+// Known implementations of lock-free collections for reference:
 //
 // Libraries of Lock-Free data structures:
 // https://github.com/mpoeter/xenium
 // https://liblfds.org/ (<-- Public Domain!)
 // https://github.com/khizmax/libcds
 //
-// Interesting implementations:
+// Interesting design advice on Moody Camel's blog:
 // https://moodycamel.com/blog/2013/a-fast-lock-free-queue-for-c++.htm
 // https://moodycamel.com/blog/2014/a-fast-general-purpose-lock-free-queue-for-c++.htm
 //
@@ -40,9 +40,15 @@ License along with this library
 // https://github.com/oneapi-src/oneTBB (Intel TBB under its new name)
 // https://github.com/oneapi-src/oneTBB/blob/master/include/oneapi/tbb/concurrent_queue.h
 //
+// Microsoft also ships a non-portable concurrent quue with Visual C++:
+// https://learn.microsoft.com/en-us/cpp/parallel/concrt/reference/concurrent-queue-class
+//
 // "Battle Tested" implementation:
 // https://github.com/rigtorp/awesome-lockfree
 // https://github.com/rigtorp/MPMCQueue
+//
+// Moody Camel's implementation (I recommend this one):
+// https://github.com/cameron314/concurrentqueue
 //
 
 namespace Nuclex { namespace Support { namespace Collections {
@@ -92,12 +98,14 @@ namespace Nuclex { namespace Support { namespace Collections {
     /// <returns>True if the element was appended, false if there was no space left</returns>
     public: virtual bool TryAppend(const TElement &element) = 0;
 
+#if 0 // if the outcome is uncertain, move semantics mean the object is necessarily toast.
     /// <summary>
     ///   Tries to move-append an element to the collection in a thread-safe manner
     /// </summary>
     /// <param name="element">Element that will be move-appended to the collection</param>
     /// <returns>True if the element was appended, false if there was no space left</returns>
     public: virtual bool TryAppend(TElement &&element) = 0;
+#endif
 
     /// <summary>Tries to take an element from the collection</summary>
     /// <param name="element">Will receive the element taken from the collection</param>
