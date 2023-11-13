@@ -153,7 +153,7 @@ target_link_libraries(
 # On Windows, we want the shared library to be named Nuclex.Support.Native.dll
 if(WIN32)
 	target_link_libraries(
-		NuclexSupportNativeTests
+		NuclexSupportNative
 		PRIVATE sychronization.lib
 	)
 	set_target_properties(
@@ -290,7 +290,7 @@ if(BUILD_BENCHMARK)
 	# On Windows, we want the executable to be named Nuclex.Support.Native.Benchmark.exe
 	if(WIN32)
 		target_link_libraries(
-			NuclexSupportNativeTests
+			NuclexSupportNativeBenchmark
 			PRIVATE sychronization.lib
 		)
 		set_target_properties(
