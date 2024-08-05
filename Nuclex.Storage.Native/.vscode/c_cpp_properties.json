@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/Include/**",
+                "${workspaceFolder}/../Nuclex.Support.Native/Include/**",
+                "${workspaceFolder}/../third-party/nuclex-googletest/build/googletest/include/**",
+                "${workspaceFolder}/../third-party/nuclex-celero/build/include/**"
+            ],
+            "defines": [
+                "NUCLEX_AUDIO_EXECUTABLE",
+                "NUCLEX_AUDIO_SOURCE"
+            ],
+            "compilerPath": "/usr/bin/g++",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-x64",
+            "compilerArgs": [
+                "-fvisibility=hidden",
+                "-Wpedantic",
+                "-Wall",
+                "-Wextra",
+                "-Wno-unknown-pragmas",
+                "-fpic",
+                "-funsafe-math-optimizations",
+                "-std=c++17",
+                "-fvisibility-inlines-hidden"
+            ]
+        }
+    ],
+    "version": 4
+}

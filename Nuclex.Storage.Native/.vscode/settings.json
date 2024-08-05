@@ -1,0 +1,15 @@
+// Workspace settings
+{
+    // The following will hide temporary clutter in the workspace
+    "files.exclude": {
+        "bin": true,
+        "obj": true,
+        "*.vcxproj": true,
+        "*.vcxproj.filters": true,
+        "*.vcxproj.user": true,
+        "*.ref": true,
+        "build.cmd": true,
+        "build.sh": true,
+        "build-clang15.sh": true
+    }
+}

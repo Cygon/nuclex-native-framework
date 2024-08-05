@@ -9,7 +9,7 @@ project(
 	DESCRIPTION "Virtual file system, serialization and compression utlities"
 )
 
-include("../BuildSystem/cmake/cplusplus.cmake")
+include("../build-system/cmake/cplusplus.cmake")
 
 set(BUILD_DOCS OFF CACHE BOOL "Whether to generate documentation via Doxygen")
 set(ENABLE_COVERAGE OFF CACHE BOOL "Whether to instrument binaries for code coverage metrics")
@@ -33,21 +33,21 @@ endif()
 add_subdirectory(${PROJECT_SOURCE_DIR}/../Nuclex.Support.Native ${CMAKE_BINARY_DIR}/Nuclex.Support.Native)
 
 # Already included by Nuclex.Support.Native, CMake doesn't like a second inclusion...
-#add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/gtest ${CMAKE_BINARY_DIR}/gtest)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/expat ${CMAKE_BINARY_DIR}/expat)
+add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/expat ${CMAKE_BINARY_DIR}/expat)
 
 if(WANT_BROTLI)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/brotli ${CMAKE_BINARY_DIR}/brotli)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/brotli ${CMAKE_BINARY_DIR}/brotli)
 endif()
 if(WANT_CSC)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/csc ${CMAKE_BINARY_DIR}/csc)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/csc ${CMAKE_BINARY_DIR}/csc)
 endif()
 if(WANT_LZIP)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/lzip ${CMAKE_BINARY_DIR}/lzip)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/lzip ${CMAKE_BINARY_DIR}/lzip)
 endif()
 if(WANT_ZLIB)
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/zlib ${CMAKE_BINARY_DIR}/zlib)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/zlib ${CMAKE_BINARY_DIR}/zlib)
 endif()
 
 # -------------------------------------------------------------------------------------------------

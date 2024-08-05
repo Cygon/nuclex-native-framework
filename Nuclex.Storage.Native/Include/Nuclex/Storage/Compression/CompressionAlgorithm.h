@@ -26,6 +26,7 @@ License along with this library
 #include <string>
 #include <memory>
 #include <array>
+#include <cstdint>
 
 namespace Nuclex { namespace Storage { namespace Compression {
 
