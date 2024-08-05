@@ -40,7 +40,7 @@ set(WANT_PNG ON CACHE BOOL "Whether to integrate PNG image loading and saving")
 # -------------------------------------------------------------------------------------------------
 
 # Contains compiler options, compiler tag for output directory, etc.
-include("../BuildSystem/cmake/cplusplus.cmake")
+include("../build-system/cmake/cplusplus.cmake")
 
 # The Unix build pipeline doesn't automatically include threading, so search for
 # the pthreads library in order to link against it later on.
@@ -57,7 +57,7 @@ endif()
 
 # Already included by Nuclex.Support.Native, CMake doesn't like a second inclusion...
 if(NOT (TARGET GoogleTest))
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/nuclex-googletest ${CMAKE_BINARY_DIR}/nuclex-googletest)
 endif()
 
 message(STATUS "Enabled options for Nuclex.Pixels.Native:")
@@ -68,7 +68,7 @@ if(BUILD_UNIT_TESTS)
 
 	# Add GoogleTest as a sub-project so we can link our unit test executable
 	if(NOT (TARGET GoogleTest))
-		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/gtest ${CMAKE_BINARY_DIR}/gtest)
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/gtest ${CMAKE_BINARY_DIR}/gtest)
 	endif()
 endif()
 
@@ -77,50 +77,50 @@ if(BUILD_BENCHMARK)
 
 	# Add Celero as a sub-project so we can link our benchmark executable
 	if(NOT (TARGET Celero))
-		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/celero ${CMAKE_BINARY_DIR}/celero)
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/nuclex-celero ${CMAKE_BINARY_DIR}/nuclex-celero)
 	endif()
 endif()
 
 # Libraries to load and save each image format
 if(WANT_JPEGXL)
 	message(STATUS "  ⚫ Support JPEG-XL")
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/jpeg-xl ${CMAKE_BINARY_DIR}/jpeg-xl)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/jpeg-xl ${CMAKE_BINARY_DIR}/jpeg-xl)
 endif()
 if(WANT_AVIF)
 	message(STATUS "  ⚫ Support AVIF")
 	# LibAVIF may have already been referenced by JPEG-XL to borrow its compression code
 	if(NOT (TARGET LibAVIF))
-		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/av1f ${CMAKE_BINARY_DIR}/av1f)
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/av1f ${CMAKE_BINARY_DIR}/av1f)
 	endif()
 endif()
 if(WANT_WEBP)
 	message(STATUS "  ⚫ Support WebP")
 	# LibWebP may have already been referenced by JPEG-XL to borrow its compression code
 	if(NOT (TARGET LibWebP))
-		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libwebp ${CMAKE_BINARY_DIR}/libwebp)
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/libwebp ${CMAKE_BINARY_DIR}/libwebp)
 	endif()
 endif()
 if(WANT_JPG)
 	message(STATUS "  ⚫ Support JPEG")
 	# LibJPEG may have already been referenced by LibTIFF to borrow its compression code
 	if(NOT (TARGET LibJPEG))
-		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libjpeg ${CMAKE_BINARY_DIR}/libjpeg)
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/libjpeg ${CMAKE_BINARY_DIR}/libjpeg)
 	endif()
 endif()
 if(WANT_TIFF)
 	message(STATUS "  ⚫ Support TIFF")
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libtiff ${CMAKE_BINARY_DIR}/libtiff)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/libtiff ${CMAKE_BINARY_DIR}/libtiff)
 endif()
 if(WANT_EXR)
 	message(STATUS "  ⚫ Support EXR")
 	# OpenEXR may have already been referenced by LibTIFF to borrow its compression code
 	if(NOT (TARGET OpenEXR))
-		add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/openexr ${CMAKE_BINARY_DIR}/openexr)
+		add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/openexr ${CMAKE_BINARY_DIR}/openexr)
 	endif()
 endif()
 if(WANT_PNG)
 	message(STATUS "  ⚫ Support PNG")
-	add_subdirectory(${PROJECT_SOURCE_DIR}/../ThirdParty/libpng ${CMAKE_BINARY_DIR}/libpng)
+	add_subdirectory(${PROJECT_SOURCE_DIR}/../third-party/libpng ${CMAKE_BINARY_DIR}/libpng)
 endif()
 
 # Use CMake's own package for locating Doxygen on the system

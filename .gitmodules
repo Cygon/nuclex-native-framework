@@ -1,0 +1,25 @@
+[submodule "build-system"]
+	path = build-system
+	url = ../../nuclex-shared/build-system.git
+	branch = main
+	update = rebase
+[submodule "third-party/nuclex-celero"]
+	path = third-party/nuclex-celero
+	url = ../../nuclex-builds/nuclex-celero.git
+	branch = main
+	update = rebase
+[submodule "third-party/nuclex-googletest"]
+	path = third-party/nuclex-googletest
+	url = ../../nuclex-builds/nuclex-googletest.git
+	branch = main
+	update = rebase
+[submodule "third-party/nuclex-moodycamelqueues"]
+	path = third-party/nuclex-moodycamelqueues
+	url = ../../nuclex-builds/nuclex-moodycamelqueues.git
+	branch = main
+	update = rebase
+[submodule "Nuclex.Support.Native"]
+	path = Nuclex.Support.Native
+	url = ../../nuclex-shared-cpp/Nuclex.Support.Native.git
+	branch = main
+	update = rebase
