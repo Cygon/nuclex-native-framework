@@ -1,0 +1,106 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Generate",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "-B", "obj/cmake-Debug",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DBUILD_UNIT_TESTS=ON"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Build",
+      "dependsOn": [ "Generate" ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--build", "obj/cmake-Debug",
+        "--config", "Debug",
+        "--parallel", "16"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Install",
+      "dependsOn": [ "Build" ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--install", "obj/cmake-Debug",
+        "--config", "Debug"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Run Tests",
+      "dependsOn": [ "Install" ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "type": "shell",
+      "command": "bin/linux-gcc13.2-amd64-debug/NuclexPixelsNativeTests",
+      "args": [ ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Run Benchmarks",
+      "dependsOn": [ "Install" ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "type": "shell",
+      "command": "bin/linux-gcc13.2-amd64-debug/NuclexPixelsNativeBenchmark",
+      "args": [ ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Clean",
+      "group": "build",
+      "type": "shell",
+      "command": "scons",
+      "args": [
+        "-c",
+        "DEBUG=1"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    }
+  ]
+}

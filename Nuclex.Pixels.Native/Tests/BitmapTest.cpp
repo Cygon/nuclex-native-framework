@@ -22,6 +22,9 @@ License along with this library
 #define NUCLEX_PIXELS_SOURCE 1
 
 #include "Nuclex/Pixels/Bitmap.h"
+
+#include <cstdint> // for std::uint8_t
+
 #include <gtest/gtest.h>
 
 namespace Nuclex { namespace Pixels {

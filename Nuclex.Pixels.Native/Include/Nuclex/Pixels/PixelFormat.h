@@ -209,7 +209,7 @@ namespace Nuclex { namespace Pixels {
     // If it exists, the separation allows us to avoid loading serialized data wrongly.
     //
 
-    #pragma region Format 1024-1031 | R8 (unsigned)
+    //#pragma region Format 1024-1031 | R8 (unsigned)
 
     /// <summary>8 bit unsigned single color stored in the red channel</summary>
     /// <remarks>
@@ -226,9 +226,9 @@ namespace Nuclex { namespace Pixels {
     /// </remarks>
     R8_Unsigned = (1 << 24) | (8 << 16) | (0 << 14) | 1024 | 0,
 
-    #pragma endregion // Format 1024-1031 | R8 (unsigned)
+    //#pragma endregion // Format 1024-1031 | R8 (unsigned)
 
-    #pragma region Format 1032-1039 | R16 (unsigned, float)
+    //#pragma region Format 1032-1039 | R16 (unsigned, float)
 
     /// <summary>16 bit unsigned single color stored in the red channel</summary>
     /// <remarks>
@@ -276,9 +276,9 @@ namespace Nuclex { namespace Pixels {
 
     // CHECK: Add float flipped16 formats to exchange above format with BE systems?
 
-    #pragma endregion // Format 1032-1039 | R16 (unsigned, float)
+    //#pragma endregion // Format 1032-1039 | R16 (unsigned, float)
 
-    #pragma region Format 1040-1047 | R32 (float)
+    //#pragma region Format 1040-1047 | R32 (float)
 
     /// <summary>32 bit floating point single color stored in the red channel</summary>
     /// <remarks>
@@ -305,9 +305,9 @@ namespace Nuclex { namespace Pixels {
 
     // CHECK: Add float flipped32 formats to exchange above format with BE systems?
 
-    #pragma endregion // Format 1040-1047 | R32 (float)
+    //#pragma endregion // Format 1040-1047 | R32 (float)
 
-    #pragma region Format 2048-2055 | A8 (unsigned)
+    //#pragma region Format 2048-2055 | A8 (unsigned)
 
     /// <summary>8 bit unsigned opacity stored in the alpha channel</summary>
     /// <remarks>
@@ -320,9 +320,9 @@ namespace Nuclex { namespace Pixels {
     /// </remarks>
     A8_Unsigned = (1 << 24) | (8 << 16) | (0 << 14) | 2048 | 0,
 
-    #pragma endregion // Format 2048-2055 | A8 (unsigned)
+    //#pragma endregion // Format 2048-2055 | A8 (unsigned)
 
-    #pragma region Format 2056-2063 | A16 (unsigned, float)
+    //#pragma region Format 2056-2063 | A16 (unsigned, float)
 
     /// <summary>16 bit unsigned opacity stored in the alpha channel</summary>
     /// <remarks>
@@ -362,9 +362,9 @@ namespace Nuclex { namespace Pixels {
 
     // CHECK: Add float flipped16 formats to exchange above format with BE systems?
 
-    #pragma endregion // Format 1032-1039 | R16 (unsigned, float)
+    //#pragma endregion // Format 1032-1039 | R16 (unsigned, float)
 
-    #pragma region Format 2064-2071 | A32 (float)
+    //#pragma region Format 2064-2071 | A32 (float)
 
     /// <summary>32 bit floating point opacity stored in the alpha channel</summary>
     /// <remarks>
@@ -387,9 +387,9 @@ namespace Nuclex { namespace Pixels {
 
     // CHECK: Add float flipped32 formats to exchange above format with BE systems?
 
-    #pragma endregion // Format 2064-2071 | A32 (float)
+    //#pragma endregion // Format 2064-2071 | A32 (float)
 
-    #pragma region Format 3072-3079 | R8_G8 (unsigned)
+    //#pragma region Format 3072-3079 | R8_G8 (unsigned)
 
     /// <summary>16 bits total with unsigned red and green channels</summary>
     /// <remarks>
@@ -408,9 +408,9 @@ namespace Nuclex { namespace Pixels {
     /// </remarks>
     R8_G8_Unsigned = (2 << 24) | (16 << 16) | (1 << 14) | 3072 | 0,
 
-    #pragma endregion // Format 3072-3079 | R8_G8 (unsigned)
+    //#pragma endregion // Format 3072-3079 | R8_G8 (unsigned)
 
-    #pragma region Format 3080-3087 | R16_G16 (unsigned, float)
+    //#pragma region Format 3080-3087 | R16_G16 (unsigned, float)
 
     /// <summary>32 bits total with unsigned red and green channels</summary>
     /// <remarks>
@@ -458,9 +458,9 @@ namespace Nuclex { namespace Pixels {
     R16_G16_Float_Native16 = (4 << 24) | (32 << 16) | (1 << 14) | 3080 | 3,
 #endif
 
-    #pragma endregion // Format 3080-3087 | R16_G16 (unsigned, float)
+    //#pragma endregion // Format 3080-3087 | R16_G16 (unsigned, float)
 
-    #pragma region Format 4096-4103 | R8_A8 (unsigned)
+    //#pragma region Format 4096-4103 | R8_A8 (unsigned)
 
     /// <summary>8 bit unsigned single color with an alpha channel</summary>
     /// <remarks>
@@ -479,9 +479,9 @@ namespace Nuclex { namespace Pixels {
     /// </remarks>
     R8_A8_Unsigned = (2 << 24) | (16 << 16) | (1 << 14) | 4096 | 0,
 
-    #pragma endregion // Format 4096-4103 | R8_A8 (unsigned)
+    //#pragma endregion // Format 4096-4103 | R8_A8 (unsigned)
 
-    #pragma region Format 4104-4111 | R16_A16 (unsigned)
+    //#pragma region Format 4104-4111 | R16_A16 (unsigned)
 
     /// <summary>8 bit unsigned single color with an alpha channel</summary>
     /// <remarks>
@@ -509,9 +509,9 @@ namespace Nuclex { namespace Pixels {
 
     // CHECK: Add unsigned flipped32 formats to exchange above format with BE systems?
 
-    #pragma endregion // Format 4104-4111 | R16_A16 (unsigned)
+    //#pragma endregion // Format 4104-4111 | R16_A16 (unsigned)
 
-    #pragma region Format 5120-5127 | R5_G6_B5 (unsigned)
+    //#pragma region Format 5120-5127 | R5_G6_B5 (unsigned)
 
     /// <summary>16 bit in native endianness with three colors<summary>
     /// <remarks>
@@ -535,9 +535,9 @@ namespace Nuclex { namespace Pixels {
     R5_G6_B5_Unsigned_Native16 = (2 << 24) | (16 << 16) | (2 << 14) | 5120 | 0,
 #endif
 
-    #pragma endregion // Format 5120-5127 | R5_G6_B5 (unsigned)
+    //#pragma endregion // Format 5120-5127 | R5_G6_B5 (unsigned)
 
-    #pragma region Format 5128-5135 | B5_G6_R5 (unsigned)
+    //#pragma region Format 5128-5135 | B5_G6_R5 (unsigned)
 
     /// <summary>16 bit in native endianness with three colors<summary>
     /// <remarks>
@@ -560,9 +560,9 @@ namespace Nuclex { namespace Pixels {
     B5_G6_R5_Unsigned_Native16 = (2 << 24) | (16 << 16) | (2 << 14) | 5128 | 0,
 #endif
 
-    #pragma endregion // Format 5128-5135 | B5_G6_R5 (unsigned)
+    //#pragma endregion // Format 5128-5135 | B5_G6_R5 (unsigned)
 
-    #pragma region Format 5136-5143 | R8_G8_B8 (unsigned, signed)
+    //#pragma region Format 5136-5143 | R8_G8_B8 (unsigned, signed)
 
     /// <summary>24 bits total with unsigned red, green and blue channels</summary>
     /// <remarks>
@@ -597,9 +597,9 @@ namespace Nuclex { namespace Pixels {
     /// </remarks>
     R8_G8_B8_Signed = (3 << 24) | (24 << 16) | (2 << 14) | 5136 | 1,
 
-    #pragma endregion // Format 5136-5143 | R8_G8_B8 (unsigned, signed)
+    //#pragma endregion // Format 5136-5143 | R8_G8_B8 (unsigned, signed)
 
-    #pragma region Format 5144-5151 | B8_G8_R8 (unsigned, signed)
+    //#pragma region Format 5144-5151 | B8_G8_R8 (unsigned, signed)
 
     /// <summary>24 bits total with unsigned blue, green and red channels</summary>
     /// <remarks>
@@ -631,9 +631,9 @@ namespace Nuclex { namespace Pixels {
     /// </remarks>
     B8_G8_R8_Signed = (3 << 24) | (24 << 16) | (2 << 14) | 5144 | 1,
 
-    #pragma endregion // Format 5144-5151 | B8_G8_R8 (unsigned, signed)
+    //#pragma endregion // Format 5144-5151 | B8_G8_R8 (unsigned, signed)
 #if 0
-    #pragma region Format 5152-5159 | R16_G16_B16 (unsigned)
+    //#pragma region Format 5152-5159 | R16_G16_B16 (unsigned)
 
     /// <summary>48 bits total with unsigned red, green and blue channels</summary>
     /// <remarks>
@@ -668,9 +668,9 @@ namespace Nuclex { namespace Pixels {
     R16_G16_B16_Unsigned_Native16 = A16_B16_G16_R16_Unsigned,
 #endif
 
-    #pragma endregion // Format 5152-5159 | R16_G16_B16 (unsigned)
+    //#pragma endregion // Format 5152-5159 | R16_G16_B16 (unsigned)
 #endif
-    #pragma region Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (unsigned)
+    //#pragma region Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (unsigned)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -789,11 +789,11 @@ namespace Nuclex { namespace Pixels {
     R8_G8_B8_A8_Unsigned_Flipped32 = A8_B8_G8_R8_Unsigned,
 #endif
 
-    #pragma endregion // Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (unsigned)
+    //#pragma endregion // Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (unsigned)
 
     // ----- Everything below here needs to be checked for API compatibility still -----
 
-    #pragma region Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (signed)
+    //#pragma region Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (signed)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -907,9 +907,9 @@ namespace Nuclex { namespace Pixels {
     R8_G8_B8_A8_Signed_Flipped32 = A8_B8_G8_R8_Signed,
 #endif
 
-    #pragma endregion // Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (signed)
+    //#pragma endregion // Format 6144-6151 | A8_B8_G8_R8 / R8_G8_B8_A8 (signed)
 
-    #pragma region Format 6152-6159 | A16_B16_G16_R16 (unsigned, float)
+    //#pragma region Format 6152-6159 | A16_B16_G16_R16 (unsigned, float)
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
     /// <remarks>
@@ -1031,9 +1031,9 @@ namespace Nuclex { namespace Pixels {
     A16_B16_G16_R16_Float_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6152 | 7,
 #endif
 
-    #pragma endregion // Format 6152-6159 | A16_B16_G16_R16 (unsigned, float)
+    //#pragma endregion // Format 6152-6159 | A16_B16_G16_R16 (unsigned, float)
 
-    #pragma region Format 6160-6167 | R16_G16_B16_A16 (unsigned, float)
+    //#pragma region Format 6160-6167 | R16_G16_B16_A16 (unsigned, float)
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
     /// <remarks>
@@ -1155,11 +1155,11 @@ namespace Nuclex { namespace Pixels {
     R16_G16_B16_A16_Float_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6160 | 7,
 #endif
 
-    #pragma endregion // Format 6160-6167 | R16_G16_B16_A16 (unsigned, float)
+    //#pragma endregion // Format 6160-6167 | R16_G16_B16_A16 (unsigned, float)
 
     // TODO: Insert A16_B16_G16_R16_Signed and R16_G16_B16_A16_Signed
 
-    #pragma region Format 6168-6175 | A32_B32_G32_R32 (float)
+    //#pragma region Format 6168-6175 | A32_B32_G32_R32 (float)
 
     /// <summary>128 bit color with alpha using 32 bits for each channel</summary>
     /// <remarks>
@@ -1241,9 +1241,9 @@ namespace Nuclex { namespace Pixels {
     A32_B32_G32_R32_Float_Flipped32 = (16 << 24) | (64 << 16) | (3 << 14) | 6168 | 7,
 #endif
 
-    #pragma endregion // Format 6168-6175 | A32_B32_G32_R32 (float)
+    //#pragma endregion // Format 6168-6175 | A32_B32_G32_R32 (float)
 
-    #pragma region Format 6176-6183 | R32_G32_B32_A32 (float)
+    //#pragma region Format 6176-6183 | R32_G32_B32_A32 (float)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -1325,9 +1325,9 @@ namespace Nuclex { namespace Pixels {
     R32_G32_B32_A32_Float_Flipped32 = (16 << 24) | (64 << 16) | (3 << 14) | 6176 | 7,
 #endif
 
-    #pragma endregion // A32_B32_G32_R32 and R32_G32_B32_A32 float formats
+    //#pragma endregion // A32_B32_G32_R32 and R32_G32_B32_A32 float formats
 
-    #pragma region Format 6184-6191 | B8_G8_R8_A8 / A8_R8_G8_B8 (unsigned)
+    //#pragma region Format 6184-6191 | B8_G8_R8_A8 / A8_R8_G8_B8 (unsigned)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -1429,9 +1429,9 @@ namespace Nuclex { namespace Pixels {
     A8_R8_G8_B8_Unsigned_Flipped32 = B8_G8_R8_A8_Unsigned,
 #endif
 
-    #pragma endregion // B8_G8_R8_A8 + A8_R8_G8_B8 formats
+    //#pragma endregion // B8_G8_R8_A8 + A8_R8_G8_B8 formats
 
-    #pragma region Format 6192-6199 | B8_G8_R8_A8 / A8_R8_G8_B8 (signed)
+    //#pragma region Format 6192-6199 | B8_G8_R8_A8 / A8_R8_G8_B8 (signed)
 
     /// <summary>32 bit color with alpha using 8 bits for each channel</summary>
     /// <remarks>
@@ -1539,9 +1539,9 @@ namespace Nuclex { namespace Pixels {
     A8_R8_G8_B8_Signed_Flipped32 = B8_G8_R8_A8_Signed,
 #endif
 
-    #pragma endregion // Format 6192-6199 | B8_G8_R8_A8 / A8_R8_G8_B8 (signed)
+    //#pragma endregion // Format 6192-6199 | B8_G8_R8_A8 / A8_R8_G8_B8 (signed)
 
-    #pragma region Format 6200-6207 | B16_G16_R16_A16 (unsigned, float)
+    //#pragma region Format 6200-6207 | B16_G16_R16_A16 (unsigned, float)
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
     /// <remarks>
@@ -1662,9 +1662,9 @@ namespace Nuclex { namespace Pixels {
     B16_G16_R16_A16_Float_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6200 | 7,
 #endif
 
-    #pragma endregion // Format 6200-6207 | B16_G16_R16_A16 (unsigned, float)
+    //#pragma endregion // Format 6200-6207 | B16_G16_R16_A16 (unsigned, float)
 
-    #pragma region Format 6208-6215 | A16_R16_G16_B16 (unsigned, float)
+    //#pragma region Format 6208-6215 | A16_R16_G16_B16 (unsigned, float)
 
     /// <summary>64 bit color with alpha using 16 bits for each channel</summary>
     /// <remarks>
@@ -1785,11 +1785,11 @@ namespace Nuclex { namespace Pixels {
     A16_R16_G16_B16_Float_Flipped16 = (8 << 24) | (64 << 16) | (3 << 14) | 6208 | 7,
 #endif
 
-    #pragma endregion // Format 6208-6215 | A16_R16_G16_B16 (unsigned, float)
+    //#pragma endregion // Format 6208-6215 | A16_R16_G16_B16 (unsigned, float)
 
     // TODO: Insert B16_G16_R16_A16_Signed and A16_R16_G16_B16_Signed
 
-    #pragma region Format 7168-7175 | A2_B10_G10_R10 (unsigned)
+    //#pragma region Format 7168-7175 | A2_B10_G10_R10 (unsigned)
 
     /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
     /// <remarks>
@@ -1813,9 +1813,9 @@ namespace Nuclex { namespace Pixels {
     A2_B10_G10_R10_Unsigned_Native32 = (4 << 24) | (32 << 16) | (3 << 14) | 7168 | 0,
 #endif
 
-    #pragma endregion // Format 7168-7175 | A2_B10_G10_R10 (unsigned)
+    //#pragma endregion // Format 7168-7175 | A2_B10_G10_R10 (unsigned)
 
-    #pragma region Format 7176-7183 | A2_R10_G10_B10 (unsigned)
+    //#pragma region Format 7176-7183 | A2_R10_G10_B10 (unsigned)
 
     /// <summary>32 bit in native endianness with three colors as 10 bit integers<summary>
     /// <remarks>
@@ -1840,7 +1840,7 @@ namespace Nuclex { namespace Pixels {
     A2_R10_G10_B10_Unsigned_Native32 = (4 << 24) | (32 << 16) | (3 << 14) | 7176 | 0,
 #endif
 
-    #pragma endregion // Format 7176-7183 | A2_R10_G10_B10 (unsigned)
+    //#pragma endregion // Format 7176-7183 | A2_R10_G10_B10 (unsigned)
 
   };
 
