@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "Nuclex.Support.Native"
+		},
+		{
+			"path": "Nuclex.Pixels.Native"
+		},
+		{
+			"path": "Nuclex.Storage.Native"
+		}
+	],
+	"settings": {}
+}
